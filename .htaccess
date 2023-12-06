@@ -1,0 +1,36 @@
+RewriteEngine On
+
+# Force HTTP
+RewriteCond %{HTTPS} on
+RewriteRule ^ http://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Remove .php extension
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^([^/]+)/?$ $1.php [L]
+
+# Rewrite /register to ?register
+RewriteRule ^register$ ?signup [L,QSA]
+RewriteRule ^registrer$ ?signup [L,QSA]
+RewriteRule ^signup$ ?signup [L,QSA]
+
+# Rewrite /verify to ?verify
+RewriteRule ^verify$ ?verify [L,QSA]
+
+# Rewrite /reset to ?reset
+RewriteRule ^reset$ ?reset [L,QSA]
+
+# Rewrite /forgot to ?forgot
+RewriteRule ^forgot$ ?forgot [L,QSA]
+
+# Rewrite /profile/user to /profile?user
+RewriteRule ^profile/([^/]+)$ profile?user=$1 [QSA,L]
+
+# Rewrite /post/id to /post?id
+RewriteRule ^post/([^/]+)$ post?id=$1 [QSA,L]
+
+# Rewrite /group/name to /group?id
+RewriteRule ^group/([^/]+)$ group?id=$1 [QSA,L]
+
+# Rewrite /page/name to /page?id
+RewriteRule ^page/([^/]+)$ page?id=$1 [QSA,L]

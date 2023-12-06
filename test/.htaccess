@@ -1,0 +1,17 @@
+# BEGIN HTTPS Forced Redirect
+# The directives (lines) between "BEGIN HTTPS Forced Redirect" and 
+# "END HTTPS Forced Redirect" are dynamically generated, and should 
+# only be modified via the filters. Any changes to the directives between 
+# these markers will be overwritten.
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteCond %{HTTPS} on
+RewriteRule ^(.*)$ http://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# END HTTPS Forced Redirect
+
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^([^\.]+)$ $1.php [NC,L]
