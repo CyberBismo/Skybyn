@@ -79,47 +79,47 @@ if (isset($_COOKIE['logged'])) {
                         <p>Click to Select</p>
                     </div>
                 </div>
-            </div>
-            <div class="reg-pack">
-                <div class="reg-pack-box" onclick="showCustom()">
-                    <h2>Custom</h2>
-                    <span id="custom-text">Set each setting manually</span>
-                    <div class="reg-pack-box-custom" id="custom-set" style="display: none">
+                <div class="reg-pack" id="reg-pack-custom">
+                    <div class="reg-pack-box" onclick="showCustom()">
+                        <h2>Custom</h2>
+                        <span id="custom-text">Set each setting manually</span>
+                        <div class="reg-pack-box-custom" id="custom-set" style="display: none">
 
-                        <div class="rpbcb">
-                            <p><b>Privacy</b><br>
-                                A private profile will only show your picture and display name.
-                            </p>
-                            <table>
-                                <tr>
-                                    <td style="text-align: right"><input type="radio" name="private" value="1" id="ppr"></td>
-                                    <td><label for="ppr">Private</label></td>
-                                </tr>
-                                <tr>
-                                    <td style="text-align: right"><input type="radio" name="private" value="0" id="ppu"></td>
-                                    <td><label for="ppu">Public</label></td>
-                                </tr>
-                            </table>
+                            <div class="rpbcb">
+                                <p><b>Privacy</b><br>
+                                    A private profile will only show your picture and display name.
+                                </p>
+                                <table>
+                                    <tr>
+                                        <td style="text-align: right"><input type="radio" name="private" value="1" id="ppr"></td>
+                                        <td><label for="ppr">Private</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right"><input type="radio" name="private" value="0" id="ppu"></td>
+                                        <td><label for="ppu">Public</label></td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <div class="rpbcb">
+                                <p><b>Visibility</b><br>
+                                    As visible you will appear in search results.
+                                </p>
+                                <table>
+                                    <tr>
+                                        <td style="text-align: right"><input type="radio" name="visible" value="1" id="vv"></td>
+                                        <td><label for="vv">Visible</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right"><input type="radio" name="visible" value="0" id="vi"></td>
+                                        <td><label for="vi">Invisible</label></td>
+                                    </tr>
+                                </table>
+                            </div>
+
                         </div>
-
-                        <div class="rpbcb">
-                            <p><b>Visibility</b><br>
-                                As visible you will appear in search results.
-                            </p>
-                            <table>
-                                <tr>
-                                    <td style="text-align: right"><input type="radio" name="visible" value="1" id="vv"></td>
-                                    <td><label for="vv">Visible</label></td>
-                                </tr>
-                                <tr>
-                                    <td style="text-align: right"><input type="radio" name="visible" value="0" id="vi"></td>
-                                    <td><label for="vi">Invisible</label></td>
-                                </tr>
-                            </table>
-                        </div>
-
+                        <p id="custom-set-btn" style="display: none"><button onclick="hitEnterRegister('cp')">Confirm</button></p>
                     </div>
-                    <p id="custom-set-btn" style="display: none"><button onclick="hitEnterRegister('cp')">Confirm</button></p>
                 </div>
             </div>
         </div>

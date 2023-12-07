@@ -8,7 +8,6 @@ $name = "$fname $mname $lname";
 $email = $_POST['email'];
 $username = $_POST['username'];
 $password = hash("sha512", $_POST['password']);
-$cpassword = hash("sha512", $_POST['cpassword']);
 $salt = hash("sha512", rand());
 $pw = hash("sha512", $salt."_".$password);
 $token = rand(100000, 999999);
@@ -18,24 +17,23 @@ $lang = geoData("countryCode");
 
 $qCheckEmail = $conn->query("SELECT * FROM `users` WHERE `email`='$email'");
 if ($qCheckEmail->num_rows == 0) {
-    if ($password == $cpassword) {
         // Test registration
         $file = fopen("test_register.txt", "w");
         // Check if the file is opened successfully
         if ($file) {
-            // Write variables to the file
-            fwrite($file, "Date of birth: $dob" . "\n");
-            fwrite($file, "Full name: $name" . "\n");
-            fwrite($file, "Email: $email" . "\n");
-            fwrite($file, "Password: $password" . "\n");
-            fwrite($file, "Salt: $salt" . "\n");
-            fwrite($file, "Encrypted password: $pw" . "\n");
+                // Write variables to the file
+                fwrite($file, "Date of birth: $dob" . "\n");
+                fwrite($file, "Full name: $name" . "\n");
+                fwrite($file, "Email: $email" . "\n");
+                fwrite($file, "Password: $password" . "\n");
+                fwrite($file, "Salt: $salt" . "\n");
+                fwrite($file, "Encrypted password: $pw" . "\n");
 
-            // Close the file
-            fclose($file);
-            echo "Data written to the file successfully.";
+                // Close the file
+                fclose($file);
+                echo "Data written to the file successfully.";
         } else {
-            echo "Error opening the file.";
+                echo "Error opening the file.";
         }
         // End of test
 
@@ -61,13 +59,13 @@ if ($qCheckEmail->num_rows == 0) {
         //        '$country',
         //        '$ip'
         //    )");
-//
+        //
         //$to = $email;
         //$subject = "Skybyn - Verify email";
         //$headers = 'From: noreply@skybyn.no' . "\r\n" .
         //    'Reply-To: noreply@skybyn.no' . "\r\n" .
         //    'Content-Type: text/html; charset=UTF-8' . "\r\n";
-//
+        //
         //$message = '
         //<!DOCTYPE html>
         //<html>
@@ -80,7 +78,7 @@ if ($qCheckEmail->num_rows == 0) {
         //                --blue: rgba(35,176,255,1);
         //                --greyblue: rgba(42,106,133,1);
         //            }
-//
+        //
         //            body {
         //                margin: 0;
         //                padding: 20px;
@@ -94,7 +92,7 @@ if ($qCheckEmail->num_rows == 0) {
         //                font-size: 16px;
         //                line-height: 1.5;
         //            }
-//
+        //
         //            .container {
         //                max-width: 600px;
         //                margin: 0 auto;
@@ -105,7 +103,7 @@ if ($qCheckEmail->num_rows == 0) {
         //                border-radius: 5px;
         //                box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
         //            }
-//
+        //
         //            .logo {
         //                display: block;
         //                width: 100px;
@@ -113,7 +111,7 @@ if ($qCheckEmail->num_rows == 0) {
         //                margin: 0 auto;
         //                padding: 0;
         //            }
-//
+        //
         //            .logo img {
         //                display: block;
         //                width: 100%;
@@ -121,19 +119,19 @@ if ($qCheckEmail->num_rows == 0) {
         //                margin: 0;
         //                padding: 0;
         //            }
-//
+        //
         //            h1 {
         //                font-size: 24px;
         //                margin-top: 20px;
         //                margin-bottom: 20px;
         //                text-align: center;
         //            }
-//
+        //
         //            p {
         //                margin-top: 0;
         //                margin-bottom: 20px;
         //            }
-//
+        //
         //            button {
         //                background-color: #4CAF50;
         //                color: #fff;
@@ -144,11 +142,11 @@ if ($qCheckEmail->num_rows == 0) {
         //                cursor: pointer;
         //                transition: background-color 0.3s ease;
         //            }
-//
+        //
         //            button:hover {
         //                background-color: #3e8e41;
         //            }
-//
+        //
         //            .code-box {
         //                margin: 40px 0;
         //            }
@@ -177,17 +175,13 @@ if ($qCheckEmail->num_rows == 0) {
         //    </body>
         //</html>
         //';
-//
+        //
         //mail($to, $subject, $message, $headers);
         //$msg = "We just sent you an email with an activation code.";
         //createCookie("msg", $msg, "10", null);
         //$id = $conn->inserted_id;
         //$_SESSION['registration_complete'] = $id;
         //echo "signup_complete";
-    } else {
-        $msg = "Passwords do not match.";
-        echo $msg;
-    }
 } else {
     $msg = "This email is already in use.";
     echo $msg;

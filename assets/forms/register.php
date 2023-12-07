@@ -82,9 +82,11 @@
                     }
                     
                     function showCustom() {
+                        const rpc = document.getElementById('reg-pack-custom');
                         const text = document.getElementById('custom-text');
                         const set = document.getElementById('custom-set');
                         const btn = document.getElementById('custom-set-btn');
+                        rpc.style.width = "610px";
                         text.style.display = "none";
                         set.style.display = "flex";
                         btn.style.display = "block";
@@ -357,6 +359,7 @@
                                             dob: dob.value
                                         }
                                     }).done(function(response) {
+                                        console.log(response);
                                         if (response === "signup_complete") {
                                             reg_packs.style.display = "block";
                                         }

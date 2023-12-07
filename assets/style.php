@@ -811,16 +811,18 @@
             }
             .reg-packs-box {
                 display: flex;
+                flex-wrap: wrap;
                 justify-content: center;
+                gap: 5px;
             }
             .reg-pack {
                 width: 300px;
-                margin: 2px;
                 padding: 5px;
                 text-align: left;
                 background: rgba(0,0,0,.1);
                 border-radius: 30px;
                 backdrop-filter: blur(5px);
+                transition: width .5s;
             }
             .reg-pack-box {
                 height: calc(100% - 20px);
