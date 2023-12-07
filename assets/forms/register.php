@@ -122,6 +122,8 @@
                         const username = document.getElementById('username'); // Username
                         const pw = document.getElementById('register-password'); // Password
                         const cpw = document.getElementById('cpassword'); // Confirm password
+
+                        autoInfo();
                         
                         if (input.id == "step_back") {
                             if (set_name.style.display == "block") {
@@ -172,6 +174,7 @@
                                     td_age.innerHTML = "Age:";
                                     td_age_v = document.createElement('td');
                                     td_age.style.textAlign = "right";
+                                    td_age.style.width = "80.25px";
                                     td_age_v.style.textAlign = "left";
                                     td_age_v.innerHTML = age;
                                     tr_age.appendChild(td_age);

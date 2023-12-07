@@ -229,6 +229,9 @@ if (isset($_COOKIE['logged'])) {
         }
         <?php }?>
     }
+    function autoInfo() {
+        document.getElementById('welcome_info').style.height = "50%";
+    }
 </script>
 
     <div class="popup" id="terms_popup">
