@@ -1,14 +1,5 @@
 <?php include_once "assets/header.php";
 
-if (isset($_GET['username'])) {
-    $user_id = $_SESSION['verify'];
-    unset($_SESSION['verify']);
-    setcookie('verify', '', -1, '/');
-    createCookie("username",$user_id,"1","3");
-    
-    ?><meta http-equiv="refresh" content="0; URL='./'" /><?php
-}
-
 if (isset($_GET['signup'])) {
 	if (skybyn('register') == "1") {
 		$signup = true;

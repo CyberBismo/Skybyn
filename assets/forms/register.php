@@ -238,6 +238,13 @@
                                             set_email_verify.style.display = "block";
                                             email_verify.focus();
                                             register.value = "Verify code";
+                                        } else
+                                        if (response === "sent_before") {
+                                            err_msg.style.display = "block";
+                                            err_msg.innerHTML = "Code already sent. Check your inbox/spam folder.";
+                                            setTimeout(() => {
+                                                err_msg.style.display = "none";
+                                            }, 5000);
                                         }
                                     });
                                     <?php }?>
