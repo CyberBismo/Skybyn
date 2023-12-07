@@ -26,7 +26,8 @@ if ($qCheckEmail->num_rows == 0) {
                 `token`,
                 `registration_date`,
                 `country`,
-                `ip`
+                `ip`,
+                `verified`
         ) VALUES (
                 '$email',
                 '$dob',
@@ -36,7 +37,7 @@ if ($qCheckEmail->num_rows == 0) {
                 '$token',
                 '$now',
                 '$country',
-                '$ip'
+                '1'
         )");
 
         $to = $email;
