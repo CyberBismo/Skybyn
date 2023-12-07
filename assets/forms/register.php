@@ -227,7 +227,7 @@
                                         url: './assets/check_email.php',
                                         type: "POST",
                                         data: {
-                                            email: email
+                                            email: email.value
                                         }
                                     }).done(function(response) {
                                         if (response === "sent") {
