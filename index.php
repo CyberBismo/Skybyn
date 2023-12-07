@@ -53,7 +53,7 @@ if (isset($_COOKIE['logged'])) {
             </div>
         </div>
         <div class="reg-packs" id="reg_packs" style="display: none">
-            <h3>Select to continue</h3>
+            <h3>Select one of following options</h3>
             <div class="reg-packs-box">
                 <div class="reg-pack" onclick="hitEnterRegister('op')">
                     <div class="reg-pack-box">
@@ -79,7 +79,7 @@ if (isset($_COOKIE['logged'])) {
                     </div>
                 </div>
             </div>
-            <div class="reg-pack reg-pack-custom">
+            <div class="reg-pack">
                 <div class="reg-pack-box" onclick="showCustom()">
                     <h2>Custom</h2>
                     <span id="custom-text">Set each setting manually</span>
@@ -167,7 +167,7 @@ if (isset($_COOKIE['logged'])) {
         </div>
     </div>
     <?php } else {?>
-    <div class="center_form">
+    <div class="center_form" id="log_reg_form">
         <?php if (isset($dev_access) && $dev_access == true) {?>
         <div class="form">
             <div class="login" id="login-form" <?php if ($signup == true) {?>hidden<?php }?>>

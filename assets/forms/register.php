@@ -108,7 +108,7 @@
                         let info_right = document.getElementById('info_right');
                         let table = document.getElementById('info-table');
                         let reg_packs = document.getElementById('reg_packs');
-                        let reg_form = document.getElementById('reg_form');
+                        let reg_form = document.getElementById('log_reg_form');
 
                         const dob_v = document.getElementById('dob').value;
                         const age = calculateAge(dob_v);
@@ -126,6 +126,7 @@
                         autoInfo();
                         
                         if (input.id == "step_back") {
+                            console.log(input.id);
                             if (set_name.style.display == "block") {
                                 set_name.style.display = "none";
                                 set_email.style.display = "block";
@@ -316,6 +317,14 @@
                                 if (pw.value != "" && pw.value === cpw.value) {
                                     set_pw.style.display = "none";
                                     set_terms.style.display = "block";
+
+                                    pwl = pw.value;
+                                    x = "*";
+                                    for (i = 0; i <= pwl.length; i++) {
+                                        if (x.length < i) {
+                                            x = x + "*";
+                                        }
+                                    }
                                     // Adding password to table
                                     tr_pw = document.createElement('tr');
                                     table.appendChild(tr_pw);
@@ -324,7 +333,7 @@
                                     td_pw_v = document.createElement('td');
                                     td_pw.style.textAlign = "right";
                                     td_pw_v.style.textAlign = "left";
-                                    td_pw_v.innerHTML = "Secure";
+                                    td_pw_v.innerHTML = x;
                                     tr_pw.appendChild(td_pw);
                                     tr_pw.appendChild(td_pw_v);
                                 }
@@ -364,7 +373,7 @@
                                         pack : input
                                     }
                                 }).done(function(response) {
-                                    window.location.href='./';
+                                    window.location.href='../';
                                 });
                             }
                         }
