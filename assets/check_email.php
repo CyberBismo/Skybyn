@@ -117,9 +117,8 @@ if ($checkEmail->num_rows == 0) {
                 <h1>Verify your email</h1>
                 <p>Enter the code below into the field displayed on the website.</p>
                 <div class="code-box">
-                    <code>'.$reset.'</code>
+                    <code>'.$code.'</code>
                 </div>
-                <button onclick="window.location.href=\'https://skybyn.no/?reset='.$reset.'\'">Skip code</button>
             </div>
         </body>
     </html>
