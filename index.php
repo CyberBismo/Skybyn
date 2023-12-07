@@ -49,6 +49,7 @@ if (isset($_COOKIE['logged'])) {
         <div class="info_text" id="info_text">
             <?php include_once "assets/intro.php"?>
             <div class="info_right" id="info_right">
+                <h3>Your information so far:</h3>
                 <table id="info-table"></table>
             </div>
         </div>
