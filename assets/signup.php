@@ -37,6 +37,7 @@ if ($qCheckEmail->num_rows == 0) {
                 '$token',
                 '$now',
                 '$country',
+                '$ip',
                 '1'
         )");
 

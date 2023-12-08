@@ -55,10 +55,11 @@ function geoData($x) {
     $data = json_decode($response, true);
     
     if (isset($x)) {
-        return $data[$x];
+        #return $data[$x];
     } else {
-        return $response;
+        #return $response;
     }
+    return "";
 }
 
 # Create cookie with country information
