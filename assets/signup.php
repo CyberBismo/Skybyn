@@ -9,7 +9,6 @@ $username = $_POST['username'];
 $password = hash("sha512", $_POST['password']);
 $salt = hash("sha512", rand());
 $pw = hash("sha512", $salt."_".$password);
-$token = rand(100000, 999999);
 $ip = getIP();
 $country = geoData("countryName");
 $lang = geoData("countryCode");
@@ -18,23 +17,23 @@ $qCheckEmail = $conn->query("SELECT * FROM `users` WHERE `email`='$email'");
 if ($qCheckEmail->num_rows == 0) {
         $conn->query("INSERT INTO `users` 
         (
+                `username`,
                 `email`,
                 `birth_date`,
                 `password`,
                 `salt`,
                 `language`,
-                `token`,
                 `registration_date`,
                 `country`,
                 `ip`,
                 `verified`
         ) VALUES (
+                '$username',
                 '$email',
                 '$dob',
                 '$pw',
                 '$salt',
                 '$lang',
-                '$token',
                 '$now',
                 '$country',
                 '$ip',
