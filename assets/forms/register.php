@@ -128,32 +128,36 @@
                         autoInfo();
                         
                         if (input.id == "step_back") {
-                            console.log(input.id);
-                            if (set_name.style.display == "block") {
-                                set_name.style.display = "none";
-                                set_email.style.display = "block";
-                                register.value = "Continue";
-                                step_back.style.display = "none";
-                            } else 
-                            if (set_email.style.display == "block") {
-                                set_email.style.display = "none";
-                                set_email_verify.style.display = "block";
-                                register.value = "Send code";
-                            } else 
-                            if (set_email_verify.style.display == "block") {
-                                set_email_verify.style.display = "none";
-                                set_username.style.display = "block";
-                                register.value = "Verify";
-                            } else 
-                            if (set_username.style.display == "block") {
-                                set_username.style.display = "none";
+                            if (set_terms.style.display == "block") {
+                                set_terms.style.display = "none";
                                 set_pw.style.display = "block";
                                 register.value = "Continue";
-                            }
+                                document.getElementById('reg-t-pw').remove();
+                            } else
                             if (set_pw.style.display == "block") {
                                 set_pw.style.display = "none";
+                                set_username.style.display = "block";
+                                register.value = "Continue";
+                                document.getElementById('reg-t-uname').remove();
+                            } else
+                            if (set_username.style.display == "block") {
+                                set_username.style.display = "none";
+                                set_email.style.display = "block";
+                                register.value = "Send code";
+                                document.getElementById('reg-t-email').remove();
+                            } else
+                            if (set_email.style.display == "block") {
+                                set_email.style.display = "none";
                                 set_name.style.display = "block";
-                                register.value = "Complete";
+                                register.value = "Continue";
+                                document.getElementById('reg-t-name').remove();
+                            } else
+                            if (set_name.style.display == "block") {
+                                set_name.style.display = "none";
+                                set_dob.style.display = "block";
+                                register.value = "Continue";
+                                step_back.style.display = "none";
+                                document.getElementById('reg-t-age').remove();
                             }
                         } else {
                             // Verify date of birth value and enter full name
@@ -165,13 +169,9 @@
                                     intro.style.display = "none";
                                     info_right.style.display = "block";
                                     fname.focus();
-                                    // Display the right info box
-                                    //table.style.padding = "0 5%";
-                                    //table.classList.toggle('split-box');
-                                    //intro.classList.toggle('split-box');
-                                    //info_text.classList.toggle('split');
                                     // Adding age to table
                                     tr_age = document.createElement('tr');
+                                    tr_age.id = "reg-t-age";
                                     table.appendChild(tr_age);
                                     td_age = document.createElement('td');
                                     td_age.innerHTML = "Age:";
@@ -193,6 +193,7 @@
                                     register.value = "Send code";
                                     // Adding name to table
                                     tr_name = document.createElement('tr');
+                                    tr_name.id = "reg-t-name";
                                     table.appendChild(tr_name);
                                     td_name = document.createElement('td');
                                     td_name.innerHTML = "Name:";
@@ -209,6 +210,7 @@
                                 if (email.value != "") {
                                     // Adding email to table
                                     tr_email = document.createElement('tr');
+                                    tr_email.id = "reg-t-email";
                                     table.appendChild(tr_email);
                                     td_email = document.createElement('td');
                                     td_email.innerHTML = "Email:";
@@ -315,6 +317,7 @@
                                         set_pw.style.display = "block";
                                         // Adding username to table
                                         tr_uname = document.createElement('tr');
+                                        tr_uname.id = "reg-t-uname";
                                         table.appendChild(tr_uname);
                                         td_uname = document.createElement('td');
                                         td_uname.innerHTML = "Username:";
@@ -343,6 +346,7 @@
                                     }
                                     // Adding password to table
                                     tr_pw = document.createElement('tr');
+                                    tr_pw.id = "reg-t-pw";
                                     table.appendChild(tr_pw);
                                     td_pw = document.createElement('td');
                                     td_pw.innerHTML = "Password:";
@@ -357,11 +361,12 @@
                             // Accept terms
                             if (set_terms.style.display != "none") {
                                 if (terms.checked) {
+                                    console.log("Terms accepted");
                                     info_text.style.display = "none";
                                     reg_form.style.display = "none";
                                     reg_packs.style.display = "block";
                                     $.ajax({
-                                        url: './assets/signup.php',
+                                        url: 'assets/signup.php',
                                         type: "POST",
                                         data: {
                                             username: username.value,
