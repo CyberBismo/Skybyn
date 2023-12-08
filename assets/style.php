@@ -2003,6 +2003,7 @@
                 display: none;
             }
             .post_comment_content {
+                max-width: calc(100% - 100px);
                 line-height: 30px;
                 padding: 0 10px;
                 background: rgba(255,255,255,.1);
