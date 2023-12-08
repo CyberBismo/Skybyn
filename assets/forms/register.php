@@ -245,6 +245,13 @@
                                             setTimeout(() => {
                                                 err_msg.style.display = "none";
                                             }, 5000);
+                                        } else
+                                        if (response === "") {
+                                            err_msg.style.display = "block";
+                                            err_msg.innerHTML = "This email cannot be used.";
+                                            setTimeout(() => {
+                                                err_msg.style.display = "none";
+                                            }, 5000);
                                         }
                                     });
                                     <?php }?>
