@@ -248,7 +248,7 @@
                                                 err_msg.style.display = "none";
                                             }, 5000);
                                         } else
-                                        if (response === "") {
+                                        if (response === null) {
                                             err_msg.style.display = "block";
                                             err_msg.innerHTML = "This email cannot be used.";
                                             setTimeout(() => {

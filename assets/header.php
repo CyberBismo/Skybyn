@@ -826,7 +826,7 @@ if ($currentUrl == $devDomain) {
             <div class="image_post" id="image_post" <?php if (isMobile() == true) {?>hidden<?php }?>></div>
             <div class="image_box">
                 <div class="image_box_close" onclick="showImage(null)"><i class="fa-solid fa-xmark"></i></div>
-                <div class="image_frame" id="image_frame"></div>
+                <div class="image_frame" id="image_frame" onclick="toggleImageSlider()"></div>
                 <div class="image_slider" id="image_slider"></div>
             </div>
         </div>
@@ -837,6 +837,8 @@ if ($currentUrl == $devDomain) {
                 const image_post = document.getElementById('image_post');
                 const image_frame = document.getElementById('image_frame');
                 const image_slider = document.getElementById('image_slider');
+
+                image_slider.style.display = "flex";
 
                 if (image_viewer.style.display === "flex") {
                     image_viewer.style.display = "none";
@@ -868,6 +870,14 @@ if ($currentUrl == $devDomain) {
                         image_frame.innerHTML = `<img src="${images[0].file_url}" id="mainImage">`;
                         image_slider.innerHTML = sliderHTML;
                     });
+                }
+            }
+            function toggleImageSlider() {
+                const image_slider = document.getElementById('image_slider');
+                if (image_slider.style.display == "none") {
+                    image_slider.style.display = "flex";
+                } else {
+                    image_slider.style.display = "none";
                 }
             }
             

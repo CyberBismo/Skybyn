@@ -1925,9 +1925,9 @@
             }
             .post_uploads img {
                 width: auto;
-                max-width: calc(100% - 10px);
+                max-width: 100px;
                 height: auto;
-                max-height: 100%;
+                max-height: 100px;
                 margin: 5px;
                 border-radius: 10px;
             }
@@ -1988,7 +1988,7 @@
                 line-height: 30px;
             }
             .post_comment_content {
-                max-width: calc(100% - 200px);
+                max-width: 40%;
                 line-height: 30px;
                 margin: 0 10px;
                 padding: 0 10px;
