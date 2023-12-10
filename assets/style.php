@@ -821,6 +821,19 @@
             .reg-packs {
                 color: white;
             }
+            .reg-packs button {
+                width: auto;
+                height: 50px;
+                margin: 3px;
+                padding: 0 10px;
+                color: white;
+                background: rgba(255,255,255,.1);
+                backdrop-filter: blur(5px);
+                border: none;
+                border-radius: 10px;
+                box-sizing: border-box;
+                transition: background .3s, transform .3s;
+            }
             .reg-packs h3 {
                 text-align: center;
             }
