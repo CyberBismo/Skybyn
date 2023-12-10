@@ -295,11 +295,18 @@
                                                     resend: "1"
                                                 }
                                             }).done(function(response) {
-                                                if (response - Date.now() > 0) {
-                                                    send_again.value = "Send code";
-                                                } else {
-                                                    send_again.value = convertUnix(response);
-                                                }
+                                                var remainingTime = parseInt(response); // Ensure it's a number
+                                                const timer = setInterval(function() {
+                                                    remainingTime--;
+                                                    if (remainingTime <= 0) {
+                                                        clearInterval(timer);
+                                                        send_again.disabled = false;
+                                                        send_again.value = "Send again";
+                                                    } else {
+                                                        send_again.disabled = true;
+                                                        send_again.value = convertUnix(remainingTime);
+                                                    }
+                                                }, 1000);
                                             });
                                         }, 3000);
                                     } else {
