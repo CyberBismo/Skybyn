@@ -825,7 +825,7 @@
                 width: auto;
                 height: 50px;
                 margin: 3px;
-                padding: 0 10px;
+                padding: 20px 10px;
                 color: white;
                 background: rgba(255,255,255,.1);
                 backdrop-filter: blur(5px);
@@ -833,6 +833,7 @@
                 border-radius: 10px;
                 box-sizing: border-box;
                 transition: background .3s, transform .3s;
+                cursor: pointer;
             }
             .reg-packs h3 {
                 text-align: center;

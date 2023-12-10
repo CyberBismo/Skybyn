@@ -142,8 +142,7 @@
                             set_email_c.style.display = "none";
                             set_email.style.display = "block";
                             send_again.style.display = "block";
-                            send_again.value = "Send again";
-                            register.style.display = "none";
+                            register.value = "Continue";
                             step_back.value = "Go back";
                             document.getElementById('reg-t-email').remove();
                         } else
