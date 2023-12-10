@@ -244,7 +244,7 @@
                         // Verify email and create a username
                         if (set_email.style.display != "none") {
                             if (email.value != "") {
-                                function convertUnix(unix,email) {
+                                function convertUnix(unix) {
                                     const minutes = Math.floor(unix / 60);
                                     const seconds = unix % 60;
                                     return minutes + "m " + seconds + "s";
@@ -265,7 +265,7 @@
                                             updateUIForEmailSent();
                                         } else
                                         if (response === "verified") {
-                                            updateUIForEmailSent('v',email.value);
+                                            updateUIForEmailSent('v');
                                         } else {
                                             register.value = "This email cannot be used.";
                                             setTimeout(() => {
@@ -274,30 +274,30 @@
                                         }
                                     });
                                 }
-                                function updateUIForEmailSent(x,y) {
+                                function updateUIForEmailSent(x) {
                                     if (x != "v") {
                                         set_email.style.display = "none";
                                         set_email_verify.style.display = "block";
+                                        email_verify.focus();
                                         send_again.style.display = "block";
                                         send_again.value = "Check your inbox/spam folder.";
-                                        setTimeout(() => {
-                                            $.ajax({
-                                                url: '../assets/check_email.php',
-                                                type: "POST",
-                                                data: {
-                                                    email: y,
-                                                    resend: "1"
-                                                }
-                                            }).done(function(response) {
-                                                send_again.value = convertUnix(response,y);
-                                            });
-                                        }, 3000);
-                                        email_verify.focus();
                                         register.value = "Verify code";
                                         td_email_v = document.createElement('td');
                                         td_email_v.id = "email-s";
                                         td_email_v.style.textAlign = "left";
                                         td_email_v.innerHTML = "Verifying..";
+                                        setTimeout(() => {
+                                            $.ajax({
+                                                url: '../assets/check_email.php',
+                                                type: "POST",
+                                                data: {
+                                                    email: email.value,
+                                                    resend: "1"
+                                                }
+                                            }).done(function(response) {
+                                                send_again.value = convertUnix(response);
+                                            });
+                                        }, 3000);
                                     } else {
                                         set_email.style.display = "none";
                                         set_username.style.display = "block";
