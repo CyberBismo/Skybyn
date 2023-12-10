@@ -106,10 +106,15 @@
                         let set_username = document.getElementById('set_username');
                         let set_pw = document.getElementById('set_password');
                         let set_terms = document.getElementById('set_terms');
+                        let sel_pack = document.getElementById('reg_packs');
                         let send_again = document.getElementById('send_again');
                         let register = document.getElementById('register');
                         let step_back = document.getElementById('step_back');
 
+                        if (sel_pack.style.display == "block") {
+                            sel_pack.style.display = "none";
+                            set_terms.style.display = "block";
+                        } else
                         if (set_terms.style.display == "block") {
                             set_terms.style.display = "none";
                             set_pw.style.display = "block";
