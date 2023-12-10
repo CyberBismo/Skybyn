@@ -395,13 +395,13 @@
                                 }).done(function(response) {
                                     if (response == "available") {
                                         username.style.outline = "1px solid green";
-                                        available = true;
+                                        usernameAvailable();
                                     } else {
                                         username.style.outline = "1px solid red";
-                                        available = false;
+                                        usernameUnavailable();
                                     }
                                 });
-                                if (available == true) {
+                                function usernameAvailable() {
                                     set_username.style.display = "none";
                                     set_pw.style.display = "block";
                                     // Adding username to table
@@ -417,7 +417,8 @@
                                     tr_uname.appendChild(td_uname);
                                     tr_uname.appendChild(td_uname_v);
                                     pw.focus();
-                                } else {
+                                }
+                                function usernameUnavailable() {
                                     username.focus();
                                     register.value = "Unavailable";
                                     setTimeout(() => {
