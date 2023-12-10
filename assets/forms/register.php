@@ -135,7 +135,7 @@
                         if (set_username.style.display == "block") {
                             set_username.style.display = "none";
                             set_email.style.display = "block";
-                            register.value = "Continue";
+                            register.value = "Send code";
                             document.getElementById('reg-t-email').remove();
                         } else
                         if (set_email.style.display == "block") {
@@ -466,36 +466,52 @@
                             if (terms.checked) {
                                 info_text.style.display = "none";
                                 reg_form.style.display = "none";
-                                $.ajax({
-                                    url: '../assets/signup.php',
-                                    type: "POST",
-                                    data: {
-                                        username: username.value,
-                                        fname: fname.value,
-                                        mname: mname.value,
-                                        lname: lname.value,
-                                        email: email.value,
-                                        password: pw.value,
-                                        dob: dob.value
-                                    }
-                                }).done(function(response) {
-                                    if (response === "signup_complete") {
-                                        reg_packs.style.display = "block";
-                                    }
-                                });
+                                reg_packs.style.display = "block";
                             }
                         } else
                         // Select package
                         if (reg_packs.style.display != "none") {
-                            window.location.href='./';
+                            const ppr = document.getElementById('ppr');
+                            const ppu = document.getElementById('ppu');
+                            const vv = document.getElementById('vv');
+                            const vi = document.getElementById('vi');
+                            if (x == "op") {
+                                pack = "op";
+                            } else
+                            if (x == "pp") {
+                                pack = "pp";
+                            } else {
+                                pack = "cp";
+                            }
+
+                            if (pack == "cp") {
+                                const private = ppr.value;
+                                const public = ppu.value;
+                                const visible = vv.value;
+                                const invisible = vi.value;
+                            }
+
                             $.ajax({
-                                url: '../assets/reg_pack_sel.php',
+                                url: '../assets/signup.php',
                                 type: "POST",
                                 data: {
-                                    pack : input
+                                    username: username.value,
+                                    fname: fname.value,
+                                    mname: mname.value,
+                                    lname: lname.value,
+                                    email: email.value,
+                                    password: pw.value,
+                                    dob: dob.value,
+                                    pack: pack,
+                                    private: private,
+                                    public: public,
+                                    visible: visible,
+                                    invisible: invisible
                                 }
                             }).done(function(response) {
-                                window.location.href='../';
+                                if (response === "signup_complete") {
+                                    window.location.href='../';
+                                }
                             });
                         }
 
