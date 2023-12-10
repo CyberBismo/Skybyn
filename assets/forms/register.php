@@ -134,16 +134,8 @@
                         } else
                         if (set_username.style.display == "block") {
                             set_username.style.display = "none";
-                            set_email_c.style.display = "block";
-                            register.value = "Verify code";
-                            document.getElementById('reg-t-email').remove();
-                        } else
-                        if (set_email_c.style.display == "block") {
-                            set_email_c.style.display = "none";
                             set_email.style.display = "block";
-                            send_again.style.display = "block";
-                            register.value = "Continue";
-                            step_back.value = "Go back";
+                            register.value = "Verify code";
                             document.getElementById('reg-t-email').remove();
                         } else
                         if (set_email.style.display == "block") {
