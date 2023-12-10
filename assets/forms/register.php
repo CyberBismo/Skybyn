@@ -302,6 +302,7 @@
                                         set_email.style.display = "none";
                                         set_username.style.display = "block";
                                         send_again.style.display = "none";
+                                        username.focus();
                                         register.value = "Continue";
                                         td_email_v = document.createElement('td');
                                         td_email_v.id = "email-s";
@@ -417,6 +418,7 @@
                                     tr_uname.appendChild(td_uname_v);
                                     pw.focus();
                                 } else {
+                                    username.focus();
                                     register.value = "Unavailable";
                                     setTimeout(() => {
                                         register.value = "Continue";
