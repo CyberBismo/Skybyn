@@ -300,6 +300,7 @@
                                     } else {
                                         set_email.style.display = "none";
                                         set_username.style.display = "block";
+                                        send_again.style.display = "none";
                                         td_email_v = document.createElement('td');
                                         td_email_v.id = "email-s";
                                         td_email_v.style.textAlign = "left";
