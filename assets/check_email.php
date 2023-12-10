@@ -24,6 +24,7 @@ $checkEmail = $stmt->get_result();
 if ($checkEmail->num_rows == 1) {
     $emailData = $checkEmail->fetch_assoc();
     $code = $emailData['code'];
+    $verified = $emailData['verified'];
     $time = $emailData['time_sent'];
     $remaining = $time - $now;
 
@@ -38,7 +39,11 @@ if ($checkEmail->num_rows == 1) {
             echo $remaining;
         }
     } else {
-        echo "sent_before";
+        if ($verified == "1") {
+            echo "verified";
+        } else {
+            echo "sent_before";
+        }
     }
 } else {
     $stmt = $conn->prepare("INSERT INTO `email_check` (`email`, `code`, `time_sent`) VALUES (?, ?, ?)");
