@@ -135,7 +135,7 @@
                         if (set_username.style.display == "block") {
                             set_username.style.display = "none";
                             set_email.style.display = "block";
-                            register.value = "Verify code";
+                            register.value = "Continue";
                             document.getElementById('reg-t-email').remove();
                         } else
                         if (set_email.style.display == "block") {
