@@ -36,6 +36,7 @@
                 </div>
 
                 <div id="set_username" style="display: none">
+                    <p>Now make a username for yourself.</p>
                     <i class="fa-solid fa-user"></i>
                     <input type="text" id="username" placeholder="Choose a username" title="" required>
                 </div>
@@ -301,6 +302,7 @@
                                         set_email.style.display = "none";
                                         set_username.style.display = "block";
                                         send_again.style.display = "none";
+                                        register.value = "Continue";
                                         td_email_v = document.createElement('td');
                                         td_email_v.id = "email-s";
                                         td_email_v.style.textAlign = "left";
