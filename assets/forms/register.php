@@ -107,14 +107,18 @@
                         let set_username = document.getElementById('set_username');
                         let set_pw = document.getElementById('set_password');
                         let set_terms = document.getElementById('set_terms');
-                        let sel_pack = document.getElementById('reg_packs');
+                        let reg_packs = document.getElementById('reg_packs');
                         let send_again = document.getElementById('send_again');
                         let register = document.getElementById('register');
                         let step_back = document.getElementById('step_back');
+                        let info_text = document.getElementById('info_text');
+                        let reg_form = document.getElementById('log_reg_form');
 
-                        if (sel_pack.style.display == "block") {
-                            sel_pack.style.display = "none";
+                        if (reg_packs.style.display == "block") {
+                            reg_packs.style.display = "none";
                             set_terms.style.display = "block";
+                            info_text.style.display = "block";
+                            reg_form.style.display = "block";
                         } else
                         if (set_terms.style.display == "block") {
                             set_terms.style.display = "none";
@@ -318,7 +322,7 @@
                                         td_email_v = document.createElement('td');
                                         td_email_v.id = "email-s";
                                         td_email_v.style.textAlign = "left";
-                                        td_email_v.innerHTML = y;
+                                        td_email_v.innerHTML = email.value;
                                     }
                                     // Adding email to table
                                     tr_email = document.createElement('tr');
@@ -380,6 +384,7 @@
                                             set_email_verify.style.display = "none";
                                             set_username.style.display = "block";
                                             username.focus();
+                                            send_again.style.display = "none";
                                             register.value = "Continue";
                                             step_back.value = "Go back";
                                         } else {
@@ -470,7 +475,6 @@
                             if (terms.checked) {
                                 info_text.style.display = "none";
                                 reg_form.style.display = "none";
-                                reg_packs.style.display = "block";
                                 $.ajax({
                                     url: '../assets/signup.php',
                                     type: "POST",
