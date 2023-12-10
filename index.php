@@ -113,7 +113,7 @@ if (isset($_COOKIE['logged'])) {
                     </div>
                 </div>
             </div>
-            <button onclick="">Go back</button>
+            <button onclick="stepBack()">Go back</button>
         </div>
     </div>
     <?php if (isset($_GET['reset'])) {
