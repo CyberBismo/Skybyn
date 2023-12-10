@@ -295,7 +295,11 @@
                                                     resend: "1"
                                                 }
                                             }).done(function(response) {
-                                                send_again.value = convertUnix(response);
+                                                if (response - Date.now() > 0) {
+                                                    send_again.value = "Send code";
+                                                } else {
+                                                    send_again.value = convertUnix(response);
+                                                }
                                             });
                                         }, 3000);
                                     } else {
