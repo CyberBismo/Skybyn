@@ -1,9 +1,9 @@
 <?php include "functions.php";
 $code = $_POST['code'];
 
-$checkCode = mysqli_query($conn, "SELECT * FROM `email_check` WHERE `code`='$code'");
-$count = mysqli_num_rows($checkCode);
-if ($count == 1) {
+$checkCode = $conn->query("SELECT * FROM `email_check` WHERE `code`='$code'");
+if ($checkCode->num_rows == 1) {
+    $checkCode->query("UPDATE `email_check` SET `verified`='1' WHERE `code`='$code'");
     echo "ok";
 }
 ?>

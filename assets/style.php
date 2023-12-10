@@ -719,6 +719,21 @@
                 background: rgba(255,255,255,.2);
                 border: 1px solid rgba(255,255,255,.5);
             }
+            .center_form .form .register input#send_again {
+                width: 100%;
+                height: 30px;
+                margin-bottom: 5px;
+                font-size: 16px;
+                border: none;
+            }
+            .center_form .form .register input#step_back {
+                width: 80%;
+                height: 30px;
+                margin: 0 10%;
+                font-size: 14px;
+                background: rgba(255,255,255,.1);
+                border: none;
+            }
             .center_form .links {
                 width: 100%;
             }

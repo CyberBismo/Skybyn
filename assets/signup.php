@@ -13,8 +13,8 @@ $ip = getIP();
 $country = geoData("countryName");
 $lang = geoData("countryCode");
 
-$qCheckEmail = $conn->query("SELECT * FROM `users` WHERE `email`='$email'");
-if ($qCheckEmail->num_rows == 0) {
+$cleanEmailCheck = $conn->query("DELETE FROM `email_check` WHERE `email`='$email'");
+if ($cleanEmailCheck) {
         $conn->query("INSERT INTO `users` 
         (
                 `username`,
@@ -126,45 +126,21 @@ if ($qCheckEmail->num_rows == 0) {
                 button:hover {
                         background-color: #3e8e41;
                 }
-
-                .code-box {
-                        margin: 40px 0;
-                }
-                .code-box code {
-                        width: auto;
-                        background-color: rgba(0,0,0,0.1);
-                        border: 1px solid rgba(0,0,0,0.1);
-                        padding: 10px 20px;
-                        overflow: auto;
-                        font-size: 24px;
-                        line-height: 1.5;
-                        letter-spacing: 10px;
-                        border-radius: 10px;
-                }
                 </style>
         </head>
         <body>
                 <div class="container">
                 <img src="https://skybyn.no/assets/images/logo_clean.png" alt="Skybyn logo" class="logo">
                 <h1>Welcome to Skybyn</h1>
-                <p>Enter this code to activate your account</p>
-                <div class="code-box">
-                        <code>'.$token.'</code>
-                </div>
                 </div>
         </body>
         </html>
         ';
 
         mail($to, $subject, $message, $headers);
-        $msg = "We just sent you an email with an activation code.";
-        createCookie("msg", $msg, "10", null);
         $id = $conn->inserted_id;
         $_SESSION['registration_complete'] = $id;
         echo "signup_complete";
-} else {
-    $msg = "This email is already in use.";
-    echo $msg;
 }
 
 $conn->close();

@@ -24,9 +24,9 @@
                 </div>
 
                 <div id="set_email" style="display: none">
-                    <p>Great! Now enter your preferred email address</p>
+                    <p>Great! Now enter your preferred email address</p> 
                     <i class="fa-solid fa-at"></i>
-                    <input type="email" id="register-email" pattern="[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" placeholder="E-mail address" title="example@example.com" oninput="setCustomValidity('')" oninvalid="setCustomValidity('Please enter a valid e-mail address')" autocomplete="new-password" required>
+                    <input type="email" id="register-email" pattern="[a-zA-Z0-9._\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}" placeholder="E-mail address" title="example@example.com" oninput="setCustomValidity('')" oninvalid="setCustomValidity('Please enter a valid e-mail address')" autocomplete="new-password" required>
                 </div>
 
                 <div id="set_email_verify" style="display: none">
@@ -55,8 +55,9 @@
                     <label for="terms">I accept the <span onclick="showTerms()">terms and conditions</a>.</label>
                 </div>
 
-                <input type="submit" id="register" onclick="hitEnterRegister(this)" value="Continue">
-                <input type="submit" id="step_back" onclick="hitEnterRegister(this)" value="Go back" style="display: none;margin-top: 3px">
+                <input type="submit" id="send_again" onclick="hitEnterRegister('resend')" style="display: none;margin-top: 3px">
+                <input type="submit" id="register" onclick="hitEnterRegister('')" value="Continue" style="margin-top: 3px">
+                <input type="submit" id="step_back" onclick="stepBack()" value="Go back" style="display: block;margin-top: 3px">
 
                 <div id="err_msg" style="display: none; margin-top: 20px">
                     <br>
@@ -80,6 +81,11 @@
 
                         return age;
                     }
+
+                    function validateEmail(email) {
+                        var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                        return emailPattern.test(email);
+                    }
                     
                     function showCustom() {
                         const rpc = document.getElementById('reg-pack-custom');
@@ -92,7 +98,7 @@
                         btn.style.display = "block";
                     }
 
-                    function hitEnterRegister(input) {
+                    function stepBack() {
                         let set_dob = document.getElementById('set_dob');
                         let set_name = document.getElementById('set_name');
                         let set_email = document.getElementById('set_email');
@@ -100,6 +106,63 @@
                         let set_username = document.getElementById('set_username');
                         let set_pw = document.getElementById('set_password');
                         let set_terms = document.getElementById('set_terms');
+                        let send_again = document.getElementById('send_again');
+                        let register = document.getElementById('register');
+                        let step_back = document.getElementById('step_back');
+
+                        if (set_terms.style.display == "block") {
+                            set_terms.style.display = "none";
+                            set_pw.style.display = "block";
+                            register.value = "Continue";
+                            document.getElementById('reg-t-pw').remove();
+                        } else
+                        if (set_pw.style.display == "block") {
+                            set_pw.style.display = "none";
+                            set_username.style.display = "block";
+                            register.value = "Continue";
+                            document.getElementById('reg-t-uname').remove();
+                        } else
+                        if (set_username.style.display == "block") {
+                            set_username.style.display = "none";
+                            set_email_c.style.display = "block";
+                            register.value = "Verify code";
+                            document.getElementById('reg-t-email').remove();
+                        } else
+                        if (set_email_c.style.display == "block") {
+                            set_email_c.style.display = "none";
+                            set_email.style.display = "block";
+                            send_again.style.display = "block";
+                            send_again.value = "Send again";
+                            register.style.display = "none";
+                            step_back.value = "Go back";
+                            document.getElementById('reg-t-email').remove();
+                        } else
+                        if (set_email.style.display == "block") {
+                            set_email.style.display = "none";
+                            set_name.style.display = "block";
+                            send_again.style.display = "none";
+                            register.style.display = "block";
+                            register.value = "Continue";
+                            document.getElementById('reg-t-name').remove();
+                        } else
+                        if (set_name.style.display == "block") {
+                            set_name.style.display = "none";
+                            set_dob.style.display = "block";
+                            register.value = "Continue";
+                            step_back.style.display = "none";
+                            document.getElementById('reg-t-age').remove();
+                        }
+                    }
+
+                    function hitEnterRegister(x) {
+                        let set_dob = document.getElementById('set_dob');
+                        let set_name = document.getElementById('set_name');
+                        let set_email = document.getElementById('set_email');
+                        let set_email_c = document.getElementById('set_email_verify');
+                        let set_username = document.getElementById('set_username');
+                        let set_pw = document.getElementById('set_password');
+                        let set_terms = document.getElementById('set_terms');
+                        let send_again = document.getElementById('send_again');
                         let register = document.getElementById('register');
                         let step_back = document.getElementById('step_back');
                         let err_msg = document.getElementById('err_msg');
@@ -127,87 +190,100 @@
 
                         autoInfo();
                         
-                        if (input.id == "step_back") {
-                            if (set_terms.style.display == "block") {
-                                set_terms.style.display = "none";
-                                set_pw.style.display = "block";
-                                register.value = "Continue";
-                                document.getElementById('reg-t-pw').remove();
-                            } else
-                            if (set_pw.style.display == "block") {
-                                set_pw.style.display = "none";
-                                set_username.style.display = "block";
-                                register.value = "Continue";
-                                document.getElementById('reg-t-uname').remove();
-                            } else
-                            if (set_username.style.display == "block") {
-                                set_username.style.display = "none";
-                                set_email.style.display = "block";
-                                register.value = "Send code";
-                                document.getElementById('reg-t-email').remove();
-                            } else
-                            if (set_email.style.display == "block") {
-                                set_email.style.display = "none";
+                        // Verify date of birth value and enter full name
+                        if (set_dob.style.display != "none") {
+                            if (dob_v != "") {
+                                set_dob.style.display = "none";
                                 set_name.style.display = "block";
-                                register.value = "Continue";
-                                document.getElementById('reg-t-name').remove();
-                            } else
-                            if (set_name.style.display == "block") {
-                                set_name.style.display = "none";
-                                set_dob.style.display = "block";
-                                register.value = "Continue";
-                                step_back.style.display = "none";
-                                document.getElementById('reg-t-age').remove();
+                                step_back.style.display = "block";
+                                intro.style.display = "none";
+                                info_right.style.display = "block";
+                                fname.focus();
+                                // Adding age to table
+                                tr_age = document.createElement('tr');
+                                tr_age.id = "reg-t-age";
+                                table.appendChild(tr_age);
+                                td_age = document.createElement('td');
+                                td_age.innerHTML = "Age:";
+                                td_age_v = document.createElement('td');
+                                td_age.style.textAlign = "right";
+                                td_age.style.width = "80.25px";
+                                td_age_v.style.textAlign = "left";
+                                td_age_v.innerHTML = age;
+                                tr_age.appendChild(td_age);
+                                tr_age.appendChild(td_age_v);
                             }
-                        } else {
-                            // Verify date of birth value and enter full name
-                            if (set_dob.style.display != "none") {
-                                if (dob_v != "") {
-                                    set_dob.style.display = "none";
-                                    set_name.style.display = "block";
-                                    step_back.style.display = "block";
-                                    intro.style.display = "none";
-                                    info_right.style.display = "block";
-                                    fname.focus();
-                                    // Adding age to table
-                                    tr_age = document.createElement('tr');
-                                    tr_age.id = "reg-t-age";
-                                    table.appendChild(tr_age);
-                                    td_age = document.createElement('td');
-                                    td_age.innerHTML = "Age:";
-                                    td_age_v = document.createElement('td');
-                                    td_age.style.textAlign = "right";
-                                    td_age.style.width = "80.25px";
-                                    td_age_v.style.textAlign = "left";
-                                    td_age_v.innerHTML = age;
-                                    tr_age.appendChild(td_age);
-                                    tr_age.appendChild(td_age_v);
+                        } else
+                        // Check full name and enter email
+                        if (set_name.style.display != "none") {
+                            if (fname.value != "" && lname.value != "") {
+                                set_name.style.display = "none";
+                                set_email.style.display = "block";
+                                email.focus();
+                                register.value = "Send code";
+                                // Adding name to table
+                                tr_name = document.createElement('tr');
+                                tr_name.id = "reg-t-name";
+                                table.appendChild(tr_name);
+                                td_name = document.createElement('td');
+                                td_name.innerHTML = "Name:";
+                                td_name_v = document.createElement('td');
+                                td_name.style.textAlign = "right";
+                                td_name_v.style.textAlign = "left";
+                                td_name_v.innerHTML = fname.value+" "+mname.value+" "+lname.value;
+                                tr_name.appendChild(td_name);
+                                tr_name.appendChild(td_name_v);
+                            }
+                        } else
+                        // Verify email and create a username
+                        if (set_email.style.display != "none") {
+                            if (email.value != "") {
+                                function convertUnix(unix,email) {
+                                    const minutes = Math.floor(unix / 60);
+                                    const seconds = unix % 60;
+                                    return minutes + "m " + seconds + "s";
                                 }
-                            } else
-                            // Check full name and enter email
-                            if (set_name.style.display != "none") {
-                                if (fname.value != "" && lname.value != "") {
-                                    set_name.style.display = "none";
-                                    set_email.style.display = "block";
-                                    email.focus();
-                                    register.value = "Send code";
-                                    // Adding name to table
-                                    tr_name = document.createElement('tr');
-                                    tr_name.id = "reg-t-name";
-                                    table.appendChild(tr_name);
-                                    td_name = document.createElement('td');
-                                    td_name.innerHTML = "Name:";
-                                    td_name_v = document.createElement('td');
-                                    td_name.style.textAlign = "right";
-                                    td_name_v.style.textAlign = "left";
-                                    td_name_v.innerHTML = fname.value+" "+mname.value+" "+lname.value;
-                                    tr_name.appendChild(td_name);
-                                    tr_name.appendChild(td_name_v);
+                                // Send an email verification code
+                                if (validateEmail(email.value)) {
+                                    $.ajax({
+                                        url: '../assets/check_email.php',
+                                        type: "POST",
+                                        data: {
+                                            email: email.value
+                                        }
+                                    }).done(function(response) {
+                                        if (response === "sent") {
+                                            updateUIForEmailSent();
+                                        } else
+                                        if (response === "sent_before") {
+                                            updateUIForEmailSent();
+                                        } else {
+                                            register.value = "This email cannot be used.";
+                                            setTimeout(() => {
+                                                register.value = "Send code";
+                                            }, 3000);
+                                        }
+                                    });
                                 }
-                            } else
-                            // Verify email and create a username
-                            if (set_email.style.display != "none") {
-                                if (email.value != "") {
+                                function updateUIForEmailSent() {
+                                    set_email.style.display = "none";
+                                    set_email_verify.style.display = "block";
+                                    send_again.style.display = "block";
+                                    send_again.value = "Check your inbox/spam folder.";
+                                    setTimeout(() => {
+                                        $.ajax({
+                                            url: '../assets/check_email.php',
+                                            type: "POST",
+                                            data: {
+                                                email: email.value,
+                                                resend: "1"
+                                            }
+                                        }).done(function(response) {
+                                            send_again.value = convertUnix(response,email.value);
+                                        });
+                                    }, 3000);
+                                    email_verify.focus();
+                                    register.value = "Verify code";
                                     // Adding email to table
                                     tr_email = document.createElement('tr');
                                     tr_email.id = "reg-t-email";
@@ -221,57 +297,47 @@
                                     td_email_v.innerHTML = "Verifying..";
                                     tr_email.appendChild(td_email);
                                     tr_email.appendChild(td_email_v);
-                                    // Send an email verification code
-                                    <?php if ($dev_access == true) {?>
-                                    set_email.style.display = "none";
-                                    set_email_verify.style.display = "block";
-                                    email_verify.focus();
-                                    register.value = "Verify code";
-                                    <?php } else {?>
+                                }
+                            }
+                        } else
+                        // Verify email
+                        if (set_email_verify.style.display != "none") {
+                            // Resend code
+                            if (x == "resend") {
+                                if (validateEmail(email.value)) {
+                                    function convertUnix(unix) {
+                                        const minutes = Math.floor(unix / 60);
+                                        const seconds = unix % 60;
+                                        return minutes + "m " + seconds + "s";
+                                    }
                                     $.ajax({
-                                        url: './assets/check_email.php',
+                                        url: '../assets/check_email.php',
                                         type: "POST",
                                         data: {
-                                            email: email.value
+                                            email: email.value,
+                                            resend: "1"
                                         }
                                     }).done(function(response) {
-                                        if (response === "sent") {
-                                            set_email.style.display = "none";
-                                            set_email_verify.style.display = "block";
-                                            email_verify.focus();
-                                            register.value = "Verify code";
-                                        } else
-                                        if (response === "sent_before") {
-                                            err_msg.style.display = "block";
-                                            err_msg.innerHTML = "Code already sent. Check your inbox/spam folder.";
-                                            setTimeout(() => {
-                                                err_msg.style.display = "none";
-                                            }, 5000);
-                                        } else
-                                        if (response === null) {
-                                            err_msg.style.display = "block";
-                                            err_msg.innerHTML = "This email cannot be used.";
-                                            setTimeout(() => {
-                                                err_msg.style.display = "none";
-                                            }, 5000);
-                                        }
+                                        // Parse response here if necessary
+                                        var remainingTime = parseInt(response); // Ensure it's a number
+                                        const timer = setInterval(function() {
+                                            remainingTime--;
+                                            if (remainingTime <= 0) {
+                                                clearInterval(timer);
+                                                send_again.disabled = false;
+                                                send_again.value = "Send again";
+                                            } else {
+                                                send_again.disabled = true;
+                                                send_again.value = convertUnix(remainingTime);
+                                            }
+                                        }, 1000);
                                     });
-                                    <?php }?>
                                 }
-                            } else
-                            // Verify email
-                            if (set_email_verify.style.display != "none") {
+                            } else {
                                 if (email_verify.value != "") {
                                     // Checking code for verification
-                                    <?php if ($dev_access == true) {?>
-                                    document.getElementById('email-s').innerHTML = email.value;
-                                    set_email_verify.style.display = "none";
-                                    set_username.style.display = "block";
-                                    username.focus();
-                                    register.value = "Continue";
-                                    <?php } else {?>
                                     $.ajax({
-                                        url: './assets/register_email_verify.php',
+                                        url: '../assets/register_email_verify.php',
                                         type: "POST",
                                         data: {
                                             code: email_verify.value
@@ -283,121 +349,124 @@
                                             set_username.style.display = "block";
                                             username.focus();
                                             register.value = "Continue";
-                                        }
-                                    });
-                                    <?php }?>
-                                }
-                            } else
-                            // Set username
-                            if (set_username.style.display != "none") {
-                                if (username.value != "") {
-                                    let available = false;
-                                    <?php if ($dev_access == true) {?>
-                                    username.style.outline = "1px solid green";
-                                    available = true;
-                                    <?php } else {?>
-                                    $.ajax({
-                                        url: 'assets/check_username.php',
-                                        type: "POST",
-                                        data: {
-                                            username : username.value
-                                        }
-                                    }).done(function(response) {
-                                        if (response == "available") {
-                                            username.style.outline = "1px solid green";
-                                            available = true;
+                                            step_back.value = "Go back";
                                         } else {
-                                            username.style.outline = "1px solid red";
-                                            available = false;
-                                        }
-                                    });
-                                    <?php }?>
-                                    if (available == true) {
-                                        set_username.style.display = "none";
-                                        set_pw.style.display = "block";
-                                        // Adding username to table
-                                        tr_uname = document.createElement('tr');
-                                        tr_uname.id = "reg-t-uname";
-                                        table.appendChild(tr_uname);
-                                        td_uname = document.createElement('td');
-                                        td_uname.innerHTML = "Username:";
-                                        td_uname_v = document.createElement('td');
-                                        td_uname.style.textAlign = "right";
-                                        td_uname_v.style.textAlign = "left";
-                                        td_uname_v.innerHTML = username.value;
-                                        tr_uname.appendChild(td_uname);
-                                        tr_uname.appendChild(td_uname_v);
-                                        pw.focus();
-                                    }
-                                }
-                            } else
-                            // Set a password
-                            if (set_pw.style.display != "none") {
-                                if (pw.value != "" && pw.value === cpw.value) {
-                                    set_pw.style.display = "none";
-                                    set_terms.style.display = "block";
-
-                                    pwl = pw.value;
-                                    x = "*";
-                                    for (i = 0; i <= pwl.length; i++) {
-                                        if (x.length < i) {
-                                            x = x + "*";
-                                        }
-                                    }
-                                    // Adding password to table
-                                    tr_pw = document.createElement('tr');
-                                    tr_pw.id = "reg-t-pw";
-                                    table.appendChild(tr_pw);
-                                    td_pw = document.createElement('td');
-                                    td_pw.innerHTML = "Password:";
-                                    td_pw_v = document.createElement('td');
-                                    td_pw.style.textAlign = "right";
-                                    td_pw_v.style.textAlign = "left";
-                                    td_pw_v.innerHTML = x;
-                                    tr_pw.appendChild(td_pw);
-                                    tr_pw.appendChild(td_pw_v);
-                                }
-                            } else
-                            // Accept terms
-                            if (set_terms.style.display != "none") {
-                                if (terms.checked) {
-                                    console.log("Terms accepted");
-                                    info_text.style.display = "none";
-                                    reg_form.style.display = "none";
-                                    reg_packs.style.display = "block";
-                                    $.ajax({
-                                        url: 'assets/signup.php',
-                                        type: "POST",
-                                        data: {
-                                            username: username.value,
-                                            fname: fname.value,
-                                            mname: mname.value,
-                                            lname: lname.value,
-                                            email: email.value,
-                                            password: pw.value,
-                                            dob: dob.value
-                                        }
-                                    }).done(function(response) {
-                                        console.log(response);
-                                        if (response === "signup_complete") {
-                                            reg_packs.style.display = "block";
+                                            register.value = "Wrong code";
+                                            setTimeout(() => {
+                                                register.value = "Verify code";
+                                            }, 3000);
                                         }
                                     });
                                 }
-                            } else
-                            // Select package
-                            if (reg_packs.style.display != "none") {
-                                window.location.href='./';
+                            }
+                        } else
+                        // Set username
+                        if (set_username.style.display != "none") {
+                            if (username.value != "") {
+                                let available = false;
                                 $.ajax({
-                                    url: 'assets/reg_pack_sel.php',
+                                    url: '../assets/check_username.php',
                                     type: "POST",
                                     data: {
-                                        pack : input
+                                        username : username.value
                                     }
                                 }).done(function(response) {
-                                    window.location.href='../';
+                                    if (response == "available") {
+                                        username.style.outline = "1px solid green";
+                                        available = true;
+                                    } else {
+                                        username.style.outline = "1px solid red";
+                                        available = false;
+                                    }
+                                });
+                                if (available == true) {
+                                    set_username.style.display = "none";
+                                    set_pw.style.display = "block";
+                                    // Adding username to table
+                                    tr_uname = document.createElement('tr');
+                                    tr_uname.id = "reg-t-uname";
+                                    table.appendChild(tr_uname);
+                                    td_uname = document.createElement('td');
+                                    td_uname.innerHTML = "Username:";
+                                    td_uname_v = document.createElement('td');
+                                    td_uname.style.textAlign = "right";
+                                    td_uname_v.style.textAlign = "left";
+                                    td_uname_v.innerHTML = username.value;
+                                    tr_uname.appendChild(td_uname);
+                                    tr_uname.appendChild(td_uname_v);
+                                    pw.focus();
+                                } else {
+                                    register.value = "Unavailable";
+                                    setTimeout(() => {
+                                        register.value = "Continue";
+                                    }, 3000);
+                                }
+                            }
+                        } else
+                        // Set a password
+                        if (set_pw.style.display != "none") {
+                            if (pw.value != "" && pw.value === cpw.value) {
+                                set_pw.style.display = "none";
+                                set_terms.style.display = "block";
+
+                                pwl = pw.value;
+                                x = "*";
+                                for (i = 0; i <= pwl.length; i++) {
+                                    if (x.length < i) {
+                                        x = x + "*";
+                                    }
+                                }
+                                // Adding password to table
+                                tr_pw = document.createElement('tr');
+                                tr_pw.id = "reg-t-pw";
+                                table.appendChild(tr_pw);
+                                td_pw = document.createElement('td');
+                                td_pw.innerHTML = "Password:";
+                                td_pw_v = document.createElement('td');
+                                td_pw.style.textAlign = "right";
+                                td_pw_v.style.textAlign = "left";
+                                td_pw_v.innerHTML = x;
+                                tr_pw.appendChild(td_pw);
+                                tr_pw.appendChild(td_pw_v);
+                            }
+                        } else
+                        // Accept terms
+                        if (set_terms.style.display != "none") {
+                            if (terms.checked) {
+                                info_text.style.display = "none";
+                                reg_form.style.display = "none";
+                                reg_packs.style.display = "block";
+                                $.ajax({
+                                    url: '../assets/signup.php',
+                                    type: "POST",
+                                    data: {
+                                        username: username.value,
+                                        fname: fname.value,
+                                        mname: mname.value,
+                                        lname: lname.value,
+                                        email: email.value,
+                                        password: pw.value,
+                                        dob: dob.value
+                                    }
+                                }).done(function(response) {
+                                    if (response === "signup_complete") {
+                                        reg_packs.style.display = "block";
+                                    }
                                 });
                             }
+                        } else
+                        // Select package
+                        if (reg_packs.style.display != "none") {
+                            window.location.href='./';
+                            $.ajax({
+                                url: '../assets/reg_pack_sel.php',
+                                type: "POST",
+                                data: {
+                                    pack : input
+                                }
+                            }).done(function(response) {
+                                window.location.href='../';
+                            });
                         }
 
                         //if (age <= 14) {
@@ -427,37 +496,6 @@
                         if (event.keyCode === 13) { // ENTER key pressed
                             //register();
                         }
-                    }
-
-                    function register() {
-                        let fname = document.getElementById('fname').value;
-                        let mname = document.getElementById('mname').value;
-                        let lname = document.getElementById('lname').value;
-                        let username = document.getElementById('username').value;
-                        let email = document.getElementById('register-email').value;
-                        let password = document.getElementById('register-password').value;
-                        let cpassword = document.getElementById('cpassword').value;
-                        let errmsg = document.getElementById('err_msg');
-                        let dob = document.getElementById('dob').value;
-                        let terms = document.getElementById('terms');
-
-                        $.ajax({
-                            url: './assets/signup.php',
-                            type: "POST",
-                            data: {
-                                username: username,
-                                fname: fname,
-                                mname: mname,
-                                lname: lname,
-                                email: email,
-                                password: password,
-                                dob: dob
-                            }
-                        }).done(function(response) {
-                            if (response === "signup_complete") {
-                                window.location.href = "./";
-                            }
-                        });
                     }
 
                     function tglErmsg(x) {

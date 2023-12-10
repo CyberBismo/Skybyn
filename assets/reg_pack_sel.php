@@ -24,9 +24,9 @@ if ($pack == "pp") {
 if ($pack == "cp") {
     $conn->query("UPDATE `users` SET `private`='$private',`visible`='$visible' WHERE `id`='$id'");
 }
-
+session_destroy();
+session_start();
 $_SESSION['username'] = $id;
-unset($_SESSION['registration_complete']);
 
 $conn->close();
 ?>

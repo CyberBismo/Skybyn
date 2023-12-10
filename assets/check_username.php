@@ -1,4 +1,4 @@
-<?php include "functions.php";
+<?php include "./functions.php";
 $username = $_POST['username'];
 
 $checkUsername = mysqli_query($conn, "SELECT * FROM `users` WHERE `username`='$username'");
