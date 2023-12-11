@@ -35,6 +35,78 @@ if (isset($_COOKIE['logged'])) {
         ?><meta http-equiv="refresh" content="0; URL='./logout'" /><?php
     }
 }?>
+<div class="reg-packs" id="reg_packs" style="display: none">
+    <h3>Select one of following options</h3>
+    <div class="reg-packs-box">
+        <div class="reg-pack" onclick="hitEnterRegister('op')">
+            <div class="reg-pack-box">
+                <h2>Open Profile</h2>
+                <ul>
+                    <li>You appear in search</li>
+                    <li>Your profile is visible</li>
+                    <li>Anyone can message you</li>
+                    <li>You appear for new users</li>
+                </ul>
+                <p>Click to Select</p>
+            </div>
+        </div>
+        <div class="reg-pack" onclick="hitEnterRegister('pp')">
+            <div class="reg-pack-box">
+                <h2>Private Profile</h2>
+                <ul>
+                    <li>You do not appear in search</li>
+                    <li>Your profile is invisible</li>
+                    <li>Only friends can message you</li>
+                </ul>
+                <p>Click to Select</p>
+            </div>
+        </div>
+        <div class="reg-pack" id="reg-pack-custom">
+            <div class="reg-pack-box" onclick="showCustom()">
+                <h2>Custom</h2>
+                <span id="custom-text">Set each setting manually</span>
+                <div class="reg-pack-box-custom" id="custom-set" style="display: none">
+
+                    <div class="rpbcb">
+                        <p><b>Privacy</b><br>
+                            A private profile will only show your picture and display name.
+                        </p>
+                        <table>
+                            <tr>
+                                <td style="text-align: right"><input type="radio" name="private" value="1" id="ppr"></td>
+                                <td><label for="ppr">Private</label></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right"><input type="radio" name="private" value="0" id="ppu"></td>
+                                <td><label for="ppu">Public</label></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="rpbcb">
+                        <p><b>Visibility</b><br>
+                            As visible you will appear in search results.
+                        </p>
+                        <table>
+                            <tr>
+                                <td style="text-align: right"><input type="radio" name="visible" value="1" id="vv"></td>
+                                <td><label for="vv">Visible</label></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right"><input type="radio" name="visible" value="0" id="vi"></td>
+                                <td><label for="vi">Invisible</label></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                </div>
+                <p id="custom-set-btn" style="display: none"><button onclick="hitEnterRegister('cp')">Confirm</button></p>
+            </div>
+        </div>
+    </div>
+    <button onclick="stepBack()">Go back</button>
+</div>
+
 <div class="start">
     <div class="welcome_information" id="welcome_info" onclick="showInfo(this)">
         <div class="info_text" id="info_text">
@@ -43,77 +115,6 @@ if (isset($_COOKIE['logged'])) {
                 <h3>Your information so far:</h3>
                 <table id="info-table"></table>
             </div>
-        </div>
-        <div class="reg-packs" id="reg_packs" style="display: none">
-            <h3>Select one of following options</h3>
-            <div class="reg-packs-box">
-                <div class="reg-pack" onclick="hitEnterRegister('op')">
-                    <div class="reg-pack-box">
-                        <h2>Open Profile</h2>
-                        <ul>
-                            <li>You appear in search</li>
-                            <li>Your profile is visible</li>
-                            <li>Anyone can message you</li>
-                            <li>You appear for new users</li>
-                        </ul>
-                        <p>Click to Select</p>
-                    </div>
-                </div>
-                <div class="reg-pack" onclick="hitEnterRegister('pp')">
-                    <div class="reg-pack-box">
-                        <h2>Private Profile</h2>
-                        <ul>
-                            <li>You do not appear in search</li>
-                            <li>Your profile is invisible</li>
-                            <li>Only friends can message you</li>
-                        </ul>
-                        <p>Click to Select</p>
-                    </div>
-                </div>
-                <div class="reg-pack" id="reg-pack-custom">
-                    <div class="reg-pack-box" onclick="showCustom()">
-                        <h2>Custom</h2>
-                        <span id="custom-text">Set each setting manually</span>
-                        <div class="reg-pack-box-custom" id="custom-set" style="display: none">
-
-                            <div class="rpbcb">
-                                <p><b>Privacy</b><br>
-                                    A private profile will only show your picture and display name.
-                                </p>
-                                <table>
-                                    <tr>
-                                        <td style="text-align: right"><input type="radio" name="private" value="1" id="ppr"></td>
-                                        <td><label for="ppr">Private</label></td>
-                                    </tr>
-                                    <tr>
-                                        <td style="text-align: right"><input type="radio" name="private" value="0" id="ppu"></td>
-                                        <td><label for="ppu">Public</label></td>
-                                    </tr>
-                                </table>
-                            </div>
-
-                            <div class="rpbcb">
-                                <p><b>Visibility</b><br>
-                                    As visible you will appear in search results.
-                                </p>
-                                <table>
-                                    <tr>
-                                        <td style="text-align: right"><input type="radio" name="visible" value="1" id="vv"></td>
-                                        <td><label for="vv">Visible</label></td>
-                                    </tr>
-                                    <tr>
-                                        <td style="text-align: right"><input type="radio" name="visible" value="0" id="vi"></td>
-                                        <td><label for="vi">Invisible</label></td>
-                                    </tr>
-                                </table>
-                            </div>
-
-                        </div>
-                        <p id="custom-set-btn" style="display: none"><button onclick="hitEnterRegister('cp')">Confirm</button></p>
-                    </div>
-                </div>
-            </div>
-            <button onclick="stepBack()">Go back</button>
         </div>
     </div>
     <?php if (isset($_GET['reset'])) {

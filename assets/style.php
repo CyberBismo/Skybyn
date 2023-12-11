@@ -819,13 +819,19 @@
                 padding: 0;
             }
             .reg-packs {
+                width: 800px;
+                margin-top: 100px;
+                margin-left: 50%;
+                transform: translateX(-50%);
+                text-align: center;
                 color: white;
             }
             .reg-packs button {
                 width: auto;
                 height: 50px;
                 margin: 3px;
-                padding: 20px 10px;
+                margin-top: 20px;
+                padding: 0 50px;
                 color: white;
                 background: rgba(255,255,255,.1);
                 backdrop-filter: blur(5px);
