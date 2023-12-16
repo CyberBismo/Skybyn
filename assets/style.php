@@ -622,14 +622,8 @@
             }
             <?php }}?>
         
-            #info_table {
-                max-height: 0px;
-                overflow: hidden;
-                transition: all 0.3s ease-in-out;
-            }
-            #info_table tr {
-                opacity: 0;
-                transition: all 0.3s ease-in-out;
+            #welcome_info {
+                
             }
             
             .info_text h2 {
@@ -645,6 +639,13 @@
             }
             #info_table {
                 margin-top: 20px;
+                height: 1000px;
+                overflow: hidden;
+                transition: all 0.3s ease-in-out;
+            }
+            #info_table tr {
+                opacity: 0;
+                transition: all 0.3s ease-in-out;
             }
 
             <?php if (isMobile() == false) {?>
