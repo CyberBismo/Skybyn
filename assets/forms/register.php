@@ -152,6 +152,9 @@
                             register.value = "Continue";
                             step_back.style.display = "none";
                             document.getElementById('reg-t-age').remove();
+                            document.getElementById('reg-t-age').style.opacity = "1";
+                            const table = document.getElementById('info_table');
+                            table.style.height = table.style.height - "30px";
                         }
                     }
 
@@ -172,7 +175,7 @@
                         let info_text = document.getElementById('info_text');
                         let intro = document.getElementById('intro');
                         let info_right = document.getElementById('info_right');
-                        let table = document.getElementById('info-table');
+                        let table = document.getElementById('info_table');
                         let reg_packs = document.getElementById('reg_packs');
                         let reg_form = document.getElementById('log_reg_form');
 
@@ -201,18 +204,22 @@
                                 info_right.style.display = "block";
                                 fname.focus();
                                 // Adding age to table
-                                tr_age = document.createElement('tr');
-                                tr_age.id = "reg-t-age";
-                                table.appendChild(tr_age);
-                                td_age = document.createElement('td');
-                                td_age.innerHTML = "Age:";
-                                td_age_v = document.createElement('td');
-                                td_age.style.textAlign = "right";
-                                td_age.style.width = "80.25px";
-                                td_age_v.style.textAlign = "left";
-                                td_age_v.innerHTML = age;
-                                tr_age.appendChild(td_age);
-                                tr_age.appendChild(td_age_v);
+                                tr = document.createElement('tr');
+                                tr.id = "reg-t-age";
+                                tr.style.opacity = 0;
+                                table.appendChild(tr);
+                                td = document.createElement('td');
+                                td.innerHTML = "Age:";
+                                td_v = document.createElement('td');
+                                td.style.textAlign = "right";
+                                td.style.width = "80.25px";
+                                td_v.style.textAlign = "left";
+                                td_v.innerHTML = age;
+                                tr.appendChild(td);
+                                tr.appendChild(td_v);
+                                setTimeout(() => {
+                                    tr.style.opacity = 1;
+                                }, 10);
                             }
                         } else
                         // Check full name and enter email
