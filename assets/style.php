@@ -623,7 +623,7 @@
             <?php }}?>
         
             #welcome_info {
-                
+                transition: all 0.3s;
             }
             
             .info_text h2 {
@@ -639,8 +639,6 @@
             }
             #info_table {
                 margin-top: 20px;
-                height: 1000px;
-                overflow: hidden;
                 transition: all 0.3s ease-in-out;
             }
             #info_table tr {
@@ -719,6 +717,7 @@
                 font-size: 18px;
                 background: rgba(255,255,255,.2);
                 border: 1px solid rgba(255,255,255,.5);
+                overflow: hidden;
             }
             .center_form .form .register input[type=submit] {
                 float: right;
@@ -727,6 +726,7 @@
                 font-size: 18px;
                 background: rgba(255,255,255,.2);
                 border: 1px solid rgba(255,255,255,.5);
+                overflow: hidden;
             }
             .center_form .form .register input#send_again {
                 width: 100%;

@@ -113,6 +113,7 @@ if (isset($_COOKIE['logged'])) {
             <?php include_once "assets/intro.php"?>
             <div class="info_right" id="info_right">
                 <h2>Your information:</h2>
+                <table id="info_table"></table>
             </div>
         </div>
     </div>

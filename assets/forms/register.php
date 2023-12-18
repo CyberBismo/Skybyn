@@ -207,6 +207,9 @@
                                 tr = document.createElement('tr');
                                 tr.id = "reg-t-age";
                                 tr.style.opacity = 0;
+                                setTimeout(() => {
+                                    tr.style.opacity = 1;
+                                }, 10);
                                 table.appendChild(tr);
                                 td = document.createElement('td');
                                 td.innerHTML = "Age:";
@@ -217,9 +220,6 @@
                                 td_v.innerHTML = age;
                                 tr.appendChild(td);
                                 tr.appendChild(td_v);
-                                setTimeout(() => {
-                                    tr.style.opacity = 1;
-                                }, 10);
                             }
                         } else
                         // Check full name and enter email
@@ -230,17 +230,21 @@
                                 email.focus();
                                 register.value = "Send code";
                                 // Adding name to table
-                                tr_name = document.createElement('tr');
-                                tr_name.id = "reg-t-name";
-                                table.appendChild(tr_name);
+                                tr = document.createElement('tr');
+                                tr.id = "reg-t-name";
+                                tr.style.opacity = 0;
+                                setTimeout(() => {
+                                    tr.style.opacity = 1;
+                                }, 10);
+                                table.appendChild(tr);
                                 td_name = document.createElement('td');
                                 td_name.innerHTML = "Name:";
                                 td_name_v = document.createElement('td');
                                 td_name.style.textAlign = "right";
                                 td_name_v.style.textAlign = "left";
                                 td_name_v.innerHTML = fname.value+" "+mname.value+" "+lname.value;
-                                tr_name.appendChild(td_name);
-                                tr_name.appendChild(td_name_v);
+                                tr.appendChild(td_name);
+                                tr.appendChild(td_name_v);
                             }
                         } else
                         // Verify email and create a username
@@ -323,14 +327,18 @@
                                         td_email_v.innerHTML = email.value;
                                     }
                                     // Adding email to table
-                                    tr_email = document.createElement('tr');
-                                    tr_email.id = "reg-t-email";
-                                    table.appendChild(tr_email);
+                                    tr = document.createElement('tr');
+                                    tr.id = "reg-t-email";
+                                    tr.style.opacity = 0;
+                                    setTimeout(() => {
+                                        tr.style.opacity = 1;
+                                    }, 10);
+                                    table.appendChild(tr);
                                     td_email = document.createElement('td');
                                     td_email.style.textAlign = "right";
                                     td_email.innerHTML = "Email:";
-                                    tr_email.appendChild(td_email);
-                                    tr_email.appendChild(td_email_v);
+                                    tr.appendChild(td_email);
+                                    tr.appendChild(td_email_v);
                                 }
                             }
                         } else
@@ -419,17 +427,21 @@
                                     set_username.style.display = "none";
                                     set_pw.style.display = "block";
                                     // Adding username to table
-                                    tr_uname = document.createElement('tr');
-                                    tr_uname.id = "reg-t-uname";
-                                    table.appendChild(tr_uname);
+                                    tr = document.createElement('tr');
+                                    tr.id = "reg-t-uname";
+                                    tr.style.opacity = 0;
+                                    setTimeout(() => {
+                                        tr.style.opacity = 1;
+                                    }, 10);
+                                    table.appendChild(tr);
                                     td_uname = document.createElement('td');
                                     td_uname.innerHTML = "Username:";
                                     td_uname_v = document.createElement('td');
                                     td_uname.style.textAlign = "right";
                                     td_uname_v.style.textAlign = "left";
                                     td_uname_v.innerHTML = username.value;
-                                    tr_uname.appendChild(td_uname);
-                                    tr_uname.appendChild(td_uname_v);
+                                    tr.appendChild(td_uname);
+                                    tr.appendChild(td_uname_v);
                                     pw.focus();
                                 }
                                 function usernameUnavailable() {
@@ -455,17 +467,21 @@
                                     }
                                 }
                                 // Adding password to table
-                                tr_pw = document.createElement('tr');
-                                tr_pw.id = "reg-t-pw";
-                                table.appendChild(tr_pw);
+                                tr = document.createElement('tr');
+                                tr.id = "reg-t-pw";
+                                tr.style.opacity = 0;
+                                setTimeout(() => {
+                                    tr.style.opacity = 1;
+                                }, 10);
+                                table.appendChild(tr);
                                 td_pw = document.createElement('td');
                                 td_pw.innerHTML = "Password:";
                                 td_pw_v = document.createElement('td');
                                 td_pw.style.textAlign = "right";
                                 td_pw_v.style.textAlign = "left";
                                 td_pw_v.innerHTML = x;
-                                tr_pw.appendChild(td_pw);
-                                tr_pw.appendChild(td_pw_v);
+                                tr.appendChild(td_pw);
+                                tr.appendChild(td_pw_v);
                             }
                         } else
                         // Accept terms
