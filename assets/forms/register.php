@@ -58,7 +58,7 @@
 
                 <input type="submit" id="send_again" onclick="hitEnterRegister('resend')" style="display: none;margin-top: 3px">
                 <input type="submit" id="register" onclick="hitEnterRegister('')" value="Continue" style="margin-top: 3px">
-                <input type="submit" id="step_back" onclick="stepBack()" value="Go back" style="display: block;margin-top: 3px">
+                <input type="submit" id="step_back" onclick="stepBack()" value="Go back" style="display: none;margin-top: 3px">
 
                 <div id="err_msg" style="display: none; margin-top: 20px">
                     <br>
