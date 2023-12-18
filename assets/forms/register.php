@@ -124,19 +124,28 @@
                             set_terms.style.display = "none";
                             set_pw.style.display = "block";
                             register.value = "Continue";
-                            document.getElementById('reg-t-pw').remove();
+                            document.getElementById('reg-t-pw').style.opacity = 0;
+                            setTimeout(() => {
+                                document.getElementById('reg-t-pw').remove();
+                            }, 10);
                         } else
                         if (set_pw.style.display == "block") {
                             set_pw.style.display = "none";
                             set_username.style.display = "block";
                             register.value = "Continue";
-                            document.getElementById('reg-t-uname').remove();
+                            document.getElementById('reg-t-uname').style.opacity = 0;
+                            setTimeout(() => {
+                                document.getElementById('reg-t-uname').remove();
+                            }, 10);
                         } else
                         if (set_username.style.display == "block") {
                             set_username.style.display = "none";
                             set_email.style.display = "block";
                             register.value = "Send code";
-                            document.getElementById('reg-t-email').remove();
+                            document.getElementById('reg-t-email').style.opacity = 0;
+                            setTimeout(() => {
+                                document.getElementById('reg-t-email').remove();
+                            }, 10);
                         } else
                         if (set_email_verify.style.display == "block") {
                             set_email_verify.style.display = "none";
@@ -144,7 +153,10 @@
                             send_again.style.display = "none";
                             register.style.display = "block";
                             register.value = "Continue";
-                            document.getElementById('reg-t-email').remove();
+                            document.getElementById('reg-t-email').style.opacity = 0;
+                            setTimeout(() => {
+                                document.getElementById('reg-t-email').remove();
+                            }, 10);
                         } else
                         if (set_email.style.display == "block") {
                             set_email.style.display = "none";
@@ -152,17 +164,20 @@
                             send_again.style.display = "none";
                             register.style.display = "block";
                             register.value = "Continue";
-                            document.getElementById('reg-t-name').remove();
+                            document.getElementById('reg-t-name').style.opacity = 0;
+                            setTimeout(() => {
+                                document.getElementById('reg-t-name').remove();
+                            }, 10);
                         } else
                         if (set_name.style.display == "block") {
                             set_name.style.display = "none";
                             set_dob.style.display = "block";
                             register.value = "Continue";
                             step_back.style.display = "none";
-                            document.getElementById('reg-t-age').remove();
-                            document.getElementById('reg-t-age').style.opacity = "1";
-                            const table = document.getElementById('info_table');
-                            table.style.height = table.style.height - "30px";
+                            document.getElementById('reg-t-age').style.opacity = 0;
+                            setTimeout(() => {
+                                document.getElementById('reg-t-age').remove();
+                            }, 10);
                         }
                     }
 
