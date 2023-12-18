@@ -127,7 +127,7 @@
                             document.getElementById('reg-t-pw').style.opacity = 0;
                             setTimeout(() => {
                                 document.getElementById('reg-t-pw').remove();
-                            }, 10);
+                            }, 1000);
                         } else
                         if (set_pw.style.display == "block") {
                             set_pw.style.display = "none";
@@ -136,7 +136,7 @@
                             document.getElementById('reg-t-uname').style.opacity = 0;
                             setTimeout(() => {
                                 document.getElementById('reg-t-uname').remove();
-                            }, 10);
+                            }, 1000);
                         } else
                         if (set_username.style.display == "block") {
                             set_username.style.display = "none";
@@ -145,7 +145,7 @@
                             document.getElementById('reg-t-email').style.opacity = 0;
                             setTimeout(() => {
                                 document.getElementById('reg-t-email').remove();
-                            }, 10);
+                            }, 1000);
                         } else
                         if (set_email_verify.style.display == "block") {
                             set_email_verify.style.display = "none";
@@ -156,7 +156,7 @@
                             document.getElementById('reg-t-email').style.opacity = 0;
                             setTimeout(() => {
                                 document.getElementById('reg-t-email').remove();
-                            }, 10);
+                            }, 1000);
                         } else
                         if (set_email.style.display == "block") {
                             set_email.style.display = "none";
@@ -167,7 +167,7 @@
                             document.getElementById('reg-t-name').style.opacity = 0;
                             setTimeout(() => {
                                 document.getElementById('reg-t-name').remove();
-                            }, 10);
+                            }, 1000);
                         } else
                         if (set_name.style.display == "block") {
                             set_name.style.display = "none";
@@ -177,7 +177,7 @@
                             document.getElementById('reg-t-age').style.opacity = 0;
                             setTimeout(() => {
                                 document.getElementById('reg-t-age').remove();
-                            }, 10);
+                            }, 1000);
                         }
                     }
 
