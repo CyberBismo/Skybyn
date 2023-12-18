@@ -138,6 +138,14 @@
                             register.value = "Send code";
                             document.getElementById('reg-t-email').remove();
                         } else
+                        if (set_email_verify.style.display == "block") {
+                            set_email_verify.style.display = "none";
+                            set_email.style.display = "block";
+                            send_again.style.display = "none";
+                            register.style.display = "block";
+                            register.value = "Continue";
+                            document.getElementById('reg-t-email').remove();
+                        } else
                         if (set_email.style.display == "block") {
                             set_email.style.display = "none";
                             set_name.style.display = "block";
