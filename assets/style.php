@@ -976,6 +976,7 @@
             }
             <?php if (isMobile() == true) {?>
             .header {
+                background: rgba(var(--dark),.2);
                 backdrop-filter: blur(5px);
             }
             <?php }?>
@@ -1149,8 +1150,9 @@
                 border-radius: 10px;
             }
 
-            .header .search_result {
-                position: absolute;
+            .search_result {
+                position: fixed;
+                top: 175px;
                 width: 33.33%;
                 height: auto;
                 left: 33.33%;
@@ -1184,15 +1186,17 @@
                 width: auto;
                 height: 100%;
             }
+
             <?php } else {?>
             .new_post {
                 position: fixed;
-                top: 75px;
+                bottom: 100px;
                 left: 0;
                 width: 100%;
-                background: rgba(0,0,0,.8);
+                height: calc(100% - 175px);
+                background: rgba(var(--dark),.8);
                 backdrop-filter: blur(5px);
-                border-radius: 20px;
+                border-radius: 0 0 20px;
                 box-sizing: border-box;
                 box-shadow: 0px 5px 10px 0px rgba(0,0,0,.5);
                 overflow: hidden;
@@ -1209,8 +1213,8 @@
                 width: 100%;
                 min-width: 100%;
                 max-width: 100%;
-                min-height: 100px;
-                max-height: 400px;
+                min-height: 300px;
+                max-height: 600px;
                 margin: 0 auto;
                 padding: 10px;
                 padding-right: 40px;
@@ -1319,6 +1323,39 @@
                 margin-left: calc(100% - 40px);
                 padding: 0 10px;
                 color: white;
+            }
+
+            .search_result {
+                width: 100%;
+                height: auto;
+                margin-top: 20px;
+                padding: 10px 20px;
+                background: rgba(255,255,255,.1);
+                border-radius: 20px;
+                box-sizing: border-box;
+            }
+            .search_res_user {
+                display: flex;
+                width: 100%;
+                height: 50px;
+                line-height: 50px;
+                border-radius: 10px;
+                box-sizing: border-box;
+            }
+            .search_res_user:hover {
+                background: rgba(255,255,255,.2);
+            }
+            .search_res_user .search_res_user_avatar {
+                width: 50px;
+                height: 50px;
+                margin-right: 10px;
+                border-radius: 10px;
+                box-sizing: border-box;
+                overflow: hidden;
+            }
+            .search_res_user .search_res_user_avatar img {
+                width: auto;
+                height: 100%;
             }
             <?php }?>
             .header .top {
@@ -1525,30 +1562,47 @@
                 color: white;
             }
             <?php } else {?>
-            .user-dropdown .search {
+            .mobile-search {
+                position: fixed;
+                top: 0;
+                left: 0;
+                transform: translateY(-135px);
                 width: 100%;
-                margin: 0 -20px;
+                padding: 20px;
+                padding-top: 95px;
+                color: white;
+                background: rgba(var(--dark),1);
+                box-sizing: border-box;
+                backdrop-filter: blur(5px);
+                border-bottom-left-radius: 20px;
+                border-bottom-right-radius: 20px;
+                transition: all .2s ease-in-out;
+                z-index: 0;
+            }
+            .search {
+                width: 100%;
+                background: rgba(0,0,0,.3);
+                border-radius: 40px;
                 box-sizing: border-box;
             }
-            .user-dropdown .search i {
+            .search i {
                 position: absolute;
                 width: 20px !important;
                 margin: 10px;
                 padding: 0;
             }
-            .user-dropdown .search input {
+            .search input {
                 width: 100%;
                 padding: 10px 15px;
                 padding-left: 40px;
                 box-sizing: border-box;
                 color: white;
-                background: rgba(0,0,0,.1);
+                background: rgba(0,0,0,0);
                 border: none;
-                border-radius: 40px;
                 outline: none;
                 transition: display .5s;
             }
-            .user-dropdown .search input::placeholder {
+            .search input::placeholder {
                 color: lightgray;
             }
             <?php }?>

@@ -70,16 +70,6 @@ if ($currentUrl == $devDomain) {
                 if (isMobile() == false) {?>
             <div class="new_post_button" id="new_post_btn" onclick="newPost()">What's on your mind?</div>
             <?php }?>
-            <div class="search_result" id="search_result" hidden>
-                <p>Users</p>
-                <div id="search_res_users"></div>
-                <p>Groups</p>
-                <div id="search_res_groups"></div>
-                <p>Pages</p>
-                <div id="search_res_pages"></div>
-                <p>Markets</p>
-                <div id="search_res_markets"></div>
-            </div>
             <?php }?>
             <?php if (!isset($_SESSION['user'])) {
                 if (isMobile() == false) {?>
@@ -93,7 +83,7 @@ if ($currentUrl == $devDomain) {
                 <div class="top-nav">
                     <ul>
                         <?php if (isMobile() == true) {?>
-                        <li onclick="newPost()"><i class="fa-solid fa-plus" id="newPostIcon"></i></li>
+                        <li onclick="showSearch()"><i class="fa-solid fa-magnifying-glass"></i></li>
                         <?php } else {?>
                         <li onclick="showNotifications()" id="notification">
                             <div class="notification_alert" id="noti_alert"><i class="fa-solid fa-circle-exclamation"></i></div>
@@ -117,14 +107,6 @@ if ($currentUrl == $devDomain) {
             </div>
             <div class="user-dropdown" id="usermenu">
                 <ul>
-                    <?php if ($rank > 0) {?>
-                    <?php if (isMobile() == true) {?>
-                    <li class="search">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" id="searchInput" onkeyup="startSearch(this)" placeholder="Search">
-                    </li>
-                    <?php }?>
-                    <?php }?>
                     <li onclick="window.location.href='./'"><i class="fa-solid fa-house"></i>Home</li>
                     <li onclick="window.location.href='./profile'"><i class="fa-solid fa-user"></i></i>Profile</li>
                     <?php if ($rank > 0) {?>
@@ -184,19 +166,25 @@ if ($currentUrl == $devDomain) {
 
         <script>
             function showSearch() {
+                const mobileSearch = document.getElementById('mobile-search');
                 const search = document.getElementById('searchInput');
-                if (search.style.display == "block") {
-                    search.style.display = "none";
+                const searchRes = document.getElementById('search_result');
+                if (mobileSearch.style.transform == "translateY(0px)") {
+                    mobileSearch.style.transform = "translateY(-135px)";
+                    searchRes.style.display = "none";
                 } else {
-                    search.style.display = "block";
+                    mobileSearch.style.transform = "translateY(0px)";
                     search.focus();
                 }
             }
             function startSearch(x) {
                 const searchResult = document.getElementById('search_result');
                 const searchResUsers = document.getElementById('search_res_users');
+                const searchRUsers = document.getElementById('search_r_users');
                 const searchResGroups = document.getElementById('search_res_groups');
+                const searchRGroups = document.getElementById('search_r_groups');
                 const searchResPages = document.getElementById('search_res_pages');
+                const searchRPages = document.getElementById('search_r_pages');
                 
                 if (x.value.length >= 4) {
                     searchResult.style.display = "block";
@@ -209,7 +197,11 @@ if ($currentUrl == $devDomain) {
                         }
                     }).done(function(response) {
                         if (response != "error") {
-                            searchResUsers.innerHTML = response;
+                            searchResUsers.toggleAttribute("hidden");
+                            searchRUsers.innerHTML = response;
+                        } else {
+                            searchResUsers.toggleAttribute("hidden");
+                            searchRUsers.innerHTML = "";
                         }
                     });
 
@@ -221,7 +213,11 @@ if ($currentUrl == $devDomain) {
                         }
                     }).done(function(response) {
                         if (response != "error") {
-                            searchResGroups.innerHTML = response;
+                            searchResGroups.toggleAttribute("hidden");
+                            searchRGroups.innerHTML = response;
+                        } else {
+                            searchResGroups.toggleAttribute("hidden");
+                            searchRGroups.innerHTML = "";
                         }
                     });
 
@@ -233,7 +229,11 @@ if ($currentUrl == $devDomain) {
                         }
                     }).done(function(response) {
                         if (response != "error") {
-                            searchResPages.innerHTML = response;
+                            searchResPages.toggleAttribute("hidden");
+                            searchRPages.innerHTML = response;
+                        } else {
+                            searchResPages.toggleAttribute("hidden");
+                            searchRPages.innerHTML = "";
                         }
                     });
                 } else {
@@ -788,9 +788,33 @@ if ($currentUrl == $devDomain) {
         </div>
 
         <?php if (isMobile() == true) {?>
+        <div class="mobile-search" id="mobile-search">
+            <div class="search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="searchInput" onkeyup="startSearch(this)" placeholder="Search">
+            </div>
+            <div class="search_result" id="search_result" hidden>
+                <div id="search_res_users" hidden>
+                    <p>Users</p>
+                    <div id="search_r_users"></div>
+                </div>
+                <div id="search_res_groups" hidden>
+                    <p>Groups</p>
+                    <div id="search_r_groups"></div>
+                </div>
+                <div id="search_res_pages" hidden>
+                    <p>Pages</p>
+                    <div id="search_r_pages"></div>
+                </div>
+                <div id="search_res_markets" hidden>
+                    <p>Markets</p>
+                    <div id="search_r_markets"></div>
+                </div>
+            </div>
+        </div>
         <div class="bottom-nav">
             <div class="bnav-btn" onclick="showLeftPanel()"><i class="fa-solid fa-list-ul"></i></div>
-            <div class="bnav-btn" onclick=""></div>
+            <div class="bnav-btn" onclick="newPost()"><i class="fa-solid fa-plus"></i></div>
             <div class="bnav-btn" onclick="showRightPanel()"><i class="fa-solid fa-user-group"></i></div>
         </div>
         <?php }?>
