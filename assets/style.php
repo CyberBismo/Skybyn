@@ -1327,12 +1327,13 @@
 
             .search_result {
                 width: 100%;
-                height: auto;
+                height: calc(100% - 250px);
                 margin-top: 20px;
                 padding: 10px 20px;
                 background: rgba(255,255,255,.1);
                 border-radius: 20px;
                 box-sizing: border-box;
+                overflow: auto;
             }
             .search_res_user {
                 display: flex;

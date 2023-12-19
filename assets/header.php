@@ -185,57 +185,67 @@ if ($currentUrl == $devDomain) {
                 const searchRGroups = document.getElementById('search_r_groups');
                 const searchResPages = document.getElementById('search_res_pages');
                 const searchRPages = document.getElementById('search_r_pages');
-                
+
                 if (x.value.length >= 4) {
                     searchResult.style.display = "block";
 
-                    $.ajax({
-                        url: 'assets/search_users.php',
-                        type: "POST",
-                        data: {
-                            text : x.value
-                        }
-                    }).done(function(response) {
-                        if (response != "error") {
-                            searchResUsers.toggleAttribute("hidden");
-                            searchRUsers.innerHTML = response;
-                        } else {
-                            searchResUsers.toggleAttribute("hidden");
-                            searchRUsers.innerHTML = "";
-                        }
-                    });
+                    // Check if the input starts with "/user"
+                    if (x.value.startsWith("/user ")) {
+                        $.ajax({
+                            url: 'assets/search_users.php',
+                            type: "POST",
+                            data: {
+                                text: x.value
+                            }
+                        }).done(function(response) {
+                            // Handle the response for user search
+                            if (response != "") {
+                                searchResUsers.removeAttribute("hidden");
+                                searchRUsers.innerHTML = response;
+                            } else {
+                                searchResUsers.setAttribute("hidden", "");
+                                searchRUsers.innerHTML = "";
+                            }
+                        });
+                    } else
+                    if (x.value.startsWith("/page ")) {
+                        $.ajax({
+                            url: 'assets/search_pages.php',
+                            type: "POST",
+                            data: {
+                                text: x.value
+                            }
+                        }).done(function(response) {
+                            // Handle the response for page search
+                            if (response != "") {
+                                searchResPages.removeAttribute("hidden");
+                                searchRPages.innerHTML = response;
+                            } else {
+                                searchResPages.setAttribute("hidden", "");
+                                searchRPages.innerHTML = "";
+                            }
+                        });
+                    } else {
+                        $.ajax({
+                            url: 'assets/search.php',
+                            type: "POST",
+                            data: {
+                                text: x.value
+                            }
+                        }).done(function(response) {
+                            // Handle the response for page search
+                            if (response != "") {
+                                searchResPages.removeAttribute("hidden");
+                                searchRPages.innerHTML = response;
+                            } else {
+                                searchResPages.setAttribute("hidden", "");
+                                searchRPages.innerHTML = "";
+                            }
+                        });
+                    }
 
-                    $.ajax({
-                        url: 'assets/search_groups.php',
-                        type: "POST",
-                        data: {
-                            text : x.value
-                        }
-                    }).done(function(response) {
-                        if (response != "error") {
-                            searchResGroups.toggleAttribute("hidden");
-                            searchRGroups.innerHTML = response;
-                        } else {
-                            searchResGroups.toggleAttribute("hidden");
-                            searchRGroups.innerHTML = "";
-                        }
-                    });
+                    // Add more conditions here if needed for other types of searches
 
-                    $.ajax({
-                        url: 'assets/search_pages.php',
-                        type: "POST",
-                        data: {
-                            text : x.value
-                        }
-                    }).done(function(response) {
-                        if (response != "error") {
-                            searchResPages.toggleAttribute("hidden");
-                            searchRPages.innerHTML = response;
-                        } else {
-                            searchResPages.toggleAttribute("hidden");
-                            searchRPages.innerHTML = "";
-                        }
-                    });
                 } else {
                     searchResult.style.display = "none";
                 }
