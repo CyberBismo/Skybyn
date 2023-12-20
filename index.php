@@ -111,10 +111,10 @@ if (isset($_COOKIE['logged'])) {
     <div class="welcome_information" id="welcome_info" onclick="showInfo(this)">
         <div class="info_text" id="info_text">
             <?php include_once "assets/intro.php"?>
-            <div class="info_right" id="info_right">
-                <h2>Your information:</h2>
-                <table id="info_table"></table>
-            </div>
+        </div>
+        <div class="reg_info" id="reg_info">
+            <h2>Your information:</h2>
+            <table id="reg_table"></table>
         </div>
     </div>
     <?php if (isset($_GET['reset'])) {

@@ -579,21 +579,19 @@
                 margin: 0 100px;
                 text-align: center;
                 color: white;
-                box-sizing: border-box;
-                overflow: hidden;
             }
-            .info_text {
+            .info_text,
+            .reg_info {
                 padding: 50px 20px;
                 background: rgba(var(--darker),.5);
                 backdrop-filter: blur(5px);
                 border-radius: 20px;
                 box-sizing: border-box;
-                overflow: hidden;
             }
             .info_text p {
                 display: none;
             }
-            .info_right {
+            .reg_info {
                 display: none;
             }
             <?php } else {?>
@@ -615,6 +613,7 @@
             }
             .info_text {
                 width: 100%;
+                height: 50px;
                 padding: 20px;
                 background: rgba(0,0,0,.1);
                 backdrop-filter: blur(5px);
@@ -634,14 +633,14 @@
                 font-size: 8px;
                 color: rgb(var(--dark));
             }
-            .info_right {
-                box-sizing: border-box;
+            .reg_info {
+                transition: all 0.3s ease-in-out;
             }
-            #info_table {
+            #reg_table {
                 margin-top: 20px;
                 transition: all 0.3s ease-in-out;
             }
-            #info_table tr {
+            #reg_table tr {
                 opacity: 0;
                 transition: all 0.3s ease-in-out;
             }

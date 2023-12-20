@@ -112,6 +112,7 @@
                         let register = document.getElementById('register');
                         let step_back = document.getElementById('step_back');
                         let info_text = document.getElementById('info_text');
+                        let reg_info = document.getElementById('reg_info');
                         let reg_form = document.getElementById('log_reg_form');
 
                         if (reg_packs.style.display == "block") {
@@ -125,6 +126,7 @@
                             set_pw.style.display = "block";
                             register.value = "Continue";
                             document.getElementById('reg-t-pw').style.opacity = 0;
+                            reg_info.style.height = "290px";
                             setTimeout(() => {
                                 document.getElementById('reg-t-pw').remove();
                             }, 1000);
@@ -134,6 +136,7 @@
                             set_username.style.display = "block";
                             register.value = "Continue";
                             document.getElementById('reg-t-uname').style.opacity = 0;
+                            reg_info.style.height = "260px";
                             setTimeout(() => {
                                 document.getElementById('reg-t-uname').remove();
                             }, 1000);
@@ -143,6 +146,7 @@
                             set_email.style.display = "block";
                             register.value = "Send code";
                             document.getElementById('reg-t-email').style.opacity = 0;
+                            reg_info.style.height = "230px";
                             setTimeout(() => {
                                 document.getElementById('reg-t-email').remove();
                             }, 1000);
@@ -154,6 +158,7 @@
                             register.style.display = "block";
                             register.value = "Continue";
                             document.getElementById('reg-t-email').style.opacity = 0;
+                            reg_info.style.height = "200px";
                             setTimeout(() => {
                                 document.getElementById('reg-t-email').remove();
                             }, 1000);
@@ -165,6 +170,7 @@
                             register.style.display = "block";
                             register.value = "Continue";
                             document.getElementById('reg-t-name').style.opacity = 0;
+                            reg_info.style.height = "170px";
                             setTimeout(() => {
                                 document.getElementById('reg-t-name').remove();
                             }, 1000);
@@ -175,6 +181,7 @@
                             register.value = "Continue";
                             step_back.style.display = "none";
                             document.getElementById('reg-t-age').style.opacity = 0;
+                            reg_info.style.height = "160px";
                             setTimeout(() => {
                                 document.getElementById('reg-t-age').remove();
                             }, 1000);
@@ -194,11 +201,9 @@
                         let step_back = document.getElementById('step_back');
                         let err_msg = document.getElementById('err_msg');
 
-                        let wel_inf = document.getElementById("welcome_info");
                         let info_text = document.getElementById('info_text');
-                        let intro = document.getElementById('intro');
-                        let info_right = document.getElementById('info_right');
-                        let table = document.getElementById('info_table');
+                        let reg_info = document.getElementById('reg_info');
+                        let table = document.getElementById('reg_table');
                         let reg_packs = document.getElementById('reg_packs');
                         let reg_form = document.getElementById('log_reg_form');
 
@@ -215,6 +220,8 @@
                         const pw = document.getElementById('register-password'); // Password
                         const cpw = document.getElementById('cpassword'); // Confirm password
 
+                        info_text.setAttribute("hidden","");
+
                         autoInfo();
                         
                         // Verify date of birth value and enter full name
@@ -224,7 +231,7 @@
                                 set_name.style.display = "block";
                                 step_back.style.display = "block";
                                 intro.style.display = "none";
-                                info_right.style.display = "block";
+                                reg_info.style.display = "block";
                                 fname.focus();
                                 // Adding age to table
                                 tr = document.createElement('tr');
@@ -232,6 +239,7 @@
                                 tr.style.opacity = 0;
                                 setTimeout(() => {
                                     tr.style.opacity = 1;
+                                    reg_info.style.height = "170px";
                                 }, 10);
                                 table.appendChild(tr);
                                 td = document.createElement('td');
@@ -258,6 +266,7 @@
                                 tr.style.opacity = 0;
                                 setTimeout(() => {
                                     tr.style.opacity = 1;
+                                    reg_info.style.height = "200px";
                                 }, 10);
                                 table.appendChild(tr);
                                 td_name = document.createElement('td');
@@ -355,6 +364,7 @@
                                     tr.style.opacity = 0;
                                     setTimeout(() => {
                                         tr.style.opacity = 1;
+                                        reg_info.style.height = "230px";
                                     }, 10);
                                     table.appendChild(tr);
                                     td_email = document.createElement('td');
@@ -455,6 +465,7 @@
                                     tr.style.opacity = 0;
                                     setTimeout(() => {
                                         tr.style.opacity = 1;
+                                        reg_info.style.height = "260px";
                                     }, 10);
                                     table.appendChild(tr);
                                     td_uname = document.createElement('td');
@@ -495,6 +506,7 @@
                                 tr.style.opacity = 0;
                                 setTimeout(() => {
                                     tr.style.opacity = 1;
+                                    reg_info.style.height = "290px";
                                 }, 10);
                                 table.appendChild(tr);
                                 td_pw = document.createElement('td');
