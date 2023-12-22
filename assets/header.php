@@ -447,7 +447,7 @@ if ($currentUrl == $devDomain) {
                     notifications.style.display = "block";
                 });
             }
-            function hideNotifications(event) {
+            function hideMenus(event) {
                 const notification = document.getElementById('notification');
                 const notifications = document.getElementById('notifications');
                 if (notifications.style.display == "block") {
@@ -457,7 +457,7 @@ if ($currentUrl == $devDomain) {
                 }
             }
             <?php if (isset($_SESSION['user'])) {?>
-            document.addEventListener('click', hideNotifications);
+            document.addEventListener('click', hideMenus);
             <?php }?>
 
             function showNoti(x) {

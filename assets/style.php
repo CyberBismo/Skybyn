@@ -1661,9 +1661,11 @@
             .user-dropdown {
                 position: absolute;
                 top: 75px;
+                text-align: right;
                 color: white;
                 box-shadow: 0 2px 2px rgba(0,0,0,.05);
                 backdrop-filter: blur(5px);
+                box-sizing: border-box;
                 z-index: 9;
             }
             <?php if (isMobile() == false) {?>
@@ -1689,6 +1691,10 @@
                 list-style: none;
                 margin: 0;
                 padding: 0;
+            }
+            .user-dropdown ul li {
+                display: flex;
+                justify-content: space-between;
             }
             <?php if (isMobile() == false) {?>
             .user-dropdown ul li {
