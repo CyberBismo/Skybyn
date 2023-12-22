@@ -83,7 +83,7 @@ if ($currentUrl == $devDomain) {
                 <div class="top-nav">
                     <ul>
                         <?php if (isMobile() == true) {?>
-                        <li onclick="showSearch()"><i class="fa-solid fa-magnifying-glass"></i></li>
+                        <li onclick="showLeftPanel()"><i class="fa-solid fa-list-ul"></i></li>
                         <?php } else {?>
                         <li onclick="showNotifications(event)" id="notification">
                             <div class="notification_alert" id="noti_alert"><i class="fa-solid fa-circle-exclamation"></i></div>
@@ -257,10 +257,10 @@ if ($currentUrl == $devDomain) {
                 const right = document.getElementById('right-panel');
                 if (um.style.transform == "translateX(0px)") {
                     um.style.transform = 'translateX(100%)';
-                    left.style.transform = 'translateX(-100%)';
-                    right.style.transform = 'translateX(100%)';
                 } else {
                     um.style.transform = 'translateX(0px)';
+                    left.style.transform = 'translateX(-100%)';
+                    right.style.transform = 'translateX(100%)';
                 }
                 <?php } else {?>
                 if (event) {
@@ -830,7 +830,7 @@ if ($currentUrl == $devDomain) {
             </div>
         </div>
         <div class="bottom-nav">
-            <div class="bnav-btn" onclick="showLeftPanel()"><i class="fa-solid fa-list-ul"></i></div>
+            <div class="bnav-btn" onclick="showSearch()"><i class="fa-solid fa-magnifying-glass"></i></div>
             <div class="bnav-btn" onclick="newPost()"><i class="fa-solid fa-plus"></i></div>
             <div class="bnav-btn" onclick="showRightPanel()"><i class="fa-solid fa-user-group"></i></div>
         </div>
