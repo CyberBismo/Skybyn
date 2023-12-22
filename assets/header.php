@@ -263,11 +263,7 @@ if ($currentUrl == $devDomain) {
                     um.style.transform = 'translateX(0px)';
                 }
                 <?php } else {?>
-                if (um.style.display == "block") {
-                    um.style.display = "none";
-                } else {
-                    um.style.display = "block";
-                }
+                um.style.display = "block";
                 <?php }?>
             }
             function newPost(x) {
@@ -448,11 +444,17 @@ if ($currentUrl == $devDomain) {
                 });
             }
             function hideMenus(event) {
+                const usermenu = document.getElementById('usermenu');
                 const notification = document.getElementById('notification');
                 const notifications = document.getElementById('notifications');
                 if (notifications.style.display == "block") {
                     if (!notifications.contains(event.target) && !notification.contains(event.target)) {
                         notifications.style.display = "none";
+                    }
+                }
+                if (usermenu.style.display == "block") {
+                    if (!usermenu.contains(event.target)) {
+                        usermenu.style.display = "none";
                     }
                 }
             }
