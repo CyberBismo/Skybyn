@@ -239,7 +239,7 @@
                                 tr.style.opacity = 0;
                                 setTimeout(() => {
                                     tr.style.opacity = 1;
-                                    reg_info.style.height = "170px";
+                                    reg_info.style.height = "100px";
                                 }, 10);
                                 table.appendChild(tr);
                                 td = document.createElement('td');

@@ -417,7 +417,7 @@
             <?php if (isMobile() == false) {?>
             .page-container {
                 min-width: 300px;
-                width: 50%;
+                width: 1100px;
                 margin: 0 auto;
                 margin-top: 105px;
                 padding: 10px 0;
@@ -568,15 +568,15 @@
             .start {
                 position: relative;
                 display: flex;
-                justify-content: center;
+                gap: 10px;
+                justify-content: space-around;
                 top: 200px;
                 min-width: 300px;
                 max-width: 1100px;
                 margin: 0 auto;
             }
             .welcome_information {
-                width: 70%;
-                margin: 0 100px;
+                width: 60%;
                 text-align: center;
                 color: white;
             }
@@ -591,9 +591,6 @@
             .info_text p {
                 display: none;
             }
-            .reg_info {
-                display: none;
-            }
             <?php } else {?>
             .start {
                 display: block;
@@ -603,6 +600,7 @@
             }
             .welcome_information {
                 width: calc(100% - 20px);
+                height: 70px;
                 margin: 0 auto;
                 margin-top: 75px;
                 text-align: center;
@@ -613,7 +611,6 @@
             }
             .info_text {
                 width: 100%;
-                height: 50px;
                 padding: 20px;
                 background: rgba(0,0,0,.1);
                 backdrop-filter: blur(5px);
@@ -634,6 +631,7 @@
                 color: rgb(var(--dark));
             }
             .reg_info {
+                display: none;
                 transition: all 0.3s ease-in-out;
             }
             #reg_table {
@@ -647,10 +645,7 @@
 
             <?php if (isMobile() == false) {?>
             .center_form {
-                min-width: 30%;
-                max-width: 500px;
-                margin: 0 auto;
-                margin-right: 100px;
+                min-width: 40%;
                 color: white;
                 border-radius: 20px;
                 box-sizing: border-box;
@@ -665,7 +660,7 @@
             }
             <?php }?>
             .center_form .form {
-                width: 100%;
+                width: auto;
                 padding: 20px;
                 background: rgba(0,0,0,.2);
                 border-radius: 20px;
@@ -749,31 +744,27 @@
                 color: rgba(200,200,200,1);
             }
 
-            .log-button,
             .reg-button {
+                display: flex;
                 width: auto;
                 margin-top: 10px;
                 background: rgba(0,0,0,.2);
                 box-sizing: border-box;
                 border-radius: 20px;
                 cursor: pointer;
-                overflow: hidden;
-            }
-            .log-button span {
-                height: 100%;
-                padding: 15px 20px;
-                border-radius: 20px;
-            }
-            .log-button span:hover {
-                background: rgba(255,255,255,.1);
-                cursor: pointer;
-            }
-            .reg-button {
-                text-align: center;
-                padding: 15px 0;
             }
             .reg-button:hover {
                 background: rgba(100,100,100,.1);
+            }
+            .reg-button span {
+                width: 50%;
+                padding: 15px;
+                border-radius: 20px;
+                overflow: hidden;
+            }
+            .reg-button span:hover {
+                background: rgba(255,255,255,.1);
+                cursor: pointer;
             }
 
             <?php if (isMobile() == false) {

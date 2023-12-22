@@ -179,10 +179,12 @@ if (isset($_COOKIE['logged'])) {
         </div>
         <?php if (skybyn('login-form') == "login") {
             if ($signup == false) {?>
-        <div class="reg-button" id="signup-btn" onclick="window.location.href='./register'">Sign up</div>
+        <div class="reg-button" id="signup-btn">
+            <span onclick="window.location.href='./register'">Sign up</span>
+        </div>
         <?php } else {?>
         <div class="log-button split" id="signup-btn">
-            <span onclick="window.location.href='./'" id="login-btn">Already registered? Login here</span>
+            <span onclick="window.location.href='./'" id="login-btn">Already registered?<br>Login here</span>
             <span onclick="window.location.href='/forgot'">Forgot password?</span>
         </div>
         <?php }}?>
@@ -204,10 +206,12 @@ if (isset($_COOKIE['logged'])) {
         </div>
         <?php if (skybyn('register') == "1") {
             if ($signup == false) {?>
-        <div class="reg-button" id="signup-btn" onclick="window.location.href='./register'">Sign up</div>
+        <div class="reg-button" id="signup-btn">
+            <span onclick="window.location.href='./register'">Sign up</span>
+        </div>
         <?php } else {?>
         <div class="reg-button" id="signup-btn">
-            <span onclick="window.location.href='./'" id="login-btn">Already registered? Login here</span>
+            <span onclick="window.location.href='./'" id="login-btn">Already registered?<br>Login here</span>
             <span onclick="window.location.href='/forgot'">Forgot password?</span>
         </div>
         <?php }}}?>
