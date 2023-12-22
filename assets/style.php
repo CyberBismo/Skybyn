@@ -1661,7 +1661,6 @@
             .user-dropdown {
                 position: absolute;
                 top: 75px;
-                text-align: right;
                 color: white;
                 box-shadow: 0 2px 2px rgba(0,0,0,.05);
                 backdrop-filter: blur(5px);

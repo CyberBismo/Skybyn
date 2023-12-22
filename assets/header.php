@@ -85,7 +85,7 @@ if ($currentUrl == $devDomain) {
                         <?php if (isMobile() == true) {?>
                         <li onclick="showSearch()"><i class="fa-solid fa-magnifying-glass"></i></li>
                         <?php } else {?>
-                        <li onclick="showNotifications()" id="notification">
+                        <li onclick="showNotifications(event)" id="notification">
                             <div class="notification_alert" id="noti_alert"><i class="fa-solid fa-circle-exclamation"></i></div>
                             <i class="fa-solid fa-bell"></i>
                         </li>
@@ -99,7 +99,7 @@ if ($currentUrl == $devDomain) {
                     <img src="<?=$avatar?>" onclick="window.location.href='./profile'">
                     <?php }?>
                 </div>
-                <div class="user-nav" onclick="showUserMenu()">
+                <div class="user-nav" onclick="showUserMenu(event)">
                     <ul>
                         <li><i class="fa-solid fa-bars"></i></li>
                     </ul>
@@ -250,7 +250,7 @@ if ($currentUrl == $devDomain) {
                     searchResult.style.display = "none";
                 }
             }
-            function showUserMenu() {
+            function showUserMenu(event) {
                 const um = document.getElementById('usermenu');
                 <?php if (isMobile() == true) {?>
                 const left = document.getElementById('left-panel');
@@ -263,7 +263,10 @@ if ($currentUrl == $devDomain) {
                     um.style.transform = 'translateX(0px)';
                 }
                 <?php } else {?>
-                um.style.display = "block";
+                if (event) {
+                    event.stopPropagation();
+                    um.style.display = "block";
+                }
                 <?php }?>
             }
             function newPost(x) {
@@ -433,7 +436,7 @@ if ($currentUrl == $devDomain) {
                 textarea.rows = textarea.value.split("\n").length;
             }
 
-            function showNotifications() {
+            function showNotifications(event) {
                 const notifications = document.getElementById('notifications');
                 const notiList = document.getElementById('noti-list');
                 $.ajax({
@@ -450,11 +453,13 @@ if ($currentUrl == $devDomain) {
                 if (notifications.style.display == "block") {
                     if (!notifications.contains(event.target) && !notification.contains(event.target)) {
                         notifications.style.display = "none";
+                        console.log("Hiding notification menu");
                     }
                 }
                 if (usermenu.style.display == "block") {
                     if (!usermenu.contains(event.target)) {
                         usermenu.style.display = "none";
+                        console.log("Hiding user menu");
                     }
                 }
             }
