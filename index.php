@@ -184,7 +184,7 @@ if (isset($_COOKIE['logged'])) {
         </div>
         <?php } else {?>
         <div class="log-button split" id="signup-btn">
-            <span onclick="window.location.href='./'" id="login-btn">Already registered?<br>Login here</span>
+            <span onclick="window.location.href='./'" id="login-btn">Login here</span>
             <span onclick="window.location.href='/forgot'">Forgot password?</span>
         </div>
         <?php }}?>
@@ -211,7 +211,7 @@ if (isset($_COOKIE['logged'])) {
         </div>
         <?php } else {?>
         <div class="reg-button" id="signup-btn">
-            <span onclick="window.location.href='./'" id="login-btn">Already registered?<br>Login here</span>
+            <span onclick="window.location.href='./'" id="login-btn">Login here</span>
             <span onclick="window.location.href='/forgot'">Forgot password?</span>
         </div>
         <?php }}}?>
@@ -226,9 +226,6 @@ if (isset($_COOKIE['logged'])) {
             x.style.height = "50%";
         }
         <?php }?>
-    }
-    function autoInfo() {
-        document.getElementById('welcome_info').style.height = "50%";
     }
 </script>
 

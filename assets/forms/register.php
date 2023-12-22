@@ -112,6 +112,7 @@
                         let register = document.getElementById('register');
                         let step_back = document.getElementById('step_back');
                         let info_text = document.getElementById('info_text');
+                        let table = document.getElementById('reg_table');
                         let reg_info = document.getElementById('reg_info');
                         let reg_form = document.getElementById('log_reg_form');
 
@@ -126,30 +127,30 @@
                             set_pw.style.display = "block";
                             register.value = "Continue";
                             document.getElementById('reg-t-pw').style.opacity = 0;
-                            reg_info.style.height = "290px";
+                            table.style.height = (table.offsetHeight - 30) + "px";
                             setTimeout(() => {
                                 document.getElementById('reg-t-pw').remove();
-                            }, 1000);
+                            }, 100);
                         } else
                         if (set_pw.style.display == "block") {
                             set_pw.style.display = "none";
                             set_username.style.display = "block";
                             register.value = "Continue";
                             document.getElementById('reg-t-uname').style.opacity = 0;
-                            reg_info.style.height = "260px";
+                            table.style.height = (table.offsetHeight - 30) + "px";
                             setTimeout(() => {
                                 document.getElementById('reg-t-uname').remove();
-                            }, 1000);
+                            }, 100);
                         } else
                         if (set_username.style.display == "block") {
                             set_username.style.display = "none";
                             set_email.style.display = "block";
                             register.value = "Send code";
                             document.getElementById('reg-t-email').style.opacity = 0;
-                            reg_info.style.height = "230px";
+                            table.style.height = (table.offsetHeight - 30) + "px";
                             setTimeout(() => {
                                 document.getElementById('reg-t-email').remove();
-                            }, 1000);
+                            }, 100);
                         } else
                         if (set_email_verify.style.display == "block") {
                             set_email_verify.style.display = "none";
@@ -158,10 +159,10 @@
                             register.style.display = "block";
                             register.value = "Continue";
                             document.getElementById('reg-t-email').style.opacity = 0;
-                            reg_info.style.height = "200px";
+                            table.style.height = (table.offsetHeight - 30) + "px";
                             setTimeout(() => {
                                 document.getElementById('reg-t-email').remove();
-                            }, 1000);
+                            }, 100);
                         } else
                         if (set_email.style.display == "block") {
                             set_email.style.display = "none";
@@ -170,10 +171,10 @@
                             register.style.display = "block";
                             register.value = "Continue";
                             document.getElementById('reg-t-name').style.opacity = 0;
-                            reg_info.style.height = "170px";
+                            table.style.height = (table.offsetHeight - 30) + "px";
                             setTimeout(() => {
                                 document.getElementById('reg-t-name').remove();
-                            }, 1000);
+                            }, 100);
                         } else
                         if (set_name.style.display == "block") {
                             set_name.style.display = "none";
@@ -181,10 +182,10 @@
                             register.value = "Continue";
                             step_back.style.display = "none";
                             document.getElementById('reg-t-age').style.opacity = 0;
-                            reg_info.style.height = "160px";
+                            table.style.height = (table.offsetHeight - 30) + "px";
                             setTimeout(() => {
                                 document.getElementById('reg-t-age').remove();
-                            }, 1000);
+                            }, 100);
                         }
                     }
 
@@ -201,6 +202,7 @@
                         let step_back = document.getElementById('step_back');
                         let err_msg = document.getElementById('err_msg');
 
+                        let wel_inf = document.getElementById('welcome_info');
                         let info_text = document.getElementById('info_text');
                         let reg_info = document.getElementById('reg_info');
                         let table = document.getElementById('reg_table');
@@ -220,9 +222,12 @@
                         const pw = document.getElementById('register-password'); // Password
                         const cpw = document.getElementById('cpassword'); // Confirm password
 
-                        info_text.setAttribute("hidden","");
-
-                        autoInfo();
+                        info_text.style.display = "none";
+                        reg_info.style.display = "block";
+                        
+                        <?php if (isMobile() == true) {?>
+                        wel_inf.style.height = "auto";
+                        <?php }?>
                         
                         // Verify date of birth value and enter full name
                         if (set_dob.style.display != "none") {
@@ -239,8 +244,8 @@
                                 tr.style.opacity = 0;
                                 setTimeout(() => {
                                     tr.style.opacity = 1;
-                                    reg_info.style.height = "100px";
-                                }, 10);
+                                    table.style.height = (table.offsetHeight + 30) + "px";
+                                }, 300);
                                 table.appendChild(tr);
                                 td = document.createElement('td');
                                 td.innerHTML = "Age:";
@@ -266,8 +271,8 @@
                                 tr.style.opacity = 0;
                                 setTimeout(() => {
                                     tr.style.opacity = 1;
-                                    reg_info.style.height = "200px";
-                                }, 10);
+                                    table.style.height = (table.offsetHeight + 30) + "px";
+                                }, 300);
                                 table.appendChild(tr);
                                 td_name = document.createElement('td');
                                 td_name.innerHTML = "Name:";
@@ -364,8 +369,8 @@
                                     tr.style.opacity = 0;
                                     setTimeout(() => {
                                         tr.style.opacity = 1;
-                                        reg_info.style.height = "230px";
-                                    }, 10);
+                                        table.style.height = (table.offsetHeight + 30) + "px";
+                                    }, 300);
                                     table.appendChild(tr);
                                     td_email = document.createElement('td');
                                     td_email.style.textAlign = "right";
@@ -465,8 +470,8 @@
                                     tr.style.opacity = 0;
                                     setTimeout(() => {
                                         tr.style.opacity = 1;
-                                        reg_info.style.height = "260px";
-                                    }, 10);
+                                        table.style.height = (table.offsetHeight + 30) + "px";
+                                    }, 300);
                                     table.appendChild(tr);
                                     td_uname = document.createElement('td');
                                     td_uname.innerHTML = "Username:";
@@ -506,8 +511,8 @@
                                 tr.style.opacity = 0;
                                 setTimeout(() => {
                                     tr.style.opacity = 1;
-                                    reg_info.style.height = "290px";
-                                }, 10);
+                                    table.style.height = (table.offsetHeight + 30) + "px";
+                                }, 300);
                                 table.appendChild(tr);
                                 td_pw = document.createElement('td');
                                 td_pw.innerHTML = "Password:";

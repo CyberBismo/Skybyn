@@ -582,7 +582,7 @@
             }
             .info_text,
             .reg_info {
-                padding: 50px 20px;
+                padding: 40px 20px;
                 background: rgba(var(--darker),.5);
                 backdrop-filter: blur(5px);
                 border-radius: 20px;
@@ -600,7 +600,7 @@
             }
             .welcome_information {
                 width: calc(100% - 20px);
-                height: 70px;
+                height: 75px;
                 margin: 0 auto;
                 margin-top: 75px;
                 text-align: center;
@@ -618,8 +618,11 @@
             }
             <?php }}?>
         
-            #welcome_info {
-                transition: all 0.3s;
+            #welcome_info,
+            #reg_info,
+            #reg_table,
+            #reg_table tr {
+                transition: all 0.3s ease-in-out;
             }
             
             .info_text h2 {
@@ -632,21 +635,26 @@
             }
             .reg_info {
                 display: none;
-                transition: all 0.3s ease-in-out;
             }
             #reg_table {
+                height: 0px;
                 margin-top: 20px;
-                transition: all 0.3s ease-in-out;
             }
             #reg_table tr {
                 opacity: 0;
-                transition: all 0.3s ease-in-out;
             }
 
             <?php if (isMobile() == false) {?>
             .center_form {
                 min-width: 40%;
                 color: white;
+                border-radius: 20px;
+                box-sizing: border-box;
+            }
+            .center_form .form {
+                width: 400px;
+                padding: 20px;
+                background: rgba(0,0,0,.2);
                 border-radius: 20px;
                 box-sizing: border-box;
             }
@@ -658,7 +666,6 @@
                 color: white;
                 box-sizing: border-box;
             }
-            <?php }?>
             .center_form .form {
                 width: auto;
                 padding: 20px;
@@ -666,6 +673,7 @@
                 border-radius: 20px;
                 box-sizing: border-box;
             }
+            <?php }?>
             .center_form .form .login,
             .center_form .form .register {
                 width: 100%;
@@ -744,24 +752,42 @@
                 color: rgba(200,200,200,1);
             }
 
+            <?php if (isMobile() == false) {?>
+            .log-button,
             .reg-button {
                 display: flex;
-                width: auto;
+                width: 400px;
                 margin-top: 10px;
+                text-align: center;
                 background: rgba(0,0,0,.2);
                 box-sizing: border-box;
                 border-radius: 20px;
                 cursor: pointer;
             }
+            <?php } else {?>
+            .log-button,
+            .reg-button {
+                display: flex;
+                margin-top: 10px;
+                text-align: center;
+                background: rgba(0,0,0,.2);
+                box-sizing: border-box;
+                border-radius: 20px;
+                cursor: pointer;
+            }
+            <?php }?>
+            .log-button:hover,
             .reg-button:hover {
                 background: rgba(100,100,100,.1);
             }
+            .log-button span,
             .reg-button span {
-                width: 50%;
+                width: 100%;
                 padding: 15px;
                 border-radius: 20px;
                 overflow: hidden;
             }
+            .log-button span:hover,
             .reg-button span:hover {
                 background: rgba(255,255,255,.1);
                 cursor: pointer;
