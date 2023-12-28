@@ -633,6 +633,13 @@
                 font-size: 8px;
                 color: rgb(var(--dark));
             }
+            .info_text ul {
+                padding: 0;
+                list-style: none;
+            }
+            .info_text b {
+                padding: 10px 0;
+            }
             .reg_info {
                 display: none;
             }
