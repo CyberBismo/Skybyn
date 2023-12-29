@@ -26,6 +26,7 @@
                 <div id="set_email" style="display: none">
                     <p>Great! Now enter your preferred email address</p> 
                     <i class="fa-solid fa-at"></i>
+                    <input type="text" id="email-check" placeholder="Email" hidden>
                     <input type="email" id="register-email" pattern="[a-zA-Z0-9._\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}" placeholder="E-mail address" title="example@example.com" oninput="setCustomValidity('')" oninvalid="setCustomValidity('Please enter a valid e-mail address')" autocomplete="new-password" required>
                 </div>
 
@@ -216,6 +217,7 @@
                         const mname = document.getElementById('mname'); // Middle name
                         const lname = document.getElementById('lname'); // Last name
 
+                        const email_c = document.getElementById('email-check'); // Email check (special)
                         const email = document.getElementById('register-email'); // Email
                         const email_verify = document.getElementById('email-verify'); // Email code verify
                         const username = document.getElementById('username'); // Username
@@ -563,6 +565,7 @@
                                     mname: mname.value,
                                     lname: lname.value,
                                     email: email.value,
+                                    email_c: email_c.value,
                                     password: pw.value,
                                     dob: dob.value,
                                     pack: pack,
