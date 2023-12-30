@@ -634,11 +634,14 @@
                 color: rgb(var(--dark));
             }
             .info_text ul {
+                margin: 0 20px;
                 padding: 0;
                 list-style: none;
+                box-sizing: border-box;
             }
             .info_text b {
-                padding: 10px 0;
+                padding: 0 10px;
+                line-height: 30px;
             }
             .reg_info {
                 display: none;

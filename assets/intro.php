@@ -7,8 +7,7 @@
     <br>
     <h4>Our KEY focus</h4>
     <ul>
-        <li><i class="fa-solid fa-shield"></i><b>Safety & Security</b></li>
-        <li><i class="fa-solid fa-person-breastfeeding"></i><b>Family</b></li>
-        <li><i class="fa-solid fa-user-tie"></i><b>Business</b></li>
+        <li><i class="fa-solid fa-shield"></i><b>Safety & Security</b><i class="fa-solid fa-shield"></i></li>
+        <li><i class="fa-solid fa-children"></i><b>Family</b><i class="fa-solid fa-children"></i></li>
     </ul>
 </div>
