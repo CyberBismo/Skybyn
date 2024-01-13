@@ -2003,27 +2003,37 @@
                 font-size: 12px;
             }
             .post_actions {
+                position: relative;
                 height: 50px;
                 padding: 20px;
-                text-align: right;
-                font-size: 12px;
                 box-sizing: border-box;
                 cursor: pointer;
             }
-            .post_actions:hover .post_action_list {
-                display: flex;
-            }
             .post_action_list {
-                position: relative;
+                flex-direction: column;
                 background: rgba(0,0,0,.3);
                 border-radius: 10px 3px 10px 10px;
                 overflow: hidden;
             }
             .post_action {
-                display: block;
-                padding: 10px 20px;
-                text-align: left;
+                display: flex;
+                padding: 7px;
                 color: white;
+            }
+            .post_action i {
+                margin-top: 10px;
+            }
+            .post_action span {
+                position: absolute;
+                width: 100px;
+                opacity: 0;
+                text-align: right;
+                margin-top: 8px;
+                transition: all .5s;
+            }
+            .post_action:hover span {
+                transform: translateX(-120px);
+                opacity: 1;
             }
             .post_action:hover {
                 background: rgba(255,255,255,.2);
@@ -2034,16 +2044,29 @@
                 word-break: break-all;
                 overflow: hidden;
             }
-            .post_links {
-                width: 100%;
-                margin: 20px 0;
-                padding: 0;
+            .post_website {
+                width: calc(100% - 20px);
+                max-height: 100px;
+                margin: 5px 10px;
+                border-radius: 10px;
+                box-sizing: border-box;
+                overflow: hidden;
+            }
+            .post_website img {
+                max-width: 90px;
+                max-height: 90px;
+                margin: 10px;
+                border-radius: 10px;
+                box-sizing: border-box;
                 overflow: hidden;
             }
             .post_links iframe {
-                width: 100%;
+                width: calc(100% - 20px);
+                margin: 0 10px;
                 aspect-ratio: 16/9;
                 border: none;
+                border-radius: 10px;
+                box-sizing: border-box;
             }
             .post_uploads {
                 display: flex;

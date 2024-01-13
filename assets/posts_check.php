@@ -15,7 +15,7 @@ $getPosts = $conn->query("SELECT p.*
     )
     AND p.id > $last_id
     ORDER BY p.created DESC
-    LIMIT 5
+    LIMIT 3
 ");
 while($post = $getPosts->fetch_assoc()) {
     $post_id = $post['id'];
@@ -36,8 +36,7 @@ while($post = $getPosts->fetch_assoc()) {
     }
     
     $post_youtube = convertYoutube($post_content);
-    $post_content_res = str_replace('\r\n',"<br />",fixEmojis($post_content, 1));
-    $post_links = makeClickable($post_links);
+    $post_content_res = str_replace('\r\n',"<br />",fixEmojis(simplifyAndMakeClickable($post_content), 1));
 ?>
 
 <div class="post" id="post_<?=$post_id?>">
@@ -74,9 +73,6 @@ while($post = $getPosts->fetch_assoc()) {
             <?=$post_content_res?>
         </div>
         <div class="post_links">
-            <div class="post_link">
-                <?=$post_links?>
-            </div>
             <?=$post_youtube?>
         </div>
         <div class="post_uploads">

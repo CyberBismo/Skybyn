@@ -68,19 +68,7 @@ if (!isset($_COOKIE['country'])) {
     createCookie("country",$country, "1","6");
 }
 
-# Make url's clickable from text
-function makeClickable($string) {
-    // regex pattern to match links
-    $pattern = '/(https?:\/\/[^\s]+)/i';
-
-    // replace matched links with clickable HTML links
-    $replacement = ' <a href="$1" target="_blank"><i class="fa-solid fa-link"></i></a> ';
-    $string = preg_replace($pattern, $replacement, $string);
-
-    // return modified string
-    return $string;
-}
-
+# Get metadata from URL
 function getMetadata($url) {
     // Parse the URL to get the domain
     $parsedUrl = parse_url($url);
@@ -137,39 +125,50 @@ function getMetadata($url) {
     return [$domain, $title, $description, $icon];
 }
 
-function extractUrls($text, $database) {
-    $pattern = '/(https?:\/\/[^\s]+)/';
-    $filePattern = '/\.(pdf|docx|zip|rar|exe|png|jpg|jpeg|gif|csv|xls|xlsx|ppt|pptx)$/i';
+# Extract URL's from text
+function extractUrls($text) {
+    // Regular expression for URL extraction
+    $urlPattern = '/\b(?:https?|ftp):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*[a-z0-9-+&@#\/%=~_|]/i';
 
-    try {
-        $text = preg_replace_callback($pattern, function($matches) use ($filePattern, $database) {
-            $originalUrl = $matches[1];
+    // Array to hold all extracted URLs
+    $urls = array();
 
-            // Shorten the URL
-            $shortenedUrl = "";#shortenUrl($originalUrl); // Implement this function to use a URL shortening service API
+    // Perform the regular expression match
+    if (preg_match_all($urlPattern, $text, $matches)) {
+        // Add all matched URLs to the array
+        $urls = $matches[0];
+    }
 
-            // Store the shortened URL in the database
-            #storeUrlInDatabase($originalUrl, $shortenedUrl, $database); // Implement this function
+    return $urls;
+}
 
-            try {
-                $metadata = getMetadata($originalUrl); // Fetch metadata for each URL
-                $title = isset($metadata['title']) ? $metadata['title'] : $shortenedUrl;
-                $description = isset($metadata['description']) ? ": " . $metadata['description'] : '';
-                $linkType = preg_match($filePattern, $originalUrl) ? " (download)" : " (visit)";
+# Make simplified URL's clickable from the original URL
+function simplifyAndMakeClickable($text) {
+    // Regular expression to extract URLs
+    $urlPattern = '/https?:\/\/[^\s]+/';
 
-                // Use the shortened URL in the clickable link
-                return "<a href='$shortenedUrl' target='_blank'>$title$description$linkType</a>";
-            } catch (Exception $e) {
-                error_log("Error processing URL: $originalUrl. Error: " . $e->getMessage());
-                return $shortenedUrl; // Fallback to shortened URL in case of error
-            }
-        }, $text);
-    } catch (Exception $e) {
-        error_log("Error in extractUrls function. Error: " . $e->getMessage());
-        return "Error processing text";
+    // Find all URLs in the text
+    if (preg_match_all($urlPattern, $text, $matches)) {
+        foreach ($matches[0] as $url) {
+            // Simplify each URL
+            $simplifiedUrl = simplifyUrl($url);
+
+            // Make each URL clickable
+            $clickableUrl = '<a href="' . $url . '" target="_blank" title="' . $url . '">' . $simplifiedUrl . '</a>';
+
+            // Replace the original URL in the text with its clickable, simplified version
+            $text = str_replace($url, $clickableUrl, $text);
+        }
     }
 
     return $text;
+}
+
+# Simplify URL
+function simplifyUrl($url) {
+    $pattern = "/https?:\/\/(www\.)?([^\/]*\.?)\/?.*/";
+    $replacement = "$2";
+    return preg_replace($pattern, $replacement, $url);
 }
 
 # Display video frame with youtube code when text contains youtube url

@@ -21,7 +21,7 @@ $image = isset($_FILES['files']) ? $_FILES['files'] : '';
 $fixedText = fixEmojis($text, null);
 $escapedText = sanitizeInput($conn, $fixedText);
 $text = nl2br($escapedText);
-$urls = "";#extractUrls($text);
+$urls = extractUrls($text);
 
 $proceed = false;
 
