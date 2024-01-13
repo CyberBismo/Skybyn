@@ -20,7 +20,6 @@ if ($currentUrl == $devDomain) {
         <link rel="apple-touch-icon" sizes="180x180" href="assets/images/logo_fav.png">
         <link rel="icon" type="image/x-icon" href="assets/images/logo_fav.png">
         <link href="fontawe/css/all.css" rel="stylesheet">
-        <script src="https://kit.fontawesome.com/bafdb5f0e9.js" crossorigin="anonymous"></script>
         <script src="assets/js/jquery.min.js"></script>
         <?php include_once "style.php"?>
     </head>
