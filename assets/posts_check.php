@@ -22,6 +22,7 @@ while($post = $getPosts->fetch_assoc()) {
     $post_user = $post['user'];
     $post_content = $post['content'];
     $post_created = date("d M. y H:i:s", $post['created']);
+    $post_links = $post['urls'];
 
     $getComments = $conn->query("SELECT * FROM `comments` WHERE `post`='$post_id'");
     $comments = $getComments->num_rows;
@@ -35,7 +36,8 @@ while($post = $getPosts->fetch_assoc()) {
     }
     
     $post_youtube = convertYoutube($post_content);
-    $post_content_res = str_replace('\r\n',"<br />",fixEmojis(replaceUrl($post_content), 1));
+    $post_content_res = str_replace('\r\n',"<br />",fixEmojis($post_content, 1));
+    $post_links = extractUrls($post_links);
 ?>
 
 <div class="post" id="post_<?=$post_id?>">
@@ -53,13 +55,16 @@ while($post = $getPosts->fetch_assoc()) {
             <div class="post_actions">
                 <i class="fa-solid fa-ellipsis-vertical"></i>
                 <div class="post_action_list" hidden>
+                    <div class="post_action" onclick="">
+                        <i class="fa-solid fa-magnifying-glass-plus"></i> Show
+                    </div>
                     <?php if ($post_user == $uid || $rank > 0) {?>
-                        <div class="post_action" onclick="editPost(<?=$post_id?>)">
-                            <i class="fa-solid fa-pen-to-square"></i> Edit
-                        </div>
-                        <div class="post_action" onclick="deletePost(<?=$post_id?>)">
-                            <i class="fa-solid fa-trash"></i> Delete
-                        </div>
+                    <div class="post_action" onclick="editPost(<?=$post_id?>)">
+                        <i class="fa-solid fa-pen-to-square"></i> Edit
+                    </div>
+                    <div class="post_action" onclick="deletePost(<?=$post_id?>)">
+                        <i class="fa-solid fa-trash"></i> Delete
+                    </div>
                     <?php }?>
                 </div>
             </div>
@@ -69,6 +74,9 @@ while($post = $getPosts->fetch_assoc()) {
             <?=$post_content_res?>
         </div>
         <div class="post_links">
+            <div class="post_link">
+                <?=$post_links?>
+            </div>
             <?=$post_youtube?>
         </div>
         <div class="post_uploads">
@@ -96,6 +104,7 @@ while($post = $getPosts->fetch_assoc()) {
                 if ($getComment->num_rows > 0) {
                     while($commentData = $getComment->fetch_assoc()) {
                         $commentID = $commentData['id'];
+                        $commentUser = $commentData['user'];
                         $commentUsername = getUser("id",$commentData['user'],"username");
                         $commentAvatar = getUser("id",$commentData['user'],"avatar");
                         $commentText = $commentData['content'];
@@ -110,7 +119,9 @@ while($post = $getPosts->fetch_assoc()) {
                     </div>
                     <div class="post_comment_content"><?=$commentText?></div>
                     <div class="post_comment_actions">
+                        <?php if ($rank > 0 || $commentUser == $uid) {?>
                         <div class="btn" onclick="delComment(<?=$commentID?>)"><i class="fa-solid fa-trash"></i></div>
+                        <?php }?>
                     </div>
                 </div>
                 <?php }}?>

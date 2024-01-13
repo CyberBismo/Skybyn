@@ -377,14 +377,29 @@ if ($currentUrl == $devDomain) {
                     contentType: false
                 }).done(function(response) {
                     console.log(response);
-                    if (response !== "error") {
+                    if (response == "") {
                         text.value = "";
                         image.value = "";
                         filesDiv.innerHTML = "";
-                        checkPosts();
                         newPost("close");
+                        isCreatingPost = false;
+                        
+                        let posts = document.getElementById('posts');
+                        let post = posts.firstElementChild;
+                        let id = post.id.replace("post_", "");
+                        $.ajax({
+                            url: 'assets/posts_check.php',
+                            type: "POST",
+                            data: {
+                                last : id
+                            }
+                        }).done(function(response) {
+                            if (response != "") {
+                                posts.insertAdjacentHTML('afterbegin', response);
+                                removeDuplicateIds();
+                            }
+                        });
                     }
-                    isCreatingPost = false;
                 });
             }
             function checkEnter() {
