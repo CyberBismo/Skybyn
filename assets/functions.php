@@ -137,42 +137,36 @@ function getMetadata($url) {
     return [$domain, $title, $description, $icon];
 }
 
-
-function extractUrls($text) {
-    // Regular expression to match URLs
+function extractUrls($text, $database) {
     $pattern = '/(https?:\/\/[^\s]+)/';
-
-    // Regular expression to detect file URLs
     $filePattern = '/\.(pdf|docx|zip|rar|exe|png|jpg|jpeg|gif|csv|xls|xlsx|ppt|pptx)$/i';
 
     try {
-        // Replace URLs in text with clickable links using metadata
-        $text = preg_replace_callback($pattern, function($matches) use ($filePattern) {
-            $url = $matches[1];
+        $text = preg_replace_callback($pattern, function($matches) use ($filePattern, $database) {
+            $originalUrl = $matches[1];
+
+            // Shorten the URL
+            $shortenedUrl = "";#shortenUrl($originalUrl); // Implement this function to use a URL shortening service API
+
+            // Store the shortened URL in the database
+            #storeUrlInDatabase($originalUrl, $shortenedUrl, $database); // Implement this function
+
             try {
-                $metadata = getMetadata($url); // Fetch metadata for each URL
-
-                // Use title from metadata; if not available, use URL itself
-                $title = isset($metadata['title']) ? $metadata['title'] : $url;
-
-                // Optionally, include description in the link text
+                $metadata = getMetadata($originalUrl); // Fetch metadata for each URL
+                $title = isset($metadata['title']) ? $metadata['title'] : $shortenedUrl;
                 $description = isset($metadata['description']) ? ": " . $metadata['description'] : '';
+                $linkType = preg_match($filePattern, $originalUrl) ? " (download)" : " (visit)";
 
-                // Check if URL is a direct link to a downloadable file
-                $linkType = preg_match($filePattern, $url) ? " (download)" : " (visit)";
-
-                // Construct the clickable link
-                return "<a href='$url' target='_blank'>$title$description$linkType</a>";
+                // Use the shortened URL in the clickable link
+                return "<a href='$shortenedUrl' target='_blank'>$title$description$linkType</a>";
             } catch (Exception $e) {
-                // Handle any exceptions during processing of individual URL
-                error_log("Error processing URL: $url. Error: " . $e->getMessage());
-                return $url; // Fallback to plain URL in case of error
+                error_log("Error processing URL: $originalUrl. Error: " . $e->getMessage());
+                return $shortenedUrl; // Fallback to shortened URL in case of error
             }
         }, $text);
     } catch (Exception $e) {
-        // Handle any exceptions during the overall processing
         error_log("Error in extractUrls function. Error: " . $e->getMessage());
-        return "Error processing text"; // Fallback message
+        return "Error processing text";
     }
 
     return $text;

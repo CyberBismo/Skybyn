@@ -32,7 +32,7 @@ while ($post = $getPosts->fetch_assoc()) {
 
     $post_youtube = convertYoutube($post_content);
     $post_content_res = str_replace('\r\n',"<br />",fixEmojis($post_content, 1));
-    $post_links = extractUrls($post_links);
+    $post_links = makeClickable($post_links);
 ?>
 
 <div class="post" id="post_<?=$post_id?>">
