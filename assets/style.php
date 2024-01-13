@@ -510,6 +510,7 @@
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
+                text-align: center;
                 bottom: 0;
                 left: 50%;
                 width: auto;
@@ -525,6 +526,9 @@
             }
             .bnav-btn {
                 padding: 20px;
+            }
+            .bnav-btn i {
+                transition: all .5s ease-in-out;
             }
 
             .bottom-navigation {
@@ -1216,13 +1220,12 @@
             <?php } else {?>
             .new_post {
                 position: fixed;
-                bottom: 100px;
+                bottom: 0;
                 left: 0;
                 width: 100%;
-                height: calc(100% - 175px);
+                height: calc(100% - 75px);
                 background: rgba(var(--dark),.8);
                 backdrop-filter: blur(5px);
-                border-radius: 0 0 20px;
                 box-sizing: border-box;
                 box-shadow: 0px 5px 10px 0px rgba(0,0,0,.5);
                 overflow: hidden;
@@ -1239,7 +1242,7 @@
                 width: 100%;
                 min-width: 100%;
                 max-width: 100%;
-                min-height: 300px;
+                min-height: 100px;
                 max-height: 600px;
                 margin: 0 auto;
                 padding: 10px;

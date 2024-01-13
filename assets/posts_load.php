@@ -11,7 +11,7 @@ $getPosts = $conn->query("SELECT p.*
         WHERE f.user_id = $uid AND f.status = 'accepted'
     )
     ORDER BY p.created DESC
-    LIMIT 5 OFFSET $offset
+    LIMIT 1 OFFSET $offset
 ");
 
 // Generate HTML structure for the fetched posts
@@ -33,8 +33,8 @@ while ($post = $getPosts->fetch_assoc()) {
     }
 
     $post_youtube = convertYoutube($post_content);
-    $post_content_res = str_replace('\r\n',"<br />",fixEmojis(replaceUrl($post_content), 1));
-    ?>    
+    $post_content_res = str_replace('\r\n',"<br />",fixEmojis(simplifyAndMakeClickable($post_content), 1));
+?>
 
 <div class="post" id="post_<?=$post_id?>">
     <div class="post_body">
@@ -48,18 +48,15 @@ while ($post = $getPosts->fetch_assoc()) {
                 </div>
                 <div class="post_date"><?=$post_created?></div>
             </div>
-            <div class="post_actions">
+            <div class="post_actions" onclick="showPostActions(<?=$post_id?>)">
                 <i class="fa-solid fa-ellipsis-vertical"></i>
-                <div class="post_action_list" hidden>
-                    <div class="post_action" onclick="showImage(<?=$post_id?>)">
-                        <i class="fa-solid fa-magnifying-glass-plus"></i> Show
-                    </div>
+                <div class="post_action_list" id="pal_<?=$post_id?>" hidden>
                     <?php if ($post_user == $uid || $rank > 0) {?>
                     <div class="post_action" onclick="editPost(<?=$post_id?>)">
-                        <i class="fa-solid fa-pen-to-square"></i> Edit
+                        <i class="fa-solid fa-pen-to-square"></i><span>Edit</span>
                     </div>
                     <div class="post_action" onclick="deletePost(<?=$post_id?>)">
-                        <i class="fa-solid fa-trash"></i> Delete
+                        <i class="fa-solid fa-trash"></i><span>Delete</span>
                     </div>
                     <?php }?>
                 </div>
@@ -80,7 +77,7 @@ while ($post = $getPosts->fetch_assoc()) {
                 <img src="<?=$file?>" onclick="showImage(<?=$post_id?>)">
             <?php }}?>
         </div>
-        <i><?=$comment_count?> comment(s)</i>
+        <i><?=$comments?> comment(s)</i>
         <div class="post_comments">
             <div class="post_comment">
                 <div class="post_comment_user">
@@ -122,6 +119,4 @@ while ($post = $getPosts->fetch_assoc()) {
         </div>
     </div>
 </div>
-    <?php
-}
-?>
+<?php }?>

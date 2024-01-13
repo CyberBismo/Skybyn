@@ -15,7 +15,7 @@ $getPosts = $conn->query("SELECT p.*
     )
     AND p.id > $last_id
     ORDER BY p.created DESC
-    LIMIT 3
+    LIMIT 1
 ");
 while($post = $getPosts->fetch_assoc()) {
     $post_id = $post['id'];
@@ -51,18 +51,15 @@ while($post = $getPosts->fetch_assoc()) {
                 </div>
                 <div class="post_date"><?=$post_created?></div>
             </div>
-            <div class="post_actions">
+            <div class="post_actions" onclick="showPostActions(<?=$post_id?>)">
                 <i class="fa-solid fa-ellipsis-vertical"></i>
-                <div class="post_action_list" hidden>
-                    <div class="post_action" onclick="">
-                        <i class="fa-solid fa-magnifying-glass-plus"></i> Show
-                    </div>
+                <div class="post_action_list" id="pal_<?=$post_id?>" hidden>
                     <?php if ($post_user == $uid || $rank > 0) {?>
                     <div class="post_action" onclick="editPost(<?=$post_id?>)">
-                        <i class="fa-solid fa-pen-to-square"></i> Edit
+                        <i class="fa-solid fa-pen-to-square"></i><span>Edit</span>
                     </div>
                     <div class="post_action" onclick="deletePost(<?=$post_id?>)">
-                        <i class="fa-solid fa-trash"></i> Delete
+                        <i class="fa-solid fa-trash"></i><span>Delete</span>
                     </div>
                     <?php }?>
                 </div>
@@ -125,5 +122,4 @@ while($post = $getPosts->fetch_assoc()) {
         </div>
     </div>
 </div>
-
 <?php }?>

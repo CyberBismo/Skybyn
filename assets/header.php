@@ -58,7 +58,7 @@ if ($currentUrl == $devDomain) {
 
         <!--div class="clouds"></div-->
 
-        <div class="header">
+        <div class="header" id="header">
             <?php if (isset($_SESSION['user'])) {
             if (isMobile() == false) {
                 include_once("assets/logo.php");
@@ -136,8 +136,9 @@ if ($currentUrl == $devDomain) {
                     <span>
                         <i class="fa-solid fa-earth-americas"></i>
                         <select id="new_post_public">
-                            <option value="1">Public</option>
                             <option value="0">Private</option>
+                            <option value="1" selected>Friends only</option>
+                            <option value="2">Public</option>
                         </select>
                     </span>
                     <span>
@@ -269,6 +270,8 @@ if ($currentUrl == $devDomain) {
                 <?php }?>
             }
             function newPost(x) {
+                const header = document.getElementById('header');
+                const mobile_nav_btn = document.getElementById('mobile_new_post');
                 const new_post_btn = document.getElementById('new_post_btn');
                 const new_post = document.getElementById('new_post');
                 const new_post_input = document.getElementById('new_post_input');
@@ -278,9 +281,14 @@ if ($currentUrl == $devDomain) {
                     if (newPostIcon) {
                         newPostIcon.classList.add("fa-plus");
                         newPostIcon.classList.remove("fa-xmark");
+                        mobile_nav_btn.classList.add("fa-plus");
+                        mobile_nav_btn.classList.remove("fa-xmark");
                     }
                     new_post_btn.style.display = "block";
                     new_post.style.display = "none";
+                    mobile_nav_btn.style.transform = "rotate(0deg)";
+                    header.style.background = "rgba(var(--dark),.2)";
+                    new_post.style.background = "rgba(var(--dark),.2)";
                 } else {
                     if (new_post.style.display == "block") {
                         if (newPostIcon) {
@@ -288,15 +296,27 @@ if ($currentUrl == $devDomain) {
                             newPostIcon.classList.remove("fa-xmark");
                         }
                         new_post.style.display = "none";
-                        new_post_btn.style.display = "block";
+                        if (new_post_btn) {
+                            new_post_btn.style.display = "block";
+                        }
+                        mobile_nav_btn.style.transform = "rotate(0deg)";
+                        new_post.style.background = "rgba(var(--dark),.2)";
+                        header.style.background = "rgba(var(--dark),.2)";
                     } else {
                         if (newPostIcon) {
                             newPostIcon.classList.add("fa-xmark");
                             newPostIcon.classList.remove("fa-plus");
                         }
                         new_post.style.display = "block";
-                        new_post_btn.style.display = "none";
+                        if (new_post_btn) {
+                            new_post_btn.style.display = "none";
+                        }
+                        mobile_nav_btn.style.transform = "rotate(45deg)";
                         new_post_input.focus();
+                        new_post.style.background = "rgba(var(--dark),1)";
+                        <?php if (isMobile() == true) {?>
+                        header.style.background = "rgba(var(--dark),1)";
+                        <?php }?>
                     }
                 }
             }
@@ -829,7 +849,7 @@ if ($currentUrl == $devDomain) {
         </div>
         <div class="bottom-nav">
             <div class="bnav-btn" onclick="showSearch()"><i class="fa-solid fa-magnifying-glass"></i></div>
-            <div class="bnav-btn" onclick="newPost()"><i class="fa-solid fa-plus"></i></div>
+            <div class="bnav-btn" onclick="newPost()"><i class="fa-solid fa-plus" id="mobile_new_post"></i></div>
             <div class="bnav-btn" onclick="showRightPanel()"><i class="fa-solid fa-user-group"></i></div>
         </div>
         <?php }?>
@@ -939,6 +959,238 @@ if ($currentUrl == $devDomain) {
                     images[index].classList.add("active");
                 });
             }
+
+            function isScrolledToBottom() {
+                // Get the current scroll position
+                var scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+                var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+                var windowHeight = window.innerHeight;
+
+                // Check if we're at the bottom of the page
+                return scrollHeight - scrollTop === windowHeight;
+            }
+            window.addEventListener("scroll", function () {
+                if (isScrolledToBottom()) {
+                    loadMorePosts();
+                }
+            });
+            
+            let loading = false;
+            const limit = 3;
+
+            function loadMorePosts() {
+                if (loading) {
+                    return;
+                }
+
+                const countPosts = document.querySelectorAll('div.post');
+                const offset = countPosts.length;
+
+                loading = true;
+                $.ajax({
+                    url: 'assets/posts_load.php',
+                    type: 'POST',
+                    data: {
+                        offset: offset
+                    },
+                    success: function (response) {
+                        const postsContainer = document.getElementById('posts');
+                        postsContainer.insertAdjacentHTML('beforeend', response);
+                        loading = false;
+                    },
+                    error: function () {
+                        loading = false;
+                    }
+                });
+            }
+
+            // Attach the scroll event listener to load more posts when scrolled to the bottom
+            window.addEventListener('scroll', function () {
+                const windowHeight = window.innerHeight;
+                const documentHeight = document.documentElement.scrollHeight;
+                const scrollPosition = window.scrollY;
+
+                if (documentHeight - (scrollPosition + windowHeight) < 200) {
+                    loadMorePosts();
+                }
+            });
+
+            function hitEnter(input,x) {
+                const button = document.getElementById('login');
+
+                function handleKeyPress(event) {
+                    if (event.keyCode === 13) {
+                        sendComment(x);
+                    }
+                }
+
+                input.addEventListener('keydown', handleKeyPress, { once: true });
+            }
+            function sendComment(x) {
+                const input = document.getElementById('pc_'+x);
+
+                if (input.value.length > 0) {
+                    $.ajax({
+                        url: 'assets/comment_new.php',
+                        type: "POST",
+                        data: {
+                            post_id : x,
+                            comment : input.value
+                        }
+                    }).done(function(response) {
+                        input.value = "";
+                        checkComments(x);
+                    });
+                }
+            }
+            function checkComments(x) {
+                const comments = document.getElementById('post_comments_'+x);
+                const comment = comments.firstElementChild;
+                $.ajax({
+                    url: 'assets/comments_check.php',
+                    type: "POST",
+                    data: {
+                        post : x
+                    }
+                }).done(function(response) {
+                    if (response != "") {
+                        comments.insertAdjacentHTML('afterbegin', response);
+                        removeDuplicateIds();
+                    }
+                });
+            }
+            function cleanComments() {
+                let comments = document.querySelectorAll('.post_comment');
+                let commentIds = [];
+                for (var i = 0; i < comments.length; i++) {
+                    let commentId = comments[i].id.replace('comment_', '');
+                    commentIds.push(commentId);
+                }
+
+                if (commentIds.length > 0) {
+                    $.ajax({
+                        url: 'assets/comments_clean.php',
+                        type: "POST",
+                        data: {
+                            ids: commentIds
+                        }
+                    }).done(function(response) {
+                        var nonExistingCommentIds = response.split(',');
+                        for (var i = 0; i < nonExistingCommentIds.length; i++) {
+                            var commentId = nonExistingCommentIds[i];
+                            var comment = document.getElementById('comment_' + commentId);
+                            if (comment) {
+                                comment.remove();
+                            }
+                        }
+                    });
+                }
+            }
+            function delComment(x) {
+                const comment = document.getElementById('comment_'+x);
+                $.ajax({
+                    url: 'assets/comment_delete.php',
+                    type: "POST",
+                    data: {
+                        comment_id : x
+                    }
+                }).done(function(response) {
+                    comment.remove();
+                });
+            }
+            function editPost(x) {
+                const post = document.getElementById('post_c_'+ x);
+                const new_post_input = document.getElementById('new_post_input');
+                new_post_input.value = post.innerHTML;
+                new_post_input.focus();
+                newPost();
+            }
+            function deletePost(x) {
+                const post = document.getElementById('post_'+ x);
+                $.ajax({
+                    url: 'assets/functions.php',
+                    type: "POST",
+                    data: {
+                        deletePost : null,
+                        post_id : x
+                    }
+                }).done(function(response) {
+                    post.remove();
+                    checkPosts();
+                });
+            }
+            function showPostActions(x) {
+                const actionList = document.getElementById("pal_"+x);
+                
+                if (actionList.hidden == true) {
+                    actionList.hidden = false;
+                } else {
+                    actionList.hidden = true;
+                }
+            }
+            function checkPosts() {
+                let posts = document.getElementById('posts');
+                let post = posts.firstElementChild;
+                let id = post.id.replace("post_", "");
+                $.ajax({
+                    url: 'assets/posts_check.php',
+                    type: "POST",
+                    data: {
+                        last : id
+                    }
+                }).done(function(response) {
+                    if (response != "") {
+                        posts.insertAdjacentHTML('afterbegin', response);
+                        removeDuplicateIds();
+                    }
+                });
+            }
+            function cleanPosts() {
+                let posts = document.querySelectorAll('.post');
+                let postIds = [];
+                for (var i = 0; i < posts.length; i++) {
+                    let postId = posts[i].id.replace('post_', '');
+                    postIds.push(postId);
+                }
+
+                if (postIds.length > 0) {
+                    $.ajax({
+                        url: 'assets/posts_clean.php',
+                        type: "POST",
+                        data: {
+                            ids: postIds
+                        }
+                    }).done(function(response) {
+                        var nonExistingPostIds = response.split(',');
+                        for (var i = 0; i < nonExistingPostIds.length; i++) {
+                            var postId = nonExistingPostIds[i];
+                            var post = document.getElementById('post_' + postId);
+                            if (post) {
+                                post.remove();
+                            }
+                        }
+                    });
+                }
+            }
+            function removeDuplicateIds() {
+                const elements = document.querySelectorAll('*');
+                const idMap = new Map();
+                elements.forEach(element => {
+                    const id = element.id;
+                    if (id) {
+                        if (idMap.has(id)) {
+                            element.parentNode.removeChild(element);
+                        } else {
+                            idMap.set(id, true);
+                        }
+                    }
+                });
+            }
+            setInterval(() => {
+                checkPosts();
+                cleanPosts();
+            }, 300000); // Every 5 minutes
+            removeDuplicateIds();
         </script>
 
         <?php }?>
