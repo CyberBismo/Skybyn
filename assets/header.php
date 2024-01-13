@@ -376,7 +376,6 @@ if ($currentUrl == $devDomain) {
                     processData: false,
                     contentType: false
                 }).done(function(response) {
-                    console.log(response);
                     if (response == "") {
                         text.value = "";
                         image.value = "";
