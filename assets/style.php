@@ -2773,10 +2773,19 @@
                 text-align: left;
             }
 
+            /** Market list */
             .markets {
                 width: 100%;
             }
             #my-markets {
+                padding: 10px;
+            }
+
+            /** Game list */
+            .gaming {
+                width: 100%;
+            }
+            #my-games {
                 padding: 10px;
             }
 
