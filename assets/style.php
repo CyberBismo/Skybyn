@@ -417,7 +417,7 @@
             <?php if (isMobile() == false) {?>
             .page-container {
                 min-width: 300px;
-                width: 1100px;
+                max-width: 1100px;
                 margin: 0 auto;
                 margin-top: 105px;
                 padding: 10px 0;
@@ -1033,18 +1033,17 @@
 
             .header .top-left .logo {
                 display: flex;
-                justify-content: center;
-                align-items: center;
+                min-width: 300px;
+                max-width: 33.33%;
             }
             .header .top-left .logo img {
                 width: auto;
-                max-height: 75px;
-                padding: 0 20px;
-                box-sizing: border-box;
+                height: 50px;
+                padding: 10px 20px;
             }
             .header .top-left .logo-name {
                 width: auto;
-                font-size: 14px;
+                font-size: 12px;
             }
             .header .top-left .logo-name h1 {
                 margin: 10px 0 5px 0;
@@ -1068,6 +1067,7 @@
                 border-radius: 50px;
                 box-sizing: border-box;
                 cursor: pointer;
+                overflow: hidden;
             }
             .new_post {
                 position: fixed;
@@ -1395,7 +1395,7 @@
             }
             <?php if (isMobile() == false) {?>
             .header .top {
-                width: 300px;
+                min-width: 300px;
                 max-width: 33%;
                 margin-left: auto;
             }

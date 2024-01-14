@@ -70,59 +70,18 @@ if (!isset($_COOKIE['country'])) {
 
 # Get metadata from URL
 function getMetadata($url) {
-    // Parse the URL to get the domain
-    $parsedUrl = parse_url($url);
-    $domain = $parsedUrl['host'] ?? '';
-
-    // Use file_get_contents to fetch the HTML content of the URL
-    $htmlContent = file_get_contents($url);
-
-    // Check if fetching the HTML content was successful
-    if ($htmlContent === false) {
-        // Return false or an error array
-        return false; 
+    // Get the HTML content from the URL
+    $html = file_get_contents($url);
+    
+    if ($html === false) {
+        return "Failed to fetch URL.";
     }
 
-    // Use DOMDocument to parse the HTML content
-    $doc = new DOMDocument();
-    @$doc->loadHTML($htmlContent);
+    // Parse the HTML and extract meta tags
+    $metaTags = get_meta_tags($url);
 
-    $title = $description = $icon = null;
-
-    // Extract the title
-    $titleTags = $doc->getElementsByTagName('title');
-    if ($titleTags->length > 0) {
-        $title = $titleTags->item(0)->textContent;
-    }
-
-    // Extract the description
-    $metaTags = $doc->getElementsByTagName('meta');
-    foreach ($metaTags as $tag) {
-        if ($tag->getAttribute('name') === 'description') {
-            $description = $tag->getAttribute('content');
-            break;
-        }
-    }
-
-    // Extract the icon
-    $linkTags = $doc->getElementsByTagName('link');
-    foreach ($linkTags as $tag) {
-        if (in_array($tag->getAttribute('rel'), ['icon', 'shortcut icon', 'apple-touch-icon'])) {
-            $iconPath = $tag->getAttribute('href');
-            // Check if the icon path is relative
-            if (filter_var($iconPath, FILTER_VALIDATE_URL) === false) {
-                // Convert relative path to absolute
-                $scheme = $parsedUrl['scheme'] ?? 'http';
-                $host = $parsedUrl['host'] ?? $_SERVER['HTTP_HOST'];
-                $icon = $scheme . '://' . $host . '/' . ltrim($iconPath, '/');
-            } else {
-                $icon = $iconPath;
-            }
-            break;
-        }
-    }
-
-    return [$domain, $title, $description, $icon];
+    // Return the extracted meta tags as an associative array
+    return $metaTags;
 }
 
 # Extract URL's from text

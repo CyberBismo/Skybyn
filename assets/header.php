@@ -67,7 +67,7 @@ if ($currentUrl == $devDomain) {
             }?>
             <?php if (isset($_SESSION['user'])) {
                 if (isMobile() == false) {?>
-            <div class="new_post_button" id="new_post_btn" onclick="newPost()">What's on your mind?</div>
+            <div class="new_post_button" id="new_post_btn" onclick="newPost()">Anything new?</div>
             <?php }?>
             <?php }?>
             <?php if (!isset($_SESSION['user'])) {
@@ -1191,6 +1191,22 @@ if ($currentUrl == $devDomain) {
                 cleanPosts();
             }, 300000); // Every 5 minutes
             removeDuplicateIds();
+        </script>
+
+        <script>
+            function hideSidePanels() {
+                const lp = document.getElementById('left-panel');
+                const rp = document.getElementById('right-panel');
+                if (window.innerWidth < 1240) {
+                    lp.style.transform = "translate(-300px)";
+                    rp.style.transform = "translate(300px)";
+                } else {
+                    lp.style.transform = "translate(0px)";
+                    rp.style.transform = "translate(0px)";
+                }
+            }
+            hideSidePanels();
+            window.addEventListener('resize', hideSidePanels);
         </script>
 
         <?php }?>
