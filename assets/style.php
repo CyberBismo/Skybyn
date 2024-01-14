@@ -2793,7 +2793,9 @@
             .friend-list {
                 width: 100%;
                 height: 100%;
+                padding: 0 10px;
                 color: White;
+                box-sizing: border-box;
             }
             .friend-list h3 {
                 padding: 0 20px;
