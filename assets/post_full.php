@@ -23,7 +23,7 @@ if ($post_user_avatar == "./") {
 }
 
 $post_youtube = convertYoutube($post_content);
-$post_content_res = fixEmojis(makeClickable($post_content), 1);
+$post_content_res = str_replace('\r\n',"<br />",fixEmojis(simplifyAndMakeClickable($post_content), 1));
 ?>
 
 <div class="post_header">
