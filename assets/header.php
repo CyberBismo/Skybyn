@@ -1192,7 +1192,7 @@ if ($currentUrl == $devDomain) {
             }, 300000); // Every 5 minutes
             removeDuplicateIds();
         </script>
-
+        <?php if (!isMobile() == false) {?>
         <script>
             function hideSidePanels() {
                 const lp = document.getElementById('left-panel');
@@ -1208,6 +1208,7 @@ if ($currentUrl == $devDomain) {
             hideSidePanels();
             window.addEventListener('resize', hideSidePanels);
         </script>
+        <?php }?>
 
         <?php }?>
 
