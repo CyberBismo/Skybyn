@@ -62,12 +62,11 @@ while ($post = $getPosts->fetch_assoc()) {
                 </div>
             </div>
         </div>
-        <div id="post_c_<?=$post_id?>" hidden><?=$post_content?></div>
         <div class="post_content">
             <?=$post_content_res?>
-        </div>
-        <div class="post_links">
-            <?=$post_video?>
+            <div class="post_links">
+                <?=$post_video?>
+            </div>
         </div>
         <div class="post_uploads">
             <?php $getUploads = $conn->query("SELECT * FROM `uploads` WHERE `post`='$post_id'");

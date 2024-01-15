@@ -50,7 +50,6 @@ $post_content_res = str_replace('\r\n',"<br />",fixEmojis(simplifyAndMakeClickab
         </div>
     </div>
 </div>
-<div id="post_c_<?=$post_id?>" hidden><?=$post_content?></div>
 <div class="post_content">
     <?=$post_content_res?>
 </div>

@@ -453,6 +453,7 @@
                 top: 75px;
                 color: white;
                 transition: transform .5s;
+                z-index: 3;
             }
             <?php if (isMobile() == false) {?>
             .left-panel,
@@ -2047,6 +2048,9 @@
                 word-break: break-all;
                 overflow: hidden;
             }
+            .post_content.shadow {
+                box-shadow: inset -1px -50px 23px -22px rgba(0,0,0,0.8);
+            }
             .post_website {
                 width: calc(100% - 20px);
                 max-height: 100px;
@@ -2063,14 +2067,27 @@
                 box-sizing: border-box;
                 overflow: hidden;
             }
-            .post_links iframe,
-            .post_links video {
-                width: calc(100% - 20px);
-                margin: 0 10px;
+            .post_links {
+                padding: 20px 0;
+            }
+            .post_links iframe {
+                width: 100%;
+                margin: 0 auto;
                 aspect-ratio: 16/9;
                 border: none;
                 border-radius: 10px;
                 box-sizing: border-box;
+            }
+            .post_links video {
+                width: auto;
+                max-height: 250px;
+                margin: 0 auto;
+                padding: 5px;
+                border: none;
+                border-radius: 10px;
+                box-sizing: border-box;
+                box-shadow: none;
+                outline: none;
             }
             .post_uploads {
                 display: flex;

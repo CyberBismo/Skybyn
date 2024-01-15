@@ -132,24 +132,26 @@ function simplifyUrl($url) {
 
 # Display video frame with youtube code when text contains youtube url
 function convertVideo($string) {
-    // Regular expression pattern to match YouTube videos and common video file extensions
-    $pattern = '/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w\-]{11})(?:\S+)?|(.*\.(?:mp4|avi|mov|mkv|flv|wmv))/i';
+    // Regular expression pattern to extract potential URLs from the string
+    $url_pattern = '/\bhttps?:\/\/\S+\b/';
 
-    // Use preg_match_all to find all matches
-    preg_match_all($pattern, $string, $matches);
+    // Use preg_match_all to find all potential URLs
+    preg_match_all($url_pattern, $string, $url_matches);
 
     // Initialize an empty string to store the converted content
     $convertedContent = '';
 
-    // Loop through the matches
-    foreach ($matches[1] as $index => $match) {
-        // Check if it's a YouTube video link
-        if (!empty($match)) {
-            $convertedContent .= "<iframe src='https://www.youtube.com/embed/$match' allowfullscreen></iframe>";
-        } else {
-            // If it's not a YouTube video, assume it's a video file link
-            $videoUrl = $matches[0][$index];
-            $convertedContent .= "<video controls><source src='$videoUrl' type='video/mp4'></video>";
+    // Check if there are any URLs
+    if (!empty($url_matches[0])) {
+        // Loop through the potential URLs
+        foreach ($url_matches[0] as $url) {
+            // Check if it's a YouTube video link
+            if (preg_match('/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w\-]{11})(?:\S+)?/', $url, $youtube_match)) {
+                $convertedContent .= "<iframe src='https://www.youtube.com/embed/{$youtube_match[1]}' allowfullscreen></iframe><br>";
+            } else {
+                // If it's not a YouTube video, assume it's a video file link
+                $convertedContent .= "<video controls><source src='$url' type='video/mp4'></video>";
+            }
         }
     }
 
