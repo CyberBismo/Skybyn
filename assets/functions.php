@@ -131,12 +131,29 @@ function simplifyUrl($url) {
 }
 
 # Display video frame with youtube code when text contains youtube url
-function convertYoutube($string) {
-    $pattern = '/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w\-]{11})(?:\S+)?/';
+function convertVideo($string) {
+    // Regular expression pattern to match YouTube videos and common video file extensions
+    $pattern = '/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w\-]{11})(?:\S+)?|(.*\.(?:mp4|avi|mov|mkv|flv|wmv))/i';
+
+    // Use preg_match_all to find all matches
     preg_match_all($pattern, $string, $matches);
-    foreach ($matches[1] as $match) {
-        return "<iframe src='https://www.youtube.com/embed/$match' allowfullscreen></iframe>";
+
+    // Initialize an empty string to store the converted content
+    $convertedContent = '';
+
+    // Loop through the matches
+    foreach ($matches[1] as $index => $match) {
+        // Check if it's a YouTube video link
+        if (!empty($match)) {
+            $convertedContent .= "<iframe src='https://www.youtube.com/embed/$match' allowfullscreen></iframe>";
+        } else {
+            // If it's not a YouTube video, assume it's a video file link
+            $videoUrl = $matches[0][$index];
+            $convertedContent .= "<video controls><source src='$videoUrl' type='video/mp4'></video>";
+        }
     }
+
+    return $convertedContent;
 }
 
 # Remove "

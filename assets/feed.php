@@ -30,7 +30,7 @@ while ($post = $getPosts->fetch_assoc()) {
         $post_user_avatar = "./assets/images/logo_faded_clean.png";
     }
 
-    $post_youtube = convertYoutube($post_content);
+    $post_video = convertVideo($post_content);
     $post_content_res = str_replace('\r\n',"<br />",fixEmojis(simplifyAndMakeClickable($post_content), 1));
 ?>
 
@@ -65,7 +65,7 @@ while ($post = $getPosts->fetch_assoc()) {
             <?=$post_content_res?>
         </div>
         <div class="post_links">
-            <?=$post_youtube?>
+            <?=$post_video?>
         </div>
         <div class="post_uploads">
             <?php $getUploads = $conn->query("SELECT * FROM `uploads` WHERE `post`='$post_id'");

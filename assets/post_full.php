@@ -22,7 +22,7 @@ if ($post_user_avatar == "./") {
     $post_user_avatar = "./assets/images/logo_faded_clean.png";
 }
 
-$post_youtube = convertYoutube($post_content);
+$post_video = convertVideo($post_content);
 $post_content_res = str_replace('\r\n',"<br />",fixEmojis(simplifyAndMakeClickable($post_content), 1));
 ?>
 
