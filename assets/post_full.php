@@ -23,7 +23,7 @@ if ($post_user_avatar == "./") {
 }
 
 $post_video = convertVideo($post_content);
-$post_content_res = str_replace('\r\n',"<br />",fixEmojis(simplifyAndMakeClickable($post_content), 1));
+$post_content_res = str_replace('\r\n',"<br />",fixEmojis(simplifyAndMakeClickable(nl2br($post_content)), 1));
 ?>
 
 <div class="post_header">

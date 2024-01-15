@@ -1,26 +1,10 @@
 <?php
 include "./functions.php";
 
-// Function to sanitize the user input using prepared statements.
-function sanitizeInput($conn, $input) {
-    if (is_array($input)) {
-        foreach ($input as $key => $value) {
-            $input[$key] = sanitizeInput($conn, $value);
-        }
-    } else {
-        $input = trim($input); // No need to use htmlspecialchars for text
-        $input = mysqli_real_escape_string($conn, $input);
-    }
-    return $input;
-}
-
 $public = isset($_POST['public']) ? $_POST['public'] : '';
 $text = isset($_POST['text']) ? $_POST['text'] : '';
 $image = isset($_FILES['files']) ? $_FILES['files'] : '';
 
-$fixedText = fixEmojis($text, null);
-$escapedText = sanitizeInput($conn, $fixedText);
-$text = nl2br($escapedText);
 $urls = extractUrls($text);
 
 $proceed = false;

@@ -643,17 +643,6 @@ if ($currentUrl == $devDomain) {
             }
         </script>
 
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                var post = document.querySelector('.post_content');
-                if (post.scrollHeight > post.clientHeight) {
-                    post.classList.add('shadow');
-                } else {
-                    post.classList.remove('shadow');
-                }
-            });
-        </script>
-
         <div class="left-panel" id="left-panel">
             <div class="shortcuts groups">
                 <h3><div><i class="fa-solid fa-comments"></i> Group chats</div><i class="fa-solid fa-plus" onclick="window.location.href='/newgroup'" title="Create new group"></i></h3>
