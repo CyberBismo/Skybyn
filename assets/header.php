@@ -269,7 +269,7 @@ if ($currentUrl == $devDomain) {
                 }
                 <?php }?>
             }
-            function newPost(x) {
+            function newPost() {
                 const header = document.getElementById('header');
                 const mobile_nav_btn = document.getElementById('mobile_new_post');
                 const new_post_btn = document.getElementById('new_post_btn');
@@ -277,47 +277,33 @@ if ($currentUrl == $devDomain) {
                 const new_post_input = document.getElementById('new_post_input');
                 const newPostIcon = document.getElementById('newPostIcon');
 
-                if (x == "close") {
+                if (new_post.style.display == "block") {
                     if (newPostIcon) {
                         newPostIcon.classList.add("fa-plus");
                         newPostIcon.classList.remove("fa-xmark");
-                        mobile_nav_btn.classList.add("fa-plus");
-                        mobile_nav_btn.classList.remove("fa-xmark");
                     }
-                    new_post_btn.style.display = "block";
                     new_post.style.display = "none";
-                    mobile_nav_btn.style.transform = "rotate(0deg)";
-                    header.style.background = "rgba(var(--dark),.2)";
-                    new_post.style.background = "rgba(var(--dark),.2)";
-                } else {
-                    if (new_post.style.display == "block") {
-                        if (newPostIcon) {
-                            newPostIcon.classList.add("fa-plus");
-                            newPostIcon.classList.remove("fa-xmark");
-                        }
-                        new_post.style.display = "none";
-                        if (new_post_btn) {
-                            new_post_btn.style.display = "block";
-                        }
-                        mobile_nav_btn.style.transform = "rotate(0deg)";
-                        new_post.style.background = "rgba(var(--dark),.2)";
-                        header.style.background = "rgba(var(--dark),.2)";
-                    } else {
-                        if (newPostIcon) {
-                            newPostIcon.classList.add("fa-xmark");
-                            newPostIcon.classList.remove("fa-plus");
-                        }
-                        new_post.style.display = "block";
-                        if (new_post_btn) {
-                            new_post_btn.style.display = "none";
-                        }
-                        mobile_nav_btn.style.transform = "rotate(45deg)";
-                        new_post_input.focus();
-                        new_post.style.background = "rgba(var(--dark),1)";
-                        <?php if (isMobile() == true) {?>
-                        header.style.background = "rgba(var(--dark),1)";
-                        <?php }?>
+                    if (new_post_btn) {
+                        new_post_btn.style.display = "block";
                     }
+                    mobile_nav_btn.style.transform = "rotate(0deg)";
+                    new_post.style.background = "rgba(var(--dark),.2)";
+                    header.style.background = "rgba(var(--dark),.2)";
+                } else {
+                    if (newPostIcon) {
+                        newPostIcon.classList.add("fa-xmark");
+                        newPostIcon.classList.remove("fa-plus");
+                    }
+                    new_post.style.display = "block";
+                    if (new_post_btn) {
+                        new_post_btn.style.display = "none";
+                    }
+                    mobile_nav_btn.style.transform = "rotate(45deg)";
+                    new_post_input.focus();
+                    new_post.style.background = "rgba(var(--dark),1)";
+                    <?php if (isMobile() == true) {?>
+                    header.style.background = "rgba(var(--dark),1)";
+                    <?php }?>
                 }
             }
             function updateFileNameLabel() {
@@ -400,7 +386,7 @@ if ($currentUrl == $devDomain) {
                         image.value = "";
                         filesDiv.innerHTML = "";
                         checkPosts();
-                        newPost("close");
+                        newPost();
                         isCreatingPost = false;
                     }
                 });
