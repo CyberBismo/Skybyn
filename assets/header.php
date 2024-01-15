@@ -286,7 +286,9 @@ if ($currentUrl == $devDomain) {
                     if (new_post_btn) {
                         new_post_btn.style.display = "block";
                     }
+                    <?php if (isMobile() == true) {?>
                     mobile_nav_btn.style.transform = "rotate(0deg)";
+                    <?php }?>
                     new_post.style.background = "rgba(var(--dark),.2)";
                     header.style.background = "rgba(var(--dark),.2)";
                 } else {
@@ -298,7 +300,9 @@ if ($currentUrl == $devDomain) {
                     if (new_post_btn) {
                         new_post_btn.style.display = "none";
                     }
+                    <?php if (isMobile() == true) {?>
                     mobile_nav_btn.style.transform = "rotate(45deg)";
+                    <?php }?>
                     new_post_input.focus();
                     new_post.style.background = "rgba(var(--dark),1)";
                     <?php if (isMobile() == true) {?>
