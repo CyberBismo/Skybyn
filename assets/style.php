@@ -2063,7 +2063,8 @@
                 box-sizing: border-box;
                 overflow: hidden;
             }
-            .post_links iframe {
+            .post_links iframe,
+            .post_links video {
                 width: calc(100% - 20px);
                 margin: 0 10px;
                 aspect-ratio: 16/9;
