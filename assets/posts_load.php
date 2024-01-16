@@ -33,7 +33,7 @@ while ($post = $getPosts->fetch_assoc()) {
     }
 
     $post_video = convertVideo($post_content);
-    $post_content_res = str_replace('\r\n',"<br />",fixEmojis(simplifyAndMakeClickable(nl2br($post_content)), 1));
+    $post_content_res = fixEmojis(cleanUrls(nl2br($post_content)), 1);
 ?>
 
 <div class="post" id="post_<?=$post_id?>">

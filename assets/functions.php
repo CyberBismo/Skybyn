@@ -101,42 +101,124 @@ function extractUrls($text) {
     return $urls;
 }
 
-# Make simplified URL's clickable from the original URL
-function simplifyAndMakeClickable($text) {
-    // Regular expression to extract URLs
-    $urlPattern = '/https?:\/\/[^\s]+/';
+function cleanUrls($text) {
+    // Regular expression for URL extraction
+    $urlPattern = '/\b(?:https?):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*[a-z0-9-+&@#\/%=~_|]/i';
 
-    // Find all URLs in the text
-    if (preg_match_all($urlPattern, $text, $matches)) {
-        foreach ($matches[0] as $url) {
-            // Simplify each URL
-            $simplifiedUrl = simplifyUrl($url);
-
-            // Make each URL clickable
-            $clickableUrl = '<a href="' . $url . '" target="_blank" title="' . $url . '">' . $simplifiedUrl . '</a>';
-
-            // Replace the original URL in the text with its clickable, simplified version
-            $text = str_replace($url, $clickableUrl, $text);
-        }
-    }
+    // Replace URLs with clickable links
+    $text = preg_replace_callback($urlPattern, function($match) {
+        $url = $match[0];
+        return '<a href="' . $url . '" target="_blank">' . shortenUrlToDomain($url) . '</a>';
+    }, $text);
 
     return $text;
 }
 
-# Simplify URL
-function simplifyUrl($url) {
-    $pattern = "/https?:\/\/(www\.)?([^\/]*\.?)\/?.*/";
-    $replacement = "$2";
-    return preg_replace($pattern, $replacement, $url);
+function shortenUrlToDomain($url) {
+    $parsedUrl = parse_url($url);
+
+    if (isset($parsedUrl['host'])) {
+        $domain = preg_replace('/^www\./i', '', $parsedUrl['host']); // Remove 'www.' if present
+        if (isVideoPlatformUrl($domain) == false) {
+            return $domain;
+        }
+    } else {
+        return $url; // Return the original URL if the host cannot be extracted.
+    }
+}
+
+# Check if URL points to a video platform
+function isVideoPlatformUrl($url) {
+    // Define an array of video platforms to check
+    $videoPlatforms = array(
+        "youtube.com",
+        "vimeo.com",
+        "tiktok.com",
+        "twitch.tv",
+        "dailymotion.com",
+        "instagram.com/igtv",
+        "d.tube",
+        "9gag.com",
+        "ted.com",
+        "flickr.com"
+    );
+
+    // Check if the URL matches any of the video platforms
+    foreach ($videoPlatforms as $platform) {
+        if (strpos($url, $platform) !== false) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 # Display video frame with youtube code when text contains youtube url
 function convertVideo($string) {
-    $pattern = '/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w\-]{11})(?:\S+)?/';
-    preg_match_all($pattern, $string, $matches);
-    foreach ($matches[1] as $match) {
-        return "<iframe src='https://www.youtube.com/embed/$match' allowfullscreen></iframe>";
+    $patterns = array(
+        '/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w\-]{11})(?:\S+)?/' => 'youtube',
+        '/(?:https?:\/\/)?(?:www\.)?(?:vimeo\.com\/)(\d+)(?:\S+)?/' => 'vimeo',
+        '/(?:https?:\/\/)?(?:www\.)?(?:tiktok\.com\/)(@[\w\-]+\/video\/\d+)(?:\S+)?/' => 'tiktok',
+        '/(?:https?:\/\/)?(?:www\.)?(?:twitch\.tv\/)([\w\-]+)(?:\S+)?/' => 'twitch',
+        '/(?:https?:\/\/)?(?:www\.)?(?:dailymotion\.com\/video\/)([\w\-]+)(?:\S+)?/' => 'dailymotion',
+        '/(?:https?:\/\/)?(?:www\.)?(?:instagram\.com\/tv\/)([\w\-]+)(?:\S+)?/' => 'igtv',
+        '/(?:https?:\/\/)?(?:www\.)?(?:d\.tube\/)([\w\-]+)(?:\S+)?/' => 'dtube',
+        '/(?:https?:\/\/)?(?:www\.)?(?:9gag\.com\/gag\/)([\w\-]+)(?:\S+)?/' => '9gag',
+        '/(?:https?:\/\/)?(?:www\.)?(?:ted\.com\/talks\/)([\w\-]+)(?:\S+)?/' => 'ted',
+        '/(?:https?:\/\/)?(?:www\.)?(?:flickr\.com\/photos\/[\w\-]+\/)(\d+)(?:\S+)?/' => 'flickr'
+    );
+
+    $output = "";
+
+    foreach ($patterns as $pattern => $platform) {
+        preg_match_all($pattern, $string, $matches);
+
+        foreach ($matches[1] as $match) {
+            $iframe = generateIframe($platform, $match);
+            $output .= $iframe;
+        }
     }
+
+    return $output;
+}
+
+function generateIframe($platform, $videoId) {
+    $iframe = "";
+
+    switch ($platform) {
+        case 'youtube':
+            $iframe = "<iframe src='https://www.youtube.com/embed/$videoId' allowfullscreen></iframe>";
+            break;
+        case 'vimeo':
+            $iframe = "<iframe src='https://player.vimeo.com/video/$videoId' allowfullscreen></iframe>";
+            break;
+        case 'tiktok':
+            $iframe = "<iframe src='https://www.tiktok.com/embed/$videoId' allowfullscreen></iframe>";
+            break;
+        case 'twitch':
+            $iframe = "<iframe src='https://www.twitch.tv/videos/$videoId' allowfullscreen></iframe>";
+            break;
+        case 'dailymotion':
+            $iframe = "<iframe src='https://www.dailymotion.com/embed/video/$videoId' allowfullscreen></iframe>";
+            break;
+        case 'igtv':
+            $iframe = "<iframe src='https://www.instagram.com/tv/$videoId/embed/' allowfullscreen></iframe>";
+            break;
+        case 'dtube':
+            $iframe = "<iframe src='https://d.tube/#!/v/$videoId' allowfullscreen></iframe>";
+            break;
+        case '9gag':
+            $iframe = "<iframe src='https://9gag.com/gag/$videoId' allowfullscreen></iframe>";
+            break;
+        case 'ted':
+            $iframe = "<iframe src='https://www.ted.com/talks/$videoId' allowfullscreen></iframe>";
+            break;
+        case 'flickr':
+            $iframe = "<iframe src='https://www.flickr.com/photos/$videoId/play/orig/$videoId/' allowfullscreen></iframe>";
+            break;
+    }
+
+    return $iframe;
 }
 
 # Remove "
