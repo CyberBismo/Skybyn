@@ -519,7 +519,7 @@
                 transform: translate(-50%, -50%);
                 font-size: 24px;
                 color: white;
-                background: rgba(var(--darker),.8);
+                background: rgba(var(--darker),.7);
                 border: 1px solid rgba(var(--dark),5);
                 border-radius: 100px;
                 box-sizing: border-box;
