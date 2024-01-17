@@ -519,7 +519,7 @@
                 transform: translate(-50%, -50%);
                 font-size: 24px;
                 color: white;
-                background: rgb(var(--darker));
+                background: rgba(var(--darker),.8);
                 border: 1px solid rgba(var(--dark),5);
                 border-radius: 100px;
                 box-sizing: border-box;
@@ -1009,6 +1009,7 @@
             .header {
                 background: rgba(var(--dark),.2);
                 backdrop-filter: blur(5px);
+                box-shadow: 0px 1px 10px 0px rgba(var(--dark),0.2);
             }
             <?php }?>
 
