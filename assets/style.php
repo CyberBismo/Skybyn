@@ -417,7 +417,7 @@
             <?php if (isMobile() == false) {?>
             .page-container {
                 min-width: 300px;
-                max-width: 1100px;
+                max-width: 650px;
                 margin: 0 auto;
                 margin-top: 105px;
                 padding: 10px 0;
@@ -1944,7 +1944,7 @@
             <?php if (isMobile() == false) {?>
             .posts {
                 width: 100%;
-                max-width: 654px;
+                max-width: 650px;
                 margin: 0 auto;
                 padding: 0 10px;
                 box-sizing: border-box;
