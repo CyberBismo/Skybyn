@@ -26,7 +26,7 @@ if ($currentUrl == $devDomain) {
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('/assets/js/service-worker.js');
             }
-            
+
             navigator.serviceWorker.getRegistrations().then(function(registrations) {
                 for(let registration of registrations) {
                     registration.unregister();
@@ -40,27 +40,27 @@ if ($currentUrl == $devDomain) {
                 }
             });
             
-            let deferredPrompt;
-
-            window.addEventListener('beforeinstallprompt', (e) => {
-                // Prevent the mini-infobar from appearing on mobile
-                e.preventDefault();
-                // Stash the event so it can be triggered later.
-                deferredPrompt = e;
-                // Update UI to notify the user they can add to home screen
-                showInstallPromotion();
-            });
-
-            buttonInstall.addEventListener('click', (e) => {
-                // Hide the app provided install promotion
-                hideInstallPromotion();
-                // Show the install prompt
-                deferredPrompt.prompt();
-                // Wait for the user to respond to the prompt
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    deferredPrompt = null;
-                });
-            });
+            //let deferredPrompt;
+//
+            //window.addEventListener('beforeinstallprompt', (e) => {
+            //    // Prevent the mini-infobar from appearing on mobile
+            //    e.preventDefault();
+            //    // Stash the event so it can be triggered later.
+            //    deferredPrompt = e;
+            //    // Update UI to notify the user they can add to home screen
+            //    showInstallPromotion();
+            //});
+//
+            //buttonInstall.addEventListener('click', (e) => {
+            //    // Hide the app provided install promotion
+            //    hideInstallPromotion();
+            //    // Show the install prompt
+            //    deferredPrompt.prompt();
+            //    // Wait for the user to respond to the prompt
+            //    deferredPrompt.userChoice.then((choiceResult) => {
+            //        deferredPrompt = null;
+            //    });
+            //});
         </script>
         <?php include_once "style.php"?>
     </head>
