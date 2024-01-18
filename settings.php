@@ -153,7 +153,7 @@ if (isset($_GET['ip_history'])) {
                     <div id="tab-ip_history" <?=$ip_history?>>
                         <h3>IP History</h3>
                         <?php
-                        $getIPhistory = $conn->query("SELECT * FROM `ip_history` WHERE `user_id`='$uid'");
+                        $getIPhistory = $conn->query("SELECT * FROM `ip_history` WHERE `user_id`='$uid' ORDER BY `date` DESC");
                         while($ipData = $getIPhistory->fetch_assoc()) {
                             $ip_date = $ipData['date'];
                             $ip_address = $ipData['ip'];
