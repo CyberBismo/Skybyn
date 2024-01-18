@@ -1,7 +1,7 @@
 <h3>New IP detected!</h3>
                 <div class="set_username_form">
                     <i class="fa-solid fa-user"></i>
-                    <input type="text" id="code" onkeydown="hitEnter(this)" pattern="\d{0,6}" title="We sent the code to your registered email." placeholder="Enter login code">
+                    <input type="text" id="code" onkeydown="hitEnter(this);checkCode(this)" pattern="\d{0,6}" title="We sent the code to your registered email." placeholder="Enter login code">
                     <input type="submit" onclick="verifyCode()" value="Login">
                 </div>
                 <div class="links">
@@ -19,6 +19,14 @@
                         }
 
                         input.addEventListener('keydown', handleKeyPress, { once: true });
+                    }
+
+                    function checkCode(x) {
+                        const input = x.value;
+
+                        if (input.length > 5) {
+                            verifyCode();
+                        }
                     }
                     
                     function verifyCode() {
