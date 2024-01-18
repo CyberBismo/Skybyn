@@ -17,10 +17,51 @@ if ($currentUrl == $devDomain) {
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="manifest" href="/manifest.json">
         <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/logo_fav.png">
         <link rel="icon" type="image/x-icon" href="/assets/images/logo_fav.png">
         <link href="/fontawe/css/all.css" rel="stylesheet">
         <script src="/assets/js/jquery.min.js"></script>
+        <script>
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/assets/js/service-worker.js');
+            }
+
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for(let registration of registrations) {
+                    registration.unregister();
+                }
+            });
+
+            // Optional: Clear all caches
+            caches.keys().then(function(names) {
+                for (let name of names) {
+                    caches.delete(name);
+                }
+            });
+            
+            //let deferredPrompt;
+//
+            //window.addEventListener('beforeinstallprompt', (e) => {
+            //    // Prevent the mini-infobar from appearing on mobile
+            //    e.preventDefault();
+            //    // Stash the event so it can be triggered later.
+            //    deferredPrompt = e;
+            //    // Update UI to notify the user they can add to home screen
+            //    showInstallPromotion();
+            //});
+//
+            //buttonInstall.addEventListener('click', (e) => {
+            //    // Hide the app provided install promotion
+            //    hideInstallPromotion();
+            //    // Show the install prompt
+            //    deferredPrompt.prompt();
+            //    // Wait for the user to respond to the prompt
+            //    deferredPrompt.userChoice.then((choiceResult) => {
+            //        deferredPrompt = null;
+            //    });
+            //});
+        </script>
         <?php include_once "style.php"?>
     </head>
     <body onload="hideMsg()">

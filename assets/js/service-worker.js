@@ -75,14 +75,15 @@ self.addEventListener('activate', event => {
         caches.keys().then(cacheNames => {
             return Promise.all(
                 cacheNames.map(cacheName => {
-                    if (cacheName !== CACHE_NAME) {
-                        return caches.delete(cacheName); // Delete old caches
-                    }
+                    return caches.delete(cacheName); // Delete all caches
                 })
             );
+        }).then(() => {
+            console.log('All caches have been deleted.');
         })
     );
 });
+
 
 self.addEventListener('push', function(event) {
     const options = {
