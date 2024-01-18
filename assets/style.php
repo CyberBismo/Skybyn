@@ -3217,6 +3217,7 @@
             
             .profile-right {
                 width: 70%;
+                color: white;
             }
             .profile-right .create_post {
                 height: 50px;
