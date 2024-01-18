@@ -83,3 +83,14 @@ self.addEventListener('activate', event => {
         })
     );
 });
+
+self.addEventListener('push', function(event) {
+    const options = {
+        body: event.data.text(),
+        // You can customize your options: icons, images, actions, etc.
+    };
+
+    event.waitUntil(
+        self.registration.showNotification('Notification Title', options)
+    );
+});

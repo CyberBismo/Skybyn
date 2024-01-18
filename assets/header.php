@@ -24,14 +24,30 @@ if ($currentUrl == $devDomain) {
         <script src="/assets/js/jquery.min.js"></script>
         <script>
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('/assets/js/service-worker.js')
-                .then(function(registration) {
-                    console.log('Service Worker Registered!', registration);
-                })
-                .catch(function(error) {
-                    console.log('Service Worker registration failed:', error);
-                });
+                navigator.serviceWorker.register('/assets/js/service-worker.js');
             }
+            
+            let deferredPrompt;
+
+            window.addEventListener('beforeinstallprompt', (e) => {
+                // Prevent the mini-infobar from appearing on mobile
+                e.preventDefault();
+                // Stash the event so it can be triggered later.
+                deferredPrompt = e;
+                // Update UI to notify the user they can add to home screen
+                showInstallPromotion();
+            });
+
+            buttonInstall.addEventListener('click', (e) => {
+                // Hide the app provided install promotion
+                hideInstallPromotion();
+                // Show the install prompt
+                deferredPrompt.prompt();
+                // Wait for the user to respond to the prompt
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    deferredPrompt = null;
+                });
+            });
         </script>
         <?php include_once "style.php"?>
     </head>
