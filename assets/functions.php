@@ -845,6 +845,18 @@ if (isset($_SESSION['user'])) {
         
     }
     
+    $firstLoaded = false;
+
+    if (isset($_SESSION['loadtime'])) {
+        if ($_SESSION['loadtime'] > 0) {
+            $firstLoaded = true;
+        } else {
+            $_SESSION['loadtime'] += 1;
+        }
+    } else {
+        $_SESSION['loadtime'] = 0;
+    }
+    
     $conn->query("UPDATE `users` SET `ip`='$newIP' WHERE `id`='$uid'");
 
     if(isset($_SERVER['HTTP_REFERER']) && !empty($_SERVER['HTTP_REFERER'])) {

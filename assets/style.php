@@ -516,13 +516,14 @@
                 left: 50%;
                 width: auto;
                 height: 50px;
-                transform: translate(-50%, -50%);
+                transform: translate(-50%, -20px);
                 font-size: 24px;
                 color: white;
                 background: rgba(var(--darker),.7);
                 border: 1px solid rgba(var(--dark),5);
                 border-radius: 100px;
                 box-sizing: border-box;
+                transition: all .3s;
                 z-index: 9;
             }
             .bnav-btn {
@@ -1003,6 +1004,7 @@
                 top: 0;
                 width: 100%;
                 height: 75px;
+                transition: all .3s;
                 z-index: 10;
             }
             <?php if (isMobile() == true) {?>
@@ -1709,8 +1711,8 @@
             }
             <?php } else {?>
             .user-dropdown {
-                left: 0;
-                width: 100%;
+                right: 0;
+                width: 90%;
                 padding: 20px;
                 background: rgba(var(--dark),.9);
                 box-shadow: 0 3px rgba(0,0,0,.2);

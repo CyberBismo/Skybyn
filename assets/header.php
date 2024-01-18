@@ -837,7 +837,7 @@ if ($currentUrl == $devDomain) {
                 </div>
             </div>
         </div>
-        <div class="bottom-nav">
+        <div class="bottom-nav" id="bottom-nav">
             <div class="bnav-btn" onclick="showSearch()"><i class="fa-solid fa-magnifying-glass"></i></div>
             <div class="bnav-btn" onclick="newPost()"><i class="fa-solid fa-plus" id="mobile_new_post"></i></div>
             <div class="bnav-btn" onclick="showRightPanel()"><i class="fa-solid fa-user-group"></i></div>
@@ -1199,7 +1199,36 @@ if ($currentUrl == $devDomain) {
             window.addEventListener('resize', hideSidePanels);
         </script>
         <?php }?>
-
+        <script>
+            function animatedEffect() {
+                const header = document.getElementById('header');
+                const lp = document.getElementById('left-panel');
+                const rp = document.getElementById('right-panel');
+                const bn = document.getElementById('bottom-nav');
+                
+                <?php if (isMobile() == false) {?>
+                header.style.transform = "translateY(0px)";
+                if (window.innerWidth < 1240) {
+                    lp.style.transform = "translate(-300px)";
+                    rp.style.transform = "translate(300px)";
+                } else {
+                    lp.style.transform = "translate(0px)";
+                    rp.style.transform = "translate(0px)";
+                }
+                bn.style.transform = "translate(-50%, 100px)";
+                <?php } else {?>
+                header.style.transform = "translate(0, -75px)";
+                bn.style.transform = "translate(-50%, 100px)";
+                setTimeout(() => {
+                    header.style.transform = "translate(0px)";
+                    bn.style.transform = "translate(-50%, -20px)";
+                }, 1000);
+                <?php }?>
+            }
+            <?php if ($firstLoaded == false) {?>
+            animatedEffect();
+            <?php }?>
+        </script>
         <?php }?>
 
         <?php if (!isset($_SESSION['user'])) {

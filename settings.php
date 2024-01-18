@@ -168,11 +168,11 @@ if (isset($_GET['ip_history'])) {
                                 <?php if ($rank > 0) {?>
                                 <div class="ip-actions">
                                     <?php if ($ip_trusted == "1") {?>
-                                    <button class="ip-action" onmouseover="this.innerHTML='Untrust'" onmouseleave="this.innerHTML='Trusted'">Trusted</button>
+                                    <button class="ip-action" onclick="ipHistory('untrust','<?=$ip_address?>')" onmouseover="this.innerHTML='Untrust'" onmouseleave="this.innerHTML='Trusted'">Trusted</button>
                                     <?php } else {?>
-                                    <button class="ip-action">Trust</button>
+                                    <button class="ip-action" onclick="ipHistory('trust','<?=$ip_address?>')">Trust</button>
                                     <?php }?>
-                                    <button class="ip-action">Remove</button>
+                                    <button class="ip-action" onclick="ipHistory('remove','<?=$ip_address?>')">Remove</button>
                                 </div>
                                 <?php }?>
                             </div>
@@ -269,6 +269,43 @@ if (isset($_GET['ip_history'])) {
                     cpin.value = "";
                     pin.maxLength = 8;
                     cpin.maxLength = 8;
+                }
+            }
+            
+            function ipHistory(x,ip) {
+                if (x == "remove") {
+                    $.ajax({
+                        url: 'assets/ip_history.php',
+                        type: "POST",
+                        data: {
+                            action: 'remove',
+                            ip: ip
+                        }
+                    }).done(function(response) {
+                        
+                    });
+                } else
+                if (x == "trust") {
+                    $.ajax({
+                        url: 'assets/ip_history.php',
+                        type: "POST",
+                        data: {
+                            action: 'trust',
+                            ip: ip
+                        }
+                    }).done(function(response) {
+                    });
+                } else
+                if (x == "untrust") {
+                    $.ajax({
+                        url: 'assets/ip_history.php',
+                        type: "POST",
+                        data: {
+                            action: 'untrust',
+                            ip: ip
+                        }
+                    }).done(function(response) {
+                    });
                 }
             }
         </script>
