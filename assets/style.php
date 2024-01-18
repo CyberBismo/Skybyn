@@ -580,6 +580,7 @@
                 min-width: 300px;
                 max-width: 1100px;
                 margin: 0 auto;
+                padding: 0 10px;
             }
             .welcome_information {
                 width: 60%;
@@ -668,7 +669,7 @@
                 box-sizing: border-box;
             }
             .center_form .form {
-                width: 400px;
+                width: auto;
                 padding: 20px;
                 background: rgba(0,0,0,.2);
                 border-radius: 20px;
@@ -772,7 +773,7 @@
             .log-button,
             .reg-button {
                 display: flex;
-                width: 400px;
+                width: auto;
                 margin-top: 10px;
                 text-align: center;
                 background: rgba(0,0,0,.2);
