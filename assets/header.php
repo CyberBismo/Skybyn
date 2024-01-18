@@ -17,10 +17,21 @@ if ($currentUrl == $devDomain) {
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black">
-        <link rel="apple-touch-icon" sizes="180x180" href="assets/images/logo_fav.png">
-        <link rel="icon" type="image/x-icon" href="assets/images/logo_fav.png">
-        <link href="fontawe/css/all.css" rel="stylesheet">
-        <script src="assets/js/jquery.min.js"></script>
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/logo_fav.png">
+        <link rel="icon" type="image/x-icon" href="/assets/images/logo_fav.png">
+        <link href="/fontawe/css/all.css" rel="stylesheet">
+        <script src="/assets/js/jquery.min.js"></script>
+        <script>
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/assets/js/service-worker.js')
+                .then(function(registration) {
+                    console.log('Service Worker Registered!', registration);
+                })
+                .catch(function(error) {
+                    console.log('Service Worker registration failed:', error);
+                });
+            }
+        </script>
         <?php include_once "style.php"?>
     </head>
     <body onload="hideMsg()">
