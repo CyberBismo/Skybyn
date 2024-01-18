@@ -27,6 +27,19 @@ if ($currentUrl == $devDomain) {
                 navigator.serviceWorker.register('/assets/js/service-worker.js');
             }
             
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for(let registration of registrations) {
+                    registration.unregister();
+                }
+            });
+
+            // Optional: Clear all caches
+            caches.keys().then(function(names) {
+                for (let name of names) {
+                    caches.delete(name);
+                }
+            });
+            
             let deferredPrompt;
 
             window.addEventListener('beforeinstallprompt', (e) => {
