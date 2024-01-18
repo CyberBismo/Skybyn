@@ -1600,7 +1600,7 @@
                 position: fixed;
                 top: 0;
                 left: 0;
-                transform: translateY(-135px);
+                transform: translateY(-155px);
                 width: 100%;
                 padding: 20px;
                 padding-top: 95px;
