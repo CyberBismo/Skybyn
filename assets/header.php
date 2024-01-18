@@ -1225,7 +1225,7 @@ if ($currentUrl == $devDomain) {
                 }, 1000);
                 <?php }?>
             }
-            <?php if ($firstLoaded == true) {?>
+            <?php if ($firstLoaded == false) {?>
             animatedEffect();
             <?php }?>
         </script>

@@ -845,8 +845,6 @@ if (isset($_SESSION['user'])) {
         
     }
     
-    $firstLoaded = true;
-    
     $conn->query("UPDATE `users` SET `ip`='$newIP' WHERE `id`='$uid'");
 
     if(isset($_SERVER['HTTP_REFERER']) && !empty($_SERVER['HTTP_REFERER'])) {
