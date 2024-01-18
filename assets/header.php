@@ -17,6 +17,7 @@ if ($currentUrl == $devDomain) {
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="manifest" href="/manifest.json">
         <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/logo_fav.png">
         <link rel="icon" type="image/x-icon" href="/assets/images/logo_fav.png">
         <link href="/fontawe/css/all.css" rel="stylesheet">
