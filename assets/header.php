@@ -1220,7 +1220,7 @@ if ($currentUrl == $devDomain) {
                 header.style.transform = "translate(0, -75px)";
                 bn.style.transform = "translate(-50%, 100px)";
                 setTimeout(() => {
-                    header.style.transform = "translate(0px)";
+                    header.style.transform = "translate(0, 0)";
                     bn.style.transform = "translate(-50%, -20px)";
                 }, 1000);
                 <?php }?>
