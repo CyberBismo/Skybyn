@@ -1011,7 +1011,7 @@
             .header {
                 background: rgba(var(--dark),.2);
                 backdrop-filter: blur(5px);
-                box-shadow: 0px 1px 10px 0px rgba(var(--dark),0.2);
+                box-shadow: 0px -20px 10px 30px rgba(var(--dark),.2);
             }
             <?php }?>
 
