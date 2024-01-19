@@ -1847,9 +1847,8 @@
                 position: fixed;
                 top: 0;
                 left: 0;
-                width: calc(100% - 100px);
-                height: calc(100% - 100px);
-                margin: 50px;
+                width: 100%;
+                height: 100%;
                 border-radius: 20px;
                 box-sizing: border-box;
                 overflow: hidden;
