@@ -2106,23 +2106,26 @@
                 outline: none;
             }
             .post_uploads {
-                position: relative;
                 width: calc(100% - 20px);
                 height: 300px;
                 margin: 0 10px 10px 10px;
                 border-radius: 10px;
                 box-sizing: border-box;
-                border: 1px solid transparent;
                 overflow: hidden;
+                transition: all .3s;
             }
-            .post_upload::before {
-                position: absolute;
-                content: "";
-                bottom: -5px;
-                left: 0;
-                right: 0;
-                height: 5px;
-                background: linear-gradient(to top, blue 0%, transparent 100%);
+            .post_expand {
+                position: relative;
+                width: calc(100% - 20px);
+                height: 50px;
+                line-height: 70px;
+                margin: 0 auto;
+                margin-top: -60px;
+                text-align: center;
+                background: linear-gradient(0deg, rgba(var(--dark),1) 0%, rgba(var(--dark),0) 100%);
+                border-radius: 0 0 10px 10px;
+                box-sizing: border-box;
+                cursor: pointer;
             }
             .post_gallery {
                 display: flex;

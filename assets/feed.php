@@ -66,7 +66,7 @@ while ($post = $getPosts->fetch_assoc()) {
                 <?=$post_video?>
             </div>
         </div>
-        <div class="post_uploads">
+        <div class="post_uploads" id="post_u_<?=$post_id?>">
             <div class="post_gallery">
             <?php $getUploads = $conn->query("SELECT * FROM `uploads` WHERE `post`='$post_id'");
             if ($getUploads->num_rows > 0) {
@@ -75,6 +75,9 @@ while ($post = $getPosts->fetch_assoc()) {
                 <img src="<?=$file?>" onclick="showImage(<?=$post_id?>)">
             <?php }}?>
             </div>
+        </div>
+        <div class="post_expand" id="post_expand" onclick="expandPost(<?=$post_id?>)">
+            Read more
         </div>
         <i><?=$comments?> comment(s)</i>
         <div class="post_comments">

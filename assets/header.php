@@ -24,8 +24,6 @@ if ($currentUrl == $devDomain) {
         <script src="/assets/js/scripts.js"></script>
         <?php if (isset($_SESSION['user'])) {?>
         <script src="/assets/js/scripts_logged.js"></script>
-        <?php } if (isMobile() == false) {?>
-        <script src="/assets/js/big_screen.js"></script>
         <?php }?>
         <?php include_once "style.php"?>
     </head>
@@ -511,4 +509,13 @@ if ($currentUrl == $devDomain) {
             }
             hideSidePanels();
             window.addEventListener('resize', hideSidePanels);
+
+            function expandPost(x) {
+                const uploads = document.getElementById('post_u_'+x);
+                if (uploads.style.height == "auto") {
+                    uploads.style.height = "300px";
+                } else {
+                    uploads.style.height = "auto";
+                }
+            }
         </script>
