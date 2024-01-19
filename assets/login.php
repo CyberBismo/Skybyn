@@ -3,7 +3,7 @@
 $email = $_POST['email'];
 $password = hash("sha512", $_POST['password']);
 $remember = $_POST['remember'];
-$newIP = getIP();
+$currentIP = getIP();
 
 $checkEmail = $conn->query("SELECT * FROM `users` WHERE `email`='$email'");
 $UserRow = $checkEmail->fetch_assoc();
@@ -16,7 +16,7 @@ if ($checkEmail->num_rows == 1) {
     $username = $UserRow['username'];
     $verified = $UserRow['verified'];
     $token = $UserRow['token'];
-    $ip = $UserRow['ip'];
+    $lastIP = $UserRow['ip'];
     if ($qCheckPassword->num_rows == 1) {
         if ($verified == 0 || $verified == null) {
             session_destroy();
@@ -28,18 +28,18 @@ if ($checkEmail->num_rows == 1) {
             createCookie("username",$uid,"1","6");
             echo "username";
         } else
-        if ($ip != $newIP) {
+        if ($lastIP != $currentIP) {
             $token = rand(100000, 999999);
             
-            $checkIPLog = $conn->query("SELECT * FROM `ip_history` WHERE `user_id`='$uid' AND `ip`='$newIP'");
+            $checkIPLog = $conn->query("SELECT * FROM `ip_history` WHERE `user_id`='$uid' AND `ip`='$currentIP'");
             $checkIPData = $checkIPLog->fetch_assoc();
             $ip_trusted = $checkIPData['trusted'];
             $ip_code = $checkIPData['code'];
         
             if ($checkIPLog->num_rows == 0) {
-                createCookie("newIP", $token, "10", null);
-                createCookie("new_IP", $newIP, "10", null);
-                $conn->query("INSERT INTO `ip_history` (`user_id`,`date`,`ip`,`trusted`,`code`) VALUES ('$uid','$now','$newIP','0','$token')");
+                createCookie("currentIP", $token, "10", null);
+                createCookie("new_IP", $currentIP, "10", null);
+                $conn->query("INSERT INTO `ip_history` (`user_id`,`date`,`ip`,`trusted`,`code`) VALUES ('$uid','$now','$currentIP','0','$token')");
         
                 $to = $email;
                 $subject = "Skybyn - Are you logging in now?";
@@ -157,15 +157,15 @@ if ($checkEmail->num_rows == 1) {
                 </html>
                 ';
         
-                mail($to, $subject, $message, $headers);
+                #mail($to, $subject, $message, $headers);
                 $msg = "Please check your email.";
                 createCookie("msg", $msg, "10", null);
-                echo "new_ip";
+                echo "login_ok";#"new_ip";
             } else
             if ($ip_trusted == '0') {
-                createCookie("newIP", $ip_code, "10", null);
-                createCookie("new_IP", $newIP, "10", null);
-                echo "new_ip";
+                createCookie("currentIP", $ip_code, "10", null);
+                createCookie("new_IP", $currentIP, "10", null);
+                echo "login_ok";#"new_ip";
             } else {
                 $_SESSION['user'] = $uid;
                 if ($remember == "true") {
@@ -179,7 +179,7 @@ if ($checkEmail->num_rows == 1) {
                 $conn->query("INSERT INTO `wallets` (`user`) VALUES (`$uid`)");
             }
 
-            $conn->query("UPDATE `ip_history` SET `date`='$now' WHERE `ip`='$newIP' AND `user_id`='$uid'");
+            $conn->query("UPDATE `ip_history` SET `date`='$now' WHERE `ip`='$currentIP' AND `user_id`='$uid'");
             $_SESSION['user'] = $uid;
             if ($remember == "true") {
                 createCookie("logged",rand(1000,9999).$uid,"1","6");
