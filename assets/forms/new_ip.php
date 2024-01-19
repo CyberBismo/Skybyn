@@ -11,7 +11,7 @@
                 <script>
                     setTimeout(() => {
                         document.getElementById('code').focus();
-                    }, 1000);
+                    }, 2000);
 
                     function hitEnter(input) {
                         const button = document.getElementById('login');
