@@ -1624,7 +1624,7 @@
                 border-bottom-left-radius: 20px;
                 border-bottom-right-radius: 20px;
                 transition: all .2s ease-in-out;
-                z-index: 0;
+                z-index: 3;
             }
             .search {
                 width: 100%;
