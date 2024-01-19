@@ -9,10 +9,9 @@
                 </div>
 
                 <script>
-                    document.addEventListener("DOMContentLoaded", function() {
-                        const code = document.getElementById('code');
-                        code.focus();
-                    });
+                    setTimeout(() => {
+                        document.getElementById('code').focus();
+                    }, 1000);
 
                     function hitEnter(input) {
                         const button = document.getElementById('login');
