@@ -2107,7 +2107,7 @@
             }
             .post_uploads {
                 width: calc(100% - 20px);
-                height: 300px;
+                max-height: 300px;
                 margin: 0 10px 10px 10px;
                 border-radius: 10px;
                 box-sizing: border-box;

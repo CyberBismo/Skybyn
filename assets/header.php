@@ -514,10 +514,10 @@ if ($currentUrl == $devDomain) {
 
             function expandPost(x) {
                 const uploads = document.getElementById('post_u_'+x);
-                if (uploads.style.height == "auto") {
-                    uploads.style.height = "300px";
+                if (uploads.style.maxHeight == "auto") {
+                    uploads.style.maxHeight = "300px";
                 } else {
-                    uploads.style.height = "auto";
+                    uploads.style.maxHeight = "auto";
                 }
             }
         </script>
