@@ -507,8 +507,10 @@ if ($currentUrl == $devDomain) {
                     rp.style.transform = "translate(0px)";
                 }
             }
+            <?php if (isMobile() == false) {?>
             hideSidePanels();
             window.addEventListener('resize', hideSidePanels);
+            <?php }?>
 
             function expandPost(x) {
                 const uploads = document.getElementById('post_u_'+x);
