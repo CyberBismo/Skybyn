@@ -2106,22 +2106,35 @@
                 outline: none;
             }
             .post_uploads {
-                display: flex;
+                position: relative;
+                width: calc(100% - 20px);
+                height: 300px;
+                margin: 0 10px 10px 10px;
+                border-radius: 10px;
                 box-sizing: border-box;
+                border: 1px solid transparent;
+                overflow: hidden;
+            }
+            .post_upload::before {
+                position: absolute;
+                content: "";
+                bottom: -5px;
+                left: 0;
+                right: 0;
+                height: 5px;
+                background: linear-gradient(to top, blue 0%, transparent 100%);
+            }
+            .post_gallery {
+                display: flex;
+                gap: 5px;
                 overflow: auto;
             }
-            .post_uploads {
-                margin: 0 10px 10px 10px;
-            }
-            .post_uploads img {
-                width: auto;
-                max-width: 100px;
+            .post_gallery img {
+                max-width: 100%;
                 height: auto;
-                max-height: 100px;
-                margin: 5px;
                 border-radius: 10px;
             }
-            .post_uploads img:hover {
+            .post_gallery img:hover {
                 position: inherit;
                 z-index: 2;
             }

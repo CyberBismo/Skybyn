@@ -67,12 +67,14 @@ while ($post = $getPosts->fetch_assoc()) {
             </div>
         </div>
         <div class="post_uploads">
+            <div class="post_gallery">
             <?php $getUploads = $conn->query("SELECT * FROM `uploads` WHERE `post`='$post_id'");
             if ($getUploads->num_rows > 0) {
                 while($upload = $getUploads->fetch_assoc()) {
                     $file = $upload['file_url'];?>
                 <img src="<?=$file?>" onclick="showImage(<?=$post_id?>)">
             <?php }}?>
+            </div>
         </div>
         <i><?=$comments?> comment(s)</i>
         <div class="post_comments">
