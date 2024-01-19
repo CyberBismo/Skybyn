@@ -1,15 +1,48 @@
+// Show search form
 function showSearch() {
     const mobileSearch = document.getElementById('mobile-search');
     const search = document.getElementById('searchInput');
     const searchRes = document.getElementById('search_result');
-    if (mobileSearch.style.transform == "translateY(0px)") {
+
+    // Function to hide the search form
+    function hideSearchForm() {
         mobileSearch.style.transform = "translateY(-135px)";
         searchRes.style.display = "none";
-    } else {
+    }
+
+    // Function to show the search form
+    function showSearchForm() {
         mobileSearch.style.transform = "translateY(0px)";
         search.focus();
     }
+
+    // Listen for the window resize event (keyboard hide)
+    window.addEventListener('resize', function() {
+        if (window.innerHeight === window.screen.height) {
+            // Keyboard is hidden
+            hideSearchForm();
+        }
+    });
+
+    // Listen for the search input blur event (if user taps outside)
+    search.addEventListener('blur', function() {
+        setTimeout(function() {
+            if (!search.matches(':focus')) {
+                // Keyboard is hidden
+                hideSearchForm();
+            }
+        }, 300); // You may need to adjust the delay based on your specific needs
+    });
+
+    // Toggle the search form
+    if (mobileSearch.style.transform == "translateY(0px)") {
+        hideSearchForm();
+    } else {
+        showSearchForm();
+    }
 }
+
+// Start searching while typing
 function startSearch(x) {
     const searchResult = document.getElementById('search_result');
     const searchResUsers = document.getElementById('search_res_users');
@@ -83,6 +116,8 @@ function startSearch(x) {
         searchResult.style.display = "none";
     }
 }
+
+
 function updateFileNameLabel() {
     const fileInput = document.getElementById('image_to_share');
     const fileNameLabel = document.getElementById('image_to_share_text');
