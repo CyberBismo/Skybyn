@@ -178,7 +178,7 @@ if ($Pwallpaper == "./") {
                             $post_user_avatar = "./assets/images/logo_faded_clean.png";
                         }
                         
-                        $post_youtube = convertVideo($post_content);
+                        $post_video = convertVideo($post_content);
                         $post_content_res = fixEmojis(nl2br(cleanUrls($post_content)), 1);
                     ?>
                     <div class="post" id="post_<?=$post_id?>">
