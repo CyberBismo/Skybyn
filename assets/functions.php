@@ -921,10 +921,11 @@ if (isset($_SESSION['user'])) {
 } else {
     if (isset($_COOKIE['logged'])) {
         $user = $_COOKIE['logged'];
-        $checkUser = $conn->query("SELECT * FROM `users` WHERE `id`='$user'");
+        $uid = substr($user, 4);
+        $checkUser = $conn->query("SELECT * FROM `users` WHERE `id`='$uid'");
         $countUsers = $checkUser->num_rows;
         if ($countUsers == 1) {
-            $_SESSION['user'] = $user;
+            $_SESSION['user'] = $uid;
             ?><meta http-equiv="Refresh" content="0; url='./'" /><?php
         } else {
             createCookie("logged","","0","7"); # 7 = -1
