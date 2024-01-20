@@ -175,7 +175,7 @@ if ($Pwallpaper == "./") {
                         $post_user_name = $postUser['username'];
                         $post_user_avatar = "./".$postUser['avatar'];
                         if ($post_user_avatar == "./") {
-                            $post_user_avatar = "./assets/images/logo.png";
+                            $post_user_avatar = "./assets/images/logo_faded_clean.png";
                         }
                         
                         $post_youtube = convertVideo($post_content);
