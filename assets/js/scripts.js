@@ -6,21 +6,24 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
-// Unregister service worker if previously registered
-navigator.serviceWorker.getRegistrations().then(function(registrations) {
-    for(let registration of registrations) {
-        registration.unregister();
-    }
-});
-
-// Optional: Clear all caches
-caches.keys().then(function(names) {
-    for (let name of names) {
-        caches.delete(name);
-    }
-});
-
-
+// Check if the service worker is supported by the browser
+if ('serviceWorker' in navigator) {
+    // Unregister service worker if previously registered
+    navigator.serviceWorker.getRegistrations().then(function (registrations) {
+        for (let registration of registrations) {
+            registration.unregister();
+        }
+    });
+  
+    // Optional: Clear all caches associated with the service worker
+    caches.keys().then(function (cacheNames) {
+        Promise.all(
+            cacheNames.map(function (cacheName) {
+                return caches.delete(cacheName);
+            })
+        );
+    });
+}
 
 function timeAgo(timestamp) {
     const currentTimestamp = Math.floor(Date.now() / 1000);

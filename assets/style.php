@@ -1840,7 +1840,7 @@
                 width: 70%;
                 height: 100%;
                 background: rgba(0,0,0,.8);
-                backdrop-filter: blur(5px);
+                backdrop-filter: blur(5px); 
             }
             <?php } else {?>
             .image_viewer {
