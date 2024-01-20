@@ -62,9 +62,9 @@ while ($post = $getPosts->fetch_assoc()) {
         </div>
         <div class="post_content" id="post_c_<?=$post_id?>">
             <?=$post_content_res?>
-            <div class="post_links">
-                <?=$post_video?>
-            </div>
+        </div>
+        <div class="post_links">
+            <?=$post_video?>
         </div>
         <?php $getUploads = $conn->query("SELECT * FROM `uploads` WHERE `post`='$post_id'");
         if ($getUploads->num_rows > 0) {?>

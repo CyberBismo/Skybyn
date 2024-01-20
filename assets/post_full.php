@@ -53,6 +53,9 @@ $post_content_res = fixEmojis(cleanUrls(nl2br($post_content)), 1);
 <div class="post_content">
     <?=$post_content_res?>
 </div>
+<div class="post_links">
+    <?=$post_video?>
+</div>
 <i class="comment_count"><?=$comment_count?> comment(s)</i>
 <div class="post_comments">
     <div class="post_comment">

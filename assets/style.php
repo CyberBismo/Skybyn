@@ -2086,8 +2086,8 @@
                 padding: 20px 0;
             }
             .post_links iframe {
-                width: 100%;
-                margin: 0 auto;
+                width: calc(100% - 20px);
+                margin: 0 10px;
                 aspect-ratio: 16/9;
                 border: none;
                 border-radius: 10px;
