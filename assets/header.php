@@ -513,11 +513,12 @@ if ($currentUrl == $devDomain) {
             <?php }?>
 
             function expandPost(x) {
-                const uploads = document.getElementById('post_u_'+x);
-                if (uploads.style.maxHeight == "auto") {
-                    uploads.style.maxHeight = "300px";
+                const p_uploads = document.getElementById('post_u_'+x);
+                const p_gallery = document.getElementById('post_g_'+x);
+                if (p_uploads.style.height == p_gallery.clientHeight+"px") {
+                    p_uploads.style.height = "300px";
                 } else {
-                    uploads.style.maxHeight = "auto";
+                    p_uploads.style.height = p_gallery.clientHeight+"px";
                 }
             }
         </script>

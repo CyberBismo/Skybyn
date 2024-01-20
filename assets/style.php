@@ -2106,12 +2106,13 @@
             }
             .post_uploads {
                 width: calc(100% - 20px);
-                max-height: 300px;
-                margin: 0 10px 10px 10px;
-                border-radius: 10px;
+                height: 300px;
+                margin: 0 0 0 10px;
+                border-radius: 0 0 10px 10px;
                 box-sizing: border-box;
                 overflow: hidden;
                 transition: all .3s;
+                cursor: pointer;
             }
             .post_expand {
                 position: relative;
@@ -2119,26 +2120,23 @@
                 height: 50px;
                 line-height: 70px;
                 margin: 0 auto;
-                margin-top: -60px;
+                margin-top: -50px;
+                margin-bottom: 10px;
                 text-align: center;
-                background: linear-gradient(0deg, rgba(var(--dark),1) 0%, rgba(var(--dark),0) 100%);
+                background: linear-gradient(0deg, rgba(var(--darker),1) 0%, rgba(var(--darker),0) 100%);
                 border-radius: 0 0 10px 10px;
                 box-sizing: border-box;
                 cursor: pointer;
             }
             .post_gallery {
                 display: flex;
-                gap: 5px;
+                gap: 10px;
                 overflow: auto;
             }
             .post_gallery img {
                 max-width: 100%;
                 height: auto;
                 border-radius: 10px;
-            }
-            .post_gallery img:hover {
-                position: inherit;
-                z-index: 2;
             }
             .post_comments {
                 width: 100%;
