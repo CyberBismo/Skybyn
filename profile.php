@@ -178,8 +178,8 @@ if ($Pwallpaper == "./") {
                             $post_user_avatar = "./assets/images/logo.png";
                         }
                         
-                        $post_youtube = convertYoutube($post_content);
-                        $post_content_res = str_replace('\r\n',"<br />",fixEmojis(replaceUrl($post_content), 1));
+                        $post_youtube = convertVideo($post_content);
+                        $post_content_res = fixEmojis(nl2br(cleanUrls($post_content)), 1);
                     ?>
                     <div class="post" id="post_<?=$post_id?>">
                         <div class="post_body">
