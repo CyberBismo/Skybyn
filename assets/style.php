@@ -2107,7 +2107,7 @@
             .post_uploads {
                 width: calc(100% - 20px);
                 max-height: 300px;
-                margin: 0 0 0 10px;
+                margin: 0 0 10px 10px;
                 border-radius: 0 0 10px 10px;
                 box-sizing: border-box;
                 overflow: hidden;
@@ -2120,7 +2120,7 @@
                 height: 50px;
                 line-height: 70px;
                 margin: 0 auto;
-                margin-top: -50px;
+                margin-top: -60px;
                 margin-bottom: 10px;
                 text-align: center;
                 background: linear-gradient(0deg, rgba(var(--darker),1) 0%, rgba(var(--darker),0) 100%);
