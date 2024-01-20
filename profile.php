@@ -247,7 +247,7 @@ if ($Pwallpaper == "./") {
                                             $commentUser = $commentData['user'];
                                             $commentUsername = getUser("id",$commentData['user'],"username");
                                             $commentAvatar = getUser("id",$commentData['user'],"avatar");
-                                            $commentText = fixEmojis(makeClickable(nl2br($post_content)), 1);
+                                            $commentText = fixEmojis(nl2br(cleanUrls($post_content)), 1);
                                             
                                             if ($commentAvatar == "") {
                                                 $commentAvatar = "./assets/images/logo_faded_clean.png";
@@ -505,66 +505,5 @@ if ($Pwallpaper == "./") {
             </form>
         </div>
         <?php }?>
-
-        <script>
-            function friendship(friend,action) {
-                const actions = document.getElementById('friend_action');
-                $.ajax({
-                    url: 'assets/friendship.php',
-                    type: "POST",
-                    data: {
-                        friend : friend,
-                        action : action
-                    }
-                }).done(function(response) {
-                    window.location.reload();
-                });
-            }
-
-            function avatarSize() {
-                document.getElementById('avatar').style.width = window.innerWidth+"px";
-            }
-            //window.addEventListener("resize", avatarSize);
-
-            function changeWallpaper() {
-                const changeWallpaperElements = document.getElementsByClassName("changeWallpaper");
-                const changeAvatarElements = document.getElementsByClassName("changeAvatar");
-
-                for (let i = 0; i < changeWallpaperElements.length; i++) {
-                    const element = changeWallpaperElements[i];
-
-                    if (element.hasAttribute("hidden")) {
-                        element.removeAttribute("hidden");
-                    } else {
-                        element.setAttribute("hidden", "");
-                    }
-                }
-                for (let i = 0; i < changeAvatarElements.length; i++) {
-                    const element = changeAvatarElements[i];
-
-                    element.setAttribute("hidden", "");
-                }
-            }
-
-            function changeAvatar() {
-                const changeWallpaperElements = document.getElementsByClassName("changeWallpaper");
-                const changeAvatarElements = document.getElementsByClassName("changeAvatar");
-
-                for (let i = 0; i < changeAvatarElements.length; i++) {
-                    const element = changeAvatarElements[i];
-
-                    if (element.hasAttribute("hidden")) {
-                        element.removeAttribute("hidden");
-                    } else {
-                        element.setAttribute("hidden", "");
-                    }
-                }
-                for (let i = 0; i < changeWallpaperElements.length; i++) {
-                    const element = changeWallpaperElements[i];
-
-                    element.setAttribute("hidden", "");
-                }
-            }
-        </script>
     </body>
 </html>

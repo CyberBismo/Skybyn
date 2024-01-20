@@ -23,7 +23,7 @@ if ($currentUrl == $devDomain) {
         <script src="/assets/js/jquery.min.js"></script>
         <script src="/assets/js/scripts.js"></script>
         <?php if (isset($_SESSION['user'])) {?>
-        <script src="/assets/js/scripts_logged.js"></script>
+        <script src="assets/js/scripts_logged.js"></script>
         <?php }?>
         <?php include_once "style.php"?>
     </head>

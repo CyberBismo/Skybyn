@@ -1,3 +1,7 @@
+setInterval(() => {
+    console.log("Logged in");
+}, 1000);
+
 // Show search form
 function showSearch() {
     const mobileSearch = document.getElementById('mobile-search');
@@ -758,5 +762,65 @@ function checkRegistrationDuration(registrationTimestamp, unlockDuration) {
         return true;
     } else {
         return false;
+    }
+}
+
+// PROFILE
+function friendship(friend,action) {
+    const actions = document.getElementById('friend_action');
+    $.ajax({
+        url: 'assets/friendship.php',
+        type: "POST",
+        data: {
+            friend : friend,
+            action : action
+        }
+    }).done(function(response) {
+        window.location.reload();
+    });
+}
+
+function avatarSize() {
+    document.getElementById('avatar').style.width = window.innerWidth+"px";
+}
+//window.addEventListener("resize", avatarSize);
+
+function changeWallpaper() {
+    const changeWallpaperElements = document.getElementsByClassName("changeWallpaper");
+    const changeAvatarElements = document.getElementsByClassName("changeAvatar");
+
+    for (let i = 0; i < changeWallpaperElements.length; i++) {
+        const element = changeWallpaperElements[i];
+
+        if (element.hasAttribute("hidden")) {
+            element.removeAttribute("hidden");
+        } else {
+            element.setAttribute("hidden", "");
+        }
+    }
+    for (let i = 0; i < changeAvatarElements.length; i++) {
+        const element = changeAvatarElements[i];
+
+        element.setAttribute("hidden", "");
+    }
+}
+
+function changeAvatar() {
+    const changeWallpaperElements = document.getElementsByClassName("changeWallpaper");
+    const changeAvatarElements = document.getElementsByClassName("changeAvatar");
+
+    for (let i = 0; i < changeAvatarElements.length; i++) {
+        const element = changeAvatarElements[i];
+
+        if (element.hasAttribute("hidden")) {
+            element.removeAttribute("hidden");
+        } else {
+            element.setAttribute("hidden", "");
+        }
+    }
+    for (let i = 0; i < changeWallpaperElements.length; i++) {
+        const element = changeWallpaperElements[i];
+
+        element.setAttribute("hidden", "");
     }
 }
