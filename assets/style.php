@@ -2059,7 +2059,7 @@
                 cursor: pointer;
             }
             .post_content {
-                padding: 20px;
+                padding: 0 20px;
                 word-break: break-all;
                 overflow: hidden;
             }
