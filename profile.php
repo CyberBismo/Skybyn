@@ -213,9 +213,11 @@ if ($Pwallpaper == "./") {
                             <div class="post_content" id="post_c_<?=$post_id?>">
                                 <?=$post_content_res?>
                             </div>
+                            <?php if (!empty($post_video)) {?>
                             <div class="post_links">
                                 <?=$post_video?>
                             </div>
+                            <?php }?>
                             <?php $getUploads = $conn->query("SELECT * FROM `uploads` WHERE `post`='$post_id'");
                             if ($getUploads->num_rows > 0) {?>
                             <div class="post_uploads" id="post_u_<?=$post_id?>">
@@ -230,8 +232,8 @@ if ($Pwallpaper == "./") {
                                 Read more
                             </div>
                             <?php }?>
-                            <i><?=$comments?> comment(s)</i>
                             <div class="post_comments">
+                                <div class="post_comment_count"><?=$comment_count?><i class="fa-solid fa-comments"></i></div>
                                 <?php if (isset($_SESSION['user'])) {?>
                                 <div class="post_comment">
                                     <div class="post_comment_user">
@@ -274,211 +276,7 @@ if ($Pwallpaper == "./") {
                             </div>
                         </div>
                     </div>
-                    <?php }?>
-                    <script>
-                        let loading = false;
-                        const limit = 8;
-
-                        function loadMorePosts() {
-                            if (loading) {
-                                return;
-                            }
-
-                            const countPosts = document.querySelectorAll('div.post');
-                            const offset = countPosts.length;
-
-                            loading = true;
-                            $.ajax({
-                                url: 'assets/posts_load_profile.php',
-                                type: 'POST',
-                                data: {
-                                    profile: $user_id,
-                                    offset: offset
-                                },
-                                success: function (response) {
-                                    const postsContainer = document.getElementById('posts');
-                                    postsContainer.insertAdjacentHTML('beforeend', response);
-                                    loading = false;
-                                },
-                                error: function () {
-                                    loading = false;
-                                }
-                            });
-                        }
-
-                        // Attach the scroll event listener to load more posts when scrolled to the bottom
-                        window.addEventListener('scroll', function () {
-                            const windowHeight = window.innerHeight;
-                            const documentHeight = document.documentElement.scrollHeight;
-                            const scrollPosition = window.scrollY;
-
-                            if (documentHeight - (scrollPosition + windowHeight) < 200) {
-                                loadMorePosts();
-                            }
-                        });
-
-                        function hitEnter(input,x) {
-                            const button = document.getElementById('login');
-
-                            function handleKeyPress(event) {
-                                if (event.keyCode === 13) {
-                                    sendComment(x);
-                                }
-                            }
-
-                            input.addEventListener('keydown', handleKeyPress, { once: true });
-                        }
-                        function sendComment(x) {
-                            const input = document.getElementById('pc_'+x);
-
-                            if (input.value.length > 0) {
-                                $.ajax({
-                                    url: 'assets/comment_new.php',
-                                    type: "POST",
-                                    data: {
-                                        post_id : x,
-                                        comment : input.value
-                                    }
-                                }).done(function(response) {
-                                    input.value = "";
-                                    checkComments(x);
-                                });
-                            }
-                        }
-                        function checkComments(x) {
-                            const comments = document.getElementById('post_comments_'+x);
-                            const comment = comments.firstElementChild;
-                            $.ajax({
-                                url: 'assets/comments_check.php',
-                                type: "POST",
-                                data: {
-                                    post : x
-                                }
-                            }).done(function(response) {
-                                if (response != "") {
-                                    comments.insertAdjacentHTML('afterbegin', response);
-                                    removeDuplicateIds();
-                                }
-                            });
-                        }
-                        function cleanComments() {
-                            let comments = document.querySelectorAll('.post_comment');
-                            let commentIds = [];
-                            for (var i = 0; i < comments.length; i++) {
-                                let commentId = comments[i].id.replace('comment_', '');
-                                commentIds.push(commentId);
-                            }
-
-                            if (commentIds.length > 0) {
-                                $.ajax({
-                                    url: 'assets/comments_clean.php',
-                                    type: "POST",
-                                    data: {
-                                        ids: commentIds
-                                    }
-                                }).done(function(response) {
-                                    var nonExistingCommentIds = response.split(',');
-                                    for (var i = 0; i < nonExistingCommentIds.length; i++) {
-                                        var commentId = nonExistingCommentIds[i];
-                                        var comment = document.getElementById('comment_' + commentId);
-                                        if (comment) {
-                                            comment.remove();
-                                        }
-                                    }
-                                });
-                            }
-                        }
-                        function delComment(x) {
-                            const comment = document.getElementById('comment_'+x);
-                            $.ajax({
-                                url: 'assets/comment_delete.php',
-                                type: "POST",
-                                data: {
-                                    comment_id : x
-                                }
-                            }).done(function(response) {
-                                comment.remove();
-                            });
-                        }
-                        function sharePost(x) {
-                            window.location.href="./post?p="+x;
-                        }
-                        function showPost(x) {
-                        }
-                        function editPost(x) {
-                            const post = document.getElementById('post_c_'+ x);
-                            const new_post = document.getElementById('new_post_input');
-                            new_post.value = post.innerHTML;
-                        }
-                        function deletePost(x) {
-                            const post = document.getElementById('post_'+ x);
-                            $.ajax({
-                                url: 'assets/functions.php',
-                                type: "POST",
-                                data: {
-                                    deletePost : null,
-                                    post_id : x
-                                }
-                            }).done(function(response) {
-                                post.remove();
-                            });
-                        }
-                        function showPostActions(x) {
-                            const actionList = document.getElementById("pal_"+x);
-                            
-                            if (actionList.hidden == true) {
-                                actionList.hidden = false;
-                            } else {
-                                actionList.hidden = true;
-                            }
-                        }
-                        function checkPosts() {
-                            let posts = document.getElementById('posts');
-                            let post = posts.firstElementChild;
-                            let id = post.id.replace("post_", "");
-                            $.ajax({
-                                url: 'assets/checkPosts.php',
-                                type: "POST",
-                                data: {
-                                    last : id
-                                }
-                            }).done(function(response) {
-                                if (response != "") {
-                                    posts.insertAdjacentHTML('beforeend', response);
-                                    removeDuplicateIds();
-                                }
-                            });
-                        }
-                        function cleanPosts() {
-                            let posts = document.querySelectorAll('.post');
-                            let postIds = [];
-                            for (var i = 0; i < posts.length; i++) {
-                                let postId = posts[i].id.replace('post_', '');
-                                postIds.push(postId);
-                            }
-                            $.ajax({
-                                url: 'assets/cleanPosts.php',
-                                type: "POST",
-                                data: {
-                                    ids : postIds
-                                }
-                            }).done(function(response) {
-                                var nonExistingPostIds = response.split(',');
-                                for (var i = 0; i < nonExistingPostIds.length; i++) {
-                                    var postId = nonExistingPostIds[i];
-                                    var post = document.getElementById('post_' + postId);
-                                    if (post) {
-                                        post.remove();
-                                    }
-                                }
-                            });
-                        }
-                        setInterval(() => {
-                            //checkPosts();
-                            //cleanPosts();
-                        }, 3000); // Every 5 minutes
-                    </script>
-                    <?php } else {?>
+                    <?php }} else {?>
                     <div class="post" id="post_<?=$post_id?>">
                         <div class="post_body">
                             <div class="post_content">
@@ -493,22 +291,87 @@ if ($Pwallpaper == "./") {
 
         <?php if ($myProfile == true) {?>
         <div class="changeAvatar" hidden>
+            <i class="fa-solid fa-xmark" onclick="changeAvatar()"></i>
             <form method="post" enctype="multipart/form-data">
                 <input type="file" name="avatar" id="setavatar" hidden>
-                <label for="setavatar">Select avatar</label>
+                <h3>Select avatar</h3>
+                <label for="setavatar">Click to browse</label>
                 <br><br>
                 <input type="submit" name="update_avatar" value="Set avatar">
             </form>
         </div>
 
         <div class="changeWallpaper" hidden>
+            <i class="fa-solid fa-xmark" onclick="changeWallpaper()"></i>
             <form method="post" enctype="multipart/form-data">
                 <input type="file" name="wallpaper" id="setwallpaper" hidden>
-                <label for="setwallpaper">Select wallpaper</label>
+                <h3>Select wallpaper</h3>
+                <label for="setwallpaper">Click to browse</label>
                 <br><br>
                 <input type="submit" name="update_wallpaper" value="Set wallpaper">
             </form>
         </div>
+
+        <script>
+            function friendship(friend,action) {
+                const actions = document.getElementById('friend_action');
+                $.ajax({
+                    url: 'assets/friendship.php',
+                    type: "POST",
+                    data: {
+                        friend : friend,
+                        action : action
+                    }
+                }).done(function(response) {
+                    window.location.reload();
+                });
+            }
+
+            function avatarSize() {
+                document.getElementById('avatar').style.width = window.innerWidth+"px";
+            }
+            //window.addEventListener("resize", avatarSize);
+
+            function changeWallpaper() {
+                const changeWallpaperElements = document.getElementsByClassName("changeWallpaper");
+                const changeAvatarElements = document.getElementsByClassName("changeAvatar");
+
+                for (let i = 0; i < changeWallpaperElements.length; i++) {
+                    const element = changeWallpaperElements[i];
+
+                    if (element.hasAttribute("hidden")) {
+                        element.removeAttribute("hidden");
+                    } else {
+                        element.setAttribute("hidden", "");
+                    }
+                }
+                for (let i = 0; i < changeAvatarElements.length; i++) {
+                    const element = changeAvatarElements[i];
+
+                    element.setAttribute("hidden", "");
+                }
+            }
+
+            function changeAvatar() {
+                const changeWallpaperElements = document.getElementsByClassName("changeWallpaper");
+                const changeAvatarElements = document.getElementsByClassName("changeAvatar");
+
+                for (let i = 0; i < changeAvatarElements.length; i++) {
+                    const element = changeAvatarElements[i];
+
+                    if (element.hasAttribute("hidden")) {
+                        element.removeAttribute("hidden");
+                    } else {
+                        element.setAttribute("hidden", "");
+                    }
+                }
+                for (let i = 0; i < changeWallpaperElements.length; i++) {
+                    const element = changeWallpaperElements[i];
+
+                    element.setAttribute("hidden", "");
+                }
+            }
+        </script>
         <?php }?>
     </body>
 </html>

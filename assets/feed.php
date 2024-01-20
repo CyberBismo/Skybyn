@@ -63,9 +63,11 @@ while ($post = $getPosts->fetch_assoc()) {
         <div class="post_content" id="post_c_<?=$post_id?>">
             <?=$post_content_res?>
         </div>
+        <?php if (!empty($post_video)) {?>
         <div class="post_links">
             <?=$post_video?>
         </div>
+        <?php }?>
         <?php $getUploads = $conn->query("SELECT * FROM `uploads` WHERE `post`='$post_id'");
         if ($getUploads->num_rows > 0) {?>
         <div class="post_uploads" id="post_u_<?=$post_id?>">
@@ -80,8 +82,8 @@ while ($post = $getPosts->fetch_assoc()) {
             Read more
         </div>
         <?php }?>
-        <i><?=$comments?> comment(s)</i>
         <div class="post_comments">
+            <div class="post_comment_count"><?=$comments?><i class="fa-solid fa-comments"></i></div>
             <div class="post_comment">
                 <div class="post_comment_user">
                     <img src="<?=$avatar?>">

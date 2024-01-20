@@ -1669,9 +1669,10 @@
             }
             <?php }?>
             .header .top .user-avatar img {
-                width: auto;
+                width: 50px;
                 max-width: 50px;
                 height: 50px;
+                max-height: 50px;
                 border-radius: 50px;
                 object-fit: cover;
             }
@@ -2059,12 +2060,14 @@
                 cursor: pointer;
             }
             .post_content {
-                padding: 0 20px;
+                padding: 10px 20px;
                 word-break: break-all;
                 overflow: hidden;
             }
-            .post_content.shadow {
-                box-shadow: inset -1px -50px 23px -22px rgba(0,0,0,0.8);
+            .post_full {
+                margin-bottom: 10px;
+                padding-bottom: 30px;
+                border-bottom: 1px solid rgba(0,0,0,.05);
             }
             .post_website {
                 width: calc(100% - 20px);
@@ -2081,9 +2084,6 @@
                 border-radius: 10px;
                 box-sizing: border-box;
                 overflow: hidden;
-            }
-            .post_links {
-                padding: 20px 0;
             }
             .post_links iframe {
                 width: calc(100% - 20px);
@@ -2140,6 +2140,7 @@
             }
             .post_comments {
                 width: 100%;
+                margin-top: 20px;
                 padding: 0 10px;
                 box-sizing: border-box;
             }
@@ -2149,6 +2150,15 @@
                 font-size: 12px;
                 margin-bottom: 10px;
                 padding: 0 10px;
+            }
+            .post_comment_count {
+                display: flex;
+                justify-content: right;
+                height: 30px;
+                padding: 0 10px;
+            }
+            .post_comment_count i {
+                padding-left: 10px;
             }
             .post_comment {
                 display: flex;
@@ -3354,8 +3364,8 @@
             .changeWallpaper {
                 position: fixed;
                 top: 20%;
-                left: -200px;
-                width: 400px;
+                left: -120px;
+                width: 445px;
                 margin-left: 50%;
                 padding: 20px;
                 background: white;
@@ -3377,6 +3387,11 @@
                 box-sizing: border-box;
             }
             <?php }?>
+            .changeAvatar i,
+            .changeWallpaper i {
+                float: right;
+                cursor: pointer;
+            }
 
             .settings-cat {
                 display: flex;

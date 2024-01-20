@@ -108,7 +108,9 @@ function cleanUrls($text) {
     // Replace URLs with clickable links
     $text = preg_replace_callback($urlPattern, function($match) {
         $url = $match[0];
-        return '<a href="' . $url . '" target="_blank">' . shortenUrlToDomain($url) . '</a>';
+        if (!empty(shortenUrlToDomain($url))) {
+            return '<a href="' . $url . '" target="_blank">' . shortenUrlToDomain($url) . '</a>';
+        }
     }, $text);
 
     return $text;
