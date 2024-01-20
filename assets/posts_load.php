@@ -68,8 +68,8 @@ while ($post = $getPosts->fetch_assoc()) {
                 <?=$post_video?>
             </div>
         </div>
-        <div class="post_uploads">
-            <div class="post_gallery">
+        <div class="post_uploads" id="post_u_<?=$post_id?>">
+            <div class="post_gallery" id="post_g_<?=$post_id?>">
             <?php $getUploads = $conn->query("SELECT * FROM `uploads` WHERE `post`='$post_id'");
             if ($getUploads->num_rows > 0) {
                 while($upload = $getUploads->fetch_assoc()) {
