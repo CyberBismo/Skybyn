@@ -210,21 +210,26 @@ if ($Pwallpaper == "./") {
                                     </div>
                                 </div>
                             </div>
-                            <div id="post_c_<?=$post_id?>" hidden><?=$post_content?></div>
-                            <div class="post_content">
+                            <div class="post_content" id="post_c_<?=$post_id?>">
                                 <?=$post_content_res?>
                             </div>
                             <div class="post_links">
-                                <?=$post_youtube?>
+                                <?=$post_video?>
                             </div>
-                            <div class="post_uploads">
-                                <?php $getUploads = $conn->query("SELECT * FROM `uploads` WHERE `post`='$post_id'");
-                                if ($getUploads->num_rows > 0) {
-                                    while($upload = $getUploads->fetch_assoc()) {
+                            <?php $getUploads = $conn->query("SELECT * FROM `uploads` WHERE `post`='$post_id'");
+                            if ($getUploads->num_rows > 0) {?>
+                            <div class="post_uploads" id="post_u_<?=$post_id?>">
+                                <div class="post_gallery" id="post_g_<?=$post_id?>">
+                                    <?php while($upload = $getUploads->fetch_assoc()) {
                                         $file = $upload['file_url'];?>
                                     <img src="<?=$file?>" onclick="showImage(<?=$post_id?>)">
-                                <?php }}?>
+                                <?php }?>
+                                </div>
                             </div>
+                            <div class="post_expand" id="post_expand" onclick="expandPost(<?=$post_id?>)">
+                                Read more
+                            </div>
+                            <?php }?>
                             <i><?=$comments?> comment(s)</i>
                             <div class="post_comments">
                                 <?php if (isset($_SESSION['user'])) {?>
