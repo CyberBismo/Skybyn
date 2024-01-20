@@ -131,6 +131,7 @@ function shortenUrlToDomain($url) {
 function isVideoPlatformUrl($url) {
     // Define an array of video platforms to check
     $videoPlatforms = array(
+        "youtu.be",
         "youtube.com",
         "vimeo.com",
         "tiktok.com",
