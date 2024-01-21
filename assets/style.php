@@ -1220,7 +1220,7 @@
                 right: 33.33%;
                 margin-top: 100px;
                 padding: 10px;
-                background: rgba(255,255,255,.9);
+                background: rgba(var(--dark),.9);
                 border-radius: 20px;
                 box-sizing: border-box;
             }
