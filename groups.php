@@ -38,7 +38,7 @@ if (!isset($_SESSION['user'])) {
                     }
                 } else {
                     ?>
-                    <div class="gb-intro">Be first to create a group</div>
+                    <div class="gb-intro" onclick="window.location.href='/newgroup'">Create a group</div>
                     <?php
                 }
                 ?>

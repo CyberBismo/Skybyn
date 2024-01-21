@@ -46,7 +46,7 @@ if (!isset($_SESSION['user'])) {
                     }
                 } else {
                     ?>
-                    <div class="pb-intro">Be first to create a page</div>
+                    <div class="pb-intro" onclick="window.location.href='/newpage'">Create a page</div>
                     <?php
                 }
                 ?>

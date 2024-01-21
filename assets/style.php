@@ -103,25 +103,24 @@
             body {
                 width: 100%;
                 margin: 0 auto;
-                background: linear-gradient(180deg, rgba(var(--dark),1) 0%, rgba(var(--darker),1) 80%, rgba(var(--black),1) 100%);
                 background-attachment: fixed;
+                transition: background-color 0.3s;
             }
-            *::-webkit-scrollbar {
-                display: none;
+            @media (prefers-color-scheme: light) {
+                body {
+                    color: black;
+                    background-color: #b9c7d2; /* Default light background */
+                }
+            }
+            @media (prefers-color-scheme: dark) {
+                body {
+                    color: white;
+                    background-color: #232325; /* Dark background */
+                }
             }
 
-            #install-button {
-                display: block;
-                position: fixed;
-                top: 0;
-                right: 0;
-                margin: 10px;
-                padding: 20px;
-                color: white;
-                background: rgba(0,0,0,.5);
-                border: none;
-                border-radius: 5px;
-                z-index: 999;
+            *::-webkit-scrollbar {
+                display: none;
             }
 
             .msg {
@@ -463,6 +462,7 @@
                 height: 100%;
                 padding: 0 10px;
                 box-sizing: border-box;
+                backdrop-filter: blur(5px);
             }
             <?php } else {?>
             .left-panel,
@@ -494,6 +494,13 @@
             .left-panel button.btn:hover {
                 transform: scale(1.1);
             }
+            .left-panel-open {
+                border-top: 1px solid rgba(255,255,255,.3);
+                border-right: 1px solid rgba(255,255,255,.3);
+                border-bottom: 1px solid rgba(255,255,255,.3);
+                border-top-right-radius: 10px;
+                border-bottom-right-radius: 10px;
+            }
             
             .right-panel {
                 right: 0;
@@ -503,6 +510,24 @@
             }
             .right-panel h3 {
                 text-align: center;
+            }
+            .right-panel-open {
+                right: 0;
+                border-top: 1px solid rgba(255,255,255,.3);
+                border-left: 1px solid rgba(255,255,255,.3);
+                border-bottom: 1px solid rgba(255,255,255,.3);
+                border-top-left-radius: 10px;
+                border-bottom-left-radius: 10px;
+            }
+
+            .left-panel-open,
+            .right-panel-open {
+                position: fixed;
+                top: 50%;
+                padding: 30px 10px;
+                backdrop-filter: blur(5px);
+                cursor: pointer;
+                transition: all .5s;
             }
 
             /** Bottom Navigation */
@@ -1064,11 +1089,9 @@
             }
             .header .top-left .logo-name h1 {
                 margin: 10px 0 5px 0;
-                color: white;
             }
             .header .top-left .logo-name p {
                 margin: 0;
-                color: white;
             }
             <?php if (isMobile() == false) {?>
             .header .new_post_button {
@@ -1080,7 +1103,7 @@
                 color: white;
                 text-align: center;
                 backdrop-filter: blur(5px);
-                border: 1px solid rgba(255,255,255,.5);
+                border: 1px solid rgba(255,255,255,.2);
                 border-radius: 50px;
                 box-sizing: border-box;
                 cursor: pointer;
@@ -1089,37 +1112,22 @@
             .new_post {
                 position: fixed;
                 top: 75px;
-                left: 50%;
-                width: 40%;
-                margin-left: -20%;
-                background: rgba(var(--dark),.8);
+                width: 50%;
+                margin: 0 25%;
+                background: rgba(var(--dark),.2);
                 backdrop-filter: blur(5px);
                 border-radius: 20px;
                 box-sizing: border-box;
                 box-shadow: 0px 5px 10px 0px rgba(0,0,0,.5);
                 overflow: hidden;
-                z-index: 3;
+                z-index: 5;
             }
             .new_post .create_post {
                 width: 100%;
                 margin: 0 auto;
                 padding: 20px;
                 color: black;
-                box-sizing: border-box;
-            }
-            .new_post .create_post textarea {
-                width: 100%;
-                min-width: 100%;
-                max-width: 100%;
-                min-height: 100px;
-                max-height: 400px;
-                margin: 0 auto;
-                padding: 10px;
-                padding-right: 40px;
-                color: white;
-                background: none;
-                border: none;
-                outline: none;
+                background: rgba(var(--dark),.2);
                 box-sizing: border-box;
             }
             .new_post .create_post textarea::placeholder {
@@ -1128,36 +1136,58 @@
             .new_post .create_post textarea::-webkit-scrollbar {
                 display: none;
             }
-            .new_post img {
-                float: left;
-                width: 50px;
-                margin: -10px 0 0 -10px;
-                border-radius: 20px;
-            }
-            .new_post .create_post_actions_top {
+            .create_post_actions_top {
                 display: flex;
-                justify-content: end;
+                width: 100%;
+                overflow: hidden;
             }
-            .new_post .create_post_actions_top span {
-                margin: 0 10px;
+            .create_post_actions_top img {
+                width: auto;
+                max-width: 50px;
+                height: auto;
+                max-height: 50px;
+                border-radius: 50px;
+            }
+            .create_post_actions_top textarea {
+                min-width: calc(100% - 100px);
+                max-width: calc(100% - 100px);
+                min-height: 50px;
+                max-height: 400px;
                 padding: 10px;
                 color: white;
-            }
-            .new_post .create_post_actions_top span select {
-                color: white;
                 background: none;
-                outline: none;
                 border: none;
+                outline: none;
+                box-sizing: border-box;
             }
-            .new_post .create_post_actions_top span select option {
-                color: black;
-            }
-            .new_post .create_post_actions_top span.close {
+            .create_post_actions_top .close {
                 width: 50px;
-                margin-right: -10px;
+                padding: 10px;
                 text-align: center;
-                border-left: 1px solid white;
+                color: white;
                 cursor: pointer;
+                box-sizing: border-box;
+            }
+            .new_post .new_post_files {
+                display: flex;
+                justify-content: left;
+                width: 100%;
+                max-height: 200px;
+                padding: 0 10px;
+                padding-top: 10px;
+                box-sizing: border-box;
+                overflow: scroll;
+            }
+            .new_post .new_post_files img {
+                max-width: 100px;
+                max-height: 200px;
+                margin: 3px 0;
+                border-radius: 10px;
+                transition: all .5s;
+            }
+            .new_post .new_post_files img:hover {
+                max-width: 100%;
+                max-height: 200px;
             }
             .new_post .create_post_actions_bottom {
                 display: flex;
@@ -1166,9 +1196,7 @@
                 color: white;
             }
             .new_post .create_post_actions_bottom .share {
-                width: 40px;
-                line-height: 40px;
-                margin-top: -10px;
+                width: 50px;
                 padding: 0;
                 text-align: center;
                 border-radius: 40px;
@@ -1178,23 +1206,9 @@
             .new_post .create_post_actions_bottom .share:hover {
                 background: rgba(255,255,255,.3);
             }
-            .new_post .create_post_actions_bottom label,
-            .new_post .create_post_actions_bottom span {
-                cursor: pointer;
-            }
             .new_post .create_post_actions_bottom i {
+                line-height: 50px;
                 padding: 0 10px;
-            }
-            .new_post .new_post_files {
-                display: flex;
-                justify-content: left;
-                width: 100%;
-                padding: 0 10px;
-                padding-top: 10px;
-            }
-            .new_post .new_post_files img {
-                margin: 3px 0;
-                border-radius: 10px;
             }
 
             .search_result {
@@ -1904,56 +1918,6 @@
             .image_box .image_slider img.active {
                 border-color: #007bff;
             }
-
-            /** Share */
-            /*.create_post {
-            /*    width: 100%;
-            /*    padding: 0;
-            /*}
-            /*.create_post textarea {
-            /*    width: 100%;
-            /*    height: 50%;
-            /*    padding: 10px;
-            /*    color: white;
-            /*    background: none;
-            /*    border: none !important;
-            /*    outline: none;
-            /*    box-sizing: border-box;
-            /*    resize: none;
-            /*}
-            /*.create_post textarea::placeholder {
-            /*    color: white;
-            /*}
-            /*.create_post_actions {
-            /*    display: flex;
-            /*    justify-content: space-between;
-            /*    width: 100%;
-            /*    padding: 0 10px;
-            /*    box-sizing: border-box;
-            /*}
-            /*.create_post_actions input[type=file] {
-            /*    width: 100px;
-            /*    padding: 0;
-            /*    color: white;
-            /*}
-            /*.create_post_actions input[type=file]::-webkit-file-upload-button {
-            /*    visibility: hidden;
-            /*    margin-top: -2px;
-            /*    padding: 15px 0;
-            /*}
-            /*.create_post_actions input[type=file]::before {
-            /*    content: 'Select file';
-            /*    margin-right: 20px;
-            /*    padding: 15px;
-            /*    color: black;
-            /*    background: white;
-            /*    border-radius: 10px;
-            /*}
-            /*.create_post i {
-            /*    line-height: 25px;
-            /*    padding: 10px 20px;
-            /*    color: white;
-            /*}
 
             /** POST */
             <?php if (isMobile() == false) {?>
@@ -2697,6 +2661,12 @@
                 color: rgba(100,100,100,1);
                 border: 1px dashed rgba(100,100,100,1);
                 border-radius: 100%;
+                cursor: pointer;
+            }
+            .pb-intro:hover,
+            .gb-intro:hover {
+                color: rgba(255,255,255,.5);
+                background: rgba(255,255,255,.05);
             }
             .pb-box {
                 float: left;
@@ -3179,21 +3149,23 @@
             <?php if (isMobile() == false) {?>
             .profile {
                 display: flex;
+                gap: 10px;
                 justify-content: space-around;
             }
             .profile-left {
+                position: sticky;
+                top: 115px;
                 width: 30%;
-                margin-right: 13px;
             }
             .profile-left i {
                 position: absolute;
+                display: none;
                 width: 40px;
                 height: 40px;
                 text-align: center;
                 cursor: pointer;
             }
             .profile-left .avatar {
-                position: relative;
                 width: 150px;
                 height: 150px;
                 margin: 0 auto;

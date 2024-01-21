@@ -61,7 +61,7 @@ if ($Pwallpaper == "./") {
                 <img src="<?=$Pwallpaper?>">
             </div>
             <div class="profile">
-                <div class="profile-left">
+                <div class="profile-left" id="profile-left">
                     <?php if ($myProfile == true) {?>
                     <i class="fa-regular fa-pen-to-square" onclick="changeWallpaper()"></i>
                     <?php }?>
@@ -158,7 +158,7 @@ if ($Pwallpaper == "./") {
                         <?php }?>
                     </div>
                 </div>
-                <div class="profile-right">
+                <div class="profile-right" id="posts">
                     <?php if ($Pprivate == "0" || $friends == true) {?>
                     <?php $getPosts = mysqli_query($conn, "SELECT * FROM `posts` WHERE `user`='$user_id' ORDER BY `created` DESC LIMIT 5");
                     while($post = mysqli_fetch_assoc($getPosts)) {
@@ -313,6 +313,12 @@ if ($Pwallpaper == "./") {
         </div>
 
         <script>
+            function stickyProfile() {
+                const avatar = document.getElementById('profile-left');
+                avatar.style.height = window.innerHeight - 125 +"px";
+            }
+            stickyProfile();
+
             function friendship(friend,action) {
                 const actions = document.getElementById('friend_action');
                 $.ajax({

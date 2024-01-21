@@ -22,6 +22,11 @@ if ($currentUrl == $devDomain) {
         <link href="/fontawe/css/all.css" rel="stylesheet">
         <script src="/assets/js/jquery.min.js"></script>
         <script src="/assets/js/scripts.js"></script>
+        <?php if (isMobile() == true) {?>
+        <script src="assets/js/small_screen.js"></script>
+        <?php } else {?>
+        <script src="assets/js/big_screen.js"></script>
+        <?php }?>
         <?php if (isset($_SESSION['user'])) {?>
         <script src="assets/js/scripts_logged.js"></script>
         <?php }?>
@@ -99,35 +104,33 @@ if ($currentUrl == $devDomain) {
         <?php if (isset($_SESSION['user'])) {?>
         <div class="new_post" id="new_post" hidden>
             <div class="create_post">
-                <img src="<?=$avatar?>">
                 <div class="create_post_actions_top">
-                    <span>
+                    <img src="<?=$avatar?>">
+                    <textarea type="text" placeholder="What's on your mind?" id="new_post_input" oninput="adjustTextareaHeight()" onkeydown="checkEnter()" onkeyup="convertEmoji(this.value)"></textarea>
+                    <?php if (isMobile() == false) {?>
+                    <span class="close" onclick="newPost()">
+                        <i class="fa-solid fa-xmark"></i>
+                    </span>
+                    <?php }?>
+                </div>
+                <div class="new_post_files" id="new_post_files"></div>
+                <div class="create_post_actions create_post_actions_bottom">
+                    <span style="width:calc(100% - 100px);word-break: break-all">
+                        <input type="file" id="image_to_share" accept=".jpg, .jpeg, .gif, .png" multiple hidden onchange="updateFileNameLabel()">
+                        <label for="image_to_share"><i class="fa-solid fa-image"></i><span id="image_to_share_text">No image selected</span></label>
+                    </span>
+
+                    <!--span>
                         <i class="fa-solid fa-earth-americas"></i>
                         <select id="new_post_public">
                             <option value="0">Private</option>
                             <option value="1" selected>Friends only</option>
                             <option value="2">Public</option>
                         </select>
-                    </span>
-                    <span>
-                        <i class="fa-solid fa-location-dot"></i> <?=$country?>
-                    </span>
-                    <?php if (isMobile() == false) {?>
-                    <span class="close" onclick="newPost('close')">
-                        <i class="fa-solid fa-xmark"></i>
-                    </span>
-                    <?php }?>
-                </div>
-                <textarea type="text" placeholder="What's on your mind?" id="new_post_input" oninput="adjustTextareaHeight()" onkeydown="checkEnter()" onkeyup="convertEmoji(this.value)"></textarea>
-                <div class="create_post_actions create_post_actions_bottom">
-                    <span style="width:calc(100% - 100px);word-break: break-all">
-                        <input type="file" id="image_to_share" accept=".jpg, .jpeg, .gif, .png" multiple hidden onchange="updateFileNameLabel()">
-                        <label for="image_to_share"><i class="fa-solid fa-image"></i><span id="image_to_share_text">No image selected</span></label>
-                    </span>
+                    </span-->
                     
                     <i class="fa-solid fa-paper-plane share" id="create_post_btn" onclick="createPost()"></i>
                 </div>
-                <div class="new_post_files" id="new_post_files"></div>
             </div>
         </div>
         <?php }?>
@@ -171,9 +174,9 @@ if ($currentUrl == $devDomain) {
                     }
                     <?php if (isMobile() == true) {?>
                     mobile_nav_btn.style.transform = "rotate(0deg)";
-                    <?php }?>
                     new_post.style.background = "rgba(var(--dark),.2)";
                     header.style.background = "rgba(var(--dark),.2)";
+                    <?php }?>
                 } else {
                     if (newPostIcon) {
                         newPostIcon.classList.add("fa-xmark");
@@ -185,12 +188,10 @@ if ($currentUrl == $devDomain) {
                     }
                     <?php if (isMobile() == true) {?>
                     mobile_nav_btn.style.transform = "rotate(45deg)";
-                    <?php }?>
-                    new_post_input.focus();
                     new_post.style.background = "rgba(var(--dark),1)";
-                    <?php if (isMobile() == true) {?>
                     header.style.background = "rgba(var(--dark),1)";
                     <?php }?>
+                    new_post_input.focus();
                 }
             }
             <?php if (isset($_SESSION['user'])) {?>
@@ -349,7 +350,8 @@ if ($currentUrl == $devDomain) {
                 </div>
             </div>
         </div>
-        
+        <div class="left-panel-open" id="lp-open" onclick="showLeftPanel()"><i class="fa-solid fa-chevron-right"></i></div>
+
         <div class="right-panel" id="right-panel">
             <?php if (isMobile() == false) {?>
             <div class="search">
@@ -395,6 +397,7 @@ if ($currentUrl == $devDomain) {
                 </div>
             </div>
         </div>
+        <div class="right-panel-open" id="rp-open" onclick="showRightPanel()"><i class="fa-solid fa-chevron-left"></i></div>
 
         <?php if (isMobile() == true) {?>
         <div class="mobile-search" id="mobile-search">
@@ -499,12 +502,18 @@ if ($currentUrl == $devDomain) {
             function hideSidePanels() {
                 const lp = document.getElementById('left-panel');
                 const rp = document.getElementById('right-panel');
+                const lb = document.getElementById('lp-open');
+                const rb = document.getElementById('rp-open');
                 if (window.innerWidth < 1240) {
-                    lp.style.transform = "translate(-300px)";
-                    rp.style.transform = "translate(300px)";
+                    lp.style.transform = "translateX(-300px)";
+                    rp.style.transform = "translateX(300px)";
+                    lb.style.transform = "translateX(0px)";
+                    rb.style.transform = "translateX(0px)";
                 } else {
-                    lp.style.transform = "translate(0px)";
-                    rp.style.transform = "translate(0px)";
+                    lp.style.transform = "translateX(0px)";
+                    rp.style.transform = "translateX(0px)";
+                    lb.style.transform = "translateX(-33px)";
+                    rb.style.transform = "translateX(33px)";
                 }
             }
             <?php if (isMobile() == false) {?>
@@ -521,4 +530,23 @@ if ($currentUrl == $devDomain) {
                     p_uploads.style.maxHeight = p_gallery.clientHeight+"px";
                 }
             }
+
+            function updateThemeBasedOnSystemSettings() {
+                const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+                function applyThemeChange(e) {
+                    if (e.matches) {
+                    } else {
+                    }
+                }
+
+                // Initial check
+                applyThemeChange(mediaQuery);
+
+                // Listen for changes
+                mediaQuery.addListener(applyThemeChange);
+            }
+
+            // Call the function to apply initial theme and set up listener
+            updateThemeBasedOnSystemSettings();
         </script>
