@@ -56,7 +56,7 @@ function startSearch(x) {
         searchResult.style.display = "block";
 
         // Check if the input starts with "/user"
-        if (x.value.startsWith("/user ")) {
+        if (x.value.startsWith("@user ")) {
             $.ajax({
                 url: 'assets/search_users.php',
                 type: "POST",
@@ -77,6 +77,24 @@ function startSearch(x) {
         if (x.value.startsWith("/page ")) {
             $.ajax({
                 url: 'assets/search_pages.php',
+                type: "POST",
+                data: {
+                    text: x.value
+                }
+            }).done(function(response) {
+                // Handle the response for page search
+                if (response != "") {
+                    searchResPages.removeAttribute("hidden");
+                    searchRPages.innerHTML = response;
+                } else {
+                    searchResPages.setAttribute("hidden", "");
+                    searchRPages.innerHTML = "";
+                }
+            });
+        } else
+        if (x.value.startsWith("/group ")) {
+            $.ajax({
+                url: 'assets/search_groups.php',
                 type: "POST",
                 data: {
                     text: x.value
@@ -269,13 +287,11 @@ function hideMenus(event) {
     if (notifications.style.display == "block") {
         if (!notifications.contains(event.target) && !notification.contains(event.target)) {
             notifications.style.display = "none";
-            console.log("Hiding notification menu");
         }
     }
     if (usermenu.style.display == "block") {
         if (!usermenu.contains(event.target)) {
             usermenu.style.display = "none";
-            console.log("Hiding user menu");
         }
     }
 }

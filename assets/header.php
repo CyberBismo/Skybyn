@@ -429,6 +429,25 @@ if ($currentUrl == $devDomain) {
             <div class="bnav-btn" onclick="newPost()"><i class="fa-solid fa-plus" id="mobile_new_post"></i></div>
             <div class="bnav-btn" onclick="showRightPanel()"><i class="fa-solid fa-user-group"></i></div>
         </div>
+        <?php } else {?>
+        <div class="search_result" id="search_result" hidden>
+            <div id="search_res_users" hidden>
+                <p>Users</p>
+                <div id="search_r_users"></div>
+            </div>
+            <div id="search_res_groups" hidden>
+                <p>Groups</p>
+                <div id="search_r_groups"></div>
+            </div>
+            <div id="search_res_pages" hidden>
+                <p>Pages</p>
+                <div id="search_r_pages"></div>
+            </div>
+            <div id="search_res_markets" hidden>
+                <p>Markets</p>
+                <div id="search_r_markets"></div>
+            </div>
+        </div>
         <?php }?>
 
         <div class="image_viewer" id="image_viewer" style="display: none">

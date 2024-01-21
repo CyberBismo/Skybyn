@@ -3,7 +3,7 @@
 $text = $_POST['text'];
 
 // Check if the text starts with "/users "
-if (strpos($text, "/user ") === 0) {
+if (strpos($text, "@user ") === 0) {
     // Extract the username from the text
     $username = substr($text, 6); // 6 is the length of "/user "
 
