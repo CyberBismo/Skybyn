@@ -84,7 +84,6 @@ while ($post = $getPosts->fetch_assoc()) {
             Read more
         </div>
         <?php }?>
-        </div>
         <div class="post_comments">
             <div class="post_comment_count"><?=$comment_count?><i class="fa-solid fa-comments"></i></div>
             <div class="post_comment">
