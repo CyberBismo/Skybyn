@@ -1195,6 +1195,20 @@
                 margin-top: 20px;
                 color: white;
             }
+            .new_post .create_post_actions_bottom span select {
+                appearance: none;
+                padding: 10px;
+                color: black;
+                background: white;
+                border: none;
+                border-radius: 10px;
+                outline: none;
+                cursor: pointer;
+            }
+            .new_post .create_post_actions_bottom span select::before,
+            .new_post .create_post_actions_bottom span select::after {
+                color: black;
+            }
             .new_post .create_post_actions_bottom .share {
                 width: 50px;
                 padding: 0;

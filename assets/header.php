@@ -115,19 +115,19 @@ if ($currentUrl == $devDomain) {
                 </div>
                 <div class="new_post_files" id="new_post_files"></div>
                 <div class="create_post_actions create_post_actions_bottom">
-                    <span style="width:calc(100% - 100px);word-break: break-all">
+                    <span style="word-break: break-all">
                         <input type="file" id="image_to_share" accept=".jpg, .jpeg, .gif, .png" multiple hidden onchange="updateFileNameLabel()">
                         <label for="image_to_share"><i class="fa-solid fa-image"></i><span id="image_to_share_text">No image selected</span></label>
                     </span>
 
-                    <!--span>
+                    <span>
                         <i class="fa-solid fa-earth-americas"></i>
                         <select id="new_post_public">
                             <option value="0">Private</option>
                             <option value="1" selected>Friends only</option>
                             <option value="2">Public</option>
                         </select>
-                    </span-->
+                    </span>
                     
                     <i class="fa-solid fa-paper-plane share" id="create_post_btn" onclick="createPost()"></i>
                 </div>
