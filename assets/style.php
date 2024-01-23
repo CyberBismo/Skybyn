@@ -1124,17 +1124,29 @@
             }
             .new_post .create_post {
                 width: 100%;
+                height: 90px;
                 margin: 0 auto;
                 padding: 20px;
                 color: black;
-                background: rgba(var(--dark),.2);
                 box-sizing: border-box;
             }
-            .new_post .create_post textarea::placeholder {
+            .create_post textarea::placeholder {
                 color: white;
             }
-            .new_post .create_post textarea::-webkit-scrollbar {
+            .create_post textarea::-webkit-scrollbar {
                 display: none;
+            }
+            .create_post .close {
+                float: right;
+                width: 16px;
+                height: 16px;
+                margin-top: -10px;
+                margin-right: -10px;
+                margin-bottom: -16px;
+                text-align: center;
+                color: white;
+                cursor: pointer;
+                box-sizing: border-box;
             }
             .create_post_actions_top {
                 display: flex;
@@ -1142,9 +1154,9 @@
                 overflow: hidden;
             }
             .create_post_actions_top img {
-                width: auto;
+                width: 50px;
                 max-width: 50px;
-                height: auto;
+                height: 50px;
                 max-height: 50px;
                 border-radius: 50px;
             }
@@ -1159,20 +1171,22 @@
                 border: none;
                 outline: none;
                 box-sizing: border-box;
+                resize: none;
             }
-            .create_post_actions_top .close {
+            .create_post_actions_top i {
                 width: 50px;
-                padding: 10px;
+                height: 50px;
+                line-height: 50px;
                 text-align: center;
                 color: white;
                 cursor: pointer;
-                box-sizing: border-box;
             }
             .new_post .new_post_files {
                 display: flex;
                 justify-content: left;
                 width: 100%;
                 max-height: 200px;
+                margin-top: 10px;
                 padding: 0 10px;
                 padding-top: 10px;
                 box-sizing: border-box;

@@ -2,10 +2,6 @@
 
 $last_id = $_POST['last'];
 
-if ($last_id == null) {
-    $last_id = 0;
-}
-
 $getPosts = $conn->query("SELECT p.*
     FROM posts p
     WHERE p.user = $uid OR p.user IN (
@@ -17,6 +13,7 @@ $getPosts = $conn->query("SELECT p.*
     ORDER BY p.created DESC
     LIMIT 1
 ");
+if ($getPosts->num_rows > 0) {
 while($post = $getPosts->fetch_assoc()) {
     $post_id = $post['id'];
     $post_user = $post['user'];
@@ -129,4 +126,4 @@ while($post = $getPosts->fetch_assoc()) {
         </div>
     </div>
 </div>
-<?php }?>
+<?php }}?>

@@ -266,8 +266,10 @@ function convertEmoji(string) {
     text.value = string.replace(/(:\)|:D)/g, (match) => emojiMap[match]);
 }
 function adjustTextareaHeight() {
-    const textarea = document.getElementById("new_post_input");
+    const newPost = document.getElementById("new_post");
+    const textarea = document.getElementById("new_post_input");0 
     textarea.rows = textarea.value.split("\n").length;
+    newPost.style.height = 40 + textarea.clientHeight + "px";
 }
 
 function showNotifications(event) {

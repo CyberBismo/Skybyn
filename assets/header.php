@@ -104,22 +104,18 @@ if ($currentUrl == $devDomain) {
         <?php if (isset($_SESSION['user'])) {?>
         <div class="new_post" id="new_post" hidden>
             <div class="create_post">
+                <?php if (isMobile() == false) {?>
+                <span class="close" onclick="newPost()">
+                    <i class="fa-solid fa-xmark"></i>
+                </span>
+                <?php }?>
                 <div class="create_post_actions_top">
                     <img src="<?=$avatar?>">
                     <textarea type="text" placeholder="What's on your mind?" id="new_post_input" oninput="adjustTextareaHeight()" onkeydown="checkEnter()" onkeyup="convertEmoji(this.value)"></textarea>
-                    <?php if (isMobile() == false) {?>
-                    <span class="close" onclick="newPost()">
-                        <i class="fa-solid fa-xmark"></i>
-                    </span>
-                    <?php }?>
+                    <i class="fa-solid fa-paper-plane share" id="create_post_btn" onclick="createPost()"></i>
                 </div>
                 <div class="new_post_files" id="new_post_files"></div>
                 <div class="create_post_actions create_post_actions_bottom">
-                    <span style="word-break: break-all">
-                        <input type="file" id="image_to_share" accept=".jpg, .jpeg, .gif, .png" multiple hidden onchange="updateFileNameLabel()">
-                        <label for="image_to_share"><i class="fa-solid fa-image"></i><span id="image_to_share_text">No image selected</span></label>
-                    </span>
-
                     <span>
                         <i class="fa-solid fa-earth-americas"></i>
                         <select id="new_post_public">
@@ -128,8 +124,10 @@ if ($currentUrl == $devDomain) {
                             <option value="2">Public</option>
                         </select>
                     </span>
-                    
-                    <i class="fa-solid fa-paper-plane share" id="create_post_btn" onclick="createPost()"></i>
+                    <span style="word-break: break-all">
+                        <input type="file" id="image_to_share" accept=".jpg, .jpeg, .gif, .png" multiple hidden onchange="updateFileNameLabel()">
+                        <label for="image_to_share"><i class="fa-solid fa-image"></i><span id="image_to_share_text">No image selected</span></label>
+                    </span>
                 </div>
             </div>
         </div>
