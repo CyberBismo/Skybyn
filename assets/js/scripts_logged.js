@@ -714,23 +714,43 @@ function showPostActions(x) {
         actionList.hidden = true;
     }
 }
+let insertedPostIds = [];
+
 function checkPosts() {
     let posts = document.getElementById('posts');
     let post = posts.firstElementChild;
-    let id = post.id.replace("post_", "");
+    let id = post ? post.id.replace("post_", "") : 0;
+
     $.ajax({
         url: 'assets/posts_check.php',
         type: "POST",
         data: {
-            last : id
+            last: id
         }
-    }).done(function(response) {
+    }).done(function (response) {
         if (response != "") {
-            posts.insertAdjacentHTML('afterbegin', response);
+            let newPosts = document.createElement('div');
+            newPosts.innerHTML = response;
+            let postElements = newPosts.querySelectorAll('.post');
+
+            for (let i = 0; i < postElements.length; i++) {
+                let postId = postElements[i].id.replace("post_", "");
+                if (!insertedPostIds.includes(postId)) {
+                    posts.insertAdjacentElement('afterbegin', postElements[i]);
+                    insertedPostIds.push(postId);
+                }
+            }
+
             removeDuplicateIds();
         }
     });
 }
+let initialPosts = document.querySelectorAll('.post');
+for (let i = 0; i < initialPosts.length; i++) {
+    let postId = initialPosts[i].id.replace("post_", "");
+    insertedPostIds.push(postId);
+}
+
 function cleanPosts() {
     let posts = document.querySelectorAll('.post');
     let postIds = [];
