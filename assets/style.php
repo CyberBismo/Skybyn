@@ -2919,6 +2919,22 @@
                 background: rgba(0,0,0,.1);
             }
 
+            .friend-referral {
+                width: 100%;
+                margin-top: 20px;
+                padding: 10px;
+                background: rgba(0,0,0,.2);
+                border-radius: 10px;
+                box-sizing: border-box;
+            }
+            .fr_code {
+                padding: 20px;
+                text-transform: uppercase;
+                text-align: center;
+                background: rgba(0,0,0,.8);
+                border-radius: 10px;
+            }
+
             /** Messages */
             .messsages-head {
                 display: flex;

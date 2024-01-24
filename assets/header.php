@@ -348,7 +348,6 @@ if ($currentUrl == $devDomain) {
                 </div>
             </div>
         </div>
-        <div class="left-panel-open" id="lp-open" onclick="showLeftPanel()"><i class="fa-solid fa-chevron-right"></i></div>
 
         <div class="right-panel" id="right-panel">
             <?php if (isMobile() == false) {?>
@@ -393,9 +392,21 @@ if ($currentUrl == $devDomain) {
                     }
                     ?>
                 </div>
+                <div class="friend-referral">
+                    <h3>Refer a friend</h3>
+                    <div class="fr_code" id="frc" <?php if($referral == "error") {?>onclick="genRef()"<?php }?>>
+                        <?php if($referral == "error") {?>
+                            Generate code
+                        <?php } else { echo $referral;}?>
+                    </div>
+                </div>
             </div>
         </div>
+        
+        <?php if (isMobile() == false) {?>
+        <div class="left-panel-open" id="lp-open" onclick="showLeftPanel()"><i class="fa-solid fa-chevron-right"></i></div>
         <div class="right-panel-open" id="rp-open" onclick="showRightPanel()"><i class="fa-solid fa-chevron-left"></i></div>
+        <?php }?>
 
         <?php if (isMobile() == true) {?>
         <div class="mobile-search" id="mobile-search">

@@ -879,6 +879,25 @@ if (isset($_SESSION['user'])) {
         $color_one = "";
     }
 
+    function referralCode($uid) {
+        global $conn;
+        $referral = $conn->query("SELECT * FROM `referral_code` WHERE `user`='$uid'");
+        if ($referral->num_rows == 1) {
+            $referrals = $referral->fetch_assoc();
+            $code = $referrals['referral_code'];
+            $created = $referrals['created'];
+
+            if ($created >= time() - (1 * calcTime('day'))) {
+                return "error";
+            } else {
+                return $code;
+            }
+        } else {
+            return "error";
+        }
+    }
+    $referral = referralCode($uid);
+
     $countryName = language('id',$country,'nicename');
     #$CName = strtolower($countryName);
     
