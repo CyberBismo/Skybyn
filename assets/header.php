@@ -399,10 +399,14 @@ if ($currentUrl == $devDomain) {
                             Generate code
                         <?php } else { echo $referral;}?>
                     </div>
+                    <div class="fr_info">
+                        <i class="fa-regular fa-circle-question"></i> What is this? <span id="fri">+</span>
+                        <div class="fr_info_text" id="frit">Refer a friend simply works as an invitation. By inviting a friend, you instantly become friends and earn 10 <a href="#">points</a>.</div>
+                    </div>
                 </div>
             </div>
         </div>
-        
+
         <?php if (isMobile() == false) {?>
         <div class="left-panel-open" id="lp-open" onclick="showLeftPanel()"><i class="fa-solid fa-chevron-right"></i></div>
         <div class="right-panel-open" id="rp-open" onclick="showRightPanel()"><i class="fa-solid fa-chevron-left"></i></div>

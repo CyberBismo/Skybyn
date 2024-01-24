@@ -2928,11 +2928,28 @@
                 box-sizing: border-box;
             }
             .fr_code {
+                margin-bottom: 10px;
                 padding: 20px;
                 text-transform: uppercase;
                 text-align: center;
                 background: rgba(0,0,0,.8);
                 border-radius: 10px;
+            }
+            .fr_info {
+                height: auto;
+                padding: 10px;
+                font-size: 12px;
+                cursor: pointer;
+                overflow: hidden;
+            }
+            .fr_info span {
+                float: right;
+            }
+            .fr_info_text {
+                padding-top: 10px;
+            }
+            .fr_info_text a {
+                color: white;
             }
 
             /** Messages */
