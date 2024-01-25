@@ -50,14 +50,14 @@ function getIP() {
 function geoData($x) {
     $ip = getIP();
     // Send request to ipapi.com API
-    $url = "https://freeipapi.com/api/json/$ip";
+    $url = "https://api.findip.net/$ip/?token=1a586d6f288e44b4a5a3277a0b70d411";
     $response = file_get_contents($url);
     $data = json_decode($response, true);
     
     if (isset($x)) {
-        #return $data[$x];
+        return $data[$x];
     } else {
-        #return $response;
+        return $response;
     }
     return "";
 }
