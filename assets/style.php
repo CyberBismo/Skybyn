@@ -1033,16 +1033,15 @@
                 transition: all .3s;
                 z-index: 10;
             }
-            <?php if (isMobile() == true) {?>
+            <?php if (isMobile() == true) { if (isset($_SESSION['user'])) {?>
             .header {
                 background: rgba(var(--dark),.2);
                 backdrop-filter: blur(5px);
                 box-shadow: 0px -20px 10px 30px rgba(var(--dark),.2);
             }
-            <?php }?>
+            <?php }}?>
 
-            <?php if (isMobile() == false) {
-                if (isset($_SESSION['user'])) {?>
+            <?php if (isMobile() == false) { if (isset($_SESSION['user'])) {?>
             .header .top-left {
                 display: flex;
                 width: 33.33%;
