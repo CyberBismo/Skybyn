@@ -629,6 +629,7 @@
                 min-width: 300px;
                 max-width: 800px;
                 margin: 0 auto;
+                margin-top: 200px;
             }
             .welcome_information {
                 width: calc(100% - 20px);
@@ -1038,6 +1039,10 @@
                 background: rgba(var(--dark),.2);
                 backdrop-filter: blur(5px);
                 box-shadow: 0px -20px 10px 30px rgba(var(--dark),.2);
+            }
+            <?php } else {?>
+            .header {
+                margin-top: 100px;
             }
             <?php }}?>
 
