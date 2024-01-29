@@ -173,6 +173,7 @@
                 transition: all 0.5s ease-in-out;
                 opacity: 1;
                 z-index: 10;
+                cursor: pointer;
             }
             #welcome-screen.hide {
                 opacity: 0;
