@@ -810,3 +810,25 @@ function checkRegistrationDuration(registrationTimestamp, unlockDuration) {
         return false;
     }
 }
+
+function genRef() {
+    const code = document.getElementById('frc');
+    $.ajax({
+        url: 'assets/generate_ref_code.php',
+        type: "POST"
+    }).done(function(response) {
+        console.log("Code is:"+response);
+        code.innerHTML = response;
+    });
+}
+function friExpand() {
+    const fri = document.getElementById('fri');
+    const frit = document.getElementById('frit');
+    if (frit.style.height == "auto") {
+        fri.innerHTML = "+";
+        frit.style.height = "0px";
+    } else {
+        fri.innerHTML = "-";
+        frit.style.height = "auto";
+    }
+}
