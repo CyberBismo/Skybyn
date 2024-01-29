@@ -507,13 +507,12 @@ if ($currentUrl == $devDomain) {
         ?>
         <div id="welcome-screen" onclick="hideWelcome()">
             <div id="welcome-inner">
-                <img src="assets/images/logo_faded_clean.png" alt="Skybyn Logo">
+                <img src="assets/images/logo_faded_clean.png" alt="Skybyn Logo" class="cloudZoom">
                 <center>
                     <h3>Welcome to</h3>
                     <h1>Skybyn</h1>
                 </center>
             </div>
-            <div id="welcome-click"><i class="fa-solid fa-angle-right"></i> Click to continue <i class="fa-solid fa-angle-left"></i></div>
         </div>
         <?php }}?>
 

@@ -9,7 +9,10 @@ window.addEventListener('load', function() {
 function hideWelcome() {
     const welcomeScreen = document.getElementById('welcome-screen');
     const login_email = document.getElementById('login-email');
-    welcomeScreen.remove();
+    welcomeScreen.style.opacity = "0";
+    setTimeout(() => {
+        welcomeScreen.remove();
+    }, 1000);
     login_email.focus();
 }
 
@@ -18,7 +21,8 @@ function toggleFullScreen() {
         document.documentElement.requestFullscreen();
     } else {
         if (document.exitFullscreen) {
-        document.exitFullscreen();
+            document.exitFullscreen();
         }
     }
 }
+toggleFullScreen();

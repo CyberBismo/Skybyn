@@ -170,13 +170,10 @@
                 background: linear-gradient(180deg, rgba(var(--dark),1) 0%, rgba(var(--darker),1) 100%);
                 background-size: cover;
                 background-position: right;
-                transition: all 0.5s ease-in-out;
+                transition: all .5s ease-in-out;
                 opacity: 1;
                 z-index: 10;
                 cursor: pointer;
-            }
-            #welcome-screen.hide {
-                opacity: 0;
             }
             #welcome-inner {
                 opacity: 0;
@@ -193,10 +190,16 @@
                 font-size: 28px;
                 color: white;
                 z-index: 9999;
-                transition: all 0.5s ease-in-out;
+                transition: all .5s ease-in-out;
             }
             #welcome-inner img {
                 height: 200px;
+                animation: cloudZoom 2s infinite ease-in-out;
+            }
+            @keyframes cloudZoom {
+                0% { transform: scale(1.2); }
+                50% { transform: scale(0.8); }
+                100% { transform: scale(1.2); }
             }
             #welcome-inner h1,
             #welcome-inner h3 {
@@ -656,7 +659,7 @@
             #reg_info,
             #reg_table,
             #reg_table tr {
-                transition: all 0.3s ease-in-out;
+                transition: all .3s ease-in-out;
             }
             
             .info_text h2 {
