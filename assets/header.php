@@ -22,6 +22,7 @@ if ($currentUrl == $devDomain) {
         <link href="/fontawe/css/all.css" rel="stylesheet">
         <script src="/assets/js/jquery.min.js"></script>
         <script src="/assets/js/scripts.js"></script>
+        <script src="assets/js/welcome.js"></script>
         <?php if (isMobile() == true) {?>
         <script src="assets/js/small_screen.js"></script>
         <?php } else {?>
