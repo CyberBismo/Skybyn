@@ -2950,7 +2950,8 @@
                 float: right;
             }
             .fr_info_text {
-                padding-top: 10px;
+                height: 0px;
+                overflow: hidden;
             }
             .fr_info_text a {
                 color: white;

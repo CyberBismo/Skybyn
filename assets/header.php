@@ -399,9 +399,9 @@ if ($currentUrl == $devDomain) {
                             Generate code
                         <?php } else { echo $referral;}?>
                     </div>
-                    <div class="fr_info">
+                    <div class="fr_info" onclick="friExpand()">
                         <i class="fa-regular fa-circle-question"></i> What is this? <span id="fri">+</span>
-                        <div class="fr_info_text" id="frit">Refer a friend simply works as an invitation. By inviting a friend, you instantly become friends and earn 10 <a href="#">points</a>.</div>
+                        <div class="fr_info_text" id="frit"><br>Refer a friend simply works as an invitation. By inviting a friend, you instantly become friends and earn 10 <a href="#">points</a>.</div>
                     </div>
                 </div>
             </div>
