@@ -2,7 +2,7 @@
 
 if (isset($_SESSION['user'])) {
     $uid = $_SESSION['user'];
-    $code = mt_rand(10000, 99999);
+    $code = mt_rand(10000000, 99999999);
     $checkCode = $conn->query("SELECT * FROM `referral_code` WHERE `user`='$uid'");
     if ($checkCode->num_rows > 0) {
         $stmt = $conn->prepare("UPDATE `referral_code` SET `referral_code`= ?, `created`= ? WHERE `user`= ?");

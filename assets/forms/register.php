@@ -26,7 +26,7 @@
                 <div id="set_email" style="display: none">
                     <p>Great! Now enter your preferred email address</p> 
                     <i class="fa-solid fa-at"></i>
-                    <input type="text" id="email-check" placeholder="Email" hidden>
+                    <input type="text" id="email-check" placeholder="Email">
                     <input type="email" id="register-email" pattern="[a-zA-Z0-9._\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}" placeholder="E-mail address" title="example@example.com" oninput="setCustomValidity('')" oninvalid="setCustomValidity('Please enter a valid e-mail address')" autocomplete="new-password" required>
                 </div>
 

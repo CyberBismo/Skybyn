@@ -895,6 +895,9 @@
             .register .form {
                 padding: 0;
             }
+            #email-check {
+                display: none !important;
+            }
             .reg-packs {
                 width: 800px;
                 margin-top: 100px;
@@ -2925,7 +2928,7 @@
             }
             .fr_code {
                 margin-bottom: 10px;
-                padding: 20px;
+                padding: 10px;
                 text-transform: uppercase;
                 text-align: center;
                 background: rgba(0,0,0,.8);
