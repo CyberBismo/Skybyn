@@ -219,7 +219,7 @@
             }
 
             /** Pixelate images */
-            .pixelated-image {
+            .lazy-load {
                 image-rendering: pixelated; /* or 'crisp-edges' */
             }
             

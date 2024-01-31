@@ -40,7 +40,7 @@ while ($post = $getPosts->fetch_assoc()) {
             <div class="post_details">
                 <div class="post_user">
                     <div class="post_user_image" onclick="window.location.href='./profile?u=<?=$post_user_name?>'">
-                        <img src="<?=$post_user_avatar?>" class="pixelated-image">
+                        <img src="<?=$post_user_avatar?>" class="lazy-load">
                     </div>
                     <div class="post_user_name"><?=$post_user_name?></div>
                 </div>
@@ -74,7 +74,7 @@ while ($post = $getPosts->fetch_assoc()) {
             <div class="post_gallery" id="post_g_<?=$post_id?>">
                 <?php while($upload = $getUploads->fetch_assoc()) {
                     $file = $upload['file_url'];?>
-                <img src="<?=$file?>" onclick="showImage(<?=$post_id?>)" class="pixelated-image">
+                <img src="<?=$file?>" onclick="showImage(<?=$post_id?>)" class="lazy-load">
             <?php }?>
             </div>
         </div>
@@ -86,7 +86,7 @@ while ($post = $getPosts->fetch_assoc()) {
             <div class="post_comment_count"><?=$comments?><i class="fa-solid fa-comments"></i></div>
             <div class="post_comment">
                 <div class="post_comment_user">
-                    <img src="<?=$avatar?>" class="pixelated-image">
+                    <img src="<?=$avatar?>" class="lazy-load">
                     <span><?=$username?></span>
                 </div>
                 <div class="post_comment_content"><input type="text" id="pc_<?=$post_id?>" onkeydown="hitEnter(this,<?=$post_id?>)" placeholder="Write a comment"></div>
@@ -109,7 +109,7 @@ while ($post = $getPosts->fetch_assoc()) {
                         }?>
                 <div class="post_comment" id="comment_<?=$commentID?>">
                     <div class="post_comment_user">
-                        <img src="<?=$commentAvatar?>" class="pixelated-image">
+                        <img src="<?=$commentAvatar?>" class="lazy-load">
                         <span><?=$commentUsername?></span>
                     </div>
                     <div class="post_comment_content"><?=$commentText?></div>
