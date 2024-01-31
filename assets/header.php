@@ -106,7 +106,7 @@ if ($currentUrl == $devDomain) {
                     <?php if (isMobile() == true) {?>
                     <img src="./assets/images/logo_faded_clean.png" onclick="window.location.href='./'">
                     <?php } else {?>
-                    <img src="<?=$avatar?>" onclick="window.location.href='./profile'" class="lazy-load">
+                    <img data-src="<?=$avatar?>" onclick="window.location.href='./profile'" loading="lazy" class="lazy-load">
                     <?php }?>
                 </div>
                 <div class="user-nav" onclick="showUserMenu(event)">
@@ -143,7 +143,7 @@ if ($currentUrl == $devDomain) {
         <div class="new_post" id="new_post" hidden>
             <div class="create_post">
                 <div class="create_post_actions_top">
-                    <img src="<?=$avatar?>" class="lazy-load">
+                    <img data-src="<?=$avatar?>" class="lazy-load" loading="lazy">
                     <textarea type="text" placeholder="What's on your mind?" id="new_post_input" oninput="adjustTextareaHeight()" onkeydown="checkEnter()" onkeyup="convertEmoji(this.value)"></textarea>
                     <i class="fa-solid fa-paper-plane share" id="create_post_btn" onclick="createPost()"></i>
                 </div>
@@ -285,7 +285,7 @@ if ($currentUrl == $devDomain) {
                             }
                             ?>
                             <div class="group" onclick="window.location.href='../group?id=<?=$gid?>'">
-                                <div class="group-icon"><img src="<?= $group_icon ?>" class="lazy-load"></div>
+                                <div class="group-icon"><img data-src="<?= $group_icon ?>" class="lazy-load" loading="lazy"></div>
                                 <div class="group-name"><?= $group_name ?></div>
                                 <?php if ($group_owner == $uid) {?>
                                 <div class="group-extra"><i class="fa-solid fa-crown"></i></div>
@@ -319,7 +319,7 @@ if ($currentUrl == $devDomain) {
                             $page_locked = $pageData['locked'];
                             ?>
                             <div class="page">
-                                <div class="page-icon"><img src="<?=$page_icon?>" class="lazy-load"></div>
+                                <div class="page-icon"><img data-src="<?=$page_icon?>" class="lazy-load" loading="lazy"></div>
                                 <div class="page-name"><?=$page_name?></div>
                             </div>
                             <?php
@@ -405,7 +405,7 @@ if ($currentUrl == $devDomain) {
                             ?>
                             <div class="friend">
                                 <div class="friend-user">
-                                    <div class="friend-avatar"><img src="<?=$friend_avatar?>" class="lazy-load"></div>
+                                    <div class="friend-avatar"><img data-src="<?=$friend_avatar?>" class="lazy-load" loading="lazy"></div>
                                     <div class="friend-name"><?=$friend_username?></div>
                                 </div>
                                 <div class="friend-actions">
