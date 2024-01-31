@@ -1149,27 +1149,15 @@
             .create_post textarea::-webkit-scrollbar {
                 display: none;
             }
-            .create_post .close {
-                float: right;
-                width: 16px;
-                height: 16px;
-                margin-top: -10px;
-                margin-right: -10px;
-                margin-bottom: -16px;
-                text-align: center;
-                color: white;
-                cursor: pointer;
-                box-sizing: border-box;
-            }
             .create_post_actions_top {
                 display: flex;
                 width: 100%;
                 overflow: hidden;
             }
             .create_post_actions_top img {
-                width: 50px;
+                width: autos;
                 max-width: 50px;
-                height: 50px;
+                height: 100%;
                 max-height: 50px;
                 border-radius: 50px;
             }
@@ -2001,20 +1989,23 @@
             }
             .post_user {
                 display: flex;
-                width: 100%;
                 height: 50px;
             }
             .post_user_image {
-                width: 50px;
-                height: 50px;
+                width: auto;
+                max-width: 50px;
+                height: 100%;
+                max-height: 50px;
                 margin: 10px;
                 border-radius: 50px;
                 overflow: hidden;
                 cursor: pointer;
             }
             .post_user_image img {
-                width: 100%;
-                height: 100%;
+                width: auto;
+                max-width: 100%;
+                height: auto;
+                max-height: 100%;
                 object-fit: cover;
             }
             .post_user_name {

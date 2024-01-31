@@ -113,11 +113,6 @@ if ($currentUrl == $devDomain) {
         <?php if (isset($_SESSION['user'])) {?>
         <div class="new_post" id="new_post" hidden>
             <div class="create_post">
-                <?php if (isMobile() == false) {?>
-                <span class="close" onclick="newPost()">
-                    <i class="fa-solid fa-xmark"></i>
-                </span>
-                <?php }?>
                 <div class="create_post_actions_top">
                     <img src="<?=$avatar?>" class="pixelated-image">
                     <textarea type="text" placeholder="What's on your mind?" id="new_post_input" oninput="adjustTextareaHeight()" onkeydown="checkEnter()" onkeyup="convertEmoji(this.value)"></textarea>
@@ -171,32 +166,26 @@ if ($currentUrl == $devDomain) {
                 const newPostIcon = document.getElementById('newPostIcon');
 
                 if (new_post.style.display == "block") {
-                    if (newPostIcon) {
-                        newPostIcon.classList.add("fa-plus");
-                        newPostIcon.classList.remove("fa-xmark");
-                    }
                     new_post.style.display = "none";
-                    if (new_post_btn) {
-                        new_post_btn.style.display = "block";
-                    }
                     <?php if (isMobile() == true) {?>
+                    newPostIcon.classList.add("fa-plus");
+                    newPostIcon.classList.remove("fa-xmark");
                     mobile_nav_btn.style.transform = "rotate(0deg)";
                     new_post.style.background = "rgba(var(--dark),.2)";
                     header.style.background = "rgba(var(--dark),.2)";
+                    <?php } else {?>
+                    new_post_btn.innerHTML = "Anything new?";
                     <?php }?>
                 } else {
-                    if (newPostIcon) {
-                        newPostIcon.classList.add("fa-xmark");
-                        newPostIcon.classList.remove("fa-plus");
-                    }
                     new_post.style.display = "block";
-                    if (new_post_btn) {
-                        new_post_btn.style.display = "none";
-                    }
                     <?php if (isMobile() == true) {?>
+                    newPostIcon.classList.add("fa-xmark");
+                    newPostIcon.classList.remove("fa-plus");
                     mobile_nav_btn.style.transform = "rotate(45deg)";
                     new_post.style.background = "rgba(var(--dark),1)";
                     header.style.background = "rgba(var(--dark),1)";
+                    <?php } else {?>
+                    new_post_btn.innerHTML = "Cancel";
                     <?php }?>
                     new_post_input.focus();
                 }
