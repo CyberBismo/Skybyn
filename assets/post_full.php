@@ -30,7 +30,7 @@ $post_content_res = fixEmojis(cleanUrls(nl2br($post_content)), 1);
     <div class="post_details">
         <div class="post_user">
             <div class="post_user_image" onclick="window.location.href='./profile?u=<?=$post_user_name?>'">
-                <img src="<?=$post_user_avatar?>">
+                <img src="<?=$post_user_avatar?>" class="pixelated-image">
             </div>
             <div class="post_user_name"><?=$post_user_name?></div>
         </div>

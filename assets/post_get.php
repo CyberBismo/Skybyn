@@ -22,8 +22,8 @@ if ($post_user_avatar == "./") {
     $post_user_avatar = "./assets/images/logo_faded_clean.png";
 }
 
-$post_youtube = convertYoutube($post_content);
-$post_content_res = str_replace('\r\n',"<br />",fixEmojis(replaceUrl($post_content), 1));
+$post_video = convertVideo($post_content);
+$post_content_res = fixEmojis(cleanUrls(nl2br($post_content)), 1);
 ?>
 
 <div class="post" id="post_<?=$post_id?>">
@@ -57,7 +57,7 @@ $post_content_res = str_replace('\r\n',"<br />",fixEmojis(replaceUrl($post_conte
             <?=$post_content_res?>
         </div>
         <div class="post_links">
-            <?=$post_youtube?>
+            <?=$post_video?>
         </div>
         <div class="post_uploads">
             <?php $getUploads = $conn->query("SELECT * FROM `uploads` WHERE `post`='$post_id'");

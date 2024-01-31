@@ -30,6 +30,14 @@ if ($currentUrl == $devDomain) {
         <?php }?>
         <?php if (isset($_SESSION['user'])) {?>
         <script src="assets/js/scripts_logged.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                var img = document.getElementsByClassName('pixelated-image');
+                img.onload = function() {
+                    img.style.imageRendering = 'auto';
+                };
+            });
+        </script>
         <?php }?>
         <?php include_once "style.php"?>
     </head>
@@ -69,7 +77,7 @@ if ($currentUrl == $devDomain) {
                     <?php if (isMobile() == true) {?>
                     <img src="./assets/images/logo_faded_clean.png" onclick="window.location.href='./'">
                     <?php } else {?>
-                    <img src="<?=$avatar?>" onclick="window.location.href='./profile'">
+                    <img src="<?=$avatar?>" onclick="window.location.href='./profile'" class="pixelated-image">
                     <?php }?>
                 </div>
                 <div class="user-nav" onclick="showUserMenu(event)">
@@ -111,7 +119,7 @@ if ($currentUrl == $devDomain) {
                 </span>
                 <?php }?>
                 <div class="create_post_actions_top">
-                    <img src="<?=$avatar?>">
+                    <img src="<?=$avatar?>" class="pixelated-image">
                     <textarea type="text" placeholder="What's on your mind?" id="new_post_input" oninput="adjustTextareaHeight()" onkeydown="checkEnter()" onkeyup="convertEmoji(this.value)"></textarea>
                     <i class="fa-solid fa-paper-plane share" id="create_post_btn" onclick="createPost()"></i>
                 </div>
@@ -259,7 +267,7 @@ if ($currentUrl == $devDomain) {
                             }
                             ?>
                             <div class="group" onclick="window.location.href='../group?id=<?=$gid?>'">
-                                <div class="group-icon"><img src="<?= $group_icon ?>"></div>
+                                <div class="group-icon"><img src="<?= $group_icon ?>" class="pixelated-image"></div>
                                 <div class="group-name"><?= $group_name ?></div>
                                 <?php if ($group_owner == $uid) {?>
                                 <div class="group-extra"><i class="fa-solid fa-crown"></i></div>
@@ -293,7 +301,7 @@ if ($currentUrl == $devDomain) {
                             $page_locked = $pageData['locked'];
                             ?>
                             <div class="page">
-                                <div class="page-icon"><img src="<?=$page_icon?>"></div>
+                                <div class="page-icon"><img src="<?=$page_icon?>" class="pixelated-image"></div>
                                 <div class="page-name"><?=$page_name?></div>
                             </div>
                             <?php
@@ -379,7 +387,7 @@ if ($currentUrl == $devDomain) {
                             ?>
                             <div class="friend">
                                 <div class="friend-user">
-                                    <div class="friend-avatar"><img src="<?=$friend_avatar?>"></div>
+                                    <div class="friend-avatar"><img src="<?=$friend_avatar?>" class="pixelated-image"></div>
                                     <div class="friend-name"><?=$friend_username?></div>
                                 </div>
                                 <div class="friend-actions">

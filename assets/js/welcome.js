@@ -15,14 +15,3 @@ function hideWelcome() {
     }, 1000);
     login_email.focus();
 }
-
-function toggleFullScreen() {
-    if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen();
-    } else {
-        if (document.exitFullscreen) {
-            document.exitFullscreen();
-        }
-    }
-}
-toggleFullScreen();
