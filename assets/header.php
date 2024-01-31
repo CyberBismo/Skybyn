@@ -21,6 +21,10 @@ if ($currentUrl == $devDomain) {
         <link rel="icon" type="image/x-icon" href="/assets/images/logo_fav.png">
         <link href="/fontawe/css/all.css" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/lozad@1.0.0/dist/lozad.min.js"></script>
+        <script>
+            const observer = lozad();
+            observer.observe();
+        </script>
         <script src="/assets/js/jquery.min.js"></script>
         <script src="/assets/js/scripts.js"></script>
         <script src="assets/js/welcome.js"></script>
@@ -31,10 +35,6 @@ if ($currentUrl == $devDomain) {
         <?php }?>
         <?php if (isset($_SESSION['user'])) {?>
         <script src="assets/js/scripts_logged.js"></script>
-        <script>
-            const observer = lozad();
-            observer.observe();
-        </script>
         <?php }?>
         <?php include_once "style.php"?>
     </head>
