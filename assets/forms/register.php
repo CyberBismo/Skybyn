@@ -24,20 +24,20 @@
                 </div>
 
                 <div id="set_email" style="display: none">
-                    <p>Great! Now enter your preferred email address</p> 
+                    <p>Great! Now enter your preferred email address</p>
                     <i class="fa-solid fa-at"></i>
                     <input type="text" id="email-check" placeholder="Email">
                     <input type="email" id="register-email" pattern="[a-zA-Z0-9._\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}" placeholder="E-mail address" title="example@example.com" oninput="setCustomValidity('')" oninvalid="setCustomValidity('Please enter a valid e-mail address')" autocomplete="new-password" required>
                 </div>
 
                 <div id="set_email_verify" style="display: none">
-                    <p>Okey, let's verify. Enter the code we just sent you.</p>
+                    <p>Okey, let's verify. Enter the code we just sent you</p>
                     <i class="fa-solid fa-arrows-rotate" id="email-verify-status"></i>
                     <input type="number" id="email-verify" pattern="[a-zA-Z0-9]" placeholder="Enter code" title="example@example.com" oninput="setCustomValidity('')" oninvalid="setCustomValidity('Please enter a valid e-mail address')" autocomplete="new-password" required>
                 </div>
 
                 <div id="set_username" style="display: none">
-                    <p>Now make a username for yourself.</p>
+                    <p>Now make a username for yourself</p>
                     <i class="fa-solid fa-user"></i>
                     <input type="text" id="username" placeholder="Choose a username" title="" required>
                 </div>
@@ -303,6 +303,7 @@
                                             email: email.value
                                         }
                                     }).done(function(response) {
+                                        <?php if ($dev_access == false) {?>
                                         if (response === "sent") {
                                             updateUIForEmailSent();
                                         } else
@@ -317,6 +318,9 @@
                                                 register.value = "Send code";
                                             }, 3000);
                                         }
+                                        <?php } else {?>
+                                        updateUIForEmailSent('v');
+                                        <?php }?>
                                     });
                                 }
                                 function updateUIForEmailSent(x) {
