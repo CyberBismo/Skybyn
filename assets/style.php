@@ -342,18 +342,24 @@
                 padding: 20px;
             }
             /** --- */
-            .form .terms {
+            .form .terms i {
+                font-size: 18px;
+            }
+            .form .terms input {
+                padding-left: 50px !important;
+            }
+            .form .terms .check {
                 display: flex;
                 margin: 20px 0;
             }
-            .form .terms input {
+            .form .terms .check input {
                 width: 20px;
                 margin-right: 10px;
             }
-            .form .terms label {
+            .form .terms .check label {
                 line-height: 45px;
             }
-            .form .terms label span {
+            .form .terms .check label span {
                 text-decoration: underline;
                 cursor: pointer;
             }

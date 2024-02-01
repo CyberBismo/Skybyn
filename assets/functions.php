@@ -779,7 +779,7 @@ if (isset($_POST['forgot'])) {
                     <img src="https://skybyn.no/assets/images/logo_clean.png" alt="Skybyn logo" class="logo">
                     <h1>You requested a password reset</h1>
                     <p>This code is to reset your password, if you did NOT request this, please ignore this email!</p>
-                    <button onclick="window.location.href=\'https://skybyn.no/?reset='.$reset.'\'">Skip code</button>
+                    <button onclick="window.location.href=\'https://skybyn.no/reset='.$reset.'\'">Reset now</button>
                     <div class="code-box">
                         <code>'.$reset.'</code>
                     </div>

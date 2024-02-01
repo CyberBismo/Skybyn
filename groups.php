@@ -6,7 +6,7 @@ if (!isset($_SESSION['user'])) {
 ?>
         <div class="page-container">
             <div class="page-head">
-                Browse Groups
+                Groups
             </div>
             <div class="groups-browse">
                 <?php $getGroups = $conn->query("SELECT * FROM `groups` WHERE `privacy`!='private'");

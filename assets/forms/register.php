@@ -53,8 +53,13 @@
                 </div>
 
                 <div class="terms" id="set_terms" style="display: none">
-                    <input type="checkbox" id="terms" required>
-                    <label for="terms">I accept the <span onclick="showTerms()">terms and conditions</a>.</label>
+                    <p>Got a friend code?</p>
+                    <i class="fa-solid fa-bug"></i>
+                    <input type="text" id="refer" pattern="[0-9]" placeholder="Enter here" autocomplete="new-password">
+                    <div class="check">
+                        <input type="checkbox" id="terms" required>
+                        <label for="terms">I accept the <span onclick="showTerms()">terms and conditions</a>.</label>
+                    </div>
                 </div>
 
                 <input type="submit" id="send_again" onclick="hitEnterRegister('resend')" style="display: none;margin-top: 3px">
