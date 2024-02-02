@@ -12,7 +12,7 @@
                     <div class="split">
                         <div class="split-box">
                             <i class="fa-solid fa-user"></i>
-                            <input type="name" id="fname" placeholder="First name *" autocomplete="new-password" required>
+                            <input type="name" id="fname" placeholder="First name *" required>
                         </div>
                         <div class="split-box">
                             <i class="fa-solid fa-user"></i>
@@ -20,14 +20,14 @@
                         </div>
                     </div>
                     <i class="fa-solid fa-user"></i>
-                    <input type="name" id="lname" placeholder="Last name *" autocomplete="new-password" required>
+                    <input type="name" id="lname" placeholder="Last name *" required>
                 </div>
 
                 <div id="set_email" style="display: none">
                     <p>Great! Now enter your preferred email address</p>
                     <i class="fa-solid fa-at"></i>
-                    <input type="text" id="email-check" placeholder="Email">
-                    <input type="email" id="register-email" pattern="[a-zA-Z0-9._\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}" placeholder="E-mail address" title="example@example.com" oninput="setCustomValidity('')" oninvalid="setCustomValidity('Please enter a valid e-mail address')" autocomplete="new-password" required>
+                    <input type="email" id="email-check" placeholder="Email">
+                    <input type="email" id="register-email" pattern="[a-zA-Z0-9._\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}" placeholder="E-mail address" title="example@example.com" oninput="setCustomValidity('')" oninvalid="setCustomValidity('Please enter a valid e-mail address')" required>
                 </div>
 
                 <div id="set_email_verify" style="display: none">

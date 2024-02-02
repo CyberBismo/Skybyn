@@ -1,4 +1,4 @@
-                <h3>Tilbakestill passord <?=$tglReset?></h3>
+                <h3>Reset password <?=$tglReset?></h3>
                 <form method="post">
                     <input type="hidden" name="code" value="<?=$code?>">
                     
@@ -11,7 +11,7 @@
                     <input type="submit" name="reset" id="set_pw" value="Done" hidden>
                 </form>
                 <div class="links">
-                    <button onclick="window.location.href='./'">Go back</a>
+                    <span onclick="window.location.href='./'">Go back</span>
                 </div>
 
                 <script>

@@ -5,8 +5,8 @@
                     <input type="submit" onclick="checkCode()" value="Confirm">
                 </div>
                 <div class="links">
-                    <button onclick="removeVerify()">Go back</a>
-                    <button onclick="resendVerify(this)">Resend verification code</button>
+                    <span onclick="removeVerify()">Go back</span>
+                    <span onclick="resendVerify(this)">Resend verification code</span>
                 </div>
 
                 <script>

@@ -1,8 +1,8 @@
                 <script src="assets/js/jquery.min.js"></script>
-                <h2>Have you recieved a code in your E-mail?</h2>
+                <h2>Got a reset code?</h2>
                 <form method="post">
                     <i class="fa-solid fa-angle-right" id="ra"></i>
-                    <input type="text" name="code" pattern="[0-9]*" onkeyup="checkCode(this)" placeholder="Enter code here!">
+                    <input type="text" name="code" pattern="[0-9]*" onkeyup="checkCode(this)" placeholder="Enter it here..">
                     
                     <div class="form-inputs" id="inputs" hidden>
                         <i class="fa-solid fa-key"></i>
@@ -15,7 +15,7 @@
                     </div>
                 </form>
                 <div class="links">
-                    <button onclick="window.location.href='./'">Go back</a>
+                    <span onclick="window.location.href='./'">Go back</span>
                 </div>
 
                 <script>

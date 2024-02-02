@@ -806,6 +806,12 @@
             .center_form .links {
                 width: 100%;
             }
+            .center_form .links span {
+                padding: 10px;
+                font-size: 12px;
+                background: rgba(0,0,0,.2);
+                border-radius: 10px;
+            }
             .center_form .links span:hover {
                 color: rgba(200,200,200,1);
             }

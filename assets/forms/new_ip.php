@@ -5,7 +5,7 @@
                     <input type="submit" onclick="verifyCode()" value="Login">
                 </div>
                 <div class="links">
-                    <button onclick="removeNewIP()">Go back</a>
+                    <span onclick="removeNewIP()">Go back</span>
                 </div>
 
                 <script>

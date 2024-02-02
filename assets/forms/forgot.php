@@ -7,5 +7,5 @@
                     <input type="submit" name="forgot" value="Request password reset">
                 </form>
                 <div class="links">
-                    <button onclick="window.location.href='./'">Go back</a>
+                    <span onclick="window.location.href='./'">Go back</span>
                 </div>
