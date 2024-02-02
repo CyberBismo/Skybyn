@@ -2031,20 +2031,17 @@
                 height: 50px;
             }
             .post_user_image {
-                width: auto;
-                max-width: 50px;
-                height: 100%;
-                max-height: 50px;
+                width: 50px;
+                height: 50px;
                 margin: 10px;
                 border-radius: 50px;
                 overflow: hidden;
                 cursor: pointer;
             }
             .post_user_image img {
-                width: auto;
-                max-width: 100%;
-                height: auto;
-                max-height: 100%;
+                width: 100%;
+                height: 100%;
+                text-align: center;
                 object-fit: cover;
             }
             .post_user_name {
@@ -2206,12 +2203,15 @@
                 max-width: 30%;
                 overflow: hidden;
             }
-            .post_comment_user img {
-                max-width: 30px;
-                max-height: 30px;
+            .post_comment_user_avatar {
+                width: 30px;
+                height: 30px;
                 margin-right: 10px;
+            }
+            .post_comment_user_avatar img {
+                width: 100%;
+                height: 100%;
                 object-fit: cover;
-                border-radius: 40px;
             }
             .post_comment_content input[type=text] {
                 width: 100%;
