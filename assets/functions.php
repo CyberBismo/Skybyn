@@ -352,6 +352,13 @@ function getGM($x, $y) {
     }
 }
 
+# Send notification
+function notify($x, $y, $z) {
+    global $conn;
+    $now = time();
+    $conn->query("INSERT INTO `notifications` (`to`,`from`,`date`,`type`) VALUES ('$x','$y','$now','$z')");
+}
+
 # Friendship actions
 function friendship($uid, $friend, $action) {
     global $conn;
