@@ -88,7 +88,9 @@ while($post = $getPosts->fetch_assoc()) {
             <div class="post_comment_count"><?=$comment_count?><i class="fa-solid fa-comments"></i></div>
             <div class="post_comment">
                 <div class="post_comment_user">
-                    <img src="<?=$avatar?>">
+                    <div class="post_comment_user_avatar">
+                        <img src="<?=$avatar?>">
+                    </div>
                     <span><?=$username?></span>
                 </div>
                 <div class="post_comment_content"><input type="text" id="pc_<?=$post_id?>" onkeydown="hitEnter(this,<?=$post_id?>)" placeholder="Write a comment"></div>

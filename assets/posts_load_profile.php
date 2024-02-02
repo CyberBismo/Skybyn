@@ -29,8 +29,8 @@ while ($post = $getPosts->fetch_assoc()) {
         $post_user_avatar = "./assets/images/logo_faded_clean.png";
     }
 
-    $post_youtube = convertYoutube($post_content);
-    $post_content_res = str_replace('\r\n',"<br />",fixEmojis(replaceUrl($post_content), 1));
+    $post_video = convertVideo($post_content);
+    $post_content_res = fixEmojis(cleanUrls(nl2br($post_content)), 1);
     ?>    
 
 <div class="post" id="post_<?=$post_id?>">
