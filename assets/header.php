@@ -27,7 +27,9 @@ if ($currentUrl == $devDomain) {
         </script>
         <script src="/assets/js/jquery.min.js"></script>
         <script src="/assets/js/scripts.js"></script>
+        <?php if (!isset($_COOKIE['welcomeScreen'])) {?>
         <script src="assets/js/welcome.js"></script>
+        <?php }?>
         <?php if (isMobile() == true) {?>
         <script src="assets/js/small_screen.js"></script>
         <?php } else {?>
@@ -525,8 +527,8 @@ if ($currentUrl == $devDomain) {
         if (!isset($_SESSION['user'])) {?>
         <div class="new_users" id="new_users"></div>
         <?php }}?>
-
         <script>
+            <?php if (isset($_SESSION['user'])) {?>
             function hideSidePanels() {
                 const lp = document.getElementById('left-panel');
                 const rp = document.getElementById('right-panel');
@@ -558,6 +560,7 @@ if ($currentUrl == $devDomain) {
                     p_uploads.style.maxHeight = p_gallery.clientHeight+"px";
                 }
             }
+            <?php }?>
 
             function updateThemeBasedOnSystemSettings() {
                 const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
