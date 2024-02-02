@@ -7,7 +7,7 @@ $lname = $_POST['lname'];
 $email = $_POST['email'];
 $email_c = $_POST['email_c'];
 $username = $_POST['username'];
-$refer = $_POST['username'];
+$refer = $_POST['refer'];
 $password = hash("sha512", $_POST['password']);
 $salt = hash("sha512", rand());
 $pw = hash("sha512", $salt . "_" . $password);
@@ -155,6 +155,13 @@ if ($cleanEmailCheck) {
 
         mail($to, $subject, $message, $headers);
         $id = $conn->inserted_id;
+
+        if (!empty($refer)) {
+            $checkRefer = $conn->query("SELECT * FROM `referral_code` WHERE `referral_code`='$refer'");
+            if ($checkRefer->num_rows == 1) {
+                friendship($id, $fid, "send");
+            }
+        }
 
         if ($pack == "op") {
             $conn->query("UPDATE `users` SET `private`='0',`visible`='1' WHERE `id`='$id'");
