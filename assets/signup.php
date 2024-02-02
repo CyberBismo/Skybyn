@@ -159,7 +159,9 @@ if ($cleanEmailCheck) {
         if (!empty($refer)) {
             $checkRefer = $conn->query("SELECT * FROM `referral_code` WHERE `referral_code`='$refer'");
             if ($checkRefer->num_rows == 1) {
-                friendship($id, $fid, "send");
+                $referralData = $checkRefer->fetch_assoc();
+                $user = $referralData['user'];
+                friendship($id, $user, "send");
             }
         }
 
