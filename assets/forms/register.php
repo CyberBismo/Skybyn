@@ -1,7 +1,7 @@
                 <?php if (skybyn('register') == "1") {?>
                 <h2>Sign up</h2>
                 
-                <div id="set_dob" style="display: none">
+                <div id="set_dob">
                     <p>Enter your date of birth to get started</p>
                     <i class="fa-solid fa-calendar-days"></i>
                     <input type="date" id="dob" min="1960-01-01" max="<?=date("Y")-15 ."-".date("m")."-".date("d")?>" title="Enter your date of birth" autofocus>
@@ -52,7 +52,7 @@
                     <i class="fa-regular fa-eye" onclick="showPassword('cpassword')"></i>
                 </div>
 
-                <div class="terms" id="set_terms">
+                <div class="terms" id="set_terms" style="display: none">
                     <p>Got a friend code?</p>
                     <i class="fa-solid fa-bug"></i>
                     <input type="text" id="refer" pattern="[0-9]" onkeyup="checkRefCode()" placeholder="Enter here" autocomplete="new-password">
@@ -92,7 +92,7 @@
 
                     function checkRefCode() {
                         const refer = document.getElementById('refer');
-                        const referRes = document.getElementById('refer-result');
+                        const referRes = document.getElementById('refer-user');
                         if (refer.value.length >= 6) {
                             $.ajax({
                                 url: '../assets/check_refer_code.php',

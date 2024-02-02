@@ -348,6 +348,30 @@
             .form .terms input {
                 padding-left: 50px !important;
             }
+            .form .terms .refer_user {
+                display: flex;
+            }
+            .refer_user .ref_u_avatar {
+                width: 50px;
+                height: 50px;
+                margin: 10px 0;
+                text-align: center;
+                background: rgba(0,0,0,.2);
+                border-radius: 10px;
+                overflow: hidden;
+            }
+            .refer_user .ref_u_avatar img {
+                width: 100%;
+                height: auto;
+                max-height: 100%;
+                object-fit: cover;
+                object-position: center;
+            }
+            .refer_user .ref_u_name {
+                width: calc(100% - 70px);
+                line-height: 70px;
+                margin-left: 10px;
+            }
             .form .terms .check {
                 display: flex;
                 margin: 20px 0;
