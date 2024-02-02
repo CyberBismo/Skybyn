@@ -135,6 +135,7 @@ if ($currentUrl == $devDomain) {
         <?php }?>
 
         <script>
+            <?php if (isset($_SESSION['user'])) {?>
             function showUserMenu(event) {
                 const um = document.getElementById('usermenu');
                 const left = document.getElementById('left-panel');
@@ -154,6 +155,7 @@ if ($currentUrl == $devDomain) {
                 }
                 <?php }?>
             }
+            <?php }?>
             function newPost() {
                 const header = document.getElementById('header');
                 const mobile_nav_btn = document.getElementById('mobile_new_post');
