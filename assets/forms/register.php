@@ -249,6 +249,7 @@
                         const username = document.getElementById('username'); // Username
                         const pw = document.getElementById('register-password'); // Password
                         const cpw = document.getElementById('cpassword'); // Confirm password
+                        const refer = document.getElementById('refer').value; // Confirm password
 
                         info_text.style.display = "none";
                         reg_info.style.display = "block";
@@ -602,7 +603,8 @@
                                     private: private,
                                     public: public,
                                     visible: visible,
-                                    invisible: invisible
+                                    invisible: invisible,
+                                    refer: refer
                                 }
                             }).done(function(response) {
                                 if (response === "signup_complete") {

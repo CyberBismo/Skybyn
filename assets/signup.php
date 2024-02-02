@@ -7,6 +7,7 @@ $lname = $_POST['lname'];
 $email = $_POST['email'];
 $email_c = $_POST['email_c'];
 $username = $_POST['username'];
+$refer = $_POST['username'];
 $password = hash("sha512", $_POST['password']);
 $salt = hash("sha512", rand());
 $pw = hash("sha512", $salt . "_" . $password);
