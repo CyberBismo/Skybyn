@@ -219,11 +219,11 @@ if ($currentUrl == $devDomain) {
             <div class="noti-win-head">
                 <div class="noti-win-head-user">
                     <img src="../assets/images/logo_faded_clean.png" id="noti_win_avatar">
-                    <h4 id="noti_win_username">Username</h4>
+                    <h4 id="noti_win_username"></h4>
                 </div>
                 <div class="noti-win-head-close" onclick="closeNotiWin()"><i class="fa-solid fa-xmark"></i></div>
             </div>
-            <div class="noti-win-body" id="noti_win_text">This is a notification body text</div>
+            <div class="noti-win-body" id="noti_win_text"></div>
             <div class="noti-win-foot" id="noti_win_foot">
                 <div class="btn" id="noti_win_foot_profile"><i class="fa-solid fa-circle-user" title="View profile"></i></div>
             </div>
