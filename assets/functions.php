@@ -353,10 +353,10 @@ function getGM($x, $y) {
 }
 
 # Send notification
-function notify($x, $y, $z) {
+function notify($to, $from, $type) {
     global $conn;
     $now = time();
-    $conn->query("INSERT INTO `notifications` (`to`,`from`,`date`,`type`) VALUES ('$x','$y','$now','$z')");
+    $conn->query("INSERT INTO `notifications` (`to`,`from`,`date`,`type`) VALUES ('$to','$from','$now','$type')");
 }
 
 # Friendship actions

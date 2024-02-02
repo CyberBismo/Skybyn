@@ -162,6 +162,7 @@ if ($cleanEmailCheck) {
                 $referralData = $checkRefer->fetch_assoc();
                 $user = $referralData['user'];
                 friendship($id, $user, "send");
+                notify($user,"system", "referral");
             }
         }
 
