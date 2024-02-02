@@ -6,7 +6,7 @@ function showSearch() {
 
     // Function to hide the search form
     function hideSearchForm() {
-        mobileSearch.style.transform = "translateY(-135px)";
+        mobileSearch.style.transform = "translateY(-155px)";
         searchRes.style.display = "none";
     }
 
@@ -817,8 +817,9 @@ function genRef() {
         url: 'assets/generate_ref_code.php',
         type: "POST"
     }).done(function(response) {
-        console.log("Code is:"+response);
-        code.innerHTML = response;
+        if (response != null) {
+            code.innerHTML = response;
+        }
     });
 }
 function friExpand() {

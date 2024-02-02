@@ -1,7 +1,7 @@
                 <?php if (skybyn('register') == "1") {?>
                 <h2>Sign up</h2>
                 
-                <div id="set_dob">
+                <div id="set_dob" style="display: none">
                     <p>Enter your date of birth to get started</p>
                     <i class="fa-solid fa-calendar-days"></i>
                     <input type="date" id="dob" min="1960-01-01" max="<?=date("Y")-15 ."-".date("m")."-".date("d")?>" title="Enter your date of birth" autofocus>
@@ -52,10 +52,11 @@
                     <i class="fa-regular fa-eye" onclick="showPassword('cpassword')"></i>
                 </div>
 
-                <div class="terms" id="set_terms" style="display: none">
+                <div class="terms" id="set_terms">
                     <p>Got a friend code?</p>
                     <i class="fa-solid fa-bug"></i>
-                    <input type="text" id="refer" pattern="[0-9]" placeholder="Enter here" autocomplete="new-password">
+                    <input type="text" id="refer" pattern="[0-9]" onkeyup="checkRefCode()" placeholder="Enter here" autocomplete="new-password">
+                    <div class="refer_user" id="refer-user"></div>
                     <div class="check">
                         <input type="checkbox" id="terms" required>
                         <label for="terms">I accept the <span onclick="showTerms()">terms and conditions</a>.</label>
@@ -87,6 +88,26 @@
                         }
 
                         return age;
+                    }
+
+                    function checkRefCode() {
+                        const refer = document.getElementById('refer');
+                        const referRes = document.getElementById('refer-result');
+                        if (refer.value.length >= 6) {
+                            $.ajax({
+                                url: '../assets/check_refer_code.php',
+                                type: "POST",
+                                data: {
+                                    code: refer.value
+                                }
+                            }).done(function(response) {
+                                if (response != null) {
+                                    referRes.innerHTML = response;
+                                } else {
+                                    referRes.innerHTML = null;
+                                }
+                            });
+                        }
                     }
 
                     function validateEmail(email) {

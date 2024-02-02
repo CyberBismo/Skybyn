@@ -137,9 +137,9 @@ if ($currentUrl == $devDomain) {
         <script>
             function showUserMenu(event) {
                 const um = document.getElementById('usermenu');
-                <?php if (isMobile() == true) {?>
                 const left = document.getElementById('left-panel');
                 const right = document.getElementById('right-panel');
+                <?php if (isMobile() == true) {?>
                 if (um.style.transform == "translateX(0px)") {
                     um.style.transform = 'translateX(100%)';
                 } else {
