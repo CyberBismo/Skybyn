@@ -352,7 +352,7 @@ if ($currentUrl == $devDomain) {
             <?php if (isMobile() == false) {?>
             <div class="search">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" id="searchInput" onkeyup="startSearch(this)" placeholder="Search... (@user | /page | /group)">
+                <input type="text" id="searchInput" onkeyup="startSearch(this)" placeholder="Search...">
             </div>
             <?php }?>
             <div class="friend-list">
