@@ -2204,9 +2204,11 @@
                 overflow: hidden;
             }
             .post_comment_user_avatar {
-                width: 30px;
+                min-width: 30px;
                 height: 30px;
                 margin-right: 10px;
+                border-radius: 30px;
+                overflow: hidden;
             }
             .post_comment_user_avatar img {
                 width: 100%;
