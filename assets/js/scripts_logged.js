@@ -717,9 +717,15 @@ function showPostActions(x) {
 let insertedPostIds = [];
 
 function checkPosts() {
-    let posts = document.getElementById('posts');
-    let post = posts.firstElementChild;
-    let id = post ? post.id.replace("post_", "") : 0;
+    const posts = document.querySelectorAll('[id^="post_"]');
+    let highestNumber = -Infinity;
+    posts.forEach((post) => {
+        const numberPart = parseInt(post.id.replace('post_', ''), 10);
+        if (numberPart > highestNumber) {
+            highestNumber = numberPart;
+        }
+    });
+    console.log(highestNumber);
 
     $.ajax({
         url: 'assets/posts_check.php',
@@ -745,6 +751,7 @@ function checkPosts() {
         }
     });
 }
+checkPosts();
 let initialPosts = document.querySelectorAll('.post');
 for (let i = 0; i < initialPosts.length; i++) {
     let postId = initialPosts[i].id.replace("post_", "");

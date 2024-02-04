@@ -55,11 +55,27 @@ function geoData($x) {
     $data = json_decode($response, true);
     
     if (isset($x)) {
-        return $data[$x];
+        // Split the path by '.' to navigate through the nested arrays
+        $path = explode('.', $x);
+        $tempData = $data;
+        foreach ($path as $key) {
+            // Check if the key exists in the current level
+            if (isset($tempData[$key])) {
+                // Navigate deeper into the array
+                $tempData = $tempData[$key];
+            } else {
+                // Return an error message or null if the path does not exist
+                return "Key not found";
+            }
+        }
+        return $tempData;
     } else {
         return $response;
     }
     return "";
+    
+// Example of usage
+// echo geoData("city.names.en"); // Outputs: Oslo (Grünerløkka District)
 }
 
 # Create cookie with country information
