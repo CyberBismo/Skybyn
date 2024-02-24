@@ -13,14 +13,18 @@ if ($getComment->num_rows > 0) {
         if ($commentAvatar == "") {
             $commentAvatar = "./assets/images/logo_faded_clean.png";
         }?>
-<div class="post_comment" id="comment_<?=$commentID?>">
-    <div class="post_comment_user">
-        <img src="<?=$commentAvatar?>">
-        <span><?=$commentUsername?></span>
-    </div>
-    <div class="post_comment_content"><?=$commentText?></div>
-    <div class="post_comment_actions">
-        <div class="btn" onclick="delComment(<?=$commentID?>)"><i class="fa-solid fa-trash"></i></div>
-    </div>
-</div>
+        <div class="post_comment" id="comment_<?=$commentID?>">
+            <div class="post_comment_user">
+                <div class="post_comment_user_avatar">
+                    <img src="<?=$commentAvatar?>">
+                </div>
+                <span><?=$commentUsername?></span>
+            </div>
+            <div class="post_comment_content"><?=$commentText?></div>
+            <div class="post_comment_actions">
+                <?php if ($rank > 0 || $commentUser == $uid) {?>
+                <div class="btn" onclick="delComment(<?=$commentID?>)"><i class="fa-solid fa-trash"></i></div>
+                <?php }?>
+            </div>
+        </div>
 <?php }}?>

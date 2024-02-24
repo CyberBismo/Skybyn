@@ -69,34 +69,44 @@ $post_content_res = fixEmojis(cleanUrls(nl2br($post_content)), 1);
         </div>
         <i><?=$comment_count?> comment(s)</i>
         <div class="post_comments">
-            <div class="post_comment_post">
-                <div class="post_comment_post_user">
-                    <img src="<?=$avatar?>">
+            <div class="post_comment_count"><?=$comments?><i class="fa-solid fa-comments"></i></div>
+            <div class="post_comment">
+                <div class="post_comment_user">
+                    <div class="post_comment_user_avatar">
+                        <img src="<?=$avatar?>">
+                    </div>
                     <span><?=$username?></span>
                 </div>
-                <input type="text" id="pc_<?=$post_id?>" onkeydown="hitEnter(this,<?=$post_id?>)" placeholder="Write a comment">
-                <button class="btn" onclick="sendComment(<?=$post_id?>)"><i class="fa-solid fa-paper-plane"></i></button>
+                <div class="post_comment_content"><input type="text" id="pc_<?=$post_id?>" onkeydown="hitEnter(this,<?=$post_id?>)" placeholder="Write a comment"></div>
+                <div class="post_comment_actions">
+                    <div class="btn" onclick="sendComment(<?=$post_id?>)"><i class="fa-solid fa-paper-plane"></i></div>
+                </div>
             </div>
             <div id="post_comments_<?=$post_id?>">
-                <?php $getComment = $conn->query("SELECT * FROM `comments` WHERE `post`='$post_id' ORDER BY `date` DESC");
+                <?php $getComment = $conn->query("SELECT * FROM `comments` WHERE `post`='$post_id' ORDER BY `date` ASC");
                 if ($getComment->num_rows > 0) {
                     while($commentData = $getComment->fetch_assoc()) {
                         $commentID = $commentData['id'];
+                        $commentUser = $commentData['user'];
                         $commentUsername = getUser("id",$commentData['user'],"username");
                         $commentAvatar = getUser("id",$commentData['user'],"avatar");
-                        $commentText = $commentData['content'];
+                        $commentText = fixEmojis(nl2br(cleanUrls($commentData['content'])), 1);
                         
                         if ($commentAvatar == "") {
                             $commentAvatar = "./assets/images/logo_faded_clean.png";
                         }?>
                 <div class="post_comment" id="comment_<?=$commentID?>">
                     <div class="post_comment_user">
-                        <img src="<?=$commentAvatar?>">
+                        <div class="post_comment_user_avatar">
+                            <img src="<?=$commentAvatar?>">
+                        </div>
                         <span><?=$commentUsername?></span>
                     </div>
                     <div class="post_comment_content"><?=$commentText?></div>
                     <div class="post_comment_actions">
+                        <?php if ($rank > 0 || $commentUser == $uid) {?>
                         <div class="btn" onclick="delComment(<?=$commentID?>)"><i class="fa-solid fa-trash"></i></div>
+                        <?php }?>
                     </div>
                 </div>
                 <?php }}?>

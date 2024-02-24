@@ -85,7 +85,7 @@ while ($post = $getPosts->fetch_assoc()) {
         </div>
         <?php }?>
         <div class="post_comments">
-            <div class="post_comment_count"><?=$comment_count?><i class="fa-solid fa-comments"></i></div>
+            <div class="post_comment_count"><?=$comments?><i class="fa-solid fa-comments"></i></div>
             <div class="post_comment">
                 <div class="post_comment_user">
                     <div class="post_comment_user_avatar">
@@ -99,7 +99,7 @@ while ($post = $getPosts->fetch_assoc()) {
                 </div>
             </div>
             <div id="post_comments_<?=$post_id?>">
-                <?php $getComment = $conn->query("SELECT * FROM `comments` WHERE `post`='$post_id' ORDER BY `date` DESC");
+                <?php $getComment = $conn->query("SELECT * FROM `comments` WHERE `post`='$post_id' ORDER BY `date` ASC");
                 if ($getComment->num_rows > 0) {
                     while($commentData = $getComment->fetch_assoc()) {
                         $commentID = $commentData['id'];
@@ -113,7 +113,9 @@ while ($post = $getPosts->fetch_assoc()) {
                         }?>
                 <div class="post_comment" id="comment_<?=$commentID?>">
                     <div class="post_comment_user">
-                        <img src="<?=$commentAvatar?>">
+                        <div class="post_comment_user_avatar">
+                            <img src="<?=$commentAvatar?>">
+                        </div>
                         <span><?=$commentUsername?></span>
                     </div>
                     <div class="post_comment_content"><?=$commentText?></div>

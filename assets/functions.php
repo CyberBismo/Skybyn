@@ -1268,18 +1268,39 @@ if (isset($_POST['update_pin'])) {
 
 # Share | Create new post
 if (isset($_POST['share'])) {
-    $text = $_POST['text'];
-    $created = $now;
-
-    $conn->query("INSERT INTO `posts` (`user`,`content`,`created`) VALUES ('$uid','$text','$created')");
-    $getPostData = $conn->query("SELECT * FROM `posts` WHERE `user`='$uid' AND `created`='$created'");
-    $postData = $getPostData->fetch_assoc();
-    $post_id = $postData['id'];
+    // Sanitize input data
+    $text = $conn->real_escape_string($_POST['text']);
+    $created = date('Y-m-d H:i:s');
+    $uid = $_SESSION['uid'];
     
-    $target_dir = "uploads/post/$uid/";
-    $target_file = $target_dir . basename($_FILES["file"]["name"]);
-    $uploadOk = 1;
-    $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+    // Insert post data using prepared statements
+    $stmt = $conn->prepare("INSERT INTO `posts` (`user`, `content`, `created`) VALUES (?, ?, ?)");
+    $stmt->bind_param("iss", $uid, $text, $created);
+    $stmt->execute();
+    
+    // Retrieve the last inserted post
+    $result = $conn->query("SELECT * FROM `posts` WHERE `user`='$uid' AND `created`='$created'");
+    $postData = $result->fetch_assoc();
+    
+    if ($postData) {
+        $post_id = $postData['id'];
+    
+        // Prepare file upload
+        $target_dir = "uploads/post/$uid/";
+        if (!file_exists($target_dir)) {
+            mkdir($target_dir, 0777, true);
+        }
+    
+        $target_file = $target_dir . uniqid() . '.' . $imageFileType;
+    
+        if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_file)) {
+            echo "File uploaded successfully.";
+        } else {
+            echo "File upload failed.";
+        }
+    } else {
+        echo "Error inserting post data.";
+    }
 
     // Check if image file is a actual image or fake image
     $check = getimagesize($_FILES["file"]["tmp_name"]);
@@ -1338,10 +1359,34 @@ if (isset($_POST['share'])) {
 
 # Delete post
 if (isset($_POST['deletePost'])) {
-    $post = $_POST['post_id'];
-
-    $conn->query("DELETE FROM `posts` WHERE `id`='$post'");
-    $conn->query("DELETE FROM `comments` WHERE `post`='$post'");
+    // Validate and sanitize the input
+    $post = filter_var($_POST['post_id'], FILTER_VALIDATE_INT);
+    
+    if ($post !== false) {
+        // Use prepared statements to prevent SQL injection
+        $deletePostQuery = $conn->prepare("DELETE FROM `posts` WHERE `id` = ?");
+        $deletePostQuery->bind_param("i", $post);
+        
+        $deleteCommentsQuery = $conn->prepare("DELETE FROM `comments` WHERE `post` = ?");
+        $deleteCommentsQuery->bind_param("i", $post);
+        
+        // Execute the queries
+        $deletePostQuery->execute();
+        $deleteCommentsQuery->execute();
+        
+        // Check for successful deletion
+        if ($deletePostQuery->affected_rows > 0 || $deleteCommentsQuery->affected_rows > 0) {
+            // Deletion successful
+        } else {
+            // Handle deletion failure
+        }
+        
+        // Close the prepared statements
+        $deletePostQuery->close();
+        $deleteCommentsQuery->close();
+    } else {
+        // Invalid input, handle accordingly
+    }
 }
 
 

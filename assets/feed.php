@@ -97,7 +97,7 @@ while ($post = $getPosts->fetch_assoc()) {
                 </div>
             </div>
             <div id="post_comments_<?=$post_id?>">
-                <?php $getComment = $conn->query("SELECT * FROM `comments` WHERE `post`='$post_id' ORDER BY `date` DESC");
+                <?php $getComment = $conn->query("SELECT * FROM `comments` WHERE `post`='$post_id' ORDER BY `date` ASC");
                 if ($getComment->num_rows > 0) {
                     while($commentData = $getComment->fetch_assoc()) {
                         $commentID = $commentData['id'];
