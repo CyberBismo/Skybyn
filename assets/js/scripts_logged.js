@@ -212,12 +212,12 @@ function createPost() {
         contentType: false
     }).done(function(response) {
         if (response == "") {
+            newPost();
+            checkPosts();
             text.value = "";
             image.value = "";
             filesDiv.innerHTML = "";
             isCreatingPost = false;
-            newPost();
-            checkPosts();
         }
     });
 }
