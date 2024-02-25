@@ -215,9 +215,9 @@ function createPost() {
             text.value = "";
             image.value = "";
             filesDiv.innerHTML = "";
-            checkPosts();
-            newPost();
             isCreatingPost = false;
+            newPost();
+            checkPosts();
         }
     });
 }
