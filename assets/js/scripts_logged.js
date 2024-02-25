@@ -731,7 +731,7 @@ function checkPosts() {
         url: 'assets/posts_check.php',
         type: "POST",
         data: {
-            last: id
+            last: highestNumber
         }
     }).done(function (response) {
         if (response != "") {

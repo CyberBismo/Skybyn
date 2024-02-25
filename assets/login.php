@@ -18,16 +18,6 @@ if ($checkEmail->num_rows == 1) {
     $token = $UserRow['token'];
     $lastIP = $UserRow['ip'];
     if ($qCheckPassword->num_rows == 1) {
-        if ($verified == 0 || $verified == null) {
-            session_destroy();
-            session_start();
-            createCookie("verify",$uid,"1","6");
-            echo "verify";
-        } else
-        if ($username == "") {
-            createCookie("username",$uid,"1","6");
-            echo "username";
-        } else
         if ($lastIP != $currentIP) {
             $token = rand(100000, 999999);
             
