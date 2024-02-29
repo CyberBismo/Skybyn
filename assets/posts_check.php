@@ -130,4 +130,4 @@ while($post = $getPosts->fetch_assoc()) {
         </div>
     </div>
 </div>
-<?php }}?>
+<?php }} else {echo "last";}?>

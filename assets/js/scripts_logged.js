@@ -725,7 +725,6 @@ function checkPosts() {
             highestNumber = numberPart;
         }
     });
-    console.log(highestNumber);
 
     $.ajax({
         url: 'assets/posts_check.php',
@@ -734,7 +733,7 @@ function checkPosts() {
             last: highestNumber
         }
     }).done(function (response) {
-        if (response != "") {
+        if (response != "last") {
             let newPosts = document.createElement('div');
             newPosts.innerHTML = response;
             let postElements = newPosts.querySelectorAll('.post');
