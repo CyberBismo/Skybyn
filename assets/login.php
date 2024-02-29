@@ -154,7 +154,8 @@ if ($checkEmail->num_rows == 1) {
             } else
             if ($ip_trusted == '0') {
                 createCookie("currentIP", $ip_code, "10", null);
-                createCookie("new_IP", $currentIP, "10", null);
+                //createCookie("new_IP", $currentIP, "10", null);
+                $_SESSION['user'] = $uid;
                 echo "login_ok";#"new_ip";
             } else {
                 $_SESSION['user'] = $uid;
