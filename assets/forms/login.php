@@ -55,14 +55,7 @@
                                 remember : remember
                             }
                         }).done(function(response) {
-                            console.log(response);
-                            if (response == "login_ok") {
-                                window.location.href = "./";
-                            } else 
-                            if (response == "new_ip") {
-                                window.location.href = "./";
-                            } else 
-                            if (response == "verify") {
+                            if (response === "login_ok" || response === "new_ip" || response === "verify") {
                                 window.location.href = "./";
                             } else {
                                 lmsg.innerHTML = response;
