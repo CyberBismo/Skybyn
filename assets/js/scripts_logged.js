@@ -213,7 +213,7 @@ function createPost() {
     }).done(function(response) {
         if (response == "") {
             newPost();
-            checkPosts();
+            checkPosts(); 
             text.value = "";
             image.value = "";
             filesDiv.innerHTML = "";
@@ -742,7 +742,7 @@ function checkPosts() {
             for (let i = 0; i < postElements.length; i++) {
                 let postId = postElements[i].id.replace("post_", "");
                 if (!insertedPostIds.includes(postId)) {
-                    posts.insertAdjacentElement('afterbegin', postElements[i]);
+                    document.getElementById("posts").insertAdjacentElement('afterbegin', postElements[i]);
                     insertedPostIds.push(postId);
                 }
             }
