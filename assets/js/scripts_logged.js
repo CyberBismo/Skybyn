@@ -843,6 +843,7 @@ function checkRef() {
         }
     });
 }
+checkRef();
 
 function friExpand() {
     const fri = document.getElementById('fri');
