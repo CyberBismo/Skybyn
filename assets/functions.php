@@ -989,7 +989,7 @@ if (isset($_SESSION['user'])) {
             $code = $referrals['referral_code'];
             $created = $referrals['created'];
 
-            if ($created >= time() - (1 * calcTime('day'))) {
+            if ($created >= time() - (5 * calcTime('minutes'))) {
                 return "error";
             } else {
                 return $code;

@@ -830,9 +830,9 @@ function genRef() {
     });
 }
 function checkRef() {
-    const code = document.getElementById('frc');
+    let code = document.getElementById('frc');
     $.ajax({
-        url: 'assets/check_ref_code.php',
+        url: 'assets/check_refer_code.php',
         type: "POST",
         data: {
             code: code.innerHTML
@@ -843,6 +843,9 @@ function checkRef() {
         }
     });
 }
+setInterval(() => {
+    checkRef();
+}, 300000);
 checkRef();
 
 function friExpand() {
