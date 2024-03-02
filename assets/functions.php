@@ -1210,7 +1210,9 @@ if (isset($_POST['update_account'])) {
         }
     }
     if (!empty($dob)) {
-        $conn->query("UPDATE `users` SET `birth_date`='$dob' WHERE `id`='$uid'");
+        if ($rank > 0) {
+            $conn->query("UPDATE `users` SET `birth_date`='$dob' WHERE `id`='$uid'");
+        }
     }
 
     header("location: ./settings");

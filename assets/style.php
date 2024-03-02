@@ -3258,7 +3258,6 @@
             }
             .profile-left i {
                 position: absolute;
-                display: none;
                 width: 40px;
                 height: 40px;
                 text-align: center;
@@ -3280,15 +3279,29 @@
                 height: 40px;
                 cursor: pointer;
             }
-            .profile-left .username {
+            .profile-left-user .username {
                 width: 100%;
-                margin-top: 20px;
-                padding: 0 10px;
+                margin-top: 10px;
+                padding: 10px;
                 text-align: center;
                 font-size: 1.3rem;
                 color: white;
+                background: rgba(var(--black-light),.3);
+                border-radius: 20px;
                 overflow: hidden;
                 box-sizing: border-box;
+            }
+            .profile-left-user .username span {
+                color: white !important;
+            }
+            .profile-tabs {
+                padding: 10px;
+                background: rgba(0,0,0,.3);
+                border-radius: 10px;
+                box-sizing: border-box;
+            }
+            .profile-tabs .settings-cat:hover {
+                background: rgba(0,0,0,.1);
             }
             .profile-btns {
                 display: flex;
@@ -3462,6 +3475,29 @@
             .changeWallpaper i {
                 float: right;
                 cursor: pointer;
+            }
+
+            .avatar_select_area {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 200px;
+                height: 200px;
+                margin: 0 auto;
+                border: 3px dashed rgba(var(--white-dark),.3);
+                border-radius: 50px;
+                cursor: pointer;
+                overflow: hidden;
+            }
+            .avatar_select_area i {
+                margin: 0;
+            }
+            .avatar_select_area img {
+                width: 100%;
+                max-width: 100%;
+                height: 100%;
+                max-height: 100%;
+                object-fit: cover;
             }
 
             .settings-cat {

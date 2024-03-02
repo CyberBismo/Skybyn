@@ -45,6 +45,7 @@ function showSearch() {
 // Start searching while typing
 function startSearch(x) {
     const searchResult = document.getElementById('search_result');
+    const searchRes = document.getElementById('search_res');
     const searchResUsers = document.getElementById('search_res_users');
     const searchRUsers = document.getElementById('search_r_users');
     const searchResGroups = document.getElementById('search_res_groups');
@@ -119,11 +120,11 @@ function startSearch(x) {
             }).done(function(response) {
                 // Handle the response for page search
                 if (response != "") {
-                    searchResPages.removeAttribute("hidden");
-                    searchRPages.innerHTML = response;
+                    searchResult.removeAttribute("hidden");
+                    searchRes.innerHTML = response;
                 } else {
-                    searchResPages.setAttribute("hidden", "");
-                    searchRPages.innerHTML = "";
+                    searchResult.setAttribute("hidden", "");
+                    searchRes.innerHTML = "";
                 }
             });
         }

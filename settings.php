@@ -21,15 +21,14 @@ if (isset($_GET['ip_history'])) {
         <div class="page-container">
             <div class="profile-wallpaper">
                 <img src="<?=$wallpaper?>">
-                <!--i class="fa-regular fa-pen-to-square" onclick="changeWallpaper()" hidden></i-->
             </div>
             <div class="profile">
                 <div class="profile-left">
-                    <i class="fa-regular fa-pen-to-square" onclick="changeWallpaper()"></i>
+                    <!--i class="fa-regular fa-pen-to-square" onclick="changeWallpaper()"></i-->
                     <div class="profile-left-user">
                         <div class="avatar" id="avatar">
                             <img src="<?=$avatar?>">
-                            <i class="fa-regular fa-pen-to-square" onclick="changeAvatar()"></i>
+                            <!--i class="fa-regular fa-pen-to-square" onclick="changeAvatar()"></i-->
                         </div>
                         <div class="username">
                             <?=$username?>
@@ -66,6 +65,18 @@ if (isset($_GET['ip_history'])) {
                 </div>
                 <div class="profile-right form">
                     <div id="tab-general" <?=$general?>>
+                        <form method="post" enctype="multipart/form-data">
+
+                            <label class="avatar_select_area" for="avatar_select" id="avatar_preview">
+                                <i class="fa-solid fa-camera"></i>
+                            </label>
+                            <input type="file" name="avatar" id="avatar_select" hidden required>
+                            
+                            <br>
+
+                            <input type="submit" name="update_avatar" value="Update avatar">
+                        </form>
+                        <br><br>
                         <form method="post">
 
                             <h3>Account</h3>
@@ -75,10 +86,8 @@ if (isset($_GET['ip_history'])) {
                             <i class="fa-solid fa-user"></i>
                             <input type="text" name="username" value="<?=$username?>" onkeyup="checkUsername(this)" required>
                             
-                            <?php if ($rank > 0) {?>
                             <i class="fa-solid fa-calendar-days"></i>
-                            <input type="date" name="dob" value="<?=$dob?>" min="1960-01-01" max="<?=date("Y")-15 ."-".date("m")."-".date("d")?>" title="Enter your date of birth"/>
-                            <?php }?>
+                            <input type="date" name="dob" value="<?=$dob?>" min="1960-01-01" max="<?=date("Y")-15 ."-".date("m")."-".date("d")?>"<?php if ($rank < 1) {?> disabled<?php }?> title="Enter your date of birth"/>
                             
                             <br><br>
 
@@ -185,6 +194,90 @@ if (isset($_GET['ip_history'])) {
         </div>
 
         <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                var avatarSelect = document.getElementById('avatar_select');
+                var avatarPreview = document.getElementById('avatar_preview');
+
+                // Function to update the preview with the selected image
+                function updatePreview(file) {
+                    if (file.type.startsWith('image/')) {
+                        var reader = new FileReader();
+                        reader.onload = function(e) {
+                            avatarPreview.innerHTML = '<img src="' + e.target.result + '" alt="Avatar">';
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        alert("Please select an image file.");
+                    }
+                }
+
+                // Handling file selection via input
+                avatarSelect.addEventListener('change', function() {
+                    if (this.files.length > 0) {
+                        updatePreview(this.files[0]);
+                    }
+                });
+
+                // Handling drag and drop
+                avatarPreview.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    avatarPreview.style.backgroundColor = '#f0f0f0'; // Optional: visual feedback
+                });
+
+                avatarPreview.addEventListener('dragleave', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    avatarPreview.style.backgroundColor = ''; // Optional: reset visual feedback
+                });
+
+                avatarPreview.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    avatarPreview.style.backgroundColor = ''; // Optional: reset visual feedback
+                    var dt = e.dataTransfer;
+                    var file = dt.files[0];
+                    updatePreview(file);
+                    avatarSelect.files = dt.files; // Update the file input
+                });
+            });
+            document.getElementById('avatar_select').addEventListener('change', function(event) {
+                // Get the file list from the input
+                var files = event.target.files;
+
+                // Check if any files are selected
+                if (files.length > 0) {
+                    var file = files[0];
+
+                    // Check if the file is an image
+                    if (file.type.startsWith('image/')) {
+                        // Create a FileReader to read the file
+                        var reader = new FileReader();
+
+                        // Define the onload event handler for the FileReader
+                        reader.onload = function(e) {
+                            // Set the preview's background to the image
+                            var preview = document.getElementById('avatar_preview');
+                            preview.style.backgroundImage = 'url(' + e.target.result + ')';
+                            preview.style.backgroundSize = 'cover';
+                            preview.style.backgroundPosition = 'center';
+                            
+                            // Optionally, remove the icon if you want
+                            var icon = preview.querySelector('i.fa-camera');
+                            if(icon) {
+                                icon.style.display = 'none';
+                            }
+                        };
+
+                        // Read the file as a Data URL
+                        reader.readAsDataURL(file);
+                    } else {
+                        // Handle non-image file types or alert the user
+                        alert('Please select an image file.');
+                    }
+                }
+            });
+
             function avatarSize() {
                 document.getElementById('avatar').style.width = window.innerWidth+"px";
             }
