@@ -838,7 +838,7 @@ function checkRef() {
             code: code.innerHTML
         }
     }).done(function(response) {
-        if (response == null) {
+        if (response == "expired") {
             code.innerHTML = "GENERATE CODE";
         }
     });
