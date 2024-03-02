@@ -303,9 +303,6 @@ if (isset($_GET['ip_history'])) {
                     security.hidden = true;
                     iplog.hidden = false;
                 }
-
-                var updatedParameter = '?' + tab;
-                window.location.href = updatedParameter;
             }
 
             function checkUsername(x) {

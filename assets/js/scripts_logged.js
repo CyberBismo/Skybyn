@@ -829,6 +829,21 @@ function genRef() {
         }
     });
 }
+function checkRef() {
+    const code = document.getElementById('frc');
+    $.ajax({
+        url: 'assets/check_ref_code.php',
+        type: "POST",
+        data: {
+            code: code.innerHTML
+        }
+    }).done(function(response) {
+        if (response == null) {
+            code.innerHTML = "GENERATE CODE";
+        }
+    });
+}
+
 function friExpand() {
     const fri = document.getElementById('fri');
     const frit = document.getElementById('frit');
