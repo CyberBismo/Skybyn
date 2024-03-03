@@ -77,8 +77,50 @@ if ($Pwallpaper == "./") {
                             <span>@<?=$Pusername?></span>
                         </div>
                     </div>
+                    <div class="profile-btns">
+                        <?php if (isset($_SESSION['user'])) {?>
+                        <div id="friend_actions">
+                        <?php if ($myProfile == false) {
+                        $checkFriendship = $conn->query("SELECT * FROM `friendship` WHERE `user_id`='$uid' AND `friend_id`='$user_id'");
+                        if ($checkFriendship->num_rows == 1) {
+                            $friendshipData = $checkFriendship->fetch_assoc();
+                            $status = $friendshipData['status'];
+
+                            if ($status == "accepted") {?>
+                            <button onclick="friendship('<?= $user_id ?>','unfriend')">
+                                <i class="fa-solid fa-user-minus"></i> <span>Unfriend</span>
+                            </button>
+                            <?php } else if ($status == "sent") {?>
+                            <button onclick="friendship('<?= $user_id ?>','cancel')">
+                                <i class="fa-solid fa-user-xmark"></i> <span>Cancel friend request</span>
+                            </button>
+                            <?php } else if ($status == "received") {?>
+                            <button onclick="friendship('<?= $user_id ?>','accept')">
+                                <i class="fa-solid fa-user-check"></i> <span>Accept</span>
+                            </button>
+                            <button onclick="friendship('<?= $user_id ?>','ignore')">
+                                <i class="fa-solid fa-user-xmark"></i> <span>Ignore</span>
+                            </button>
+                            <?php } else if ($status == "blocked") {?>
+                            <button onclick="friendship('<?= $user_id ?>','unblock')">
+                                <i class="fa-solid fa-user-slash"></i> <span>Unblock</span>
+                            </button>
+                            <?php }} else {?>
+                            <button onclick="friendship('<?= $user_id ?>','send')">
+                                <i class="fa-solid fa-user-plus"></i> <span>Send friend request</span>
+                            </button>
+                            <button onclick="friendship('<?= $user_id ?>','block')">
+                                <i class="fa-solid fa-user-slash"></i> <span>Block</span>
+                            </button>
+                            <?php }?>
+                            <button class="red" onclick="friendship('<?= $user_id ?>','report')">
+                            <i class="fa-solid fa-triangle-exclamation"></i> <span>Report</span>
+                            </button>
+                        <?php }?>
+                        </div>
+                        <?php }?>
+                    </div>
                     <?php if (isMobile() == false) {?>
-                    <?php if (isset($_SESSION['user'])) {?>
                     <hr>
                     <div class="profile-tabs">
                         <b>Groups</b>
@@ -112,51 +154,6 @@ if ($Pwallpaper == "./") {
                         ?>
                     </div>
                     <?php }?>
-                    <?php }?>
-                    <div class="profile-btns">
-                        <?php if (isset($_SESSION['user'])) {?>
-                        <div id="friend_actions">
-                        <?php if ($myProfile == false) {
-                        $checkFriendship = $conn->query("SELECT * FROM `friendship` WHERE `user_id`='$uid' AND `friend_id`='$user_id'");
-                        if ($checkFriendship->num_rows == 1) {
-                            $friendshipData = $checkFriendship->fetch_assoc();
-                            $status = $friendshipData['status'];
-
-                            if ($status == "accepted") {?>
-                            <button onclick="friendship('<?= $user_id ?>','unfriend')">
-                                <i class="fa-solid fa-user-minus"></i> <span>Unfriend</span>
-                            </button>
-                        <?php } else if ($status == "sent") {?>
-                            <button onclick="friendship('<?= $user_id ?>','cancel')">
-                                <i class="fa-solid fa-user-xmark"></i> <span>Cancel friend request</span>
-                            </button>
-                        <?php } else if ($status == "received") {?>
-                            <button onclick="friendship('<?= $user_id ?>','accept')">
-                                <i class="fa-solid fa-user-check"></i> <span>Accept</span>
-                            </button>
-                            <button onclick="friendship('<?= $user_id ?>','ignore')">
-                                <i class="fa-solid fa-user-xmark"></i> <span>Ignore</span>
-                            </button>
-                        <?php } else if ($status == "blocked") {?>
-                            <button onclick="friendship('<?= $user_id ?>','unblock')">
-                                <i class="fa-solid fa-user-slash"></i> <span>Unblock</span>
-                            </button>
-                        <?php }
-                        } else {?>
-                        <button onclick="friendship('<?= $user_id ?>','send')">
-                            <i class="fa-solid fa-user-plus"></i> <span>Send friend request</span>
-                        </button>
-                        <button onclick="friendship('<?= $user_id ?>','block')">
-                            <i class="fa-solid fa-user-slash"></i> <span>Block</span>
-                        </button>
-                        <?php }?>
-                        <button class="red" onclick="friendship('<?= $user_id ?>','report')">
-                        <i class="fa-solid fa-triangle-exclamation"></i> <span>Report</span>
-                        </button>
-                        <?php }?>
-                        </div>
-                        <?php }?>
-                    </div>
                 </div>
                 <div class="profile-right" id="posts">
                     <?php if ($Pprivate == "0" || $friends == true) {?>

@@ -24,6 +24,12 @@ if (strpos($text, "@user ") === 0) {
             </div>
             <?php
         }
+    } else {
+        ?>
+        <div class="search_res_user">
+            No users found
+        </div>
+        <?php
     }
 }
 ?>

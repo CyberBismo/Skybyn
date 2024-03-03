@@ -3255,6 +3255,7 @@
                 position: sticky;
                 top: 115px;
                 width: 30%;
+                height: calc(100vh - 125px);
             }
             .profile-left i {
                 position: absolute;
@@ -3267,6 +3268,7 @@
                 width: 150px;
                 height: 150px;
                 margin: 0 auto;
+                background: rgba(var(--dark),.3);
                 border-radius: 25px;
                 overflow: hidden;
                 object-fit: cover;
@@ -3304,16 +3306,12 @@
                 background: rgba(0,0,0,.1);
             }
             .profile-btns {
-                display: flex;
-                height: 100%;
                 margin: 20px 0;
                 box-sizing: border-box;
             }
             .profile-btns button {
-                width: auto;
-                height: 50px;
                 margin: 3px;
-                padding: 0 10px;
+                padding: 10px;
                 color: white;
                 background: rgba(255,255,255,.1);
                 backdrop-filter: blur(5px);
@@ -3334,6 +3332,7 @@
                 height: 10px;
             }
             .profile-btns button.red {
+                color: white;
                 background: rgba(255,0,0,.5);
             }
             
@@ -3364,6 +3363,7 @@
             }
             .profile-left-user {
                 display: flex;
+                width: 50%;
                 margin-right: 20px;
             }
             .profile-left-user .avatar {
@@ -3381,8 +3381,13 @@
                 overflow: hidden;
                 box-sizing: border-box;
             }
+            .profile-left-user .username span {
+                color: white !important;
+            }
             .profile-btns {
                 display: flex;
+                justify-content: right;
+                width: 50%;
                 height: 100%;
                 margin: 20px 0;
                 box-sizing: border-box;
@@ -3391,10 +3396,22 @@
                 width: 50px;
                 height: 50px;
                 margin: 3px;
-                border: 1px solid rgba(255,255,255,.3);
+                padding: 10px;
+                color: white;
+                background: rgba(255,255,255,.1);
+                backdrop-filter: blur(5px);
+                border: none;
                 border-radius: 10px;
                 box-sizing: border-box;
+                transition: background .3s, transform .3s;
             }
+            .profile-btns button span {
+                display: none;
+            }
+            .profile-btns button.red {
+                background: rgba(255,0,0,.5);
+            }
+
             .profile-tabs {
                 position: absolute;
                 display: flex;
@@ -3415,10 +3432,7 @@
                 display: none;
             }
             <?php }?>
-            
-            .profile-left {
-                color: white;
-            }
+        
             .profile-left hr {
                 height: 1px;
                 background: rgba(0,0,0,.1);

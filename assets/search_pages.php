@@ -25,6 +25,12 @@ if (strpos($text, "/page ") === 0) {
             </div>
             <?php
         }
+    } else {
+        ?>
+        <div class="search_res_page">
+            No pages found
+        </div>
+        <?php
     }
 }
 

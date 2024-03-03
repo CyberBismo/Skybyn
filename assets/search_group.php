@@ -14,7 +14,11 @@ if ($getGroups->num_rows > 0) {
         <?php
     }
 } else {
-    echo "error";
+    ?>
+    <div class="search_res_group">
+        No groups found
+    </div>
+    <?php
 }
 
 ?>

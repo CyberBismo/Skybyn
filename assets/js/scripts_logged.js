@@ -830,12 +830,12 @@ function genRef() {
     });
 }
 function checkRef() {
-    const code = document.getElementById('frc').innerHTML;
+    const code = document.getElementById('frc');
     $.ajax({
         url: 'assets/check_refer_code.php',
         type: "POST",
         data: {
-            code : code
+            code: code.innerHTML
         }
     }).done(function(response) {
         if (response == "expired") {
