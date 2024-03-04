@@ -751,9 +751,6 @@ function checkPosts() {
         }
     });
 }
-if (window.location.pathname === "/profile") {
-    checkPosts();
-}
 
 let initialPosts = document.querySelectorAll('.post');
 for (let i = 0; i < initialPosts.length; i++) {
