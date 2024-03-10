@@ -1,4 +1,4 @@
-<?php
+<?php include("../assets/functions.php");
 $devDomain = 'dev.skybyn.no';
 $currentUrl = domain();
 if ($currentUrl == $devDomain) {
@@ -13,8 +13,12 @@ if ($dev_access) {
 
 session_start();
 
-if (!isset($_SESSION['user']) || $_SESSION['user'] !== true) {
-    header('Location: ../.');
+if (!isset($_SESSION['user'])) {
+    if ($dev_access) {
+        header('Location: ../');
+    } else {
+        header('Location: https://skybyn.no/');
+    }
     exit;
 }
 

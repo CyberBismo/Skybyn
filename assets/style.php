@@ -490,7 +490,6 @@
                 position: fixed;
                 top: 75px;
                 color: white;
-                background: rgba(var(--dark),.3);
                 backdrop-filter: blur(5px);
                 transition: transform .5s;
                 z-index: 3;
@@ -510,6 +509,7 @@
             .right-panel {
                 width: 90%;
                 height: calc(100% - 75px);
+                background: rgba(var(--dark),.3);
             }
             <?php }?>
             
