@@ -490,6 +490,8 @@
                 position: fixed;
                 top: 75px;
                 color: white;
+                background: rgba(var(--dark),.3);
+                backdrop-filter: blur(5px);
                 transition: transform .5s;
                 z-index: 3;
             }
@@ -508,7 +510,6 @@
             .right-panel {
                 width: 90%;
                 height: calc(100% - 75px);
-                background: rgb(var(--dark));
             }
             <?php }?>
             
@@ -1123,7 +1124,7 @@
             }
             .header .top-left .logo img {
                 width: auto;
-                height: 50px;
+                height: 100px;
                 margin: 0 auto;
                 padding: 10px 20px;
             }
@@ -1700,7 +1701,7 @@
                 padding: 20px;
                 padding-top: 95px;
                 color: white;
-                background: rgba(var(--dark),1);
+                background: rgba(var(--dark),.3);
                 box-sizing: border-box;
                 backdrop-filter: blur(5px);
                 border-bottom-left-radius: 20px;
@@ -1795,7 +1796,7 @@
                 box-shadow: 0 2px 2px rgba(0,0,0,.05);
                 backdrop-filter: blur(5px);
                 box-sizing: border-box;
-                z-index: 9;
+                z-index: 3;
             }
             <?php if (isMobile() == false) {?>
             .user-dropdown {
@@ -1810,7 +1811,7 @@
                 right: 0;
                 width: 90%;
                 padding: 20px;
-                background: rgba(var(--dark),.9);
+                background: rgba(var(--darker),.9);
                 box-shadow: 0 3px rgba(0,0,0,.2);
                 transform: translateX(100%);
                 transition: transform .5s;

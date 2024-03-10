@@ -157,6 +157,46 @@ if ($currentUrl == $devDomain) {
                 }
                 <?php }?>
             }
+            function showLeftPanel() {
+                const left = document.getElementById('left-panel');
+                const leftButton = document.getElementById('lp-open');
+                const right = document.getElementById('right-panel');
+                const rightButton = document.getElementById('rp-open');
+                const um = document.getElementById('usermenu');
+                if (left.style.transform == "translateX(0px)") {
+                    um.style.transform = 'translateX(100%)';
+                    left.style.transform = 'translateX(-100%)';
+                    right.style.transform = 'translateX(100%)';
+                    leftButton.style.transform = 'translateX(0px)';
+                    rightButton.style.transform = 'translateX(0px)';
+                } else {
+                    um.style.transform = 'translateX(100%)';
+                    left.style.transform = 'translateX(0px)';
+                    right.style.transform = 'translateX(100%)';
+                    leftButton.style.transform = 'translateX('+left.clientWidth+'px)';
+                    rightButton.style.transform = 'translateX(0px)';
+                }
+            }
+            function showRightPanel() {
+                const left = document.getElementById('left-panel');
+                const leftButton = document.getElementById('lp-open');
+                const right = document.getElementById('right-panel');
+                const rightButton = document.getElementById('rp-open');
+                const um = document.getElementById('usermenu');
+                if (right.style.transform == "translateX(0px)") {
+                    um.style.transform = 'translateX(100%)';
+                    left.style.transform = 'translateX(-100%)';
+                    right.style.transform = 'translateX(100%)';
+                    leftButton.style.transform = 'translateX(0px)';
+                    rightButton.style.transform = 'translateX(0px)';
+                } else {
+                    um.style.transform = 'translateX(100%)';
+                    left.style.transform = 'translateX(-100%)';
+                    right.style.transform = 'translateX(0px)';
+                    rightButton.style.transform = 'translateX(-'+left.clientWidth+'px)';
+                    leftButton.style.transform = 'translateX(0px)';
+                }
+            }
             <?php }?>
             function newPost() {
                 const header = document.getElementById('header');

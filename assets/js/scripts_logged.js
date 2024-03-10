@@ -3,6 +3,7 @@ function showSearch() {
     const mobileSearch = document.getElementById('mobile-search');
     const search = document.getElementById('searchInput');
     const searchRes = document.getElementById('search_result');
+    const usermenu = document.getElementById('usermenu');
 
     // Function to hide the search form
     function hideSearchForm() {
@@ -438,45 +439,6 @@ function markRead(x) {
         
     });
 }
-
-
-function showLeftPanel() {
-    const left = document.getElementById('left-panel');
-    const leftButton = document.getElementById('lp-open');
-    const right = document.getElementById('right-panel');
-    const rightButton = document.getElementById('rp-open');
-    const um = document.getElementById('usermenu');
-    if (left.style.transform == "translateX(0px)") {
-        left.style.transform = 'translateX(-100%)';
-        leftButton.style.transform = 'translateX(0px)';
-        rightButton.style.transform = 'translateX(0px)';
-    } else {
-        left.style.transform = 'translateX(0px)';
-        leftButton.style.transform = 'translateX('+left.clientWidth+'px)';
-        right.style.transform = 'translateX(100%)';
-        rightButton.style.transform = 'translateX(0px)';
-        um.style.transform = 'translateX(100%)';
-    }
-}
-function showRightPanel() {
-    const left = document.getElementById('left-panel');
-    const leftButton = document.getElementById('lp-open');
-    const right = document.getElementById('right-panel');
-    const rightButton = document.getElementById('rp-open');
-    const um = document.getElementById('usermenu');
-    if (right.style.transform == "translateX(0px)") {
-        right.style.transform = 'translateX(100%)';
-        leftButton.style.transform = 'translateX(0px)';
-        rightButton.style.transform = 'translateX(0px)';
-    } else {
-        right.style.transform = 'translateX(0px)';
-        rightButton.style.transform = 'translateX(-'+left.clientWidth+'px)';
-        left.style.transform = 'translateX(-100%)';
-        leftButton.style.transform = 'translateX(0px)';
-        um.style.transform = 'translateX(100%)';
-    }
-}
-
 
 function showImage(x) {
     const image_viewer = document.getElementById('image_viewer');
