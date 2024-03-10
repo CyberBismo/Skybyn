@@ -53,12 +53,7 @@ if ($currentUrl == $devDomain) {
             <div class="new_post_button" id="new_post_btn" onclick="newPost()">Anything new?</div>
             <?php }?>
             <?php }?>
-            <?php if (!isset($_SESSION['user'])) {
-                if (isMobile() == false) {?>
-            <div class="login">
-                <?php include_once("/assets/forms/login.php");?>
-            </div>
-            <?php }} else {?>
+            <?php if (isset($_SESSION['user'])) {?>
             <div class="top">
                 <div class="top-nav">
                     <ul>

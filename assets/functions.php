@@ -1,6 +1,5 @@
 <?php include_once "db.php";
 
-error_reporting(0);
 
 # Get full url
 function domain() {
