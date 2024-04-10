@@ -1,6 +1,5 @@
 <?php
 session_start();
-session_destroy();
 
 function domainCheck() {
     $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
@@ -20,10 +19,6 @@ if ($dev_access) {
     include("https://skybyn.no/assets/functions.php");
 }
 
-session_start();
-
-$_SESSION['user'] = 'admin';
-
 if (!isset($_SESSION['user'])) {
     if ($dev_access) {
         header('Location: ../');
@@ -32,8 +27,6 @@ if (!isset($_SESSION['user'])) {
     }
     exit;
 }
-
-
 ?>
 <!DOCTYPE html>
 <html>

@@ -1,5 +1,6 @@
 <?php include_once "db.php";
 
+error_reporting(0);
 
 # Get full url
 function domain() {
@@ -348,20 +349,20 @@ function createCookie($name, $value, $time, $time_type) {
 }
 
 # Get text in language - x = column name input | y = value | z = column name output
-function language($x,$y,$z) {
-    global $conn;
-    if ($x == "id") {
-        $attr = "WHERE `id`='$y'";
-    } else
-    if ($x == "name") {
-        $attr = "WHERE `name`='$y'";
-    }
-    
-    $getLangs = $conn->query("SELECT * FROM `countries` $attr");
-    $LRow = $getLangs->fetch_assoc();
-
-    return $LRow[$z];
-}
+#function language($x,$y,$z) {
+#    global $conn;
+#    if ($x == "id") {
+#        $attr = "WHERE `id`='$y'";
+#    } else
+#    if ($x == "name") {
+#        $attr = "WHERE `name`='$y'";
+#    }
+#    
+#    $getLangs = $conn->query("SELECT * FROM `countries` $attr");
+#    $LRow = $getLangs->fetch_assoc();
+#
+#    return $LRow[$z];
+#}
 
 # Get user data
 function getUser($x, $y, $z) {
@@ -976,7 +977,7 @@ if (isset($_SESSION['user'])) {
         
     }
     
-    $conn->query("UPDATE `users` SET `ip`='$newIP' WHERE `id`='$uid'");
+    #$conn->query("UPDATE `users` SET `ip`='$newIP' WHERE `id`='$uid'");
 
     if(isset($_SERVER['HTTP_REFERER']) && !empty($_SERVER['HTTP_REFERER'])) {
         $previousUrl = $_SERVER['HTTP_REFERER'];
@@ -1026,7 +1027,7 @@ if (isset($_SESSION['user'])) {
     }
     $referral = referralCode($uid);
 
-    $countryName = language('id',$country,'nicename');
+    #$countryName = language('id',$country,'nicename');
     #$CName = strtolower($countryName);
     
 
