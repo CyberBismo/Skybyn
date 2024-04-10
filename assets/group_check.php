@@ -7,7 +7,7 @@ $getMsg = $conn->query("SELECT * FROM `group_messages` WHERE `group`='$group' AN
 while ($message = mysqli_fetch_assoc($getMsg)) {
     $message_id = $message['id'];
     $message_user = $message['user'];
-    $message_content = $message['content'];
+    $message_content = htmlspecialchars($message['content'], ENT_QUOTES, 'UTF-8');
     $message_created = date("Y-m-d H:i:s", $message['date']);
     $message_system = $message['system'];
 
