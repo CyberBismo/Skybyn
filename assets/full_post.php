@@ -40,7 +40,7 @@
                 while($comment = mysqli_fetch_assoc($getComments)) {
                     $comment_id = $comment['id'];
                     $comment_user = $comment['user'];
-                    $comment_content = $comment['content'];
+                    $comment_content = htmlspecialchars(cleanUrls(nl2br($comment['content'])), ENT_QUOTES, 'UTF-8');
                     $comment_created = $comment['created'];
 
                     $getCommentUser = mysqli_query($conn, "SELECT * FROM `users` WHERE `id`='$comment_user'");
