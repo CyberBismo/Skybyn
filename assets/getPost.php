@@ -21,7 +21,7 @@ if ($post_user_avatar == "./") {
 }
 
 $post_video = convertVideo($post_content);
-$post_content_res = htmlspecialchars(cleanUrls(nl2br($post_content)), ENT_QUOTES, 'UTF-8');
+$post_content_res = cleanUrls(nl2br(htmlspecialchars($post_content, ENT_QUOTES, 'UTF-8')));
 ?>
 
 <div class="post" id="post_<?=$post_id?>">

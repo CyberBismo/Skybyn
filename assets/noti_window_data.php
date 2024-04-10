@@ -6,7 +6,7 @@ $getNotiData = $conn->query("SELECT * FROM `notifications` WHERE `id`='$noti_id'
 $notiData = $getNotiData->fetch_assoc();
 
 $noti_from = $notiData['from'];
-$noti_content = htmlspecialchars(cleanUrls(nl2br($notiData['content'])), ENT_QUOTES, 'UTF-8');
+$noti_content = cleanUrls(nl2br(htmlspecialchars($notiData['content'], ENT_QUOTES, 'UTF-8')));
 $noti_date = $notiData['date'];
 $noti_profile = $notiData['profile'];
 $noti_post = $notiData['post'];

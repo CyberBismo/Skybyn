@@ -7,7 +7,7 @@ while ($message = mysqli_fetch_assoc($getMessages)) {
     $message_id = $message['id'];
     $message_user = $message['user'];
     $message_friend = $message['friend'];
-    $message_content = htmlspecialchars(cleanUrls(nl2br($message['content'])), ENT_QUOTES, 'UTF-8');
+    $message_content = cleanUrls(nl2br(htmlspecialchars($message['content'], ENT_QUOTES, 'UTF-8')));
     $message_created = date("Y-m-d H:i:s", $message['created']);
 
     $getFriendData = mysqli_query($conn, "SELECT * FROM `users` WHERE `id`='$message_user'");
