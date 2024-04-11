@@ -429,9 +429,7 @@ if ($currentUrl == $devDomain) {
                 <div class="friend-referral">
                     <h3>Refer a friend</h3>
                     <div class="fr_code" id="frc" <?php if($referral == "error") {?>onclick="genRef()"<?php }?>>
-                        <?php if($referral == "error") {?>
-                            Generate code
-                        <?php } else { echo $referral;}?>
+                        <?php if($referral == "error") {?>Generate code<?php } else { echo $referral;}?>
                     </div>
                     <div class="fr_info" onclick="friExpand()">
                         <i class="fa-regular fa-circle-question"></i> What is this? <span id="fri">+</span>

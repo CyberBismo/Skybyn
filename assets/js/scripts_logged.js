@@ -792,12 +792,12 @@ function genRef() {
     });
 }
 function checkRef() {
-    const code = document.getElementById('frc');
+    let ref = document.getElementById('frc');
     $.ajax({
         url: 'assets/check_refer_code.php',
         type: "POST",
         data: {
-            code: code.innerHTML
+            code: ref
         }
     }).done(function(response) {
         if (response == "expired") {
