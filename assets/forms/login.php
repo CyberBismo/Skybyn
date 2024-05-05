@@ -1,4 +1,7 @@
-                <h2>Sign in</h2>
+                <div class="qr_login">
+                    <img id="login_qr">
+                </div>
+                <!--h2>Sign in</h2>
 
                 <i class="fa-solid fa-at"></i>
                 <input type="email" id="login-email" onkeydown="hitEnterLogin(this)" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" required placeholder="E-mail address" title="example@example.com" oninput="setCustomValidity('')" oninvalid="setCustomValidity('Please enter a valid email address')" autofocus>
@@ -65,4 +68,4 @@
                             }
                         });
                     }
-                </script>
+                </script-->

@@ -804,6 +804,16 @@
                 border: 1px solid rgba(255,255,255,.5);
                 overflow: hidden;
             }
+            .center_form .form .login .qr_login {
+                width: 100%;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            .center_form .form .login .qr_login img {
+                width: 100px;
+                height: 100px;
+                height: auto;
+            }
             .center_form .form .register input[type=submit] {
                 float: right;
                 width: 100%;
