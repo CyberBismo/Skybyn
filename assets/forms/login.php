@@ -1,5 +1,55 @@
                 <div class="qr_login">
-                    <img id="login_qr">
+                    <img src="./assets/images/logo_faded_clean.png" alt="" id="login_qr">
+                    <?php
+                    $code = hash("sha256",rand(1000000,9999999));
+                    if (!isset($_SESSION['qr_session'])) {
+                        $_SESSION['qr_session'] = $code;
+                    }
+                    ?>
+                    <script>
+                        function generateRandomString(length) {
+                            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                            let result = '';
+                            for (let i = 0; i < length; i++) {
+                                const randomIndex = Math.floor(Math.random() * characters.length);
+                                result += characters[randomIndex];
+                            }
+                            return result;
+                        }
+
+                        function getLoginQR() {
+                            $.ajax({
+                                url: './qr/api.php',
+                                type: "POST",
+                                data: {
+                                    data : null
+                                }
+                            }).done(function(response) {
+                                if (response === "repeat") {
+                                    getLoginQR();
+                                } else {
+                                    document.getElementById('login_qr').src = "./qr/temp/"+response+".png";
+                                    checkQR(response);
+                                }
+                            });
+                        }
+                        function checkQR(code) {
+                            $.ajax({
+                                url: './qr/api.php',
+                                type: "POST",
+                                data: {
+                                    code : code
+                                }
+                            }).done(function(response) {
+                                if (response === "repeat") {
+                                    getLoginQR();
+                                } else {
+                                    window.location.href = "./";
+                                }
+                            });
+                        }
+                        getLoginQR();
+                    </script>
                 </div>
                 <!--h2>Sign in</h2>
 

@@ -805,14 +805,16 @@
                 overflow: hidden;
             }
             .center_form .form .login .qr_login {
-                width: 100%;
+                width: 200px;
+                height: 200px;
+                margin: 0 auto;
                 padding: 0;
                 box-sizing: border-box;
             }
             .center_form .form .login .qr_login img {
-                width: 100px;
-                height: 100px;
-                height: auto;
+                width: 100%;
+                height: 100%;
+                border: none;
             }
             .center_form .form .register input[type=submit] {
                 float: right;
