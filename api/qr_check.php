@@ -7,6 +7,7 @@ if ($check->num_rows == 1) {
     $row = $check->fetch_assoc();
     $code = $row['code'];
     $conn->query("UPDATE `qr_sessions` SET `user`='$user' WHERE `code`='$code'");
+    unlink("../qr/temp/".$code.".png");
     $json = array("responseCode"=>"1","message"=>"You logged in");
     echo json_encode($json);
 } else {

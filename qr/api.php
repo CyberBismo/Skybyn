@@ -12,9 +12,9 @@ function genQR($data) {
 if (isset($_POST['data'])) {
     $code = $_SESSION['qr_session'];
     $now = time();
-    $qrSessions = $conn->query("SELECT * FROM `qr_sessions` WHERE `code`='$code' AND `user`='0'");
+    $qrSessions = $conn->query("SELECT * FROM `qr_sessions` WHERE `code`='$code'");
     if ($qrSessions->num_rows == 0) {
-        $conn->query("INSERT INTO `qr_sessions` (`code`, `user`,`created_date`,`modified_date`) VALUES ('$code', '0', '$now', '$now')");
+        $conn->query("INSERT INTO `qr_sessions` (`code`, `user`,`created_date`) VALUES ('$code', '0', '$now')");
         genQR($code);
         echo $code;
     } else {
@@ -30,15 +30,15 @@ if (isset($_POST['data'])) {
             if (file_exists("./qr/temp/".$code.".png")) {
                 echo $code;
             } else {
-                $conn->query("DELETE FROM `qr_sessions` WHERE `code`='$code'");
+                $conn->query("UPDATE `qr_sessions` SET `modified_date`='$now' WHERE `code`='$code'");
                 echo "repeat";
             }
         }
     }
 }
-if (isset($_POST['code'])) {
-    $code = $_POST['code'];
-    $qrSessions = $conn->query("SELECT * FROM `qr_sessions` WHERE `code`='$code' AND `user`='0'");
+if (isset($_POST['check'])) {
+    $code = $_POST['check'];
+    $qrSessions = $conn->query("SELECT * FROM `qr_sessions` WHERE `code`='$code'");
     if ($qrSessions->num_rows == 0) {
         echo "repeat";
     } else {
@@ -52,9 +52,11 @@ if (isset($_POST['code'])) {
             unlink("./qr/temp/".$code.".png");
             echo "repeat";
         } else {
-            $conn->query("DELETE FROM `qr_sessions` WHERE `code`='$code'");
-            $_SESSION['loggedin'] = $user;
-            echo "success";
+            if ($user != 0) {
+                $conn->query("DELETE FROM `qr_sessions` WHERE `code`='$code'");
+                $_SESSION['loggedin'] = $user;
+                echo "success";
+            }
         }
     }
 }

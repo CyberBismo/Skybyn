@@ -1,22 +1,11 @@
                 <div class="qr_login">
                     <img src="./assets/images/logo_faded_clean.png" alt="" id="login_qr">
                     <?php
-                    $code = hash("sha256",rand(1000000,9999999));
                     if (!isset($_SESSION['qr_session'])) {
-                        $_SESSION['qr_session'] = $code;
+                        $_SESSION['qr_session'] = hash("sha256",rand(1000000,9999999));
                     }
                     ?>
                     <script>
-                        function generateRandomString(length) {
-                            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-                            let result = '';
-                            for (let i = 0; i < length; i++) {
-                                const randomIndex = Math.floor(Math.random() * characters.length);
-                                result += characters[randomIndex];
-                            }
-                            return result;
-                        }
-
                         function getLoginQR() {
                             $.ajax({
                                 url: './qr/api.php',
@@ -26,7 +15,9 @@
                                 }
                             }).done(function(response) {
                                 if (response === "repeat") {
-                                    getLoginQR();
+                                    setTimeout(() => {
+                                        getLoginQR();
+                                    }, 1000);
                                 } else {
                                     document.getElementById('login_qr').src = "./qr/temp/"+response+".png";
                                     checkQR(response);
@@ -38,11 +29,13 @@
                                 url: './qr/api.php',
                                 type: "POST",
                                 data: {
-                                    code : code
+                                    check : code
                                 }
                             }).done(function(response) {
                                 if (response === "repeat") {
-                                    getLoginQR();
+                                    setTimeout(() => {
+                                        getLoginQR();
+                                    }, 1000);
                                 } else {
                                     window.location.href = "./";
                                 }
