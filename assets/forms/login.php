@@ -14,10 +14,11 @@
                                     data : null
                                 }
                             }).done(function(response) {
+                                //console.log(response);
                                 if (response === "repeat") {
                                     setTimeout(() => {
                                         getLoginQR();
-                                    }, 1000);
+                                    }, 3000);
                                 } else {
                                     document.getElementById('login_qr').src = "./qr/temp/"+response+".png";
                                     checkQR(response);
@@ -32,12 +33,13 @@
                                     check : code
                                 }
                             }).done(function(response) {
+                                //console.log(response);
                                 if (response === "repeat") {
                                     setTimeout(() => {
                                         getLoginQR();
-                                    }, 1000);
+                                    }, 3000);
                                 } else {
-                                    window.location.href = "./";
+                                    //window.location.href = "./";
                                 }
                             });
                         }

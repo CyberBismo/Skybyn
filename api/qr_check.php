@@ -1,11 +1,10 @@
-<?php include_once("../assets/config.php");
+<?php include_once("../assets/db.php");
 $code = $_POST['code'];
 $user = $_POST['user'];
 
-$check = $conn->query("SELECT * FROM `qr_sessions` WHERE `code`='$code' AND `user`='0'");
+$check = $conn->query("SELECT * FROM `qr_sessions` WHERE `code`='$code'");
 if ($check->num_rows == 1) {
     $row = $check->fetch_assoc();
-    $code = $row['code'];
     $conn->query("UPDATE `qr_sessions` SET `user`='$user' WHERE `code`='$code'");
     unlink("../qr/temp/".$code.".png");
     $json = array("responseCode"=>"1","message"=>"You logged in");
