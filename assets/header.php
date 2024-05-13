@@ -1,4 +1,4 @@
-<?php include_once "functions.php";
+<?php include("functions.php");
 
 $devDomain = 'dev.skybyn.no';
 $currentUrl = domain();

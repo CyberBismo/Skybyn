@@ -1,6 +1,4 @@
-<?php include_once "db.php";
-
-error_reporting(0);
+<?php require_once("conn.php");
 
 # Get full url
 function domain() {
