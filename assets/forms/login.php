@@ -3,7 +3,7 @@
                         <h2>Scan QR code</h2>
                         <p>Scan the QR code with your phone to sign in.</p>
                     </div>
-                    <div class="qr_login_img">
+                    <div class="qr_login_img" id="qr_login_img">
                         <img src="#" alt="" id="login_qr">
                     </div>
                     <script>
@@ -11,6 +11,10 @@
                             let code;
                             if (cookieExists('qr')) {
                                 code = getCookieValue('qr');
+                                if (code.length == 0) {
+                                    code = generateRandomString(10);
+                                    setCookie('qr', code, 1);
+                                }
                             } else {
                                 code = generateRandomString(10);
                                 setCookie('qr', code, 1);
@@ -22,15 +26,20 @@
                                     data : code
                                 }
                             }).done(function(response) {
-                                if (response === "repeat") {
-                                    getLoginQR();
+                                if (response === "404") {
+                                    setTimeout(() => {
+                                        getLoginQR();
+                                    }, 1000);
                                 } else {
-                                    document.getElementById('login_qr').src = "./qr/temp/"+code+".png";
-                                    checkQR(code);
+                                    document.getElementById('login_qr').src = "../qr/temp/" + response + ".png";
+                                    setTimeout(() => {
+                                        checkQR(code);
+                                    }, 3000);
                                 }
                             });
                         }
                         function checkQR(code) {
+                            console.log('Checking QR code');
                             $.ajax({
                                 url: './qr/api.php',
                                 type: "POST",
@@ -38,22 +47,30 @@
                                     check : code
                                 }
                             }).done(function(response) {
-                                if (response === "recheck") {
+                                if (response === "pending") {
                                     setTimeout(() => {
                                         checkQR(code);
                                     }, 1000);
                                 } else
                                 if (response === "404") {
-                                    getLoginQR();
+                                    return;
                                 } else
                                 if (response === "expired") {
                                     getLoginQR();
-                                } else {
-                                    setCookie('user', response, 1);
+                                } else
+                                if (response === "success"){
                                     window.location.href = "./";
                                 }
                             });
                         }
+
+                        function setQRSize() {
+                            const qrImage = document.getElementById('qr_login');
+                            const qrWidth = qrImage.style.width;
+                            qrImage.style.height = qrWidth + 'px';
+                        }
+                        setQRSize();
+                        window.addEventListener('resize', setQRSize);
                     </script>
                 </div>
                 <div class="normal_login">
@@ -132,10 +149,14 @@
                     <span onclick="window.location.href='/forgot'">Forgot password?</span>
                     <?php }}?>
                     <?php if (isMobile() === false) { ?>
-                    <span class="show_qr_login" onclick="tglLogin();getLoginQR()" id="qr_tgl">Sign in with <i class="fa-solid fa-qrcode"></i></span>
+                    <span class="show_qr_login" onclick="tglLogin()" id="qr_tgl">Sign in with <i class="fa-solid fa-qrcode"></i></span>
                     <?php } ?>
                 </div>
                 <script>
+                    function deleteCookie(name) {
+                        document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+                        console.clear();
+                    }
                     function tglLogin() {
                         let qr_tgl = document.getElementById('qr_tgl');
                         let qr = document.querySelector('.qr_login');
@@ -144,23 +165,25 @@
                             qr.style.display = "none";
                             normal.style.display = "block";
                             if (cookieExists('qr')) {
+                                let code = getCookieValue('qr');
+                                deleteCookie('qr');
+                                document.getElementById('login_qr').src = "#";
+                                qr_tgl.innerHTML = "Sign in with <i class='fa-solid fa-qrcode'></i>";
                                 $.ajax({
                                     url: './qr/api.php',
                                     type: "POST",
                                     data: {
-                                        delete : null
+                                        delete : code
                                     }
                                 }).done(function(response) {
-                                    if (response === "ok") {
-                                        document.getElementById('login_qr').src = "#";
-                                        qr_tgl.innerHTML = "Sign in with <i class='fa-solid fa-qrcode'></i>";
-                                    }
+                                    console.clear();
                                 });
                             }
                         } else {
                             qr.style.display = "flex";
                             normal.style.display = "none";
                             qr_tgl.innerHTML = "Sign in with <i class='fa-solid fa-at'></i>";
+                            getLoginQR();
                         }
                     }
 

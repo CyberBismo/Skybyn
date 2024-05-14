@@ -1,4 +1,4 @@
-<?php include "../assets/db.php";
+<?php include "../assets/conn.php";
 function genQR($data) {
     $PNG_TEMP_DIR = dirname(__FILE__).DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR;
     include "qrlib.php";
@@ -10,54 +10,73 @@ function genQR($data) {
 }
 
 if (isset($_POST['data'])) {
-    $code = $_SESSION['qr_session'];
+    $code = $_COOKIE['qr'];
     $now = time();
     $qrSessions = $conn->query("SELECT * FROM `qr_sessions` WHERE `code`='$code'");
-    if ($qrSessions->num_rows == 0) {
-        $conn->query("INSERT INTO `qr_sessions` (`code`, `user`,`created_date`) VALUES ('$code', '0', '$now')");
-        if (!file_exists("./qr/temp/".$code.".png")) {
-            genQR($code);
-        }
-        echo $code;
-    } else {
-        $qrRow = $qrSessions->fetch_assoc();
-        $created = strtotime($qrRow['created_date']);
-        $diff = $now - $created;
-        if ($diff > 60) {
-            $conn->query("DELETE FROM `qr_sessions` WHERE `code`='$code'");
-            unlink("./qr/temp/".$code.".png");
-            echo "repeat";
+    if ($qrSessions->num_rows > 0) {
+        if (file_exists("./temp/".$code.".png")) {
+            echo $code;
         } else {
-            $code = $qrRow['code'];
-            if (file_exists("./qr/temp/".$code.".png")) {
-                echo $code;
-            } else {
-                echo "repeat";
+            genQR($code);
+            echo $code;
+        }
+    } else {
+        $conn->query("INSERT INTO `qr_sessions` (`code`, `user`,`created_date`) VALUES ('$code', '0', '$now')");
+        if ($conn->affected_rows > 0) {
+            if (!file_exists("./temp/".$code.".png")) {
+                genQR($code);
             }
+            echo $code;
+        } else {
+            echo "404";
         }
     }
 }
 if (isset($_POST['check'])) {
     $code = $_POST['check'];
     $qrSessions = $conn->query("SELECT * FROM `qr_sessions` WHERE `code`='$code'");
-    if ($qrSessions->num_rows == 0) {
-        echo "repeat";
-    } else {
+    if ($qrSessions->num_rows == 1) {
         $qrRow = $qrSessions->fetch_assoc();
         $user = $qrRow['user'];
-        $created = strtotime($qrRow['created_date']);
+        $created = $qrRow['created_date'];
         $now = time();
         $diff = $now - $created;
         if ($diff > 60) {
             $conn->query("DELETE FROM `qr_sessions` WHERE `code`='$code'");
-            #unlink("./qr/temp/".$code.".png");
-            echo "repeat";
+            if (file_exists("./temp/".$code.".png")) {
+                unlink("./temp/".$code.".png");
+            }
+            echo "expired";
         } else {
             if ($user != 0) {
-                $_SESSION['loggedin'] = $user;
+                $conn->query("DELETE FROM `qr_sessions` WHERE `code`='$code'");
+                if (file_exists("./temp/".$code.".png")) {
+                    unlink("./temp/".$code.".png");
+                }
+                setcookie("qr_login", $user, time() + 3600, "/");
                 echo "success";
+            } else {
+                echo "pending";
             }
         }
+    } else {
+        echo "404";
+    }
+}
+if (isset($_POST['delete'])) {
+    $code = $_POST['delete'];
+    $qrSessions = $conn->query("SELECT * FROM `qr_sessions` WHERE `code`='$code'");
+    if ($qrSessions->num_rows == 0) {
+        if (file_exists("./temp/".$code.".png")) {
+            unlink("./temp/".$code.".png");
+        }
+        echo "404";
+    } else {
+        $conn->query("DELETE FROM `qr_sessions` WHERE `code`='$code'");
+        if (file_exists("./temp/".$code.".png")) {
+            unlink("./temp/".$code.".png");
+        }
+        echo "ok";
     }
 }
 ?>

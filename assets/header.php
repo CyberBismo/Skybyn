@@ -429,12 +429,14 @@ if ($currentUrl == $devDomain) {
                 </div>
                 <div class="friend-referral">
                     <h3>Refer a friend</h3>
-                    <div class="fr_code" id="frc" <?php if($referral == "error") {?>onclick="genRef()"<?php }?>>
-                        <?php if($referral == "error") {?>Generate code<?php } else { echo $referral;}?>
-                    </div>
-                    <div class="fr_info" onclick="friExpand()">
-                        <i class="fa-regular fa-circle-question"></i> What is this? <span id="fri">+</span>
-                        <div class="fr_info_text" id="frit"><br>Refer a friend simply works as an invitation. By inviting a friend, you instantly become friends and earn 10 <a href="#">points</a>.</div>
+                    <div class="fr_body">
+                        <div class="fr_code" id="frc" <?php if($referral == "error") {?>onclick="genRef()"<?php }?>>
+                            <?php if($referral == "error") {?>Generate code<?php } else { echo $referral;}?>
+                        </div>
+                        <div class="fr_info" onclick="friExpand()">
+                            <i class="fa-regular fa-circle-question"></i> What is this? <span id="fri">+</span>
+                            <div class="fr_info_text" id="frit"><br>Refer a friend simply works as an invitation. By inviting a friend, you instantly become friends and earn 10 <a href="#">points</a>.</div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -1,5 +1,15 @@
 <?php include_once "conn.php";
 
+if (isset($_COOKIE['qr_login'])) {
+    $uid = $_COOKIE['qr_login'];
+    $checkUser = $conn->query("SELECT * FROM `users` WHERE `id`='$uid'");
+    if ($checkUser->num_rows == 1) {
+        $_SESSION['user'] = $uid;
+        setcookie('qr_login', '', time() - 3600, '/');
+        setcookie('qr', '', time() - 3600, '/');
+        ?><meta http-equiv="refresh" content="0; URL='./'" /><?php
+    }
+}
 
 # Get full url
 function domain() {
