@@ -1,9 +1,13 @@
 <?php include "./functions.php";
 
 $pid = $_POST['post_id'];
-$text = cleanUrls(nl2br(htmlspecialchars($_POST['comment'], ENT_QUOTES, 'UTF-8')));
+$text = $_POST['comment'];
+$fixedText = fixEmojis($text, null);
+$escapedText = htmlspecialchars($fixedText);
+$escapedText = addslashes($escapedText);
+$text = nl2br($escapedText);
 
-if (!empty($_POST['comment'])) {
+if (!empty($text)) {
     $conn->query("INSERT INTO `comments` (`post`,`user`,`content`,`date`) VALUES ('$pid','$uid','$text','$now')");
 }
 

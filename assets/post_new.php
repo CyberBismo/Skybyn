@@ -65,6 +65,8 @@ if ($proceed == true) {
             }
         }
     }
+
+    echo "";
 } else {
     echo "error"; // Indicate an error if the text is empty
 }

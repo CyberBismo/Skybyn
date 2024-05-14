@@ -1,5 +1,6 @@
 <?php include_once "conn.php";
 
+
 # Get full url
 function domain() {
     $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
@@ -74,6 +75,17 @@ function geoData($x) {
     
 // Example of usage
 // echo geoData("city.names.en"); // Outputs: Oslo (Grünerløkka District)
+}
+
+if (isset($_COOKIE['user'])) {
+    $uid = $_COOKIE['user'];
+    $checkUser = $conn->query("SELECT * FROM `users` WHERE `id`='$uid'");
+    if ($checkUser->num_rows > 0) {
+        $userData = $checkUser->fetch_assoc();
+        $_SESSION['user'] = $uid;
+        setcookie('user', '', time() - 3600, '/');
+        ?><meta http-equiv="refresh" content="0; URL='./'" /><?php
+    }
 }
 
 # Create cookie with country information
@@ -347,20 +359,20 @@ function createCookie($name, $value, $time, $time_type) {
 }
 
 # Get text in language - x = column name input | y = value | z = column name output
-#function language($x,$y,$z) {
-#    global $conn;
-#    if ($x == "id") {
-#        $attr = "WHERE `id`='$y'";
-#    } else
-#    if ($x == "name") {
-#        $attr = "WHERE `name`='$y'";
-#    }
-#    
-#    $getLangs = $conn->query("SELECT * FROM `countries` $attr");
-#    $LRow = $getLangs->fetch_assoc();
-#
-#    return $LRow[$z];
-#}
+function language($x,$y,$z) {
+    global $conn;
+    if ($x == "id") {
+        $attr = "WHERE `id`='$y'";
+    } else
+    if ($x == "name") {
+        $attr = "WHERE `name`='$y'";
+    }
+    
+    $getLangs = $conn->query("SELECT * FROM `countries` $attr");
+    $LRow = $getLangs->fetch_assoc();
+
+    #return $LRow[$z];
+}
 
 # Get user data
 function getUser($x, $y, $z) {
@@ -495,6 +507,236 @@ function checkFriendship($uid,$friend) {
         }
     } else {
         return "";
+    }
+}
+
+# Convert/Store emojis
+function fixEmojis($x,$flip) {
+    $emojiMap = array(
+        '🙂' => ':)',
+        '😁' => ':D',
+        '😛' => ':P',
+        '🙁' => ':(',
+        '😉' => ';)',
+        '😮' => ':O',
+        '😘' => ':*',
+        '❤️' => '<3',
+        '😕' => ':/',
+        '😐' => ':|',
+        '🤫' => ':$',
+        '👽' => ':o)',
+        '😞' => ':-(',
+        '😊' => ':-)',
+        '😂' => ':-D',
+        '😜' => ':-P',
+        '😕' => ':-/',
+        '😐' => ':-|',
+        '😉' => ';-)',
+        '😊' => '=)',
+        '😃' => '=D',
+        '😛' => '=P',
+        '💩' => ':poop:',
+        '🔥' => ':fire:',
+        '🚀' => ':rocket:',
+        '😀' => ':D1',
+        '😃' => ':D2',
+        '😄' => ':D3',
+        '😁' => ':D4',
+        '😆' => ':D5',
+        '😅' => ':D6',
+        '🤣' => ':D7',
+        '😂' => ':D8',
+        '🙂' => ':)1',
+        '🙃' => ':)2',
+        '🫠' => ':)3',
+        '😉' => ';)1',
+        '😊' => ':-)1',
+        '😇' => ':angel:0',
+        '🥰' => ':heart_eyes:0',
+        '😍' => ':heart_eyes_cat:0',
+        '🤩' => ':star_struck:0',
+        '😘' => ':kissing_heart:0',
+        '😗' => ':kissing:0',
+        '☺️' => ':relaxed:0',
+        '😚' => ':kissing_closed_eyes:0',
+        '😙' => ':kissing_smiling_eyes:0',
+        '🥲' => ':smiling_with_tear:0',
+        '😋' => ':yum:0',
+        '😛' => ':stuck_out_tongue:0',
+        '😜' => ':stuck_out_tongue_winking_eye:0',
+        '🤪' => ':zany_face:0',
+        '😝' => ':stuck_out_tongue_closed_eyes:0',
+        '🤑' => ':money_mouth_face:0',
+        '🤗' => ':hugging:0',
+        '🤭' => ':face_with_hand_over_mouth:0',
+        '🫢' => ':hand_over_mouth:0',
+        '🫣' => ':salivating_face:0',
+        '🤫' => ':shushing_face:0',
+        '🤔' => ':thinking:0',
+        '🫡' => ':hand_on_chin:0',
+        '🤐' => ':zipper_mouth_face:0',
+        '🤨' => ':face_with_raised_eyebrow:0',
+        '😐' => ':neutral_face:0',
+        '😑' => ':expressionless:0',
+        '😶' => ':no_mouth:0',
+        '🫥' => ':smiling_imp:0',
+        '😶‍🌫️' => ':face_in_clouds:0',
+        '😏' => ':smirk:0',
+        '😒' => ':unamused:0',
+        '🙄' => ':roll_eyes:0',
+        '😬' => ':grimacing:0',
+        '😮‍💨' => ':face_exhaling:0',
+        '🤥' => ':lying_face:0',
+        '😌' => ':relieved:0',
+        '😔' => ':pensive:0',
+        '😪' => ':sleepy:0',
+        '🤤' => ':drooling_face:0',
+        '😴' => ':sleeping:0',
+        '😷' => ':mask:0',
+        '🤒' => ':face_with_thermometer:0',
+        '🤕' => ':face_with_head_bandage:0',
+        '🤢' => ':nauseated_face:0',
+        '🤮' => ':face_vomiting:0',
+        '🤧' => ':sneezing_face:0',
+        '🥵' => ':hot_face:0',
+        '🥶' => ':cold_face:0',
+        '🥴' => ':woozy_face:0',
+        '😵' => ':dizzy_face:0',
+        '😵‍💫' => ':face_with_spiral_eyes:0',
+        '🤯' => ':exploding_head:0',
+        '🤠' => ':cowboy_hat_face:0',
+        '🥳' => ':partying_face:0',
+        '🥸' => ':disguised_face:0',
+        '😎' => ':sunglasses:0',
+        '🤓' => ':nerd_face:0',
+        '🧐' => ':face_with_monocle:0',
+        '😕' => ':confused:0',
+        '🫤' => ':slightly_frowning_face:0',
+        '😟' => ':worried:0',
+        '🙁' => ':slightly_frowning_face:0',
+        '☹️' => ':frowning_face:0',
+        '😮' => ':open_mouth:0',
+        '😯' => ':hushed:0',
+        '😲' => ':astonished:0',
+        '😳' => ':flushed:0',
+        '🥺' => ':pleading_face:0',
+        '🥹' => ':face_with_head_bandage:0',
+        '😦' => ':frowning:0',
+        '😧' => ':anguished:0',
+        '😨' => ':fearful:0',
+        '😰' => ':cold_sweat:0',
+        '😥' => ':disappointed_relieved:0',
+        '😢' => ':cry:0',
+        '😭' => ':sob:0',
+        '😱' => ':scream:0',
+        '😖' => ':confounded:0',
+        '😣' => ':persevere:0',
+        '😞' => ':disappointed:0',
+        '😓' => ':sweat:0',
+        '😩' => ':weary:0',
+        '😫' => ':tired_face:0',
+        '🥱' => ':yawning_face:0',
+        '😤' => ':triumph:0',
+        '😡' => ':rage:0',
+        '😠' => ':angry:0',
+        '🤬' => ':face_with_symbols_over_mouth:0',
+        '😈' => ':smiling_imp:0',
+        '👿' => ':imp:0',
+        '💀' => ':skull:0',
+        '☠️' => ':skull_and_crossbones:0',
+        '💩' => ':poop:0',
+        '🤡' => ':clown_face:0',
+        '👹' => ':japanese_ogre:0',
+        '👺' => ':japanese_goblin:0',
+        '👻' => ':ghost:0',
+        '👽' => ':alien:0',
+        '👾' => ':space_invader:0',
+        '🤖' => ':robot_face:0',
+        '💋' => ':kiss:0',
+        '💌' => ':love_letter:0',
+        '💘' => ':cupid:0',
+        '💝' => ':gift_heart:0',
+        '💖' => ':sparkling_heart:0',
+        '💗' => ':heartpulse:0',
+        '💓' => ':heartbeat:0',
+        '💞' => ':revolving_hearts:0',
+        '💕' => ':two_hearts:0',
+        '💟' => ':heart_decoration:0',
+        '❣️' => ':heavy_heart_exclamation:0',
+        '💔' => ':broken_heart:0',
+        '❤️‍🔥' => ':heart_on_fire:0',
+        '❤️‍🩹' => ':mending_heart:0',
+        '❤️' => ':heart:0',
+        '🧡' => ':orange_heart:0',
+        '💛' => ':yellow_heart:0',
+        '💚' => ':green_heart:0',
+        '💙' => ':blue_heart:0',
+        '💜' => ':purple_heart:0',
+        '🤎' => ':brown_heart:0',
+        '🖤' => ':black_heart:0',
+        '🤍' => ':white_heart:0',
+        '🙈' => ':see_no_evil:0',
+        '🙉' => ':hear_no_evil:0',
+        '🙊' => ':speak_no_evil:0',
+        '💯' => ':100:0',
+        '💢' => ':anger:0',
+        '💥' => ':boom:0',
+        '💫' => ':dizzy:0',
+        '💦' => ':sweat_drops:0',
+        '💨' => ':dash:0',
+        '🕳' => ':hole:0',
+        '💣' => ':bomb:0',
+        '💬' => ':speech_balloon:0',
+        '🗨' => ':left_speech_bubble:0',
+        '🗯' => ':right_anger_bubble:0',
+        '💭' => ':thought_balloon:0',
+        '💤' => ':zzz:0',
+        '👋' => ':wave:0',
+        '🤚' => ':raised_back_of_hand:0',
+        '🖐' => ':raised_hand_with_fingers_splayed:0',
+        '✋️' => ':raised_hand:0',
+        '🖖' => ':vulcan_salute:0',
+        '🫱' => ':palms_up_together:0',
+        '🫲' => ':handshake:0',
+        '🫳' => ':hand_with_index_and_middle_fingers_crossed:0',
+        '🫴' => ':love_you_gesture:0',
+        '👌' => ':ok_hand:0',
+        '🤌' => ':pinched_fingers:0',
+        '🤏' => ':pinching_hand:0',
+        '✌️' => ':victory_hand:0',
+        '🤞' => ':crossed_fingers:0',
+        '🫰' => ':raised_hand_with_part_between_middle_and_ring_fingers:0',
+        '🤟' => ':love_you_gesture:0',
+        '🤘' => ':metal:0',
+        '🤙' => ':call_me_hand:0',
+        '👈' => ':point_left:0',
+        '👉' => ':point_right:0',
+        '👆' => ':point_up_2:0',
+        '🖕' => ':middle_finger:0',
+        '👇' => ':point_down:0',
+        '☝️' => ':point_up:0',
+        '🫵' => ':index_pointing_up_dark_skin_tone:0',
+        '👍' => ':thumbs_up:0',
+        '👎' => ':thumbs_down:0',
+        '✊️' => ':fist_raised:0',
+        '👊' => ':fist_oncoming:0',
+        '🤛' => ':fist_left:0',
+        '🤜' => ':fist_right:0',
+        '👏' => ':clap:0',
+        '🙌' => ':raised_hands:0',
+        '🫶' => ':raising_hands:0',
+        '👐' => ':open_hands:0',
+        '🤲' => ':palms_up_together:0',
+        '🤝' => ':handshake:0',
+        '🙏' => ':pray:0',
+        '✍️' => ':writing_hand:0',
+        '👀' => ':eyes:0'
+    );
+
+    if ($flip == 1) {
+        return strtr($x, array_flip($emojiMap));
+    } else {
+        return strtr($x, $emojiMap);
     }
 }
 
@@ -744,6 +986,14 @@ if (isset($_SESSION['user'])) {
     if ($verified == "0") {
         
     }
+
+    if (isset($_COOKIE['qr'])) {
+        $code = $_COOKIE['qr'];
+        if (file_exists("qr/temp/$code.png")) {
+            unlink("qr/temp/$code.png");
+        }
+        setcookie("qr", "", time() - 3600);
+    }
     
     #$conn->query("UPDATE `users` SET `ip`='$newIP' WHERE `id`='$uid'");
 
@@ -795,7 +1045,7 @@ if (isset($_SESSION['user'])) {
     }
     $referral = referralCode($uid);
 
-    #$countryName = language('id',$country,'nicename');
+    $countryName = language('id',$country,'nicename');
     #$CName = strtolower($countryName);
     
 

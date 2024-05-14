@@ -23,7 +23,7 @@ if ($post_user_avatar == "./") {
 }
 
 $post_video = convertVideo($post_content);
-$post_content_res = htmlspecialchars(cleanUrls(nl2br($post_content)), ENT_QUOTES, 'UTF-8');
+$post_content_res = fixEmojis(cleanUrls(nl2br($post_content)), 1);
 ?>
 
 <div class="post_header">
@@ -77,7 +77,7 @@ $post_content_res = htmlspecialchars(cleanUrls(nl2br($post_content)), ENT_QUOTES
                 $commentID = $commentData['id'];
                 $commentUsername = getUser("id",$commentData['user'],"username");
                 $commentAvatar = getUser("id",$commentData['user'],"avatar");
-                $commentText = htmlspecialchars(cleanUrls(nl2br($commentData['content'])), ENT_QUOTES, 'UTF-8');
+                $commentText = fixEmojis(nl2br(cleanUrls($commentData['content'])), 1);
                 
                 if ($commentAvatar == "") {
                     $commentAvatar = "./assets/images/logo_faded_clean.png";

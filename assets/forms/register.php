@@ -330,7 +330,7 @@
                                             email: email.value
                                         }
                                     }).done(function(response) {
-                                        <?php if ($dev_access == false) {?>
+                                        <?php if (isset($dev_access) && $dev_access == false) {?>
                                         if (response === "sent") {
                                             updateUIForEmailSent();
                                         } else

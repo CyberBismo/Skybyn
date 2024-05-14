@@ -10,7 +10,7 @@ if ($getMessages->num_rows > $current) {
     $message = mysqli_fetch_assoc($getMessages);
     $message_id = $message['id'];
     $message_user = $message['user'];
-    $message_content = htmlspecialchars(cleanUrls(nl2br($message['content'])), ENT_QUOTES, 'UTF-8');
+    $message_content = $message['content'];
     $message_created = date("Y-m-d H:i:s", $message['date']);
     $message_system = $message['system'];
     

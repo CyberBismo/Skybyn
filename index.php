@@ -170,12 +170,6 @@ if (isset($_COOKIE['logged'])) {
             <div class="register" id="register-form" <?php if ($signup == false) {?>hidden<?php }?>>
                 <?php include("assets/forms/register.php");?>
             </div>
-            <div class="links">
-                <?php if (skybyn('login-form') == "login") {
-                    if ($signup == false) {?>
-                <span onclick="window.location.href='/forgot'">Forgot password?</span>
-                <?php }}?>
-            </div>
         </div>
         <?php if (skybyn('login-form') == "login") {
             if ($signup == false) {?>
@@ -196,12 +190,6 @@ if (isset($_COOKIE['logged'])) {
             </div>
             <div class="register" id="register-form" <?php if ($signup == false) {?>hidden<?php }?>>
                 <?php include("assets/forms/register.php");?>
-            </div>
-            <div class="links">
-                <?php if (skybyn('login-form') == "login") {
-                    if ($signup == false) {?>
-                <span onclick="window.location.href='/forgot'">Forgot password?</span>
-                <?php }}?>
             </div>
         </div>
         <?php if (skybyn('register') == "1") {

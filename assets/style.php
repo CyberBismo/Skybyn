@@ -804,17 +804,46 @@
                 border: 1px solid rgba(255,255,255,.5);
                 overflow: hidden;
             }
-            .center_form .form .login .qr_login {
-                width: 200px;
-                height: 200px;
-                margin: 0 auto;
-                padding: 0;
+            .center_form .form .login .show_qr_login {
+                cursor: pointer;
+            }
+            .center_form .form .login .show_qr_login span {
+                padding-right: 30px;
                 box-sizing: border-box;
             }
-            .center_form .form .login .qr_login img {
+            .center_form .form .login .show_qr_login i {
+                float: right;
+                margin-top: -13px;
+                font-size: 18px;
+            }
+            .center_form .form .login .qr_login {
+                width: 400px;
+                display: none;
+                justify-content: space-between;
+            }
+            .center_form .form .login .qr_login .qr_login_text {
+                width: 50%;
+            }
+            .center_form .form .login .qr_login .qr_login_text p {
+                padding-right: 10px;
+            }
+            .center_form .form .login .qr_login .qr_login_img {
+                width: 50%;
+                padding: 10px;
+                background: white;
+                border-radius: 10px;
+                box-sizing: border-box;
+                overflow: hidden;
+            }
+            .center_form .form .login .qr_login .qr_login_img img {
                 width: 100%;
-                height: 100%;
-                border: none;
+                height: auto;
+                max-height: 100%;
+                object-fit: cover;
+                object-position: center;
+            }
+            .center_form .form .login .normal_login {
+                vertical-align: top;
             }
             .center_form .form .register input[type=submit] {
                 float: right;

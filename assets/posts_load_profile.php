@@ -30,7 +30,7 @@ while ($post = $getPosts->fetch_assoc()) {
     }
 
     $post_video = convertVideo($post_content);
-    $post_content_res = cleanUrls(nl2br(htmlspecialchars($post_content, ENT_QUOTES, 'UTF-8')));
+    $post_content_res = fixEmojis(cleanUrls(nl2br($post_content)), 1);
     ?>    
 
 <div class="post" id="post_<?=$post_id?>">
@@ -97,7 +97,7 @@ while ($post = $getPosts->fetch_assoc()) {
                         $commentUser = $commentData['user'];
                         $commentUsername = getUser("id",$commentData['user'],"username");
                         $commentAvatar = getUser("id",$commentData['user'],"avatar");
-                        $commentText = cleanUrls(nl2br(htmlspecialchars($commentData['content'], ENT_QUOTES, 'UTF-8')));
+                        $commentText = $commentData['content'];
                         
                         if ($commentAvatar == "") {
                             $commentAvatar = "./assets/images/logo_faded_clean.png";

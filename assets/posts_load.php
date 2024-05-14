@@ -33,7 +33,7 @@ while ($post = $getPosts->fetch_assoc()) {
     }
 
     $post_video = convertVideo($post_content);
-    $post_content_res = cleanUrls(nl2br(htmlspecialchars($post_content, ENT_QUOTES, 'UTF-8')));
+    $post_content_res = fixEmojis(cleanUrls(nl2br($post_content)), 1);
 ?>
 
 <div class="post" id="post_<?=$post_id?>">
@@ -85,7 +85,7 @@ while ($post = $getPosts->fetch_assoc()) {
         </div>
         <?php }?>
         <div class="post_comments">
-            <div class="post_comment_count"><?=$comments?><i class="fa-solid fa-comments"></i></div>
+            <div class="post_comment_count"><?=$comment_count?><i class="fa-solid fa-comments"></i></div>
             <div class="post_comment">
                 <div class="post_comment_user">
                     <div class="post_comment_user_avatar">
@@ -99,23 +99,21 @@ while ($post = $getPosts->fetch_assoc()) {
                 </div>
             </div>
             <div id="post_comments_<?=$post_id?>">
-                <?php $getComment = $conn->query("SELECT * FROM `comments` WHERE `post`='$post_id' ORDER BY `date` ASC");
+                <?php $getComment = $conn->query("SELECT * FROM `comments` WHERE `post`='$post_id' ORDER BY `date` DESC");
                 if ($getComment->num_rows > 0) {
                     while($commentData = $getComment->fetch_assoc()) {
                         $commentID = $commentData['id'];
                         $commentUser = $commentData['user'];
                         $commentUsername = getUser("id",$commentData['user'],"username");
                         $commentAvatar = getUser("id",$commentData['user'],"avatar");
-                        $commentText = cleanUrls(nl2br(htmlspecialchars($commentData['content'], ENT_QUOTES, 'UTF-8')));
+                        $commentText = fixEmojis(nl2br(cleanUrls($commentData['content'])), 1);
                         
                         if ($commentAvatar == "") {
                             $commentAvatar = "./assets/images/logo_faded_clean.png";
                         }?>
                 <div class="post_comment" id="comment_<?=$commentID?>">
                     <div class="post_comment_user">
-                        <div class="post_comment_user_avatar">
-                            <img src="<?=$commentAvatar?>">
-                        </div>
+                        <img src="<?=$commentAvatar?>">
                         <span><?=$commentUsername?></span>
                     </div>
                     <div class="post_comment_content"><?=$commentText?></div>
