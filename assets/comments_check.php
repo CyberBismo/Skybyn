@@ -15,7 +15,9 @@ if ($getComment->num_rows > 0) {
         }?>
 <div class="post_comment" id="comment_<?=$commentID?>">
     <div class="post_comment_user">
-        <img src="<?=$commentAvatar?>">
+        <div class="post_comment_user_avatar">
+            <img src="<?=$commentAvatar?>">
+        </div>
         <span><?=$commentUsername?></span>
     </div>
     <div class="post_comment_content"><?=$commentText?></div>

@@ -23,8 +23,8 @@ if ($checkEmail->num_rows == 1) {
             
             $checkIPLog = $conn->query("SELECT * FROM `ip_history` WHERE `user_id`='$uid' AND `ip`='$currentIP'");
             $checkIPData = $checkIPLog->fetch_assoc();
-            #$ip_trusted = $checkIPData['trusted'];
-            #$ip_code = $checkIPData['code'];
+            $ip_trusted = $checkIPData['trusted'];
+            $ip_code = $checkIPData['code'];
         
             //if ($checkIPLog->num_rows == 0) {
             //    $conn->query("INSERT INTO `ip_history` (`user_id`,`date`,`ip`,`trusted`,`code`) VALUES ('$uid','$now','$currentIP','0','$token')");

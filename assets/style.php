@@ -3006,9 +3006,6 @@
                 border-radius: 10px;
                 box-sizing: border-box;
             }
-            .fr_body {
-                height: 50px;
-            }
             .fr_code {
                 margin-bottom: 10px;
                 padding: 10px;

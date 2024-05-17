@@ -6,9 +6,17 @@ if (!isset($_SESSION['user'])) {
 ?>
         <div class="page-container">
             <div class="page-head">
-                Pages
+                Browse Pages
             </div>
             <div class="pages-browse">
+                <!--div class="pb-box">
+                    <div class="pb-wallpaper"><img src="/assets/images/clouds-old.png"></div>
+                    <div class="pb-icon"><img src="/assets/images/logo_fav.png"></div>
+                    <div class="pb-info">
+                        <span>Name</span>
+                        <p>Description</p>
+                    </div>
+                </div-->
                 <?php $getPages = $conn->query("SELECT * FROM `pages` WHERE `locked`='0'");
                 if ($getPages->num_rows > 0) {
                     while($page = $getPages->fetch_assoc()){
