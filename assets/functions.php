@@ -1,4 +1,4 @@
-<?php include_once "conn.php";
+<?php include_once "../assets/conn.php";
 
 if (isset($_COOKIE['qr_login'])) {
     $uid = $_COOKIE['qr_login'];
@@ -1086,6 +1086,8 @@ if (isset($_SESSION['user'])) {
     if (empty($username)) {
         $_SESSION['username'];
     }
+
+    $myOwnedGroups = $conn->query("SELECT * FROM `groups` WHERE `owner`='$uid'");
 
     ## Wallet
     $getWallet = $conn->query("SELECT * FROM `wallets` WHERE `user`='$uid'");

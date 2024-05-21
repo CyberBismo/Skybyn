@@ -1,5 +1,5 @@
 <?php
-include "./functions.php";
+include_once "../assets/functions.php";
 
 $getPosts = $conn->query("SELECT p.*
     FROM posts p
