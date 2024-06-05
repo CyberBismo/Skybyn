@@ -1,9 +1,4 @@
-<?php include_once "assets/header.php";
-include_once "assets/navigation.php";
-
-if (!isset($_SESSION['driver'])) {
-    header("Location: ./car.php?signin");
-}
+<?php include_once "assets/navigation.php";
 
 if (isset($_SESSION['driver'])) {
     $id = $_SESSION['driver'];
@@ -72,14 +67,14 @@ if ($meets->num_rows > 0) {
 
 <style>
 </style>
-<?php if (isset($_SESSION['driver'])) {?>
-<div class="car">
-    <div class="driver">
-        <div class="profile">
+<div class="dashboard">
+    <?php if (isset($_SESSION['driver'])) {?>
+    <div class="car">
+        <div class="driver profile">
             Brukernavn:<br>
             <b><?=$username?></b><br>
             <br>
-            Biler:<br>
+            Mine biler:<br>
             <?php
             $cars = $conn->query("SELECT * FROM `cars` WHERE `driver` = '$id'");
             $carsCount = $cars->num_rows;
@@ -105,32 +100,33 @@ if ($meets->num_rows > 0) {
                 <button type="submit" name="add_car"></button>
             </form>
             <?php }?>
-        </div>
-        <div class="buttons">
-            <button onclick="window.location.href='.?logout'" class="signout">Logg ut</button>
-            <?php if (checkMeet($id) == false) {?>
-            <button onclick="window.location.href='./meet'" class="meet_btn">Opprett treff</button>
-            <?php } else {?>
-            <button onclick="window.location.href='./meet?id=<?=checkMeet($id)?>'" class="meet_btn">Treff info</button>
-            <?php }?>
-        </div>
-        <script>
-            function showCar(plate) {
-                window.location.href = "./car?s="+plate;
-            }
-            function makeDefault(plate) {
-                window.location.href = "./?setDefault="+plate;
-            }
-            function deleteCar(plate) {
-                if (confirm("Er du sikker på at du vil fjerne bilen?")) {
-                    window.location.href = "./?removeCar="+plate;
+            <div class="buttons">
+                <button onclick="window.location.href='.?logout'" class="signout">Logg ut</button>
+                <button onclick="window.location.href='profile'" class="meet_btn">Se profil</button>
+            </div>
+            <script>
+                function showCar(plate) {
+                    window.location.href = "car?s="+plate;
                 }
-            }
-        </script>
+                function makeDefault(plate) {
+                    window.location.href = "./?setDefault="+plate;
+                }
+                function deleteCar(plate) {
+                    if (confirm("Er du sikker på at du vil fjerne bilen?")) {
+                        window.location.href = "./?removeCar="+plate;
+                    }
+                }
+            </script>
+        </div>
     </div>
-</div>
-<?php }?>
-<div class="dashboard">
+    <?php } else {?>
+    <div class="car">
+        <div class="car_btns">
+            <button onclick="window.location.href='car?signin'" class="login_btn">Logg inn / Bli sjåfør</button>
+        </div>
+    </div>
+    <?php }?>
+
     <?php if ($warning == true) {?>
     <div class="card red">
         <h1>Advarsel</h1>
@@ -153,7 +149,7 @@ if ($meets->num_rows > 0) {
     <div class="card green">
         <h1>Videoer</h1>
         <p>Det er delt videoer for dette treffet.</p>
-        <button onclick="window.location.href='./video'">Se videoer</button>
+        <button onclick="window.location.href='video'">Se videoer</button>
     </div>
     <?php }
 
@@ -165,28 +161,26 @@ if ($meets->num_rows > 0) {
             $myMeetInfo = $myMeetInfo->fetch_assoc();
             $myMeet_host = $myMeetInfo['driver'];
             $myMeet_name = $myMeetInfo['name'];
-            $myMeet_time = $myMeetInfo['time'];
+            $myMeet_date = date("d. M", $myMeetInfo['time']);
+            $myMeet_time = date("H:i", $myMeetInfo['time']);
             $myMeet_location = $myMeetInfo['location'];
-            $myMeet_visibility = $myMeetInfo['address_visible'];
+            $myMeet_private = $myMeetInfo['private'];
             $myMeet_cancelled = $myMeetInfo['cancelled'];
             $myMeet_warning = $myMeetInfo['warning'];
             $myMeet_info = $myMeetInfo['info'];
             $myMeet_police = $myMeetInfo['police'];
+            $myMeet_code = $myMeetInfo['code'];
         ?>
     <div class="card white">
-        <h1><?=$meet_name?></h1>
+        <h1><?=$myMeet_name?></h1>
         <?php if ($myMeet_cancelled == 1) {?>
-        <p>Treffet er avlyst</p>
+        <p>Du har avlyst dette treffet.</p>
+        <p>Slett det for å opprette nytt.</p>
         <?php } else {?>
-        <?php if ($meet_visibility == 1) {?>
-        <p>Adresse: <?=$meet_location?></p>
-        <p>Tidspunkt: <?=$meet_time?></p>
-        <?php } else {
-        if ($meet_host == $id) {?>
-        <button onclick="window.location.href='./meet?id=<?=$meetInfo['id']?>'">Treff info</button>
-        <?php } else {?>
-        <p>Informasjon utilgjengelig</p>
-        <?php }}}?>
+        <p>Dato: <?=$myMeet_date?></p>
+        <p>Tidspunkt: <?=$myMeet_time?></p>
+        <p>Adresse: <a href="<?=openMaps($myMeet_location,detectDevice())?>"><?=$myMeet_location?></a></p>
+        <?php }?>
     </div>
     <?php } else {
         $checkJoiners = $conn->query("SELECT * FROM `joiners` WHERE `joiner` = '$id'");
@@ -217,7 +211,13 @@ if ($meets->num_rows > 0) {
         <p>Informasjon utilgjengelig</p>
         <?php }}?>
     </div>
-    <?php }}
+    <?php } else {?>
+    <div class="card white">
+        <h1>Du har ingen planlagte treff</h1>
+        <button onclick="window.location.href='meet'">Opprett nå</button>
+    </div>
+    <?php }
+        }
     }
 
 

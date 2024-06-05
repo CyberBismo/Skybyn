@@ -1,11 +1,12 @@
-<?php include_once "assets/functions.php";?>
+<?php require_once "assets/functions.php";?>
     <head>
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="theme-color" content="#000000">
         <link rel="icon" href="assets/images/start.png" type="image/png">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="apple-mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+        <meta name="apple-mobile-web-app-status-bar-style" content="white-translucent">
         <title>Rimeet</title>
         <style>
             html, body {
@@ -110,13 +111,25 @@
                 font-size: 1.5em;
             }
             .meet input {
+                width: 100%;
                 padding: 10px;
                 border: none;
                 border-radius: 10px;
                 font-size: 1.5em;
                 outline: none;
+                box-sizing: border-box;
+            }
+            .meet textarea {
+                width: 100%;
+                padding: 10px;
+                border: none;
+                border-radius: 10px;
+                font-size: 1.5em;
+                outline: none;
+                box-sizing: border-box;
             }
             .meet button {
+                width: 100%;
                 padding: 10px;
                 border: none;
                 border-radius: 10px;
@@ -128,6 +141,16 @@
             .meet button:disabled {
                 background: grey;
             }
+            .meet .split {
+                display: flex;
+                justify-content: space-between;
+            }
+            .meet .split input {
+                width: 90%;
+            }
+            .meet .split button {
+                width: 10%;
+            }
             .meet .meet_info {
                 display: flex;
                 flex-direction: column;
@@ -137,13 +160,6 @@
             .meet .meet_info .address {
                 display: flex;
                 justify-content: space-between;
-            }
-            .meet .meet_info .address form {
-                padding-top: 15px;
-            }
-            .meet .meet_info .address label {
-                font-size: 1em !important;
-                cursor: pointer;
             }
             .meet .meet_options {
                 display: block;
@@ -215,7 +231,7 @@
                 width: 90%;
                 max-width: 600px;
                 margin: 0 auto;
-                padding: 20px;
+                padding: 20px 10px;
                 border-radius: 10px;
                 color: white;
                 box-sizing: border-box;
@@ -255,7 +271,7 @@
                 padding: 10px;
                 border: none;
                 border-radius: 10px;
-                font-size: 1.5em;
+                font-size: 1em;
                 text-align: center;
                 outline: none;
             }
@@ -273,7 +289,7 @@
             }
             .car .driver {
                 width: 100%;
-                max-width: 400px;
+                max-width: 600px;
                 margin: 0 auto;
                 padding: 10px;
                 border-radius: 10px;
@@ -281,32 +297,39 @@
                 color: white;
                 box-sizing: border-box;
             }
-            .car .driver .profile {
+            .car .profile {
+                width: 100%;
+                max-width: 600px;
                 padding: 20px;
                 font-size: 1em;
+                margin: 0 auto;
+                color: white;
+                background: rgba(0, 0, 0, 0.3);
+                border-radius: 10px;
+                box-sizing: border-box;
             }
-            .car .driver .profile h1 {
+            .car .profile h1 {
                 font-size: 2em;
             }
-            .car .driver .profile b {
+            .car .profile b {
                 padding: 0 5px;
                 font-size: 1.5em;
             }
-            .car .driver .profile .profile_car {
+            .car .profile .profile_car {
                 display: flex;
                 justify-content: space-between;
             }
-            .car .driver .profile ul {
+            .car .profile ul {
                 list-style-type: none;
                 padding: 0;
             }
-            .car .driver .profile ul li {
+            .car .profile ul li {
                 padding: 5px;
             }
-            .car .driver .add_vehicle {
+            .car .profile .add_vehicle {
                 padding-top: 5px;
             }
-            .car .driver .add_vehicle input {
+            .car .profile .add_vehicle input {
                 padding: 0 5px;
                 color: white;
                 background: none;
@@ -315,19 +338,20 @@
                 font-size: 1em;
                 outline: none;
             }
-            .car .driver .add_vehicle button {
+            .car .profile .add_vehicle button {
                 display: none;
             }
-            .car .driver .buttons {
+            .car .profile .buttons {
                 display: flex;
                 justify-content: space-between;
+                margin-left: -10px;
+                margin-right: -10px;
+                margin-bottom: -10px;
             }
-            .car .driver .buttons .signout {
-                background-color: #f44336;
+            .car .profile .buttons button {
                 border: none;
-                border-radius: 20px 20px 20px 5px;
                 color: white;
-                padding: 5px 20px;
+                padding: 15px;
                 text-align: center;
                 text-decoration: none;
                 display: inline-block;
@@ -335,17 +359,58 @@
                 margin: 4px 2px;
                 cursor: pointer;
             }
-            .car .driver .buttons .meet_btn {
+            .car .profile .buttons .signout {
+                background-color: #f44336;
+                border-radius: 20px 20px 20px 5px;
+            }
+            .car .profile .buttons .meet_btn {
                 background-color: rgba(0, 100, 255, 0.7);
-                border: none;
                 border-radius: 20px 20px 5px 20px;
+            }
+            .car .drivers {
+                max-height: calc(50vh - 200px);
+            }
+            .car .drivers .profile {
+                padding: 20px;
+                border-radius: 10px;
+                background: rgba(0, 0, 0, 0.5);
                 color: white;
-                padding: 15px 32px;
+            }
+            .car .drivers .profile .details {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+            }
+            .car .drivers .profile .details img {
+                width: 100px;
+                height: 100px;
+                border-radius: 20px;
+            }
+            .car .drivers .profile .details .contact {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+            }
+            .car .drivers .profile form {
+                width: 100%;
+                margin-top: 10px;
+            }
+            .car .drivers .profile form button {
+                width: 100%;
+                padding: 10px;
+                color: white;
+                background: black;
+                border: none;
+                border-radius: 10px;
+                font-size: 1em;
+                cursor: pointer;
+            }
+            .car .drivers .profile .driver_cars {
+                height: 50px;
+                overflow: hidden;
+            }
+            .car .drivers .profile .driver_cars h3 {
                 text-align: center;
-                text-decoration: none;
-                display: inline-block;
-                font-size: 16px;
-                margin: 4px 2px;
                 cursor: pointer;
             }
             .car .cars {
@@ -426,6 +491,10 @@
                 background: black;
                 color: white;
                 box-sizing: border-box;
+            }
+            .login a {
+                color: white;
+                text-decoration: none;
             }
             .login input {
                 padding: 10px;
@@ -520,8 +589,10 @@
             .videos h1 {
                 width: 100%;
                 text-align: center;
-                margin: 20px 0px;
+                margin: 0;
+                padding: 20px 0px;
                 font-size: 20px;
+                box-sizing: border-box;
             }
             .video_gallery {
                 display: grid;
@@ -592,6 +663,7 @@
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
+                z-index: 1000;
             }
             .start_logo {
                 position: absolute;

@@ -1,0 +1,5 @@
+[05-Jun-2024 10:04:31 America/Boise] PHP Warning:  Undefined variable $meet in /home3/elitesys/public_html/rimeet/meet.php on line 37
+[05-Jun-2024 10:04:31 America/Boise] PHP Warning:  Trying to access array offset on null in /home3/elitesys/public_html/rimeet/meet.php on line 37
+[05-Jun-2024 10:04:31 America/Boise] PHP Warning:  Undefined variable $meet in /home3/elitesys/public_html/rimeet/meet.php on line 48
+[05-Jun-2024 10:04:31 America/Boise] PHP Warning:  Trying to access array offset on null in /home3/elitesys/public_html/rimeet/meet.php on line 48
+[05-Jun-2024 10:04:31 America/Boise] PHP Warning:  Undefined variable $id in /home3/elitesys/public_html/rimeet/meet.php on line 48

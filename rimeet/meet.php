@@ -1,10 +1,6 @@
 <?php include_once "assets/header.php";
 include_once "assets/navigation.php";
 
-if (!isset($_SESSION['driver'])) {
-    header("Location: ./car.php?signin");
-}
-
 if (isset($_GET['id'])) {
     if (!empty($_GET['id']) && is_numeric($_GET['id']) && $_GET['id'] > 0 && $_GET['id'] != null) {
         $meet_id = $_GET['id'];
@@ -13,9 +9,44 @@ if (isset($_GET['id'])) {
         $result = $stmt->get_result();
         $meet = $result->fetch_assoc();
         $stmt->close();
+        if ($meet['private'] == 1) {
+            if (isset($_GET['code']) && !empty($_GET['code'])) {
+                $code = $_GET['code'];
+                if ($code == $meet['code']) {
+                    $access = true;
+                } else {
+                    $access = false;
+                }
+            }
+        } else {
+            $access = true;
+        }
     } else {
-        echo "<script>window.location.href = './meet';</script>";
+        $meet_id = $_GET['id'];
+        $checkMeet = $conn->query("SELECT * FROM `meets` WHERE `id` = '$meet_id'");
+        if ($checkMeet->num_rows == 0) {
+            echo "<script>window.location.href = './';</script>";
+        }
     }
+} else {
+    if (!isset($_SESSION['driver'])) {
+        echo "<script>window.location.href = './';</script>";
+    }
+}
+
+if ($meet['private'] == 1) {
+    if (isset($_POST['unlock'])) {
+        $password = $_POST['password'];
+        if ($password == $meet['code']) {
+            $access = true;
+        } else {
+            $access = false;
+        }
+    }
+}
+
+if ($meet['driver'] == $id) {
+    $access = true;
 }
 
 if (isset($_POST['return_meet'])) {
@@ -25,34 +56,42 @@ if (isset($_POST['return_meet'])) {
         echo "<script>window.location.href = './meet';</script>";
     }
 }
+
+if (isset($_POST['return'])) {
+    echo "<script>window.location.href = './';</script>";
+}
 ?>
 <style>
 </style>
-<?php if (isset($_GET['id'])) {?>
 <div class="meet">
+<?php if (isset($_GET['id'])) {
+    if ($access == false) {?>
+    <h1>Privat treff</h1>
+    <form method="post">
+        <input type="hidden" name="id" value="<?=$meet_id?>">
+        <label for="password">Adgangskode:</label>
+        <input type="password" name="password" id="password" required><br>
+        <br>
+        <button type="submit" name="unlock">Lås opp</button>
+    </form>
+    <form method="post">
+        <button type="submit" name="return">Tilbake</button>
+    </form>
+<?php } else {?>
+    <?php if ($meet['driver'] != $id && $meet['cancelled'] == "1") {?>
+    <h1>Treffet er avlyst</h1>
+    <?php } else {?>
+    <?php if ($meet['cancelled'] == "1") {?>
+    <h1>Avlyst</h1>
+    <?php } else {?>
     <h1><?=$meet['name']?></h1>
     <div class="meet_info">
-        <p>Dato: <?=date('d.M - H:i:s', strtotime($meet['time']))?></p>
+        <p>Dato: <?=date('d.M - H:i', strtotime($meet['time']))?></p>
         <div class="address">
-            <p>Adresse: <?=$meet['address_visible'] == 1 ? $meet['location'] : "Skjult"?></p>
-            <?php if (isset($_SESSION['driver'])) {
-            if ($meet['driver'] == $_SESSION['driver']) {?>
-            <form method="post">
-                <input type="hidden" name="id" value="<?=$meet_id?>">
-                <label for="address_visible"><?=$meet['address_visible'] == 1 ? "Skjul" : "Vis"?></label>
-                <input type="checkbox" name="address_visible" id="address_visible" <?=$meet['address_visible'] == 1 ? "checked" : ""?> hidden>
-                <input type="submit" name="meet_visibility" id="meet_visibility" hidden>
-            </form>
-            <script>
-                document.getElementById('address_visible').addEventListener('change', function() {
-                    setTimeout(() => {
-                        this.form.submit();
-                    }, 200);
-                });
-            </script>
-            <?php }}?>
+            <p>Adresse: <?=$meet['location']?></p>
         </div>
     </div>
+    <?php }}?>
     <?php if (isset($_SESSION['driver'])) {?>
     <div class="meet_options">
         <?php if (isset($_POST['cancel_meet'])) {?>
@@ -64,7 +103,8 @@ if (isset($_POST['return_meet'])) {
         </form>
         <hr>
         <?php } else
-        if (isset($_POST['editMeet'])) {?>
+        if (isset($_POST['editMeet'])) {
+            if ($meet['cancelled'] == 0) {?>
         <form method="post">
             <input type="hidden" name="id" value="<?=$meet_id?>">
             <label for="name">Navn</label>
@@ -75,12 +115,26 @@ if (isset($_POST['return_meet'])) {
             <input type="time" name="time" id="time" value="<?=date('H:i', strtotime($meet['time']))?>" required>
             <label for="location">Sted</label>
             <input type="text" name="location" id="location" value="<?=$meet['location']?>" required>
+            <label for="private">Adgangskode</label>
+            <input type="text" name="code" id="private" placeholder="Gjør treffet privat" value="<?=$meet['code']?>" title="Fyll dette feltet for å gjøre informasjon utilgjengelig før man har skrevet inn koden." autocomplete="new-password">
+            <label for="info">Informasjon</label>
+            <textarea name="info" id="info" rows="5" placeholder="Informasjon om treffet"><?=$meet['info']?></textarea>
+            <label for="police">Politiet</label>
+            <input type="text" name="police" id="police" value="<?=$meet['police']?>" placeholder="Politiet er varslet" title="Fyll dette feltet for å informere om at politiet er varslet.">
+            <label for="warning">Advarsel</label>
+            <input type="text" name="warning" id="warning" value="<?=$meet['warning']?>" placeholder="Advarsel" title="Fyll dette feltet for å informere om at det er en advarsel.">
             <button type="submit" name="updateMeet">Oppdater</button>
         </form>
+        <?php }?>
         <form method="post">
+            <input type="hidden" name="id" value="<?=$meet_id?>">
+            <?php if ($meet['cancelled'] == 1) {?>
+            <button type="submit" name="deleteMeet">Slett treff</button>
+            <?php } else {?>
             <button type="submit" name="return_meet">Avbryt</button>
             <hr>
             <button type="submit" name="cancel_meet">Avlys Treff</button>
+            <?php }?>
         </form>
         <hr>
         <?php } else {?>
@@ -115,21 +169,31 @@ if (isset($_POST['return_meet'])) {
         <p>Ingen deltakere</p>
         <?php }?>
     </div>
-</div>
-<?php } else {?>
-<div class="meet">
+<?php }} else {
+    if (isset($_SESSION['driver'])) {?>
     <h1>Opprett treff</h1>
     <form method="post">
         <label for="name">Navn</label><br>
-        <input type="text" name="name" id="name" placeholder="<?=driver("id",$id,"username")?>'s treff" autocomplete="off"><br>
+        <input type="text" name="name" id="name" placeholder="<?=driver("id",$id,"username")?>'s treff" autocomplete="off"><br><br>
         <label for="date">Dato</label><br>
-        <input type="date" name="date" id="date" required><br>
+        <input type="date" name="date" id="date" min="<?= date('Y-m-d') ?>" required><br><br>
         <label for="time">Tid</label><br>
-        <input type="time" name="time" id="time" required><br>
+        <input type="time" name="time" id="time" required><br><br>
         <label for="location">Sted</label><br>
-        <input type="text" name="location" id="location" placeholder="Adresse" required autocomplete="off"><br>
+        <input type="text" name="location" id="location" placeholder="Adresse" required autocomplete="off"><br><br>
+        <label for="private">Lukket treff?</label><br>
+        <div class="split">
+            <input type="text" name="code" id="private" placeholder="Sett adgangskode her" title="Fyll dette feltet for å gjøre informasjon utilgjengelig uten kode" autocomplete="new-password">
+            <button type="button" onclick="genCode()"><i class="fa-solid fa-repeat"></i></button>
+        </div>
         <br>
         <button type="submit" name="newMeet">Opprett</button>
     </form>
+    <script>
+        function genCode() {
+            var code = Math.random().toString(36).substring(4, 10).toUpperCase();
+            document.getElementById('private').value = code;
+        }
+    </script>
+<?php }}?>
 </div>
-<?php }?>
