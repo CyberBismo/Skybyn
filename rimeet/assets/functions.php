@@ -25,17 +25,32 @@ function checkUrl() {
     } else
     if (strpos($url, "profile") !== false) {
         return "profile";
+    } else
+    if (strpos($url, "forgot") !== false) {
+        return "forgot";
     } else {
         return "home";
     }
 }
 
-function navItem($x) {
+function navItem($x,$driver) { # x = position, y = driver
     global $nav_item_left, $nav_item_center, $nav_item_right;
     $url = checkUrl();
+
+    if ($driver == null) {
+        $meet = "";
+    } else {
+        $meet_id = checkMeet($driver);
+        if ($meet_id != null) {
+            $meet = "?id=$meet_id";
+        } else {
+            $meet = "";
+        }
+    }
+
     if ($url == "car") {
-        $nav_item_left = '<a href="meet" class="nav-link"><i class="fa-solid fa-car"></i></a>'; # Meet
-        $nav_item_center = '<a href="./" class="nav-link"><i class="fa-solid fa-house"></i></a>'; # Home
+        $nav_item_left = '<a href="./" class="nav-link"><i class="fa-solid fa-house"></i></a>'; # Home
+        $nav_item_center = '<a id="searchBtn" class="nav-link"><i class="fa-solid fa-magnifying-glass"></i></a>'; # Search
         $nav_item_right = '<a href="info" class="nav-link"><i class="fa-solid fa-circle-info"></i></a>'; # Info
     } else
     if ($url == "video") {
@@ -44,22 +59,27 @@ function navItem($x) {
         $nav_item_right = '<a href="./" class="nav-link"><i class="fa-solid fa-home"></i></a>'; # Home
     } else
     if ($url == "meet") {
-        $nav_item_left = '<a href="car" class="nav-link"><i class="fa-solid fa-car"></i></a>'; # Search
-        $nav_item_center = '<a href="./" class="nav-link"><i class="fa-solid fa-house"></i></a>'; # Home
+        $nav_item_left = '<a href="./" class="nav-link"><i class="fa-solid fa-house"></i></a>'; # Home
+        $nav_item_center = '<a id="createMeet" class="nav-link"><i class="fa-solid fa-flag-checkered"></i></a>'; # Create meet
         $nav_item_right = '<a href="video" class="nav-link"><i class="fa-solid fa-video"></i></a>'; # Video
     } else
     if ($url == "info") {
-        $nav_item_left = '<a href="./" class="nav-link"><i class="fa-solid fa-arrow-left"></i></a>'; # Search
+        $nav_item_left = '<a href="./" class="nav-link"><i class="fa-solid fa-arrow-left"></i></a>'; # Return
         $nav_item_center = '<a href="info" class="nav-link"><i class="fa-solid fa-info"></i></a>'; # Home
         $nav_item_right = ''; # Video
     } else
     if ($url == "profile") {
-        $nav_item_left = '<a href="./" class="nav-link"><i class="fa-solid fa-arrow-left"></i></a>'; # Search
-        $nav_item_center = '<a href="info" class="nav-link"><i class="fa-solid fa-info"></i></a>'; # Home
-        $nav_item_right = ''; # Video
+        $nav_item_left = '<a href="./" class="nav-link"><i class="fa-solid fa-arrow-left"></i></a>'; # Return
+        $nav_item_center = '<a id="updateProfileBtn" class="nav-link"><i class="fa-solid fa-check"></i></a>'; # Save
+        $nav_item_right = '<a href="./?logout" class="nav-link"><i class="fa-solid fa-arrow-right-from-bracket"></i></a>'; # Logout
+    } else
+    if ($url == "forgot") {
+        $nav_item_left = '<a href="./" class="nav-link"><i class="fa-solid fa-arrow-left"></i></a>'; # Return
+        $nav_item_center = '<a id="forgotBtn" class="nav-link"><i class="fa-solid fa-paper-plane"></i></a>'; # Forgot
+        $nav_item_right = '<a href="./?logout" class="nav-link"><i class="fa-solid fa-arrow-right-from-bracket"></i></a>'; # Logout
     } else {
-        $nav_item_left = '<a href="car" class="nav-link"><i class="fa-solid fa-car"></i></a>'; # Search
-        $nav_item_center = '<a href="meet" class="nav-link"><i class="fa-solid fa-bullhorn"></i></a>'; # Meet
+        $nav_item_left = '<a href="car" class="nav-link"><i class="fa-solid fa-magnifying-glass"></i></a>'; # Search
+        $nav_item_center = '<a href="./" class="nav-link"><i class="fa-solid fa-arrows-rotate"></i></a>'; # Refresh
         $nav_item_right = '<a href="video" class="nav-link"><i class="fa-solid fa-video"></i></a>'; # Video
     }
 
@@ -121,11 +141,11 @@ function checkMeet($driver) {
     if ($result->num_rows > 0) {
         $meetInfo = $result->fetch_assoc();
         $meet_id = $meetInfo['id'];
-        $meet_cancelled = $meetInfo['cancelled'];
-        if ($meet_cancelled == 0) {
+        $meet_deleted = $meetInfo['deleted'];
+        if ($meet_deleted == 0) {
             return $meet_id;
         } else {
-            return $meet_id;
+            return null;
         }
     } else {
         return null;
@@ -215,9 +235,21 @@ if (!isset($_SESSION['driver'])) {
     }
 }
 
+# Generate random string
+function generateRandomString($length = 8) {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $charactersLength = strlen($characters);
+    $randomString = '';
+    for ($i = 0; $i < $length; $i++) {
+        $randomString .= $characters[rand(0, $charactersLength - 1)];
+    }
+    return $randomString;
+}
+
 # Passenger functions
 if (isset($_POST['join_driver'])) {
     $passenger = rand();
+    setcookie("passenger", $passenger, time() + (7 * 24 * 60 * 60), "/"); # 7 days
     $_SESSION['passenger'] = $passenger;
     $plate = $_POST['plate'];
     $stmt = $conn->prepare("INSERT INTO `passengers` (`id`, `ip`, `license_plate`) VALUES (?, ?, ?)");
@@ -225,6 +257,27 @@ if (isset($_POST['join_driver'])) {
     $stmt->execute();
     $stmt->close();
     header("Location: ./car?s=$plate");
+}
+
+if (isset($_SESSION['passenger'])) {
+    $passenger = $_SESSION['passenger'];
+    $passengers = $conn->query("SELECT * FROM `passengers` WHERE `id` = '$passenger'");
+    if ($passengers->num_rows == 0) {
+        session_destroy();
+        echo "<script>window.location.href = './';</script>";
+    } else {
+        $passenger = $passengers->fetch_assoc();
+        $plate = $passenger['license_plate'];
+        $ip = $passenger['ip'];
+
+        if ($ip != $_SERVER['REMOTE_ADDR']) {
+            $conn->query("UPDATE `passengers` SET `ip` = '$ip' WHERE `id` = '$passenger'");
+        }
+
+        $car = $conn->query("SELECT * FROM `cars` WHERE `license_plate` = '$plate'");
+        $car = $car->fetch_assoc();
+        $driver = $car['driver'];
+    }
 }
 
 # Driver functions
@@ -320,11 +373,20 @@ if (isset($_SESSION['driver'])) {
         setcookie("driver", "", time() - 3600, "/");
         echo "<script>window.location.href = './';</script>";
     } else {
+        setcookie("start", "", time() + (10), "/"); # 1 minute
         $driver = $drivers->fetch_assoc();
         $username = $driver['username'];
         $default_car = $driver['default_car'];
         $phone = $driver['phone'];
         $fullname = $driver['full_name'];
+        $doors = $driver['doors'];
+        $avatar = $driver['avatar'];
+
+        if ($avatar == null) {
+            $avatar = "assets/images/car.png";
+        } else {
+            $avatar = "uploads/avatars/$id/$avatar";
+        }
     }
 }
 
@@ -363,6 +425,7 @@ if (isset($_GET['removeCar'])) {
 
 if (isset($_GET['stolen'])) {
     $plate = $_GET['stolen'];
+    $id = $_SESSION['driver'];
     $checkPlate = $conn->query("SELECT * FROM `cars` WHERE `license_plate` = '$plate' AND `driver` = '$id'");
     if ($checkPlate->num_rows == 1) {
         $stmt = $conn->prepare("UPDATE `cars` SET `stolen` = 1 WHERE `license_plate` = ? AND `driver` = ?");
@@ -386,19 +449,25 @@ if (isset($_GET['found'])) {
 
 # Meet functions
 if (isset($_POST['newMeet'])) {
-    $name = htmlspecialchars($_POST['name'], ENT_QUOTES, "UTF-8");
-    $date = $_POST['date'];
-    $time = $_POST['time'];
-    $location = htmlspecialchars($_POST['location'], ENT_QUOTES, "UTF-8");
-
-    $datetime = date("Y-m-d H:i:s", strtotime($_POST['date'] . ' ' . $_POST['time']));
+    $name = htmlspecialchars_decode($_POST['name'], ENT_QUOTES | ENT_SUBSTITUTE);
+    $date = strtotime($_POST['date']);
+    $time = strtotime($_POST['time']);
+    $location = htmlspecialchars_decode($_POST['location'], ENT_QUOTES | ENT_SUBSTITUTE);
+    $code = htmlspecialchars_decode($_POST['code'], ENT_QUOTES | ENT_SUBSTITUTE);
 
     if (empty($name)) {
-        $name = $username."'s treff";
+        $name = $username."s treff";
+    }
+    if (isset($_POST['private'])) {
+        $public = 0;
+    } else {
+        $public = 1;
     }
 
-    $stmt = $conn->prepare("INSERT INTO `meets` (`name`, `time`, `location`, `driver`,`created`) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("sissi", $name, $datetime, $location, $id, $today);
+    $now = strtotime(date("Y-m-d H:i:s"));
+
+    $stmt = $conn->prepare("INSERT INTO `meets` (`driver`,`name`,`location`,`date`,`time`,`public`,`created`,`code`) VALUES (?,?,?,?,?,?,?,?)");
+    $stmt->bind_param("issiiiis", $id, $name, $location, $date, $time, $public, $now, $code);
     $stmt->execute();
     $stmt->close();
     $meet_id = $conn->insert_id;
@@ -407,26 +476,23 @@ if (isset($_POST['newMeet'])) {
 
 if (isset($_POST['updateMeet'])) {
     $meet_id = $_POST['id'];
-    $name = htmlspecialchars($_POST['name'], ENT_QUOTES, "UTF-8");
-    $date = $_POST['date'];
-    $time = $_POST['time'];
-    $location = htmlspecialchars($_POST['location'], ENT_QUOTES, "UTF-8");
-    $code = htmlspecialchars($_POST['code'], ENT_QUOTES, "UTF-8");
-    $private = 0;
-    $info = htmlspecialchars($_POST['info'], ENT_QUOTES, "UTF-8");
-    $warning = htmlspecialchars($_POST['warning'], ENT_QUOTES, "UTF-8");
-    $police = htmlspecialchars($_POST['police'], ENT_QUOTES, "UTF-8");
+    $name = htmlspecialchars_decode($_POST['name'], ENT_QUOTES | ENT_SUBSTITUTE);
+    $date = strtotime($_POST['date']);
+    $time = strtotime($_POST['time']);
+    $location = htmlspecialchars_decode($_POST['location'], ENT_QUOTES | ENT_SUBSTITUTE);
+    $code = htmlspecialchars_decode($_POST['code'], ENT_QUOTES | ENT_SUBSTITUTE);
+    $info = htmlspecialchars_decode($_POST['info'], ENT_QUOTES | ENT_SUBSTITUTE);
+    $warning = htmlspecialchars_decode($_POST['warning'], ENT_QUOTES | ENT_SUBSTITUTE);
+    $police = htmlspecialchars_decode($_POST['police'], ENT_QUOTES | ENT_SUBSTITUTE);
 
-    if (!empty($code)) {
-        $private = 1;
+    if (isset($_POST['private'])) {
+        $public = 0;
     } else {
-        $code = null;
+        $public = 1;
     }
-
-    $datetime = date("Y-m-d H:i:s", strtotime($_POST['date'] . ' ' . $_POST['time']));
     
-    $stmt = $conn->prepare("UPDATE `meets` SET `name` = ?, `time` = ?, `location` = ?, `code` = ?, `private` = ?, `info` = ?, `warning` = ?, `police` = ? WHERE `id` = ?");
-    $stmt->bind_param("ssssisssi", $name, $datetime, $location, $code, $private, $info, $warning, $police, $meet_id);
+    $stmt = $conn->prepare("UPDATE `meets` SET `name` = ?, `location` = ?, `date` = ?, `time` = ?, `public` = ?, `info` = ?, `warning` = ?, `police` = ?, `code` = ? WHERE `id` = ?");
+    $stmt->bind_param("ssiiissssi", $name, $location, $date, $time, $public, $info, $warning, $police, $code, $meet_id);
     $stmt->execute();
     $stmt->close();
     echo "<script>window.location.href = './meet?id=$meet_id';</script>";

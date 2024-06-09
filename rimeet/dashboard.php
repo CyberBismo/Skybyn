@@ -1,69 +1,4 @@
-<?php include_once "assets/navigation.php";
-
-if (isset($_SESSION['driver'])) {
-    $id = $_SESSION['driver'];
-    $username = driver("id", $id, "username");
-    $meets = $conn->query("SELECT * FROM `meets` WHERE `driver` != '$id'");
-} else {
-    $meets = $conn->query("SELECT * FROM `meets`");
-}
-
-if ($meets->num_rows > 0) {
-    $meetInfo = $meets->fetch_assoc();
-    $meet = $meetInfo['id'];
-    $meet_driver = $meetInfo['driver'];
-    $meet_name = $meetInfo['name'];
-    $meet_time = $meetInfo['time'];
-    $meet_location = $meetInfo['location'];
-    $meet_visibility = $meetInfo['address_visible'];
-    $meet_cancelled = $meetInfo['cancelled'];
-    $meet_warning = $meetInfo['warning'];
-    $meet_info = $meetInfo['info'];
-    $meet_police = $meetInfo['police'];
-
-    if (!empty($meet_warning)) {
-        $warning = true;
-    } else {
-        $warning = false;
-    }
-
-    if (!empty($meet_info)) {
-        $info = true;
-    } else {
-        $info = false;
-    }
-
-    if (!empty($meet_police)) {
-        $police = true;
-    } else {
-        $police = false;
-    }
-
-    $checkVideos = $conn->query("SELECT * FROM `videos` WHERE `meet_id` = $meet");
-    if ($checkVideos->num_rows > 0) {
-        $videos = true;
-    } else {
-        $videos = false;
-    }
-    
-    if (isset($_SESSION['driver'])) {
-        if ($meet_driver == $id) {
-            $meet = false;
-        } else {
-            $meet = true;
-        }
-    } else {
-        $meet = true;
-    }
-} else {
-    $police = false;
-    $videos = false;
-    $warning = false;
-    $info = false;
-    $meet = false;
-}
-
-?>
+<?php include_once "assets/navigation.php";?>
 
 <style>
 </style>
@@ -71,8 +6,10 @@ if ($meets->num_rows > 0) {
     <?php if (isset($_SESSION['driver'])) {?>
     <div class="car">
         <div class="driver profile">
-            Brukernavn:<br>
-            <b><?=$username?></b><br>
+            <div class="split">
+                <img src="<?=$avatar?>">
+                <b><?=$username?></b>
+            </div>
             <br>
             Mine biler:<br>
             <?php
@@ -101,8 +38,8 @@ if ($meets->num_rows > 0) {
             </form>
             <?php }?>
             <div class="buttons">
-                <button onclick="window.location.href='.?logout'" class="signout">Logg ut</button>
-                <button onclick="window.location.href='profile'" class="meet_btn">Se profil</button>
+                <button onclick="window.location.href='meet'" class="meet_btn"><i class="fa-solid fa-flag-checkered"></i> Nytt treff</button>
+                <button onclick="window.location.href='profile'" class="profile_btn">Profil <i class="fa-solid fa-address-card"></i></button>
             </div>
             <script>
                 function showCar(plate) {
@@ -126,118 +63,142 @@ if ($meets->num_rows > 0) {
         </div>
     </div>
     <?php }?>
-
-    <?php if ($warning == true) {?>
-    <div class="card red">
-        <h1>Advarsel</h1>
-        <p><?=$meet_warning?></p>
-    </div>
-    <?php }?>
-    <?php if ($info == true) {?>
-    <div class="card yellow">
-        <h1>Informasjon</h1>
-        <p><?=$meet_info?></p>
-    </div>
-    <?php }?>
-    <?php if ($police == true) {?>
-    <div class="card blue">
-        <h1>Politi</h1>
-        <p><?=$meet_police?></p>
-    </div>
-    <?php }?>
-    <?php if ($videos == true) {?>
-    <div class="card green">
-        <h1>Videoer</h1>
-        <p>Det er delt videoer for dette treffet.</p>
-        <button onclick="window.location.href='video'">Se videoer</button>
-    </div>
-    <?php }
-
-
-
+    
+    <?php
     if (isset($_SESSION['driver'])) {
-        $myMeetInfo = $conn->query("SELECT * FROM `meets` WHERE `driver` = '$id'");
+        $myMeetInfo = $conn->query("SELECT * FROM `meets` WHERE `deleted` = 0 AND `driver` = '$id'");
         if ($myMeetInfo->num_rows > 0) {
             $myMeetInfo = $myMeetInfo->fetch_assoc();
+            $myMeet_id = $myMeetInfo['id'];
             $myMeet_host = $myMeetInfo['driver'];
             $myMeet_name = $myMeetInfo['name'];
-            $myMeet_date = date("d. M", $myMeetInfo['time']);
+            $myMeet_date = date("d. M", $myMeetInfo['date']);
             $myMeet_time = date("H:i", $myMeetInfo['time']);
             $myMeet_location = $myMeetInfo['location'];
-            $myMeet_private = $myMeetInfo['private'];
-            $myMeet_cancelled = $myMeetInfo['cancelled'];
+            $myMeet_public = $myMeetInfo['public'];
+            $myMeet_deleted = $myMeetInfo['deleted'];
             $myMeet_warning = $myMeetInfo['warning'];
             $myMeet_info = $myMeetInfo['info'];
             $myMeet_police = $myMeetInfo['police'];
             $myMeet_code = $myMeetInfo['code'];
         ?>
+        
+    <?php if (!empty($meet_warning)) {?>
+    <div class="card red">
+        <h1>Advarsel</h1>
+        <p><?=$meet_warning?></p>
+    </div>
+    <?php }?>
+    <?php if (!empty($meet_info)) {?>
+    <div class="card yellow">
+        <h1>Informasjon</h1>
+        <p><?=$meet_info?></p>
+    </div>
+    <?php }?>
+    <?php if (!empty($meet_police)) {?>
+    <div class="card blue">
+        <h1>Politi</h1>
+        <p><?=$meet_police?></p>
+    </div>
+    <?php }?>
+
     <div class="card white">
         <h1><?=$myMeet_name?></h1>
-        <?php if ($myMeet_cancelled == 1) {?>
-        <p>Du har avlyst dette treffet.</p>
-        <p>Slett det for å opprette nytt.</p>
-        <?php } else {?>
         <p>Dato: <?=$myMeet_date?></p>
         <p>Tidspunkt: <?=$myMeet_time?></p>
         <p>Adresse: <a href="<?=openMaps($myMeet_location,detectDevice())?>"><?=$myMeet_location?></a></p>
+        <?php if ($myMeet_code != "") {?>
+        <p>Adgangskode: <?=$myMeet_code?></p>
         <?php }?>
-    </div>
-    <?php } else {
-        $checkJoiners = $conn->query("SELECT * FROM `joiners` WHERE `joiner` = '$id'");
-        if ($checkJoiners->num_rows > 0) {
-        $joiner = $checkJoiners->fetch_assoc();
-        $meet_id = $joiner['meet_id'];
-        $meetInfo = $conn->query("SELECT * FROM `meets` WHERE `id` = '$meet_id'");
-        $meetInfo = $meetInfo->fetch_assoc();
-        $meet_host = $meetInfo['driver'];
-        $meet_name = $meetInfo['name'];
-        $meet_time = $meetInfo['time'];
-        $meet_location = $meetInfo['location'];
-        $meet_visibility = $meetInfo['address_visible'];
-        $meet_cancelled = $meetInfo['cancelled'];
-        $meet_warning = $meetInfo['warning'];
-        $meet_info = $meetInfo['info'];
-        $meet_police = $meetInfo['police'];
-    ?>
-    <div class="card white">
-        <h1><?=$meet_name?></h1>
-        <?php if ($meet_cancelled == 1) {?>
-        <p>Treffet er avlyst</p>
+        <?php if ($myMeet_public == 1) {?>
+            <p>Treffet er offentlig</p>
         <?php } else {?>
-        <?php if ($meet_visibility == 1) {?>
-        <p>Adresse: <?=$meet_location?></p>
-        <p>Tidspunkt: <?=$meet_time?></p>
-        <?php } else {?>
-        <p>Informasjon utilgjengelig</p>
-        <?php }}?>
-    </div>
-    <?php } else {?>
-    <div class="card white">
-        <h1>Du har ingen planlagte treff</h1>
-        <button onclick="window.location.href='meet'">Opprett nå</button>
+            <p>Treffet er privat</p>
+        <?php }?>
+        <div class="btns">
+            <button onclick="window.location.href='meet?id=<?=$myMeet_id?>'">Se treff</button>
+            <button onclick="window.location.href='meet?id=<?=$myMeet_id?>&edit'">Rediger treff</button>
+            <button onclick="window.location.href='meet?id=<?=$myMeet_id?>&delete'">Slett treff</button>
+        </div>
     </div>
     <?php }
+    } else
+    $meet = false;
+    if (isset($_SESSION['passenger'])) {
+        $checkJoiners = $conn->query("SELECT * FROM `joiners` WHERE `joiner` = '$id'");
+        if ($checkJoiners->num_rows > 0) {
+            $joiner = $checkJoiners->fetch_assoc();
+            $meet_id = $joiner['meet_id'];
+            $meetInfo = $conn->query("SELECT * FROM `meets` WHERE `id` = '$meet_id'");
+            $meetInfo = $meetInfo->fetch_assoc();
+            $meet_host = $meetInfo['driver'];
+            $meet_name = $meetInfo['name'];
+            $meet_date = date("d. M", $meetInfo['date']);
+            $meet_time = date("H:i", $meetInfo['time']);
+            $meet_location = $meetInfo['location'];
+            $meet_public = $meetInfo['public'];
+            $meet_deleted = $meetInfo['deleted'];
+            $meet_warning = $meetInfo['warning'];
+            $meet_info = $meetInfo['info'];
+            $meet_police = $meetInfo['police'];
+            $meet_code = $meetInfo['code'];
+            $meet = true;
+        } else {
+            $meet = false;
         }
+    } else {
+        $meet = false;
     }
-
-
 
     if ($meet == true) {?>
     <div class="card white">
         <h1><?=$meet_name?></h1>
-        <?php if ($meet_cancelled == 1) {?>
+        <?php if ($meet_deleted == 1) {?>
         <p>Treffet er avlyst</p>
         <?php } else {?>
-        <?php if ($meet_visibility == 1) {?>
-        <p>Adresse: <?=$meet_location?></p>
+        <?php if ($meet_public == 1) {?>
         <p>Tidspunkt: <?=$meet_time?></p>
+        <p>Adresse: <a href="<?=openMaps($meet_location,detectDevice())?>"><?=$meet_location?></a></p>
         <?php } else {?>
         <p>Informasjon utilgjengelig</p>
         <?php }}?>
     </div>
+    <?php } else {
+        $getMeets = $conn->query("SELECT * FROM `meets` WHERE `deleted` = 0 AND `public` = 1");
+        if ($getMeets->num_rows > 0) {
+            while ($meetData = $getMeets->fetch_assoc()) {
+                $meet_id = $meetData['id'];
+                $meet_host = $meetData['driver'];
+                $meet_name = $meetData['name'];
+                $meet_date = date("d. M", $meetData['date']);
+                $meet_time = date("H:i", $meetData['time']);
+                $meet_location = $meetData['location'];
+                $meet_public = $meetData['public'];
+                $meet_deleted = $meetData['deleted'];
+                $meet_warning = $meetData['warning'];
+                $meet_info = $meetData['info'];
+                $meet_police = $meetData['police'];
+                $meet_code = $meetData['code'];
+
+                $checkJoiners = $conn->query("SELECT * FROM `joiners` WHERE `joiner` = '$id' AND `meet_id` = '$meet_id'");
+                $joiners = $checkJoiners->num_rows;
+        ?>
+        <div class="card white">
+            <h1><?=$meet_name?></h1>
+            <?php if ($meet_code == "") {?>
+            <p>Dato: <?=$meet_date?></p>
+            <p>Tidspunkt: <?=$meet_time?></p>
+            <p>Adresse: <a href="<?=openMaps($meet_location,detectDevice())?>"><?=$meet_location?></a></p>
+            <?php }?>
+            <?php if ($joiners == 0) {?>
+            <button onclick="window.location.href='meet?id=<?=$meet_id?>'">Bli med</button>
+            <?php }?>
+        </div>
+        <?php }?>
     <?php } else {?>
     <div class="card white">
         <h1>Ingen planlagte treff</h1>
     </div>
     <?php }?>
+<?php }?>
 </div>

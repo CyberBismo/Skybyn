@@ -1,10 +1,22 @@
 <style>
+    #start-btn {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 50%;
+        cursor: pointer;
+    }
+    #start-btn:hover {
+        transform: translate(-50%, -50%) rotate(1440deg);
+        transition: transform 8s;
+    }
 </style>
 
 <div class="start">
     <div class="start_logo"></div>
     <img src="assets/images/rimeet.png" class="start_logo">
-    <img src="assets/images/start.png" id="start-btn">
+    <img src="assets/images/rim.png" id="start-btn">
     <audio id="engineSound" src="start/start.mp3"></audio>
 </div>
 
@@ -35,32 +47,36 @@
             .then(response => response.arrayBuffer())
             .then(data => audioContext.decodeAudioData(data))
             .then(buffer => {
-            var source = audioContext.createBufferSource();
-            var gainNode = audioContext.createGain();
+                var source = audioContext.createBufferSource();
+                var gainNode = audioContext.createGain();
 
-            source.buffer = buffer;
-            source.connect(gainNode);
-            gainNode.connect(audioContext.destination);
+                source.buffer = buffer;
+                source.connect(gainNode);
+                gainNode.connect(audioContext.destination);
 
-            // Play the sound
-            source.start(0);
+                // Play the sound
+                source.start(0);
 
-            // Hide the logo and button
-            setTimeout(() => {
-                startLogo.style.opacity = 0;
-                startBtn.style.opacity = 0;
+                // Start the animation
+                startLogo.style.animation = 'fadeOut 1s forwards';
+                startBtn.style.animation = 'fadeOut 1s forwards';
+
+                // Hide the logo and button
                 setTimeout(() => {
-                document.cookie = "start=1";
-                window.location.href = "./";
-                }, 1000);
-            }, 1500);
+                    startLogo.style.opacity = 0;
+                    startBtn.style.opacity = 0;
+                    setTimeout(() => {
+                    document.cookie = "start=true; path=/";
+                    window.location.href = "./";
+                    }, 1000);
+                }, 1500);
 
-            // Schedule the fade out
-            gainNode.gain.setValueAtTime(1, audioContext.currentTime + 3);
-            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 4);
+                // Schedule the fade out
+                gainNode.gain.setValueAtTime(1, audioContext.currentTime + 3);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 4);
 
-            // Stop the sound after 4 seconds
-            source.stop(audioContext.currentTime + 4);
+                // Stop the sound after 4 seconds
+                source.stop(audioContext.currentTime + 4);
             })
             .catch(e => console.error(e));
 
@@ -74,9 +90,5 @@
             }
             }
         }
-
-        document.getElementById('start-btn').addEventListener('click', function() {
-            toggleFullScreen();
-        });
     });
 </script>

@@ -2,9 +2,12 @@
 include_once "assets/navigation.php";
 
 if (isset($_SESSION['driver']) || isset($_SESSION['joiner'])) {
-    $driver = $_SESSION['driver'];
-    $joiner = $_SESSION['joiner'];
-    $checkDriver = $conn->query("SELECT * FROM `drivers` WHERE `id` IN ('$driver','$joiner')");
+    if (isset($_SESSION['driver'])) {
+        $id = $_SESSION['driver'];
+    } else {
+        $id = $_SESSION['joiner'];
+    }
+    $checkDriver = $conn->query("SELECT * FROM `drivers` WHERE `id` = '$id'");
     if ($checkDriver->num_rows > 0) {
         if (!empty($driver)) {
             $plate = driver("id", $id, "default_car");

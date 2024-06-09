@@ -1,9 +1,14 @@
-<?php require_once "assets/functions.php";?>
+<?php require_once "assets/functions.php";
+
+if (isset($_SESSION['driver']) || isset($_SESSION['passenger'])) {
+    $_COOKIE['start'] = true;
+}
+?>
     <head>
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="theme-color" content="#000000">
-        <link rel="icon" href="assets/images/start.png" type="image/png">
+        <link rel="icon" href="assets/images/rim.png" type="image/png">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="white-translucent">
@@ -29,14 +34,15 @@
             .error {
                 position: fixed;
                 top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
+                left: 5%;
+                width: 90%;
                 padding: 20px;
                 border-radius: 10px;
                 background: rgba(255, 0, 0, 0.7);
                 color: white;
                 font-size: 1.5em;
                 transition: opacity 1s ease-in-out;
+                box-sizing: border-box;
                 z-index: 1000;
             }
             .error::before {
@@ -64,17 +70,28 @@
                 border-radius: 10px;
                 text-align: center;
                 box-sizing: border-box;
+                overflow: auto;
             }
-            .card button {
+            .card::-webkit-scrollbar {
+                display: none;
+            }
+            .card .btns {
+                display: flex;
+                justify-content: space-between;
+                gap: 5px;
+            }
+            .card button,
+            .card .btns button {
                 width: 100%;
                 padding: 10px;
                 border: none;
                 border-radius: 10px;
                 background: black;
                 color: white;
-                font-size: 1.5em;
+                font-size: 1em;
             }
             .red {
+                color: white;
                 background: linear-gradient(to bottom, rgba(255, 0, 0, 0.3), rgba(255, 0, 0, 0.7));
             }
             .blue {
@@ -85,9 +102,11 @@
                 background: linear-gradient(to bottom, rgba(0, 255, 0, 0.3), rgba(0, 255, 0, 0.7));
             }
             .yellow {
+                color: white;
                 background: linear-gradient(to bottom, rgba(255, 255, 0, 0.3), rgba(255, 255, 0, 0.7));
             }
             .white {
+                color: black;
                 background: linear-gradient(to bottom, rgba(200, 200, 200, 0.3), rgba(200, 200, 200, 0.7));
             }
             .black {
@@ -96,30 +115,30 @@
             }
             
             .meet {
-                width: 90%;
+                width: 100%;
                 max-width: 600px;
                 margin: 0 auto;
-                padding: 20px;
                 border-radius: 10px;
                 color: white;
-                box-sizing: border-box;
+                overflow: auto;
+            }
+            .create_meet {
+                padding-bottom: 50px;
             }
             .meet h1 {
                 text-align: center;
+            }
+            .meet form {
+                margin: 0 20px;
+                padding: 20px;
+                background: rgba(0, 0, 0, 0.7);
+                border-radius: 10px;
+                box-sizing: border-box;
             }
             .meet label {
                 font-size: 1.5em;
             }
             .meet input {
-                width: 100%;
-                padding: 10px;
-                border: none;
-                border-radius: 10px;
-                font-size: 1.5em;
-                outline: none;
-                box-sizing: border-box;
-            }
-            .meet textarea {
                 width: 100%;
                 padding: 10px;
                 border: none;
@@ -145,11 +164,15 @@
                 display: flex;
                 justify-content: space-between;
             }
+            .meet .split input[type=checkbox] {
+                width: 20px;
+                height: 20px;
+            }
             .meet .split input {
-                width: 90%;
+                width: calc(100% - 50px);
             }
             .meet .split button {
-                width: 10%;
+                width: 50px;
             }
             .meet .meet_info {
                 display: flex;
@@ -228,10 +251,10 @@
             }
             
             .car {
-                width: 90%;
+                width: 100%;
                 max-width: 600px;
                 margin: 0 auto;
-                padding: 20px 10px;
+                padding: 10px;
                 border-radius: 10px;
                 color: white;
                 box-sizing: border-box;
@@ -296,59 +319,77 @@
                 background: rgba(0, 0, 0, 0.3);
                 color: white;
                 box-sizing: border-box;
+                overflow: hidden;
             }
-            .car .profile {
+            .car .driver .split {
+                display: flex;
+            }
+            .car .driver .split img {
+                width: 50px;
+                height: 50px;
+                border-radius: 20px;
+                object-fit: cover;
+            }
+            .car .driver .split b {
+                width: calc(100% - 50px);
+                line-height: 50px;
+                text-align: center;
+            }
+            .profile {
                 width: 100%;
                 max-width: 600px;
-                padding: 20px;
-                font-size: 1em;
                 margin: 0 auto;
+                font-size: 1em;
                 color: white;
+            }
+            .profile form {
+                padding: 20px;
                 background: rgba(0, 0, 0, 0.3);
                 border-radius: 10px;
                 box-sizing: border-box;
             }
-            .car .profile h1 {
+            .profile h1 {
                 font-size: 2em;
             }
-            .car .profile b {
+            .profile b {
                 padding: 0 5px;
                 font-size: 1.5em;
             }
-            .car .profile .profile_car {
+            .profile .profile_car {
                 display: flex;
                 justify-content: space-between;
             }
-            .car .profile ul {
+            .profile ul {
                 list-style-type: none;
                 padding: 0;
             }
-            .car .profile ul li {
+            .profile ul li {
                 padding: 5px;
             }
-            .car .profile .add_vehicle {
-                padding-top: 5px;
+            .profile .add_vehicle {
+                margin-top: 5px;
+                padding: 0px;
+                background: rgba(0, 0, 0, 0);
             }
-            .car .profile .add_vehicle input {
-                padding: 0 5px;
+            .profile .add_vehicle input {
+                padding: 0px;
                 color: white;
-                background: none;
+                background: rgba(0, 0, 0, 0);
                 border: none;
-                border-radius: 5px;
                 font-size: 1em;
                 outline: none;
             }
-            .car .profile .add_vehicle button {
+            .profile .add_vehicle button {
                 display: none;
             }
-            .car .profile .buttons {
+            .profile .buttons {
                 display: flex;
                 justify-content: space-between;
                 margin-left: -10px;
                 margin-right: -10px;
                 margin-bottom: -10px;
             }
-            .car .profile .buttons button {
+            .profile .buttons button {
                 border: none;
                 color: white;
                 padding: 15px;
@@ -359,37 +400,49 @@
                 margin: 4px 2px;
                 cursor: pointer;
             }
-            .car .profile .buttons .signout {
-                background-color: #f44336;
+            .profile .buttons .meet_btn {
+                background-color: rgba(0, 100, 255, 0.7);
                 border-radius: 20px 20px 20px 5px;
             }
-            .car .profile .buttons .meet_btn {
-                background-color: rgba(0, 100, 255, 0.7);
+            .profile .buttons .profile_btn {
+                color: black;
+                background-color: rgba(255, 255, 255, 0.7);
                 border-radius: 20px 20px 5px 20px;
             }
+            .profile input {
+                padding: 10px;
+                border: none;
+                border-radius: 10px;
+                font-size: 1em;
+                outline: none;
+            }
+            .profile input[type=checkbox] {
+                width: 20px;
+                height: 20px;
+            }
             .car .drivers {
-                max-height: calc(50vh - 200px);
+                margin-bottom: 20px;
             }
             .car .drivers .profile {
                 padding: 20px;
                 border-radius: 10px;
                 background: rgba(0, 0, 0, 0.5);
                 color: white;
+                box-sizing: border-box;
             }
             .car .drivers .profile .details {
                 display: flex;
-                flex-direction: column;
+                flex-direction: row;
                 justify-content: space-between;
             }
             .car .drivers .profile .details img {
                 width: 100px;
                 height: 100px;
                 border-radius: 20px;
+                object-fit: cover;
             }
-            .car .drivers .profile .details .contact {
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
+            .car .drivers .profile .details .contact p {
+                text-align: left;
             }
             .car .drivers .profile form {
                 width: 100%;
@@ -413,14 +466,45 @@
                 text-align: center;
                 cursor: pointer;
             }
-            .car .cars {
-                max-height: calc(50vh - 200px);
+            .driver_cars ul li {
+                display: flex;
+                justify-content: space-between;
+                line-height: 30px;
+                font-size: .7em;
+            }
+            .driver_cars ul li img {
+                width: 30px;
+                height: 30px;
+                border-radius: 5px;
+                object-fit: cover;
             }
             .car .cars .vehicle {
                 padding: 20px;
                 border-radius: 10px;
                 background: rgba(0, 0, 0, 0.5);
                 color: white;
+                overflow: hidden;
+            }
+            .car .cars .vehicle .split {
+                display: flex;
+                justify-content: space-around;
+                vertical-align: top;
+            }
+            .car .cars .vehicle .vehicle_photo {
+                width: 30%;
+                text-align: center;
+            }
+            .car .cars .vehicle .vehicle_photo img {
+                width: 100px;
+                height: 100px;
+                border-radius: 20px;
+                object-fit: cover;
+            }
+            .car .cars .vehicle .vehicle_info {
+                width: 70%;
+            }
+            .car .cars .vehicle .vehicle_info p {
+                text-align: left;
             }
             .car .cars .vehicle .btns {
                 display: flex;
@@ -620,7 +704,7 @@
                 padding: 10px 0;
                 background: black;
                 border-top: 1px solid grey;
-                z-index: 1000;
+                z-index: 100;
             }
             .nav-item {
                 width: 80px;
@@ -697,6 +781,19 @@
         <?php if (isset($_COOKIE['error'])) {?>
         <div class="error">
             <?=$_COOKIE['error']?>
+        </div>
+        <script>
+            setTimeout(() => {
+                document.querySelector('.error').style.opacity = '0';
+                setTimeout(() => {
+                    document.querySelector('.error').style.display = 'none';
+                }, 1000);
+            }, 5000);
+        </script>
+        <?php }?>
+        <?php if (isset($_COOKIE['success'])) {?>
+        <div class="error" style="background: rgba(0, 255, 0, 0.7)">
+            <?=$_COOKIE['success']?> <i class="fas fa-check"></i>
         </div>
         <script>
             setTimeout(() => {
