@@ -28,6 +28,9 @@ function checkUrl() {
     } else
     if (strpos($url, "forgot") !== false) {
         return "forgot";
+    } else
+    if (strpos($url, "feedback") !== false) {
+        return "feedback";
     } else {
         return "home";
     }
@@ -63,11 +66,6 @@ function navItem($x,$driver) { # x = position, y = driver
         $nav_item_center = '<a id="createMeet" class="nav-link"><i class="fa-solid fa-flag-checkered"></i></a>'; # Create meet
         $nav_item_right = '<a href="video" class="nav-link"><i class="fa-solid fa-video"></i></a>'; # Video
     } else
-    if ($url == "info") {
-        $nav_item_left = '<a href="./" class="nav-link"><i class="fa-solid fa-arrow-left"></i></a>'; # Return
-        $nav_item_center = '<a href="info" class="nav-link"><i class="fa-solid fa-info"></i></a>'; # Home
-        $nav_item_right = ''; # Video
-    } else
     if ($url == "profile") {
         $nav_item_left = '<a href="./" class="nav-link"><i class="fa-solid fa-arrow-left"></i></a>'; # Return
         $nav_item_center = '<a id="updateProfileBtn" class="nav-link"><i class="fa-solid fa-check"></i></a>'; # Save
@@ -77,6 +75,16 @@ function navItem($x,$driver) { # x = position, y = driver
         $nav_item_left = '<a href="./" class="nav-link"><i class="fa-solid fa-arrow-left"></i></a>'; # Return
         $nav_item_center = '<a id="forgotBtn" class="nav-link"><i class="fa-solid fa-paper-plane"></i></a>'; # Forgot
         $nav_item_right = '<a href="./?logout" class="nav-link"><i class="fa-solid fa-arrow-right-from-bracket"></i></a>'; # Logout
+    } else
+    if ($url == "info") {
+        $nav_item_left = '<a href="./" class="nav-link"><i class="fa-solid fa-arrow-left"></i></a>'; # Return
+        $nav_item_center = '<a href="info" class="nav-link"><i class="fa-solid fa-info"></i></a>'; # Home
+        $nav_item_right = '<a href="feedback" class="nav-link"><i class="fa-solid fa-clipboard-question"></i></a>'; # Video
+    } else
+    if ($url == "feedback") {
+        $nav_item_left = '<a href="./" class="nav-link"><i class="fa-solid fa-arrow-left"></i></a>'; # Return
+        $nav_item_center = '<a id="feedbackBtn" class="nav-link"><i class="fa-solid fa-paper-plane"></i></a>'; # Forgot
+        $nav_item_right = '<a href="info" class="nav-link"><i class="fa-solid fa-circle-info"></i></a>'; # Info
     } else {
         $nav_item_left = '<a href="car" class="nav-link"><i class="fa-solid fa-magnifying-glass"></i></a>'; # Search
         $nav_item_center = '<a href="./" class="nav-link"><i class="fa-solid fa-arrows-rotate"></i></a>'; # Refresh
@@ -187,11 +195,11 @@ function checkCarPlate($plate) {
     if ($result->num_rows > 0) {
         $error = "Skiltnummeret er allerede registrert";
         setcookie("error", $error, time() + (10), "/"); # 1 minute
-    } else
-    if (verifyPlate($plate) == false) {
-        $error = "Skiltnummeret er ikke gyldig";
-        setcookie("error", $error, time() + (10), "/"); # 1 minute
     } else {
+    #if (verifyPlate($plate) == false) {
+    #    $error = "Skiltnummeret er ikke gyldig";
+    #    setcookie("error", $error, time() + (10), "/"); # 1 minute
+    #} else {
         return true;
     }
 
@@ -248,15 +256,73 @@ function generateRandomString($length = 8) {
 
 # Passenger functions
 if (isset($_POST['join_driver'])) {
-    $passenger = rand();
-    setcookie("passenger", $passenger, time() + (7 * 24 * 60 * 60), "/"); # 7 days
-    $_SESSION['passenger'] = $passenger;
+    $driver = false;
+    if (isset($_SESSION['driver'])) {
+        $passenger = $_SESSION['driver'];
+        $driver = true;
+    } else {
+        $passenger = rand();
+        setcookie("passenger", $passenger, time() + (7 * 24 * 60 * 60), "/"); # 7 days
+        $_SESSION['passenger'] = $passenger;
+    }
     $plate = $_POST['plate'];
-    $stmt = $conn->prepare("INSERT INTO `passengers` (`id`, `ip`, `license_plate`) VALUES (?, ?, ?)");
-    $stmt->bind_param("iss", $passenger, $_SERVER['REMOTE_ADDR'], $plate);
+    $checkPassenger = $conn->query("SELECT * FROM `passengers` WHERE `id` = '$passenger'");
+    if ($checkPassenger->num_rows == 0) {
+        if ($driver == true) {
+            $stmt = $conn->prepare("UPDATE `drivers` SET `doors` = 'closed' WHERE `id` = ?");
+            $stmt->bind_param("i", $passenger);
+            $stmt->execute();
+            $stmt->close();
+        }
+        $stmt = $conn->prepare("INSERT INTO `passengers` (`id`, `ip`, `license_plate`) VALUES (?, ?, ?)");
+        $stmt->bind_param("iss", $passenger, $_SERVER['REMOTE_ADDR'], $plate);
+        $stmt->execute();
+        $stmt->close();
+        header("Location: ./car?s=$plate");
+    } else {
+        $passenger = $checkPassenger->fetch_assoc();
+        $plate = $passenger['license_plate'];
+        if ($plate == $_POST['plate']) {
+            header("Location: ./car?s=$plate");
+        } else {
+            $stmt = $conn->prepare("UPDATE `passengers` SET `license_plate` = ? WHERE `id` = ?");
+            $stmt->bind_param("si", $plate, $passenger);
+            $stmt->execute();
+            $stmt->close();
+            header("Location: ./car?s=$plate");
+        }
+    }
+}
+if (isset($_POST['leave_driver'])) {
+    $driver = false;
+    if (isset($_SESSION['driver'])) {
+        $passenger = $_SESSION['driver'];
+        $driver = true;
+    } else {
+        $passenger = $_COOKIE['passenger'];
+    }
+    if ($driver == true) {
+        $stmt = $conn->prepare("UPDATE `drivers` SET `doors` = 'open' WHERE `id` = ?");
+        $stmt->bind_param("i", $passenger);
+        $stmt->execute();
+        $stmt->close();
+    }
+    $license_plate = $_POST['license_plate'];
+    $stmt = $conn->prepare("DELETE FROM `passengers` WHERE `id` = ?");
+    $stmt->bind_param("i", $passenger);
     $stmt->execute();
     $stmt->close();
-    header("Location: ./car?s=$plate");
+    session_destroy();
+    setcookie("passenger", "", time() - 3600, "/");
+    echo "<script>window.location.href = './';</script>";
+}
+if (isset($_POST['remove_passenger'])) {
+    $passenger = $_POST['passenger'];
+    $stmt = $conn->prepare("DELETE FROM `passengers` WHERE `id` = ?");
+    $stmt->bind_param("i", $passenger);
+    $stmt->execute();
+    $stmt->close();
+    echo "<script>window.location.href = './';</script>";
 }
 
 if (isset($_SESSION['passenger'])) {
@@ -376,11 +442,19 @@ if (isset($_SESSION['driver'])) {
         setcookie("start", "", time() + (10), "/"); # 1 minute
         $driver = $drivers->fetch_assoc();
         $username = $driver['username'];
-        $default_car = $driver['default_car'];
+        $default_car = strtoupper($driver['default_car']);
         $phone = $driver['phone'];
         $fullname = $driver['full_name'];
         $doors = $driver['doors'];
         $avatar = $driver['avatar'];
+        
+        $checkRanks = $conn->query("SELECT * FROM `ranks` WHERE `user_id` = '$id'");
+        if ($checkRanks->num_rows == 1) {
+            $rankData = $checkRanks->fetch_assoc();
+            $rank = $rankData['rank'];
+        } else {
+            $rank = "driver";
+        }
 
         if ($avatar == null) {
             $avatar = "assets/images/car.png";
@@ -391,9 +465,9 @@ if (isset($_SESSION['driver'])) {
 }
 
 if (isset($_POST['add_car'])) {
-    $plate = $_POST['license_plate'];
+    $plate = strtoupper($_POST['license_plate']);
     if (checkCarPlate($plate) == true) {
-        $stmt = $conn->prepare("INSERT INTO `cars` (`license_plate`, `driver`) VALUES (?, ?)");
+        $stmt = $conn->prepare("INSERT INTO `cars` (UPPER(`license_plate`), `driver`) VALUES (?, ?)");
         $stmt->bind_param("si", $plate, $id);
         $stmt->execute();
         $stmt->close();

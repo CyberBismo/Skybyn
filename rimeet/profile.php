@@ -16,55 +16,48 @@ if (isset($_POST['updateProfile'])) {
         $doors = "open";
     }
 
-    $stmt = $conn->prepare("UPDATE `drivers` SET `username` = ?, `email` = ?, `phone` = ?, `doors` = ? WHERE `id` = ?");
-    $stmt->bind_param("ssssi", $username, $email, $phone, $doors, $_SESSION['driver']);
+    if (!empty($_FILES['avatar'])) {
+        $avatar = $_FILES['avatar'];
+        $avatarName = $avatar['name'];
+        $avatarTmp = $avatar['tmp_name'];
+        $avatarSize = $avatar['size'];
+        $avatarError = $avatar['error'];
+        $avatarExt = explode(".", $avatarName);
+        $avatarActualExt = strtolower(end($avatarExt));
+        $allowed = array("jpg", "jpeg", "png");
+    
+        $avatarNameNew = ""; // Initialize the variable
+    
+        if (in_array($avatarActualExt, $allowed)) {
+            if ($avatarError === 0) {
+                if ($avatarSize < 1000000) {
+                    $avatarNameNew = $avatarName."_".$_SESSION['driver'].".".(string)$avatarActualExt;
+                    $avatarDestination = "uploads/avatars/".$_SESSION['driver']."/".$avatarNameNew;
+                    if (!file_exists("uploads/avatars/".$_SESSION['driver'])) {
+                        mkdir("uploads/avatars/".$_SESSION['driver']);
+                    }
+                    move_uploaded_file($avatarTmp, $avatarDestination);
+                } else {
+                    setcookie("error", "Filen er for stor", time() + 1, "/");
+                }
+            } else {
+                setcookie("error", "Det oppstod en feil", time() + 1, "/");
+            }
+        } else {
+            setcookie("error", "Du kan ikke laste opp filer av denne typen", time() + 1, "/");
+        }
+    }
+    
+    $stmt = $conn->prepare("UPDATE `drivers` SET `username` = ?, `email` = ?, `phone` = ?,`avatar` = ?, `doors` = ? WHERE `id` = ?");
+    $stmt->bind_param("sssssi", $username, $email, $phone, $avatarNameNew, $doors, $_SESSION['driver']);
     $stmt->execute();
     $stmt->close();
     setcookie("success", "Profilen din ble oppdatert", time() + 1, "/");
-    echo "<script>window.location.href = './profile';</script>";
-}
-
-if (isset($_POST['updateAvatar'])) {
-    $avatar = $_FILES['avatar'];
-    $avatarName = $avatar['name'];
-    $avatarTmp = $avatar['tmp_name'];
-    $avatarSize = $avatar['size'];
-    $avatarError = $avatar['error'];
-    $avatarExt = explode(".", $avatarName);
-    $avatarActualExt = strtolower(end($avatarExt));
-    $allowed = array("jpg", "jpeg", "png");
-
-    if (in_array($avatarActualExt, $allowed)) {
-        if ($avatarError === 0) {
-            if ($avatarSize < 1000000) {
-                $avatarNameNew = "avatar_".$_SESSION['driver'].".".$avatarActualExt;
-                $avatarDestination = "uploads/avatars/".$_SESSION['driver']."/".$avatarNameNew;
-                if (!file_exists("uploads/avatars/".$_SESSION['driver'])) {
-                    mkdir("uploads/avatars/".$_SESSION['driver']);
-                }
-                move_uploaded_file($avatarTmp, $avatarDestination);
-                $stmt = $conn->prepare("UPDATE `drivers` SET `avatar` = ? WHERE `id` = ?");
-                $stmt->bind_param("si", $avatarNameNew, $_SESSION['driver']);
-                $stmt->execute();
-                $stmt->close();
-                setcookie("success", "Profilbilde ble oppdatert", time() + 1, "/");
-                echo "<script>window.location.href = 'profile';</script>";
-            } else {
-                setcookie("error", "Filen er for stor", time() + 1, "/");
-                echo "<script>window.location.href = 'profile';</script>";
-            }
-        } else {
-            setcookie("error", "Det oppstod en feil", time() + 1, "/");
-            echo "<script>window.location.href = 'profile';</script>";
-        }
-    } else {
-        setcookie("error", "Du kan ikke laste opp filer av denne typen", time() + 1, "/");
-        echo "<script>window.location.href = 'profile';</script>";
-    }
+    echo "<script>window.location.href = 'profile';</script>";
 }
 
 if (!isset($_SESSION['driver'])) {
-    header("Location: ./car?signin");
+    header("Location: car?signin");
 }?>
 <style>
     .profile {
@@ -104,23 +97,9 @@ if (!isset($_SESSION['driver'])) {
 </style>
 <div class="profile">
     <form method="post" enctype="multipart/form-data">
-        <img src="<?=$avatar?>" id="avatar_preview" onclick="document.getElementById('avatar').click()">
+        <img src="<?=$avatar?>" id="avatar_preview">
         <input type="file" name="avatar" id="avatar" onchange="previewAvatar()" hidden>
-        <button type="submit" name="updateAvatar" id="updateAvatar">Oppdater profilbilde</button>
-    </form>
-    <script>
-        function previewAvatar() {
-            var file = document.getElementById("avatar").files[0];
-            var reader = new FileReader();
-            reader.onloadend = function() {
-                document.getElementById("avatar_preview").src = reader.result;
-            }
-            if (file) {
-                reader.readAsDataURL(file);
-            }
-        }
-    </script>
-    <form method="post">
+        <button type="button" onclick="document.getElementById('avatar').click()">Velg bilde</button>
         <label for="username">Brukernavn:</label>
         <input type="text" name="username" id="username" value="<?=$username?>" required>
         <label for="email">E-post adresse:</label>
@@ -136,6 +115,17 @@ if (!isset($_SESSION['driver'])) {
 </div>
 
 <script>
+    function previewAvatar() {
+        var file = document.getElementById("avatar").files[0];
+        var reader = new FileReader();
+        reader.onloadend = function() {
+            document.getElementById("avatar_preview").src = reader.result;
+        }
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    }
+
     document.getElementById("updateProfileBtn").addEventListener("click", function() {
         document.getElementById("updateProfile").click();
     });

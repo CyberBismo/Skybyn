@@ -28,8 +28,8 @@ if (isset($_POST['updatePhoto'])) {
                     mkdir("uploads/vehicles/".$plate);
                 }
                 move_uploaded_file($photoTmp, $photoDestination);
-                $stmt = $conn->prepare("UPDATE `cars` SET `photo` = ? WHERE `license_plate` = ?");
-                $stmt->bind_param("ss", $photoNameNew, $plate);
+                $stmt = $conn->prepare("UPDATE `cars` SET `photo` = ? WHERE UPPER(`license_plate`) = ?");
+                $stmt->bind_param("ss", $photoNameNew, strtoupper($plate));
                 $stmt->execute();
                 $stmt->close();
                 setcookie("success", "Bilde ble oppdatert", time() + 1, "/");
@@ -104,7 +104,7 @@ if (isset($_POST['updatePhoto'])) {
             while ($driver = $drivers->fetch_assoc()) {
                 $driverId = $driver['id'];
                 $driverName = $driver['username'];
-                $driverCar = $driver['default_car'];
+                $driverCar = strtoupper($driver['default_car']);
                 $driverRealName = $driver['full_name'];
                 $driverPhone = $driver['phone'];
                 $driverAvatar = $driver['avatar'];
@@ -117,7 +117,7 @@ if (isset($_POST['updatePhoto'])) {
                 }
 
                 if (!empty($driverCar)) {
-                    $driverCarData = $conn->query("SELECT * FROM `cars` WHERE `license_plate` = '$driverCar'");
+                    $driverCarData = $conn->query("SELECT * FROM `cars` WHERE UPPER(`license_plate`) = '$driverCar'");
                     $driverCarData = $driverCarData->fetch_assoc();
                     $driverCarStolen = $driverCarData['stolen'];
                 } else {
@@ -142,7 +142,7 @@ if (isset($_POST['updatePhoto'])) {
                         <?php }?>
                     </div>
                     <?php if (!empty($driverCar)) {
-                        $driverCarData = $conn->query("SELECT * FROM `cars` WHERE `license_plate` = '$driverCar'");
+                        $driverCarData = $conn->query("SELECT * FROM `cars` WHERE UPPER(`license_plate`) = '$driverCar'");
                         $driverCarData = $driverCarData->fetch_assoc();
                         $driverCarOwner = $driverCarData['driver'];
                         $driverCarPhoto = $driverCarData['photo'];
@@ -168,7 +168,7 @@ if (isset($_POST['updatePhoto'])) {
                         <ul>
                             <?php while ($car = $driversCars->fetch_assoc()) {?>
                             <li onclick="window.location.href='?s=<?=$car['license_plate']?>'">
-                                <b><?=$car['license_plate']?></b>
+                                <b><?=strtoupper($car['license_plate'])?></b>
                                 <img src="<?=$driverCarPhoto?>">
                             </li>
                             <?php }?>
@@ -195,7 +195,7 @@ if (isset($_POST['updatePhoto'])) {
             <h1>Biler</h1>
             <?php
             while ($carData = $cars->fetch_assoc()) {
-                $carPlate = $carData['license_plate'];
+                $carPlate = strtoupper($carData['license_plate']);
                 $carDriver = $carData['driver'];
                 $carStolen = $carData['stolen'];
                 $carPhoto = $carData['photo'];
@@ -282,7 +282,7 @@ if (isset($_POST['updatePhoto'])) {
             <div class="car-carousel">
             <?php
             while ($carData = $cars->fetch_assoc()) {
-                $carPlate = $carData['license_plate'];
+                $carPlate = strtoupper($carData['license_plate']);
                 $carDriver = $carData['driver'];
                 ?>
                 <div class="vehicle stolen">

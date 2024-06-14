@@ -75,10 +75,45 @@ if (isset($_SESSION['driver']) || isset($_SESSION['passenger'])) {
             .card::-webkit-scrollbar {
                 display: none;
             }
+            .passengers .split {
+                display: flex;
+                justify-content: space-between;
+            }
+            .passengers img {
+                width: 30px;
+                height: 30px;
+                border-radius: 10px;
+                object-fit: cover;
+            }
+            .passengers p {
+                height: 30px;
+                margin: 0;
+                padding: 0;
+                line-height: 30px;
+            }
+            .passengers form {
+                margin: 0;
+                padding: 0;
+            }
+            .passengers button[type=submit] {
+                color: black;
+                background: rgba(0, 0, 0, 0);
+            }
             .card .btns {
                 display: flex;
                 justify-content: space-between;
                 gap: 5px;
+            }
+            .card .btns img {
+                width: 50px;
+                height: 50px;
+                border-radius: 10px;
+                object-fit: cover;
+            }
+            .card .btns h2 {
+                margin: 0;
+                padding: 0;
+                line-height: 50px;
             }
             .card button,
             .card .btns button {

@@ -30,7 +30,7 @@
                         $default = ' <i class="fa-regular fa-star" onclick="makeDefault(\''.$plate.'\')"></i>';
                     }
             ?>
-            <b class="profile_car"><span onclick="showCar('<?=$plate?>')"><?=$plate?></span><?=$default?></b>
+            <b class="profile_car"><span onclick="showCar('<?=$plate?>')"><?=strtoupper($plate)?></span><?=$default?></b>
             <?php }?>
             <form method="post" class="add_vehicle">
                 <input type="text" name="license_plate" placeholder="+ Legg til bil" alt="Skiltnummer (AA12345)" required>
@@ -65,7 +65,9 @@
     <?php }?>
     
     <?php
+    $meet = false;
     if (isset($_SESSION['driver'])) {
+        $id = $_SESSION['driver'];
         $myMeetInfo = $conn->query("SELECT * FROM `meets` WHERE `deleted` = 0 AND `driver` = '$id'");
         if ($myMeetInfo->num_rows > 0) {
             $myMeetInfo = $myMeetInfo->fetch_assoc();
@@ -123,8 +125,8 @@
     </div>
     <?php }
     } else
-    $meet = false;
     if (isset($_SESSION['passenger'])) {
+        $id = $_SESSION['passenger'];
         $checkJoiners = $conn->query("SELECT * FROM `joiners` WHERE `joiner` = '$id'");
         if ($checkJoiners->num_rows > 0) {
             $joiner = $checkJoiners->fetch_assoc();
@@ -148,6 +150,97 @@
         }
     } else {
         $meet = false;
+    }
+
+    if (isset($_SESSION['driver'])) {
+        if ($doors == "closed") {
+            $checkCar = $conn->query("SELECT * FROM `passengers` WHERE `id` = '$id'");
+            if ($checkCar->num_rows > 0) {
+                $car = $checkCar->fetch_assoc();
+                $car_plate = $car['license_plate'];
+
+                $checkPlate = $conn->query("SELECT * FROM `cars` WHERE `license_plate` = '$car_plate'");
+                if ($checkPlate->num_rows > 0) {
+                    $carInfo = $checkPlate->fetch_assoc();
+                    $car_driver = $carInfo['driver'];
+
+                    $checkDriver = $conn->query("SELECT * FROM `drivers` WHERE `id` = '$car_driver'");
+                    if ($checkDriver->num_rows > 0) {
+                        $driver = $checkDriver->fetch_assoc();
+                        $driver_name = $driver['username'];
+                        
+                        if ($driver['avatar'] == "" || !file_exists("./uploads/avatars/".$car_driver."/".$driver['avatar'])) {
+                            $driver_avatar = "./assets/img/car.png";
+                        } else {
+                            $driver_avatar = "./uploads/avatars/".$car_driver."/".$driver['avatar'];
+                        }
+                        ?>
+                        <div class="card green">
+                            <div class="btns">
+                                <img src="<?=$driver_avatar?>">
+                                <h2><?=$driver_name?></h2>
+                            </div>
+                            <p onclick="window.location.href='car?s=<?=$car_plate?>'"><b><?=$car_plate?></b></p>
+                            <form method="post" class="btns">
+                                <button onclick="window.location.href='car?s=<?=$driver_name?>'">Sjåfør</button>
+                                <input type="hidden" name="license_plate" value="<?=$car_plate?>">
+                                <button type="submit" name="leave_driver">Forlat bil</button>
+                            </form>
+                        </div>
+                        <?php
+                    }
+                }
+            }
+        } else {
+            $checkCar = $conn->query("SELECT * FROM `passengers` WHERE `license_plate` = '$default_car'");
+            if ($checkCar->num_rows > 0) {
+                ?>
+                <div class="card green passengers">
+                    <h2>Passasjerer</h2>
+                <?php
+                while($car = $checkCar->fetch_assoc()) {
+                    $car_passenger = $car['id'];
+                    $car_passenger_nickname = $car['nickname'];
+
+                    $checkDriver = $conn->query("SELECT * FROM `drivers` WHERE `id` = '$car_passenger'");
+                    if ($checkDriver->num_rows > 0) {
+                        $driver = $checkDriver->fetch_assoc();
+                        $driver_name = $driver['username'];
+
+                        if ($driver['avatar'] == "" || !file_exists("./uploads/avatars/".$car_passenger."/".$driver['avatar'])) {
+                            $driver_avatar = "./assets/img/car.png";
+                        } else {
+                            $driver_avatar = "./uploads/avatars/".$car_passenger."/".$driver['avatar'];
+                        }
+                        ?>
+                        <div class="split">
+                            <img src="<?=$driver_avatar?>">
+                            <p onclick="window.location.href='car?s=<?=$driver_name?>'"><b><?=$driver_name?></b></p>
+                            <form method="post">
+                                <input type="hidden" name="passenger" value="<?=$car_passenger?>">
+                                <button type="submit" name="remove_passenger"><i class="fa-solid fa-xmark"></i></button>
+                            </form>
+                        </div>
+                        <?php
+                    } else {
+                        $driver_avatar = "./assets/img/car.png";
+                        ?>
+                        <div class="split">
+                            <img src="<?=$driver_avatar?>">
+                            <p><b><?=$car_passenger_nickname?></b></p>
+                            <form method="post">
+                                <input type="hidden" name="passenger" value="<?=$car_passenger?>">
+                                <button type="submit" name="remove_passenger"><i class="fa-solid fa-xmark"></i></button>
+                            </form>
+                        </div>
+                        <?php
+                    }
+                }
+                ?>
+                </div>
+                <?php
+            }
+        }
     }
 
     if ($meet == true) {?>
