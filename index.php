@@ -1,4 +1,4 @@
-<?php include_once "assets/header.php";
+<?php include_once "./assets/header.php";
 
 if (isset($_GET['signup'])) {
 	if (skybyn('register') == "1") {

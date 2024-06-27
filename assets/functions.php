@@ -1,4 +1,4 @@
-<?php include_once "../assets/conn.php";
+<?php include_once "./assets/conn.php";
 
 if (isset($_COOKIE['qr_login'])) {
     $uid = $_COOKIE['qr_login'];

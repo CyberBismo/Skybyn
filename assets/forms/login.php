@@ -150,7 +150,7 @@
                     <?php }}?>
                     <?php if (isMobile() === false) { ?>
                     <span class="show_qr_login" onclick="tglLogin()" id="qr_tgl">Sign in with <i class="fa-solid fa-qrcode"></i></span>
-                    <?php } ?>
+                    <?php }?>
                 </div>
                 <script>
                     function deleteCookie(name) {
