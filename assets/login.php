@@ -1,4 +1,4 @@
-<?php  include_once "./functions.php";
+<?php include_once "./assets/functions.php";
 
 $email = $_POST['email'];
 $password = hash("sha512", $_POST['password']);

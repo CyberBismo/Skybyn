@@ -37,7 +37,11 @@ $friends = [
     "Dennis Lyngholm",
     "Jeanette Nilsen",
     "Fabian Strøm",
-    "Sigrid Clinckaert"
+    "Sigrid Clinckaert",
+    "Sofie Miettinen",
+    "Andrea Jonskau",
+    "Marius Lervik",
+    "Marius Bruheim"
 ];
 
 $address = "Måltrostveien 19, 3482 Tofte";
@@ -93,19 +97,27 @@ if (isset($_POST['venner_valg'])) {
 }
 
 if (isset($_POST['bekreft'])) {
-    $dag = isset($_POST['dag']) ? 1 : 0;
-    $kveld = isset($_POST['kveld']) ? 1 : 0;
     $barn = isset($_POST['barn']) ? 1 : 0;
     $kommer_ikke = isset($_POST['kommer_ikke']) ? 1 : 0;
+
+    if (isset($_POST['dag'])) {
+        $dag = 1;
+    } else {
+        $dag = 0;
+    }
+
+    if (isset($_POST['kveld'])) {
+        $kveld = 1;
+    } else {
+        $kveld = 0;
+    }
     
     $valg = $_SESSION['valg'];
 
     foreach ($valg as $navn) {
         $checkName = "SELECT * FROM `invitasjoner` WHERE `navn` = '$navn'";
         $result = mysqli_query($conn, $checkName);
-        if (mysqli_num_rows($result) > 0) {
-            $_SESSION['info'] = "$navn har allerede svart.";
-        } else {
+        if (mysqli_num_rows($result) == 0) {
             $sql = "INSERT INTO `invitasjoner` (`navn`, `dag`, `kveld`, `har med barn`, `kommer ikke`) VALUES ('$navn', $dag, $kveld, $barn, $kommer_ikke)";
             mysqli_query($conn, $sql);
         }
@@ -175,6 +187,19 @@ if (isset($_POST['send_allergier'])) {
 
             p {
                 color: #666;
+            }
+
+            button {
+                background-color: #f44336;
+                border: none;
+                color: white;
+                padding: 15px 32px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                margin: 4px 2px;
+                cursor: pointer;
             }
 
             input[type="button"],
@@ -268,6 +293,8 @@ if (isset($_POST['send_allergier'])) {
             <p>Håper at vi ses om ikke så alt for lenge</p>
             <?php }?>
 
+            <button onclick="window.location.href='./'">Lukk</button>
+
             <?php } else
             if ($_SESSION['steg'] == 4) {?>
             <h1>Har du matallergier eller annet vi må ta hensyn til?</h1>
@@ -286,12 +313,12 @@ if (isset($_POST['send_allergier'])) {
                 <ul>
                     <label for="dag">
                         <li>
-                            <input type="checkbox" name="dag" id="dag" onchange="checkControl('dag')"> 12-16
+                            <input type="checkbox" name="dag" id="dag" onchange="checkControl('dag')"> Dag (12-16)
                         </li>
                     </label>
                     <label for="kveld">
                         <li>
-                            <input type="checkbox" name="kveld" id="kveld" onchange="checkControl('kveld')"> 19-23
+                            <input type="checkbox" name="kveld" id="kveld" onchange="checkControl('kveld')">Kveld (19-02)
                         </li>
                     </label>
                     <label for="barn">
@@ -333,7 +360,7 @@ if (isset($_POST['send_allergier'])) {
                 if ($_SESSION['bekreftelse'] == 'familie') {
                     $names = $family;
             ?>
-            <h1>Velg de navnene du kommer med.</h1>
+            <h1>Velg ditt eget og de navnene du kommer med.</h1>
             <h2>Familie er hovedsaklig satt av til dagtid (12-16)</h2>
 
             <form method="post">
@@ -341,49 +368,17 @@ if (isset($_POST['send_allergier'])) {
                     <?php foreach ($names as $index => $name) { ?>
                         <label class="choices" for="navn<?php echo $index + 1; ?>">
                             <li>
-                                <input type="checkbox" value="<?=$name?>" name="navn<?php echo $index + 1; ?>" id="navn<?php echo $index + 1; ?>" onchange="toggleBold('navn<?php echo $index + 1; ?>')"> <span><?php echo $name; ?></span>
+                                <input type="checkbox" value="<?=$name?>" name="navn<?php echo $index + 1; ?>" id="navn<?php echo $index + 1; ?>" onchange="toggleBold('navn<?php echo $index + 1; ?>');checkName('<?=$name?>')"> <span><?php echo $name; ?></span>
                             </li>
                         </label>
                     <?php } ?>
                 </ul>
                 <input type="submit" name="familie_valg" value="Fortsett" onclick="return validateForm()">
             </form>
-
-            <form method="post">
-                <input type="submit" name="tilbake" value="Tilbake">
-            </form>
-            
-            <script>
-                function toggleBold(id) {
-                    var element = document.getElementById(id);
-                    var span = element.nextElementSibling;
-                    if (element.checked) {
-                        span.style.fontWeight = 'bold';
-                    } else {
-                        span.style.fontWeight = 'normal';
-                    }
-                }
-                
-                function validateForm() {
-                    var checkboxes = document.querySelectorAll('input[type="checkbox"]');
-                    var checked = false;
-                    for (var i = 0; i < checkboxes.length; i++) {
-                        if (checkboxes[i].checked) {
-                        checked = true;
-                        break;
-                        }
-                    }
-                    if (!checked) {
-                        alert("Please check at least one box.");
-                        return false;
-                    }
-                    return true;
-                }
-            </script>
             <?php } else {
                 $names = $friends;
                 ?>
-            <h1>Velg de navnene du kommer med.</h1>
+            <h1>Velg ditt eget og de navnene du kommer med.</h1>
             <h2>Venner er hovedsaklig satt av til kvelstid (19-02)</h2>
 
             <form method="post">
@@ -391,13 +386,15 @@ if (isset($_POST['send_allergier'])) {
                 <?php foreach ($names as $index => $name) { ?>
                     <label class="choices" for="navn<?php echo $index + 1; ?>">
                         <li>
-                            <input type="checkbox" value="<?=$name?>" name="navn<?php echo $index + 1; ?>" id="navn<?php echo $index + 1; ?>" onchange="toggleBold('navn<?php echo $index + 1; ?>')"> <span><?php echo $name; ?></span>
+                            <input type="checkbox" value="<?=$name?>" name="navn<?php echo $index + 1; ?>" id="navn<?php echo $index + 1; ?>" onchange="toggleBold('navn<?php echo $index + 1; ?>');checkName('<?=$name?>')"> <span><?php echo $name; ?></span>
                         </li>
                     </label>
                 <?php } ?>
                 </ul>
                 <input type="submit" name="venner_valg" value="Fortsett" onclick="return validateForm()">
             </form>
+
+            <?php }?>
             
             <form method="post">
                 <input type="submit" name="tilbake" value="Tilbake">
@@ -429,8 +426,28 @@ if (isset($_POST['send_allergier'])) {
                     }
                     return true;
                 }
+
+                function checkName(name) {
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("POST", "checkName.php", true);
+                    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                    xhr.onreadystatechange = function() {
+                        if (xhr.readyState == 4 && xhr.status == 200) {
+                            if (xhr.responseText == "Name already exists") {
+                                alert(name + " har allerede svart.");
+                                var element = document.querySelector('input[value="' + name + '"]');
+                                if (element) {
+                                    element.checked = false;
+                                    toggleBold(element.id);
+                                }
+                            }
+                        }
+                    };
+                    xhr.send("navn=" + name);
+                }
             </script>
-            <?php }} else
+
+            <?php } else
             if ($_SESSION['steg'] == 1) {?>
             <h1>Er du familie eller venner?</h1>
             
