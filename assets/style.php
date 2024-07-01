@@ -3012,6 +3012,7 @@
             .friend-referral h3 {
                 margin: 0 0 10px 0;
                 padding: 0 10px;
+                cursor: pointer;
             }
             .fr_code {
                 margin-bottom: 10px;
