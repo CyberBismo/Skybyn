@@ -1,4 +1,4 @@
-<?php include_once "./assets/functions.php";
+<?php include_once "functions.php";
 header('Access-Control-Allow-Origin: *');
 
 $devDomain = 'dev.skybyn.no';

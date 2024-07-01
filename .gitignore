@@ -6115,3 +6115,5 @@ rimeet/vegvesen/classes/Application.php
 rimeet/vegvesen/.php-cs-fixer.cache
 rimeet/vegvesen/.gitattributes
 rimeet/vegvesen/.env.example
+assets/vendor/stripe/stripe-php/lib/ApiResponse.php
+assets/vendor/stripe/stripe-php/lib/Capability.php

@@ -71,7 +71,9 @@ $post_content_res = fixEmojis(cleanUrls(nl2br($post_content)), 1);
         <div class="post_comments">
             <div class="post_comment_post">
                 <div class="post_comment_post_user">
-                    <img src="<?=$avatar?>">
+                    <div class="post_comment_user_avatar">
+                        <img src="<?=$avatar?>">
+                    </div>
                     <span><?=$username?></span>
                 </div>
                 <input type="text" id="pc_<?=$post_id?>" onkeydown="hitEnter(this,<?=$post_id?>)" placeholder="Write a comment">
@@ -91,7 +93,9 @@ $post_content_res = fixEmojis(cleanUrls(nl2br($post_content)), 1);
                         }?>
                 <div class="post_comment" id="comment_<?=$commentID?>">
                     <div class="post_comment_user">
-                        <img src="<?=$commentAvatar?>">
+                        <div class="post_comment_user_avatar">
+                            <img src="<?=$commentAvatar?>">
+                        </div>
                         <span><?=$commentUsername?></span>
                     </div>
                     <div class="post_comment_content"><?=$commentText?></div>

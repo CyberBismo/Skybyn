@@ -81,7 +81,7 @@ while($post = $getPosts->fetch_assoc()) {
             </div>
         </div>
         <div class="post_expand" id="post_expand" onclick="expandPost(<?=$post_id?>)">
-            Read more
+            Show more
         </div>
         <?php }?>
         <div class="post_comments">

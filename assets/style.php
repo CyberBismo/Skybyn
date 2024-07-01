@@ -1236,11 +1236,10 @@
                 overflow: hidden;
             }
             .create_post_actions_top img {
-                width: autos;
-                max-width: 50px;
-                height: 100%;
-                max-height: 50px;
-                border-radius: 50px;
+                width: 50px;
+                height: 50px;
+                border-radius: 25px;
+                object-fit: cover;
             }
             .create_post_actions_top textarea {
                 min-width: calc(100% - 100px);
@@ -2242,11 +2241,12 @@
             .post_comment_user {
                 display: flex;
                 min-width: 30px;
-                max-width: 30%;
+                max-width: 40%;
                 overflow: hidden;
             }
             .post_comment_user_avatar {
                 min-width: 30px;
+                max-width: 30px;
                 height: 30px;
                 margin-right: 10px;
                 border-radius: 30px;
@@ -2268,6 +2268,7 @@
             }
             <?php if (isMobile() == false) {?>
             .post_comment_user span {
+                width: 200px;
                 line-height: 30px;
             }
             .post_comment_content {

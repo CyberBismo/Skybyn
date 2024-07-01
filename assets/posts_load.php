@@ -81,11 +81,11 @@ while ($post = $getPosts->fetch_assoc()) {
             </div>
         </div>
         <div class="post_expand" id="post_expand" onclick="expandPost(<?=$post_id?>)">
-            Read more
+            Show more
         </div>
         <?php }?>
         <div class="post_comments">
-            <div class="post_comment_count"><?=$comment_count?><i class="fa-solid fa-comments"></i></div>
+            <div class="post_comment_count"><?=$comments?><i class="fa-solid fa-comments"></i></div>
             <div class="post_comment">
                 <div class="post_comment_user">
                     <div class="post_comment_user_avatar">
@@ -113,7 +113,9 @@ while ($post = $getPosts->fetch_assoc()) {
                         }?>
                 <div class="post_comment" id="comment_<?=$commentID?>">
                     <div class="post_comment_user">
-                        <img src="<?=$commentAvatar?>">
+                        <div class="post_comment_user_avatar">
+                            <img src="<?=$commentAvatar?>">
+                        </div>
                         <span><?=$commentUsername?></span>
                     </div>
                     <div class="post_comment_content"><?=$commentText?></div>

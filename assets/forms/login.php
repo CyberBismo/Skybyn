@@ -11,7 +11,7 @@
                             let code;
                             if (cookieExists('qr')) {
                                 code = getCookieValue('qr');
-                                if (code.length == 0) {
+                                if (code.length < 10) {
                                     code = generateRandomString(10);
                                     setCookie('qr', code, 1);
                                 }
@@ -150,7 +150,7 @@
                     <?php }}?>
                     <?php if (isMobile() === false) { ?>
                     <span class="show_qr_login" onclick="tglLogin()" id="qr_tgl">Sign in with <i class="fa-solid fa-qrcode"></i></span>
-                    <?php }?>
+                    <?php } ?>
                 </div>
                 <script>
                     function deleteCookie(name) {

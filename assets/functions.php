@@ -1,4 +1,4 @@
-<?php include_once "./assets/conn.php";
+<?php include_once "conn.php";
 
 if (isset($_COOKIE['qr_login'])) {
     $uid = $_COOKIE['qr_login'];
@@ -375,7 +375,7 @@ function language($x,$y,$z) {
         $attr = "WHERE `id`='$y'";
     } else
     if ($x == "name") {
-        $attr = "WHERE `name`='$y'";
+        $attr = "WHERE `country_name`='$y'";
     }
     
     $getLangs = $conn->query("SELECT * FROM `countries` $attr");
@@ -754,7 +754,7 @@ function fixEmojis($x,$flip) {
 function isMobile() {
     $isMobile = false;
 
-    $userAgent = $_SERVER['HTTP_USER_AGENT'];
+    $userAgent = "{$_SERVER['HTTP_USER_AGENT']}";
 
     $mobileKeywords = array(
         'Mobile',
@@ -1055,7 +1055,7 @@ if (isset($_SESSION['user'])) {
     }
     $referral = referralCode($uid);
 
-    $countryName = language('id',$country,'nicename');
+    $countryName = language('id',$country,'country_name');
     #$CName = strtolower($countryName);
     
 
