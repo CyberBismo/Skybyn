@@ -427,8 +427,8 @@ if ($currentUrl == $devDomain) {
                     }
                     ?>
                 </div>
-                <div class="friend-referral">
-                    <h3>Refer a friend</h3>
+                <div class="friend-referral" id="fr">
+                    <h3 onclick="expandFR()">Refer a friend</h3>
                     <div class="fr_code" id="frc" <?php if($referral == "error") {?>onclick="genRef()"<?php }?>>
                         <?php if($referral == "error") {?>Generate code<?php } else { echo $referral;}?>
                     </div>

@@ -3001,11 +3001,17 @@
 
             .friend-referral {
                 width: 100%;
+                height: 40px;
                 margin-top: 20px;
                 padding: 10px;
                 background: rgba(0,0,0,.2);
                 border-radius: 10px;
                 box-sizing: border-box;
+                overflow: hidden;
+            }
+            .friend-referral h3 {
+                margin: 0 0 10px 0;
+                padding: 0 10px;
             }
             .fr_code {
                 margin-bottom: 10px;

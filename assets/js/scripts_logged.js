@@ -810,6 +810,15 @@ setInterval(() => {
 }, 300000);
 checkRef();
 
+function expandFR() {
+    const fr = document.getElementById('fr');
+    if (fr.style.height == "auto") {
+        fr.style.height = "40px";
+    } else {
+        fr.style.height = "auto";
+    }
+}
+
 function friExpand() {
     const fri = document.getElementById('fri');
     const frit = document.getElementById('frit');
