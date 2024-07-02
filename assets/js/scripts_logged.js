@@ -57,8 +57,8 @@ function startSearch(x) {
     if (x.value.length >= 4) {
         searchResult.style.display = "block";
 
-        // Check if the input starts with "/user"
-        if (x.value.startsWith("@user ")) {
+        // Check if the input starts with "@" to search for users
+        if (x.value.startsWith("@")) {
             $.ajax({
                 url: 'assets/search_users.php',
                 type: "POST",
@@ -76,7 +76,8 @@ function startSearch(x) {
                 }
             });
         } else
-        if (x.value.startsWith("/page ")) {
+        // Search pages
+        if (x.value.startsWith("!p ")) {
             $.ajax({
                 url: 'assets/search_pages.php',
                 type: "POST",
@@ -94,7 +95,8 @@ function startSearch(x) {
                 }
             });
         } else
-        if (x.value.startsWith("/group ")) {
+        // Search groups
+        if (x.value.startsWith("/g ")) {
             $.ajax({
                 url: 'assets/search_groups.php',
                 type: "POST",
@@ -112,6 +114,7 @@ function startSearch(x) {
                 }
             });
         } else {
+            // Search general
             $.ajax({
                 url: 'assets/search.php',
                 type: "POST",
@@ -170,11 +173,13 @@ function updateFileNameLabel() {
         fileNameLabel.textContent = allFilesSupported ? fileInput.files.length + ' files selected' : 'Invalid file type';
     }
 }
+
 function isFileSupported(file) {
     const allowedExtensions = ['.jpg', '.jpeg', '.gif', '.png'];
     const fileExtension = file.name.split('.').pop().toLowerCase();
     return allowedExtensions.includes('.' + fileExtension);
 }
+
 function displayImageAsThumbnail(file, filesDiv) {
     const reader = new FileReader();
     reader.onload = function (event) {
@@ -185,54 +190,6 @@ function displayImageAsThumbnail(file, filesDiv) {
     reader.readAsDataURL(file);
 }
 let isCreatingPost = false;
-function createPost() {
-    if (isCreatingPost) {
-        // If post creation is already in progress, do nothing
-        return;
-    }
-
-    isCreatingPost = true; // Set the flag to indicate post creation is in progress
-
-    const text = document.getElementById('new_post_input');
-    const public = document.getElementById('new_post_public');
-    const image = document.getElementById('image_to_share');
-    const filesDiv = document.getElementById('new_post_files');
-
-    var formData = new FormData();
-    for (var i = 0; i < image.files.length; i++) {
-        formData.append('files[]', image.files[i]);
-    }
-
-    formData.append('text', text.value);
-    formData.append('public', public.value); // Visibility
-
-    $.ajax({
-        url: 'assets/post_new.php',
-        type: "POST",
-        data: formData,
-        processData: false,
-        contentType: false
-    }).done(function(response) {
-        if (response == "") {
-            newPost();
-            checkPosts(); 
-            text.value = "";
-            image.value = "";
-            filesDiv.innerHTML = "";
-            isCreatingPost = false;
-        }
-    });
-}
-function checkEnter() {
-    let text = document.getElementById('new_post_input');
-
-    text.addEventListener('keydown', function(event) {
-        if (event.key === "Enter" && !event.shiftKey) {
-            event.preventDefault();
-            createPost(); // Call the createPost function directly
-        }
-    });
-}
 
 function convertEmoji(string) {
     let text = document.getElementById('new_post_input');
@@ -267,6 +224,7 @@ function convertEmoji(string) {
     };
     text.value = string.replace(/(:\)|:D)/g, (match) => emojiMap[match]);
 }
+
 function adjustTextareaHeight() {
     const newPost = document.getElementById("new_post");
     const textarea = document.getElementById("new_post_input");0 
@@ -274,16 +232,6 @@ function adjustTextareaHeight() {
     newPost.style.height = 40 + textarea.clientHeight + "px";
 }
 
-function showNotifications(event) {
-    const notifications = document.getElementById('notifications');
-    const notiList = document.getElementById('noti-list');
-    $.ajax({
-        url: 'assets/noti_get.php'
-    }).done(function(response) {
-        notiList.innerHTML = response;
-        notifications.style.display = "block";
-    });
-}
 function hideMenus(event) {
     const usermenu = document.getElementById('usermenu');
     const notification = document.getElementById('notification');
@@ -298,146 +246,6 @@ function hideMenus(event) {
             usermenu.style.display = "none";
         }
     }
-}
-
-function showNoti(x) {
-    let notiWin = document.getElementById('notification-window');
-    let notWin_avatar = document.getElementById('noti_win_avatar');
-    let notWin_user = document.getElementById('noti_win_username');
-    let notWin_text = document.getElementById('noti_win_text');
-    let notWin_foot = document.getElementById('noti_win_foot');
-    let notWin_foot_profile = document.getElementById('noti_win_foot_profile');
-
-    $.ajax({
-        url: 'assets/noti_window_data.php',
-        type: "POST",
-        data: {
-            noti : x
-        }
-    }).done(function(response) {
-        data = response;
-        noti_from = data.noti_from;
-        noti_date = data.noti_date;
-        noti_profile = data.noti_profile;
-        noti_post = data.noti_post;
-        noti_type = data.noti_type;
-        
-        if (noti_from !== null) {
-            notWin_avatar.src.value = data.notiUserAvatar;
-            notWin_user.innerHTML = data.notiUserUsername;
-        } else {
-            notWin_user.innerHTML = "Skybyn";
-        }
-        if (noti_profile !== null) {
-            notWin_foot.removeAttribute("hidden");
-            var profileURL = "window.location.href='./profile="+noti_profile+"'";
-            notWin_foot_profile.setAttribute("onclick",profileURL);
-        } else {
-            notWin_foot.setAttribute("hidden","");
-        }
-        notWin_text.innerHTML = data.noti_content;
-
-        notiWin.removeAttribute("hidden");
-
-        $.ajax({
-            url: 'assets/noti_status.php',
-            type: "POST",
-            data: {
-                noti : x
-            }
-        }).done(function(response) {
-            const noti_status = document.getElementById('noti_status_'+x);
-            if (response === "1") {
-                noti_status.innerHTML = '<i class="fa-solid fa-envelope-open-text"></i>';
-            }
-        });
-    });
-}
-function closeNotiWin() {
-    const notiWin = document.getElementById('notification-window');
-    if (notiWin.hasAttribute("hidden")) {
-        notiWin.removeAttribute("hidden");
-    } else {
-        notiWin.setAttribute("hidden","");
-    }
-}
-function readNoti() {
-    $.ajax({
-        url: 'assets/noti_status.php',
-        type: "POST",
-        data: {
-            read: 1
-        }
-    }).done(function(response) {
-        const noti_status = document.getElementsByClassName('noti-status');
-        for (let i = 0; i < noti_status.length; i++) {
-            noti_status[i].innerHTML = '<i class="fa-solid fa-envelope-open-text"></i>';
-        }
-    });
-}
-function delNoti(x) {
-    const notiList = document.getElementById('noti-list');
-    const noti = document.getElementsByClassName('noti');
-    if (x === "all") {
-        $.ajax({
-            url: 'assets/noti_delete.php',
-            type: "POST",
-            data: {
-                noti: 'all'
-            }
-        }).done(function(response) {
-            for (let i = 0; i < noti.length; i++) {
-                noti[i].remove();
-            }
-            notiList.innerHTML = '<center><br>No new notifications<br><br></center>';
-        });
-    } else {
-        $.ajax({
-            url: 'assets/noti_delete.php',
-            type: "POST",
-            data: {
-                noti: x
-            }
-        }).done(function(response) {
-            document.getElementById('noti_'+x).remove();
-            if (noti.length == 0) {
-                notiList.innerHTML = '<center><br>No new notifications<br><br></center>';
-            }
-        });
-    }
-    checkNoti();
-}
-function checkNoti() {
-    var notiAlert = document.getElementById('noti_alert');
-    $.ajax({
-        url: 'assets/noti_check.php'
-    }).done(function(response) {
-        if (response == "unread") {
-            notiAlert.style.opacity = '1';
-        } else {
-            notiAlert.style.opacity = '0';
-        }
-    });
-}
-
-
-function expandNoti(x) {
-    if (x.style.height === "auto") {
-        x.style.height = "40px";
-    } else {
-        x.style.height = "auto";
-    }
-}
-function markRead(x) {
-    $.ajax({
-        url: 'assets/noti_read.php',
-        type: "POST",
-        data: {
-            noti : x
-        }
-    }).done(function(response) {
-        
-    });
 }
 
 function showImage(x) {
@@ -480,6 +288,7 @@ function showImage(x) {
         });
     }
 }
+
 function toggleImageSlider() {
     const image_slider = document.getElementById('image_slider');
     if (image_slider.style.display == "none") {
@@ -518,6 +327,7 @@ function isScrolledToBottom() {
     // Check if we're at the bottom of the page
     return scrollHeight - scrollTop === windowHeight;
 }
+
 window.addEventListener("scroll", function () {
     if (isScrolledToBottom()) {
         loadMorePosts();
@@ -526,32 +336,6 @@ window.addEventListener("scroll", function () {
 
 let loading = false;
 const limit = 3;
-
-function loadMorePosts() {
-    if (loading) {
-        return;
-    }
-
-    const countPosts = document.querySelectorAll('div.post');
-    const offset = countPosts.length;
-
-    loading = true;
-    $.ajax({
-        url: 'assets/posts_load.php',
-        type: 'POST',
-        data: {
-            offset: offset
-        },
-        success: function (response) {
-            const postsContainer = document.getElementById('posts');
-            postsContainer.insertAdjacentHTML('beforeend', response);
-            loading = false;
-        },
-        error: function () {
-            loading = false;
-        }
-    });
-}
 
 // Attach the scroll event listener to load more posts when scrolled to the bottom
 window.addEventListener('scroll', function () {
@@ -575,99 +359,7 @@ function hitEnter(input,x) {
 
     input.addEventListener('keydown', handleKeyPress, { once: true });
 }
-function sendComment(x) {
-    const input = document.getElementById('pc_'+x);
 
-    if (input.value.length > 0) {
-        $.ajax({
-            url: 'assets/comment_new.php',
-            type: "POST",
-            data: {
-                post_id : x,
-                comment : input.value
-            }
-        }).done(function(response) {
-            input.value = "";
-            checkComments(x);
-        });
-    }
-}
-function checkComments(x) {
-    const comments = document.getElementById('post_comments_'+x);
-    const comment = comments.firstElementChild;
-    $.ajax({
-        url: 'assets/comments_check.php',
-        type: "POST",
-        data: {
-            post : x
-        }
-    }).done(function(response) {
-        if (response != "") {
-            comments.insertAdjacentHTML('afterbegin', response);
-            removeDuplicateIds();
-        }
-    });
-}
-function cleanComments() {
-    let comments = document.querySelectorAll('.post_comment');
-    let commentIds = [];
-    for (var i = 0; i < comments.length; i++) {
-        let commentId = comments[i].id.replace('comment_', '');
-        commentIds.push(commentId);
-    }
-
-    if (commentIds.length > 0) {
-        $.ajax({
-            url: 'assets/comments_clean.php',
-            type: "POST",
-            data: {
-                ids: commentIds
-            }
-        }).done(function(response) {
-            var nonExistingCommentIds = response.split(',');
-            for (var i = 0; i < nonExistingCommentIds.length; i++) {
-                var commentId = nonExistingCommentIds[i];
-                var comment = document.getElementById('comment_' + commentId);
-                if (comment) {
-                    comment.remove();
-                }
-            }
-        });
-    }
-}
-function delComment(x) {
-    const comment = document.getElementById('comment_'+x);
-    $.ajax({
-        url: 'assets/comment_delete.php',
-        type: "POST",
-        data: {
-            comment_id : x
-        }
-    }).done(function(response) {
-        comment.remove();
-    });
-}
-function editPost(x) {
-    const post = document.getElementById('post_c_'+ x);
-    const new_post_input = document.getElementById('new_post_input');
-    new_post_input.value = post.innerHTML;
-    new_post_input.focus();
-    newPost();
-}
-function deletePost(x) {
-    const post = document.getElementById('post_'+ x);
-    $.ajax({
-        url: 'assets/functions.php',
-        type: "POST",
-        data: {
-            deletePost : null,
-            post_id : x
-        }
-    }).done(function(response) {
-        post.remove();
-        checkPosts();
-    });
-}
 function showPostActions(x) {
     const actionList = document.getElementById("pal_"+x);
     
@@ -678,96 +370,6 @@ function showPostActions(x) {
     }
 }
 let insertedPostIds = [];
-
-function checkPosts() {
-    const posts = document.querySelectorAll('[id^="post_"]');
-    let highestNumber = -Infinity;
-    posts.forEach((post) => {
-        const numberPart = parseInt(post.id.replace('post_', ''), 10);
-        if (numberPart > highestNumber) {
-            highestNumber = numberPart;
-        }
-    });
-
-    $.ajax({
-        url: 'assets/posts_check.php',
-        type: "POST",
-        data: {
-            last: highestNumber
-        }
-    }).done(function (response) {
-        if (response != "last") {
-            let newPosts = document.createElement('div');
-            newPosts.innerHTML = response;
-            let postElements = newPosts.querySelectorAll('.post');
-
-            for (let i = 0; i < postElements.length; i++) {
-                let postId = postElements[i].id.replace("post_", "");
-                if (!insertedPostIds.includes(postId)) {
-                    document.getElementById("posts").insertAdjacentElement('afterbegin', postElements[i]);
-                    insertedPostIds.push(postId);
-                }
-            }
-
-            removeDuplicateIds();
-        }
-    });
-}
-
-let initialPosts = document.querySelectorAll('.post');
-for (let i = 0; i < initialPosts.length; i++) {
-    let postId = initialPosts[i].id.replace("post_", "");
-    insertedPostIds.push(postId);
-}
-
-function cleanPosts() {
-    let posts = document.querySelectorAll('.post');
-    let postIds = [];
-    for (var i = 0; i < posts.length; i++) {
-        let postId = posts[i].id.replace('post_', '');
-        postIds.push(postId);
-    }
-
-    if (postIds.length > 0) {
-        $.ajax({
-            url: 'assets/posts_clean.php',
-            type: "POST",
-            data: {
-                ids: postIds
-            }
-        }).done(function(response) {
-            var nonExistingPostIds = response.split(',');
-            for (var i = 0; i < nonExistingPostIds.length; i++) {
-                var postId = nonExistingPostIds[i];
-                var post = document.getElementById('post_' + postId);
-                if (post) {
-                    post.remove();
-                }
-            }
-        });
-    }
-}
-function removeDuplicateIds() {
-    const elements = document.querySelectorAll('*');
-    const idMap = new Map();
-    elements.forEach(element => {
-        const id = element.id;
-        if (id) {
-            if (idMap.has(id)) {
-                element.parentNode.removeChild(element);
-            } else {
-                idMap.set(id, true);
-            }
-        }
-    });
-}
-setInterval(() => {
-    checkPosts();
-    cleanPosts();
-}, 300000); // Every 5 minutes
-removeDuplicateIds();
-
-
 
 function checkRegistrationDuration(registrationTimestamp, unlockDuration) {
     const currentTimestamp = Math.floor(Date.now() / 1000);

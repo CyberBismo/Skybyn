@@ -38,6 +38,9 @@ if ($currentUrl == $devDomain) {
         <?php }?>
         <?php if (isset($_SESSION['user'])) {?>
         <script src="assets/js/scripts_logged.js"></script>
+        <script src="assets/js/posts/updateFeed.js"></script>
+        <script src="assets/js/comments/updateComments.js"></script>
+        <script src="assets/js/notifications/notis.js"></script>
         <?php }?>
         <?php include_once "style.php"?>
     </head>
