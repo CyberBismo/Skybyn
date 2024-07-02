@@ -830,3 +830,43 @@ function friExpand() {
         frit.style.height = "auto";
     }
 }
+
+// Function to extract metadata from a given URL
+function extractMetadata(url) {
+    // Create an iframe to load the URL content
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+    
+    iframe.onload = () => {
+        // Wait for the content to load
+        const doc = iframe.contentDocument || iframe.contentWindow.document;
+        
+        // Extract metadata
+        const metadata = {
+            title: doc.querySelector('title') ? doc.querySelector('title').innerText : '',
+            description: doc.querySelector('meta[name="description"]') ? doc.querySelector('meta[name="description"]').getAttribute('content') : '',
+            images: []
+        };
+        
+        // Extract all images from meta tags and img elements
+        const metaImages = doc.querySelectorAll('meta[property="og:image"], meta[name="twitter:image"], meta[itemprop="image"]');
+        metaImages.forEach(meta => {
+            metadata.images.push(meta.getAttribute('content'));
+        });
+        
+        const imgElements = doc.querySelectorAll('img');
+        imgElements.forEach(img => {
+            metadata.images.push(img.getAttribute('src'));
+        });
+        
+        // Log the metadata
+        console.log(metadata);
+        
+        // Clean up
+        document.body.removeChild(iframe);
+    };
+    
+    // Set the iframe source to the given URL
+    iframe.src = url;
+}
