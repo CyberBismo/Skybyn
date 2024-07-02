@@ -870,3 +870,53 @@ function extractMetadata(url) {
     // Set the iframe source to the given URL
     iframe.src = url;
 }
+
+async function fetchPreviews(urls,id) {
+    const response = await fetch(`fetch_url_preview.php?urls=${encodeURIComponent(urls.join(','))}`);
+    const metadataList = await response.json();
+
+    const previewsContainer = document.getElementById('previews_'+id);
+    previewsContainer.innerHTML = '';
+
+    metadataList.forEach(metadata => {
+        const previewContainer = document.createElement('div');
+        previewContainer.classList.add('preview-container');
+        
+        const previewHeader = document.createElement('div');
+        previewHeader.classList.add('preview-header');
+        
+        const logo = document.createElement('img');
+        logo.src = metadata.logo;
+        logo.alt = 'Logo';
+        logo.classList.add('logo');
+        
+        const titleDescription = document.createElement('div');
+        titleDescription.classList.add('title-description');
+        
+        const title = document.createElement('div');
+        title.textContent = metadata.title;
+        title.classList.add('title');
+        
+        const description = document.createElement('div');
+        description.textContent = metadata.description;
+        description.classList.add('description');
+        
+        titleDescription.appendChild(title);
+        titleDescription.appendChild(description);
+        
+        previewHeader.appendChild(logo);
+        previewHeader.appendChild(titleDescription);
+        
+        const featuredImage = document.createElement('img');
+        featuredImage.src = metadata.featured_image;
+        featuredImage.alt = 'Featured Image';
+        featuredImage.classList.add('featured-image');
+        
+        previewContainer.appendChild(previewHeader);
+        if (metadata.featured_image) {
+            previewContainer.appendChild(featuredImage);
+        }
+        
+        previewsContainer.appendChild(previewContainer);
+    });
+}

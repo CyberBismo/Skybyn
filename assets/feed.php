@@ -17,7 +17,6 @@ while ($post = $getPosts->fetch_assoc()) {
     $post_user = $post['user'];
     $post_content = $post['content'];
     $post_created = date("d M. y H:i:s", $post['created']);
-    $post_links = $post['urls'];
 
     $getComments = $conn->query("SELECT * FROM `comments` WHERE `post`='$post_id'");
     $comments = $getComments->num_rows;

@@ -3,19 +3,17 @@
 if (isset($_SESSION['user'])) {
     $uid = $_SESSION['user'];
     $code = rand(10000000, 99999999);
+    $in_five_min = strtotime(' +5 seconds ');
     $checkCode = $conn->query("SELECT * FROM `referral_code` WHERE `user`='$uid'");
     if ($checkCode->num_rows == 1) {
         $codeData = $checkCode->fetch_assoc();
         $date = $codeData['created'];
-        if ($date + (1 * calcTime('day')) >= $now) {
-            $stmt = $conn->prepare("UPDATE `referral_code` SET `referral_code`= ?, `created`= ? WHERE `user`= ?");
-            $stmt->bind_param("iii", $code, $now, $uid);
-            $stmt->execute();
-            echo $code;
+        if ($date < time()) {
+            $conn->query("DELETE FROM `referral_code` WHERE `user`='$uid'");
         }
     } else {
         $stmt = $conn->prepare("INSERT INTO `referral_code` (`referral_code`,`created`,`user`) VALUES (?, ?, ?)");
-        $stmt->bind_param("iii", $code, $now, $uid);
+        $stmt->bind_param("iii", $code, $in_five_min, $uid);
         $stmt->execute();
         echo $code;
     }

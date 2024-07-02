@@ -2306,6 +2306,40 @@
                 cursor: pointer;
             }
 
+            .preview-container {
+                display: flex;
+                flex-direction: column;
+                border: 1px solid #ddd;
+                padding: 10px;
+                width: 400px;
+                font-family: Arial, sans-serif;
+            }
+            .preview-header {
+                display: flex;
+                align-items: center;
+            }
+            .logo {
+                width: 50px;
+                height: 50px;
+                margin-right: 10px;
+            }
+            .title-description {
+                display: flex;
+                flex-direction: column;
+            }
+            .title {
+                font-size: 18px;
+                font-weight: bold;
+            }
+            .description {
+                font-size: 14px;
+                color: #555;
+            }
+            .featured-image {
+                width: 100%;
+                margin-top: 10px;
+            }
+
             /** Side menu */
             .side_menu_back {
                 position: fixed;
@@ -3512,11 +3546,12 @@
             .changeWallpaper {
                 position: fixed;
                 top: 20%;
-                left: -120px;
-                width: 445px;
+                left: 0;
+                width: 600px;
                 margin-left: 50%;
                 padding: 20px;
-                background: white;
+                transform: translateX(-50%);
+                background: rgba(0,0,0,.7);
                 border-radius: 10px;
                 box-sizing: border-box;
             }

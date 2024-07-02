@@ -1038,13 +1038,14 @@ if (isset($_SESSION['user'])) {
 
     function referralCode($uid) {
         global $conn;
-        $referral = $conn->query("SELECT * FROM `referral_code` WHERE `user`='$uid'");
-        if ($referral->num_rows == 1) {
-            $referrals = $referral->fetch_assoc();
+        $checkReferral = $conn->query("SELECT * FROM `referral_code` WHERE `user`='$uid'");
+        if ($checkReferral->num_rows == 1) {
+            $referrals = $checkReferral->fetch_assoc();
             $code = $referrals['referral_code'];
-            $created = $referrals['created'];
+            $date = $referrals['created'];
 
-            if ($created >= time() - (5 * calcTime('minutes'))) {
+            if ($date < time()) {
+                $conn->query("DELETE FROM `referral_code` WHERE `user`='$uid'");
                 return "error";
             } else {
                 return $code;

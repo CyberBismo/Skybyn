@@ -6,7 +6,7 @@ if (isset($_GET['u'])) {
     $user_id = substr($_GET['u'], 4);
     
     if ($uid != $user_id) {
-        if (getUser('id',$user,'username') != "error") {
+        if (getUser('id',$user_id,'username') != "error") {
             if (checkFriendship($uid,$user_id) == "ok") {
                 $friends = true;
             } else {
@@ -55,9 +55,11 @@ if ($Pavatar == "./") {
 if ($Pwallpaper == "./") {
     $Pwallpaper = "./assets/images/blank.png";
 }
+
+$Pavatar_bg = "background: black";
 ?>
         <div class="page-container">
-            <div class="profile-wallpaper">
+            <div class="profile-wallpaper" id="wallpaper">
                 <img src="<?=$Pwallpaper?>">
             </div>
             <div class="profile">
@@ -293,25 +295,29 @@ if ($Pwallpaper == "./") {
             <i class="fa-solid fa-xmark" onclick="changeAvatar()"></i>
             <form method="post" enctype="multipart/form-data">
                 <input type="file" name="avatar" id="setavatar" hidden>
-                <h3>Select avatar</h3>
-                <label for="setavatar">Click to browse</label>
+                <h3>Update avatar</h3>
+                <label for="setavatar">Browse</label>
                 <br><br>
-                <input type="submit" name="update_avatar" value="Set avatar">
+                <input type="submit" name="update_avatar" value="Update">
             </form>
         </div>
 
         <div class="changeWallpaper" hidden>
             <i class="fa-solid fa-xmark" onclick="changeWallpaper()"></i>
             <form method="post" enctype="multipart/form-data">
-                <input type="file" name="wallpaper" id="setwallpaper" hidden>
-                <h3>Select wallpaper</h3>
-                <label for="setwallpaper">Click to browse</label>
+                <input type="file" name="wallpaper" id="setwallpaper" onchange="preViewWallpaper(this)" hidden>
+                <h3>Set new wallpaper</h3>
+                <label for="setwallpaper">Browse</label>
                 <br><br>
-                <input type="submit" name="update_wallpaper" value="Set wallpaper">
+                <input type="submit" name="update_wallpaper" value="Update">
             </form>
         </div>
 
         <script>
+            function preViewWallpaper(x) {
+                const wallpaper = document.getElementById('wallpaper');
+
+            }
             function stickyProfile() {
                 const avatar = document.getElementById('profile-left');
                 avatar.style.height = window.innerHeight - 125 +"px";
