@@ -752,9 +752,7 @@ function fixEmojis($x,$flip) {
 
 ## Check if device is mobile
 function isMobile() {
-    $isMobile = false;
-
-    $userAgent = "{$_SERVER['HTTP_USER_AGENT']}";
+    $userAgent = $_SERVER['HTTP_USER_AGENT'];
 
     $mobileKeywords = array(
         'Mobile',
@@ -768,16 +766,11 @@ function isMobile() {
 
     foreach ($mobileKeywords as $keyword) {
         if (stripos($userAgent, $keyword) !== false) {
-            $isMobile = true;
-            break;
+            return true;
         }
     }
 
-    if ($isMobile) {
-        return true;
-    } else {
-        return false;
-    }
+    return false;
 }
 
 $msg = null;

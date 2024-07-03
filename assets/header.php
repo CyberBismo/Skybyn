@@ -310,7 +310,7 @@ if ($currentUrl == $devDomain) {
             </div>
 
             <div class="shortcuts pages">
-                <h3><div><i class="fa-regular fa-newspaper"></i> Pages</div><i class="fa-solid fa-plus" title="Create new page"></i></h3>
+                <h3><div><i class="fa-regular fa-newspaper"></i> Pages</div><i class="fa-solid fa-plus" onclick="window.location.href='/newpage'" title="Create new page"></i></h3>
                 <div id="my-pages">
                     <div class="shortcut-browse" onclick="window.location='/pages'">
                         <div>Browse</div>
@@ -341,7 +341,7 @@ if ($currentUrl == $devDomain) {
             </div>
 
             <div class="shortcuts markets">
-                <h3 onclick="window.location.href='./markets'"><div><i class="fa-solid fa-store"></i> Markets</div><i class="fa-solid fa-plus" title="Add to market"></i></h3>
+                <h3><div><i class="fa-solid fa-store"></i> Markets</div><i class="fa-solid fa-plus" onclick="window.location.href='./newmarket'" title="Add to market"></i></h3>
                 <div id="my-markets">
                     <div class="shortcut-browse">
                         <div>Browse</div>
