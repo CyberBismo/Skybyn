@@ -86,7 +86,6 @@ if (!isset($_SESSION['user'])) {
                 const pin = document.getElementById('lt-pin').value;
                 
                 if (privacy === 'locked') {
-
                     if (lockType === 'password') {
                         password = password;
                     } else if (lockType === 'pin') {
@@ -109,8 +108,8 @@ if (!isset($_SESSION['user'])) {
                     data: data,
                 }).done(function (response) {
                     var result = JSON.parse(response);
-                    var response = result.response;
-                    var message = result.message;
+                    var response = result['response'];
+                    var message = result['message'];
 
                     if (response === "ok") {
                         window.location.href = "./group?id=" + message;

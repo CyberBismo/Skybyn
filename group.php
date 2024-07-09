@@ -18,7 +18,7 @@ if (isset($_GET['id'])) {
         $groupIcon = $groupData['icon'];
         $groupWallpaper = $groupData['wallpaper'];
         
-        $groupLocked = $groupData['locked'];
+        $groupPrivacy = $groupData['privacy'];
         $groupLockType = $groupData['lock_type'];
         
         $groupPW = $groupData['password'];
@@ -68,7 +68,7 @@ if (isset($_GET['id'])) {
                 <?=$groupName?>
             </div>
             <?php
-            if ($groupLocked == "1") {
+            if ($groupPrivacy == "1") {
                 if ($groupLockType == "pin") {
                     $lock = 'pattern="[0-9]" placeholder="PIN required"';
                 }
@@ -77,14 +77,13 @@ if (isset($_GET['id'])) {
                 }
                 ?>
                 <div class="group-lock">
-                    <input type="password" <?=$loxk?> required>
+                    <input type="password" <?=$lock?> required>
                     <input type="submit" name="enter_group" value="ENTER">
                 </div>
                 <?php
             } else {?>
             <div class="group-box">
                 <div class="gbox-left">
-                    <p>Members</p>
                     <div class="gbox-memberlist">
                         <?php $groupMembers = $conn->query("SELECT * FROM `group_members` WHERE `group`='$groupID'");
                         while($groupMember = $groupMembers->fetch_assoc()) {

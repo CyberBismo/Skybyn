@@ -1,4 +1,4 @@
-<?php include "./functions.php";
+<?php include_once "functions.php";
 
 
 $name = $_POST['group_name'];
@@ -16,8 +16,6 @@ if ($privacy == "locked") {
     if ($lock_type == "pin") {
         $pin = $_POST['group_pin'];
     }
-} else {
-    $privacy = "none";
 }
 
 // Using prepared statements
