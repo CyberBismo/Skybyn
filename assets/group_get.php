@@ -30,7 +30,7 @@ if ($getMessages->num_rows > $current) {
                         <i class="fa-solid fa-ellipsis-vertical"></i>
                         <div class="chat_message_option_list">
                             <div class="chat_action">
-                                <i class="fa-solid fa-share"></i>Share
+                                <i class="fa-regular fa-pen-to-square"></i>Edit
                             </div>
                             <div class="chat_action">
                                 <i class="fa-solid fa-trash"></i>Delete

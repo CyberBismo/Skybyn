@@ -4,6 +4,9 @@ header('Access-Control-Allow-Origin: *');
 $devDomain = 'dev.skybyn.no';
 if ($domain == $devDomain) {
     $dev_access = true;
+    $homepage = "http://dev.skybyn.no/";
+} else {
+    $homepage ? "https://skybyn.com" : "https://skybyn.no";
 }
 ?>
 <!DOCTYPE html>
@@ -58,10 +61,10 @@ if ($domain == $devDomain) {
 
             <?php // New post if logged in
             if (isset($_SESSION['user'])) {
-                if (isMobile() == false) {?>
+                if (isMobile() == false) {
+                    if (fullUrl() == $homepage) {?>
             <div class="new_post_button" id="new_post_btn" onclick="newPost()">Anything new?</div>
-            <?php }
-            }?>
+            <?php }}}?>
 
             <?php if (isset($_SESSION['user'])) {?>
             <div class="top">

@@ -2591,9 +2591,16 @@
                 background: rgba(0,0,0,.1);
                 border-radius: 20px 0 0 20px;
             }
+            .gbox-main #gbox-chat,
+            .gbox-main #gbox-members,
+            .gbox-main #gbox-gallery,
+            .gbox-main #gbox-settings,
+            .gbox-main #gbox-logout {
+                height: 100%;
+            }
             .gbox-right {
                 width: 10%;
-                background: rgba(255,255,255,.2);
+                background: rgba(255,255,255,.1);
                 border-radius: 0 20px 20px 0;
             }
             <?php } else {?>
@@ -2621,7 +2628,6 @@
             .gbox-memberlist {
                 height: 40%;
                 margin: 5px;
-                text-align: center;
             }
             .gbox-member {
                 display: inline-flex;
@@ -2696,6 +2702,9 @@
             .gbox-right p {
                 text-align: center;
             }
+            .gbox-right-top {
+                height: calc(100% - 113px);
+            }
             .gbox-right-icons {
                 text-align: center;
                 width: 100%;
@@ -2706,7 +2715,7 @@
             .gbox-right-icon {
                 width: 100%;
                 padding: 10px 0;
-                font-size: 1.5vw;
+                font-size: 16px;
                 border-radius: 15px;
                 box-sizing: border-box;
             }
@@ -2714,8 +2723,8 @@
                 background: rgba(0,0,0,.1);
                 cursor: pointer;
             }
-            .gbox-settings {
-                height: 50px;
+            .gbox-right-icons .gleave {
+                vertical-align: bottom;
             }
 
             /** Page list */
@@ -3179,6 +3188,7 @@
             .chat_message {
                 display: flex;
                 padding: 10px;
+                box-sizing: border-box;
             }
             .chat_message.me {
                 justify-content: flex-end;
@@ -3225,14 +3235,15 @@
                 margin-right: 10px;
                 border-radius: 50px;
                 overflow: hidden;
+                box-sizing: border-box;
             }
             .me .chat_user {
-                margin-left: 10px;
-                margin-right: 0;
+                margin-right: 0px;
+                box-sizing: border-box;
             }
             .chat_user img {
-                width: 100%;
-                height: 100%;
+                width: 50px;
+                height: 50px;
                 object-fit: cover;
             }
             .chat_message_box {
@@ -3246,6 +3257,9 @@
                 background: rgba(0,0,0,.2);
                 border-radius: 20px;
                 box-sizing: border-box;
+            }
+            .me .chat_text {
+                margin-right: 10px;
             }
             .chat_message_box .chat_text {
                 max-width: calc(100% - 60px);

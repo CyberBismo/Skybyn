@@ -83,103 +83,114 @@ if (isset($_GET['id'])) {
                 <?php
             } else {?>
             <div class="group-box">
-                <!--div class="gbox-left">
-                    <div class="gbox-memberlist">
-                        < ?php $groupMembers = $conn->query("SELECT * FROM `group_members` WHERE `group`='$groupID'");
-                        while($groupMember = $groupMembers->fetch_assoc()) {
-                            $gmid = $groupMember['user'];
-                            $getMemberData = $conn->query("SELECT * FROM `users` WHERE `id`='$gmid'");
-                            $gmd = $getMemberData->fetch_assoc();
-                            $memberName = $gmd['username'];
-                            $memberAvatar = $gmd['avatar'];
-
-                            if ($memberAvatar == "") {
-                                $memberAvatar = "../assets/images/logo_faded_clean.png";
-                            }
-                        ?>
-                        <div class="gbox-member" id="< ?=$gmid?>">
-                            <img src="< ?=$memberAvatar?>">
-                            <div class="gbox-member-name">< ?=$memberName?></div>
-                        </div>
-                        < ?php }?>
-                    </div>
-                </div-->
                 <div class="gbox-main">
-                    <div class="gbox-chat" id="message-feed">
-                        <?php
-                        $getMessages = mysqli_query($conn, "SELECT * FROM `group_messages` WHERE `group`='$groupID' ORDER BY `date` ASC");
-                        while ($message = mysqli_fetch_assoc($getMessages)) {
-                            $message_id = $message['id'];
-                            $message_user = $message['user'];
-                            $message_content = $message['content'];
-                            $message_created = date("Y-m-d H:i:s", $message['date']);
-                            $message_system = $message['system'];
+                    <div id="gbox-chat">
+                        <div class="gbox-chat" id="message-feed">
+                            <?php
+                            $getMessages = mysqli_query($conn, "SELECT * FROM `group_messages` WHERE `group`='$groupID' ORDER BY `date` ASC");
+                            while ($message = mysqli_fetch_assoc($getMessages)) {
+                                $message_id = $message['id'];
+                                $message_user = $message['user'];
+                                $message_content = $message['content'];
+                                $message_created = date("Y-m-d H:i:s", $message['date']);
+                                $message_system = $message['system'];
 
-                            $getUserData = mysqli_query($conn, "SELECT * FROM `users` WHERE `id`='$message_user'");
-                            $gUser = mysqli_fetch_assoc($getUserData);
-                            $guser_id = $gUser['id'];
-                            $guser_name = $gUser['username'];
-                            $guser_avatar = $gUser['avatar'];
+                                $getUserData = mysqli_query($conn, "SELECT * FROM `users` WHERE `id`='$message_user'");
+                                $gUser = mysqli_fetch_assoc($getUserData);
+                                $guser_id = $gUser['id'];
+                                $guser_name = $gUser['username'];
+                                $guser_avatar = $gUser['avatar'];
 
-                            if ($guser_avatar == "") {
-                                $guser_avatar = "./assets/images/logo_faded_clean.png";
-                            }
+                                if ($guser_avatar == "") {
+                                    $guser_avatar = "./assets/images/logo_faded_clean.png";
+                                }
 
-                            if ($guser_id == $uid) {?>
-                                        <div class="chat_message me" id="chat_<?=$message_id?>">
-                                            <div class="chat_message_options">
-                                                <i class="fa-solid fa-ellipsis-vertical"></i>
-                                                <div class="chat_message_option_list">
-                                                    <div class="chat_action">
-                                                        <i class="fa-solid fa-share"></i>Share
-                                                    </div>
-                                                    <div class="chat_action">
-                                                        <i class="fa-solid fa-trash"></i>Delete
+                                if ($guser_id == $uid) {?>
+                                            <div class="chat_message me" id="chat_<?=$message_id?>">
+                                                <div class="chat_message_options">
+                                                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                                                    <div class="chat_message_option_list">
+                                                        <div class="chat_action">
+                                                            <i class="fa-regular fa-pen-to-square"></i>Edit
+                                                        </div>
+                                                        <div class="chat_action">
+                                                            <i class="fa-solid fa-trash"></i>Delete
+                                                        </div>
                                                     </div>
                                                 </div>
+                                                <div class="chat_message_box">
+                                                    <div class="chat_text"><?=$message_content?></div>
+                                                </div>
+                                                <div class="chat_user">
+                                                    <img src="<?=$guser_avatar?>">
+                                                </div>
                                             </div>
-                                            <div class="chat_message_box">
+                                <?php } else {?>
+                                            <div class="chat_message" id="chat_<?=$message_id?>">
+                                                <div class="chat_user">
+                                                    <img src="<?=$guser_avatar?>">
+                                                </div>
                                                 <div class="chat_text"><?=$message_content?></div>
                                             </div>
-                                            <div class="chat_user">
-                                                <img src="<?=$guser_avatar?>">
-                                            </div>
-                                        </div>
+                                <?php 
+                                }
+                            }?>
+                        </div>
+                        <div class="gbox-msg-send form">
+                            <?php if (getGM($groupID,$uid) == "ok") {?>
+                            <input name="msg" placeholder="Message.." id="gmsg" onkeyup="sendMessage(event)" autofocus>
+                            <i class="fa-solid fa-paper-plane" onclick="sendMessage()"></i>
                             <?php } else {?>
-                                        <div class="chat_message" id="chat_<?=$message_id?>">
-                                            <div class="chat_user">
-                                                <img src="<?=$guser_avatar?>">
-                                            </div>
-                                            <div class="chat_text"><?=$message_content?></div>
-                                        </div>
-                            <?php 
+                            <input type="button" value="Join Group" onclick="joinGroup()">
+                            <?php }?>
+                        </div>
+                    </div>
+                    <div id="gbox-members" hidden>
+                        <div class="gbox-memberlist">
+                            <?php
+                            $groupMembers = $conn->query("SELECT * FROM `group_members` WHERE `group`='$groupID'");
+                            while ($groupMember = $groupMembers->fetch_assoc()) {
+                                $gmid = $groupMember['user'];
+                                $getMemberData = $conn->query("SELECT * FROM `users` WHERE `id`='$gmid'");
+                                $gmd = $getMemberData->fetch_assoc();
+                                $memberID = $gmd['id'];
+                                $memberName = $gmd['username'];
+                                $memberAvatar = $gmd['avatar'];
+
+                                if ($memberAvatar == "") {
+                                    $memberAvatar = "../assets/images/logo_faded_clean.png";
+                                }
+                                ?>
+                                <div class="gbox-member" id="<?=$gmid?>">
+                                    <img src="<?=$memberAvatar?>" alt="Avatar">
+                                    <div class="gbox-member-name"><?=$memberName?></div>
+                                </div>
+                                <?php
                             }
-                        }?>
+                            ?>
+                        </div>
                     </div>
-                    <div class="gbox-msg-send form">
-                        <?php if (getGM($groupID,$uid) == "ok") {?>
-                        <input name="msg" placeholder="Message.." id="gmsg" onkeyup="sendMessage(event)" autofocus>
-                        <i class="fa-solid fa-paper-plane" onclick="sendMessage()"></i>
-                        <?php } else {?>
-                        <input type="button" value="Join Group" onclick="joinGroup()">
-                        <?php }?>
-                    </div>
+                    <div id="gbox-gallery" hidden></div>
+                    <div id="gbox-settings" hidden></div>
+                    <div id="gbox-logout" hidden></div>
                 </div>
                 <div class="gbox-right">
-                    <div class="gbox-right-icons">
-                        <div class="gbox-right-icon"><i class="fa-solid fa-comments"></i></div>
+                    <div class="gbox-right-top">
+                        <div class="gbox-right-icons">
+                            <div class="gbox-right-icon" onclick="gvt('chat')"><i class="fa-solid fa-comments"></i></div>
+                        </div>
+                        <div class="gbox-right-icons">
+                            <div class="gbox-right-icon" onclick="gvt('members')"><i class="fa-solid fa-users"></i></div>
+                        </div>
+                        <div class="gbox-right-icons">
+                            <div class="gbox-right-icon" onclick="gvt('gallery')"><i class="fa-regular fa-images"></i></div>
+                        </div>
                     </div>
                     <div class="gbox-right-icons">
-                        <div class="gbox-right-icon"><i class="fa-solid fa-users"></i></div>
-                    </div>
-                    <div class="gbox-right-icons">
-                        <div class="gbox-right-icon"><i class="fa-regular fa-images"></i></div>
-                    </div>
-                    <div class="gbox-right-icons">
-                        <div class="gbox-right-icon"><i class="fa-solid fa-gear"></i></div>
+                        <div class="gbox-right-icon" onclick="gvt('settings')"><i class="fa-solid fa-gear"></i></div>
                     </div>
                     <div class="gbox-right-icons gleave">
-                        <div class="gbox-right-icon"><i class="fa-solid fa-right-from-bracket"></i></div>
+                        <div class="gbox-right-icon" onclick="gvt('logout')"><i class="fa-solid fa-right-from-bracket"></i></div>
                     </div>
                 </div>
             </div>
@@ -207,6 +218,18 @@ if (isset($_GET['id'])) {
         <?php }?>
 
         <script>
+            function gvt(x) { // Group View Toggle
+                const view = document.getElementById('gbox-'+x);
+                if (view.hasAttribute("hidden")) {
+                    const chat = document.getElementById('gbox-chat').setAttribute("hidden","");
+                    const members = document.getElementById('gbox-members').setAttribute("hidden","");
+                    const gallery = document.getElementById('gbox-gallery').setAttribute("hidden","");
+                    const settings = document.getElementById('gbox-settings').setAttribute("hidden","");
+                    const logout = document.getElementById('gbox-logout').setAttribute("hidden","");
+                    view.removeAttribute("hidden");
+                }
+            }
+
             function isChatFeedAtBottom() {
                 const messageFeed = document.getElementById('message-feed');
                 return messageFeed.scrollTop + messageFeed.clientHeight === messageFeed.scrollHeight;
@@ -217,8 +240,7 @@ if (isset($_GET['id'])) {
             messageFeed.addEventListener('mouseleave', () => {
                 isChatFeedAtBottom();
             });
-        </script>
-        <script>
+            
             function scrollMessageFeedToBottom() {
                 const messageFeed = document.getElementById('message-feed');
                 messageFeed.scrollTop = messageFeed.scrollHeight;
@@ -263,8 +285,19 @@ if (isset($_GET['id'])) {
                 }
             }
 
-            function checkMsgs() {
+            function getMsgs() {
                 const feed = document.getElementById('message-feed');
+
+                var tempContainer = document.createElement('div');
+                tempContainer.innerHTML = response;
+                
+                while (tempContainer.firstChild) {
+                    feed.appendChild(tempContainer.firstChild);
+                }
+                checkMsgs();
+            }
+
+            function checkMsgs() {
                 var msgs = document.getElementsByClassName('chat_message');
                 
                 if (msgs.length > 0) {
@@ -278,18 +311,19 @@ if (isset($_GET['id'])) {
                             last : gid
                         }
                     }).done(function(response) {
-                        var tempContainer = document.createElement('div');
-                        tempContainer.innerHTML = response;
-                        
-                        while (tempContainer.firstChild) {
-                            feed.appendChild(tempContainer.firstChild);
+                        response = JSON.parse(response);
+                        console.log(response);
+                        if (response['responseCode'] === "ok") {
+                            getMsgs();
+                        } else {
+                            setTimeout(() => {
+                                checkMsgs();
+                            }, 1000);
                         }
                     });
                 }
             }
-            setInterval(() => {
-                checkMsgs();
-            }, 1000);
+            checkMsgs();
         </script>
         <?php if (isset($_SESSION['user'])) {?>
         <script>
@@ -339,8 +373,12 @@ if (isset($_GET['id'])) {
         fetch('../data/groups/<?=$groupID?>.json')
         .then(response => response.json())
         .then(data => {
+            if (Object.keys(data).length === 0) {
+                console.log("The data is empty.");
+                return;
+            }
             const { id, username, avatar } = data;
-            createGboxMemberElement(id, username, avatar);
+            //createGboxMemberElement(id, username, avatar);
         });
 
         function checkUserActivity() {
@@ -368,7 +406,7 @@ if (isset($_GET['id'])) {
                 console.error('Error loading JSON data:', error);
             });
         }
-        setInterval(checkUserActivity, 500);
+        setInterval(checkUserActivity, 1000);
         </script>
         <?php }?>
     </body>

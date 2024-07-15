@@ -95,3 +95,60 @@ function hideNewUsers() {
         }, index * 2000); // Adjust the delay between elements as needed
     });
 }
+
+
+/// / /// / /// / /// / /// / /// / /// / /// / /// / /// / ///
+// SECURITY
+
+let dynamicUpdateInProgress = false;
+
+// Function to refresh the page
+function refreshPage() {
+    location.reload();
+}
+
+// Function to observe DOM changes
+function observeDOMChanges() {
+    const targetNode = document.documentElement; // Monitor the entire document
+
+    const config = {
+        attributes: true, 
+        childList: true, 
+        subtree: true
+    };
+
+    const callback = function(mutationsList, observer) {
+        if (dynamicUpdateInProgress) {
+            return;
+        }
+
+        for (const mutation of mutationsList) {
+            if (mutation.type === 'childList' || mutation.type === 'attributes') {
+                console.log('Detected modification in the DOM');
+                refreshPage();
+                break;
+            }
+        }
+    };
+
+    const observer = new MutationObserver(callback);
+    observer.observe(targetNode, config);
+}
+
+// Function to safely update DOM elements
+function safelyUpdateDOM(callback) {
+    dynamicUpdateInProgress = true;
+    try {
+        callback();
+    } finally {
+        dynamicUpdateInProgress = false;
+    }
+}
+
+// Start observing DOM changes when the page is loaded
+window.addEventListener('load', observeDOMChanges);
+
+// Example of dynamically updating the DOM safely
+// safelyUpdateDOM(() => {
+//     // Your dynamic update code here
+// });
