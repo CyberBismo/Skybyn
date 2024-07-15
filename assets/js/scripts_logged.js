@@ -1,3 +1,8 @@
+// Redirect to post view
+function showPost(x) {
+    window.location.href = "./post?id="+x;
+}
+
 // Show search form
 function showSearch() {
     const mobileSearch = document.getElementById('mobile-search');

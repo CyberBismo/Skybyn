@@ -83,9 +83,9 @@ if (isset($_GET['id'])) {
                 <?php
             } else {?>
             <div class="group-box">
-                <div class="gbox-left">
+                <!--div class="gbox-left">
                     <div class="gbox-memberlist">
-                        <?php $groupMembers = $conn->query("SELECT * FROM `group_members` WHERE `group`='$groupID'");
+                        < ?php $groupMembers = $conn->query("SELECT * FROM `group_members` WHERE `group`='$groupID'");
                         while($groupMember = $groupMembers->fetch_assoc()) {
                             $gmid = $groupMember['user'];
                             $getMemberData = $conn->query("SELECT * FROM `users` WHERE `id`='$gmid'");
@@ -97,22 +97,14 @@ if (isset($_GET['id'])) {
                                 $memberAvatar = "../assets/images/logo_faded_clean.png";
                             }
                         ?>
-                        <div class="gbox-member" id="<?=$gmid?>">
-                            <img src="<?=$memberAvatar?>">
-                            <div class="gbox-member-name"><?=$memberName?></div>
+                        <div class="gbox-member" id="< ?=$gmid?>">
+                            <img src="< ?=$memberAvatar?>">
+                            <div class="gbox-member-name">< ?=$memberName?></div>
                         </div>
-                        <?php }?>
+                        < ?php }?>
                     </div>
-                    <!--hr>
-                    <p>Gallery</p>
-                    <div class="gbox-gallery-grid">
-                        <div class="gbox-gallery-item">
-                            <img src="../assets/images/logo.png">
-                        </div>
-                        < ?php ?>
-                    </div-->
-                </div>
-                <div class="gbox-feed">
+                </div-->
+                <div class="gbox-main">
                     <div class="gbox-chat" id="message-feed">
                         <?php
                         $getMessages = mysqli_query($conn, "SELECT * FROM `group_messages` WHERE `group`='$groupID' ORDER BY `date` ASC");
@@ -175,13 +167,19 @@ if (isset($_GET['id'])) {
                 </div>
                 <div class="gbox-right">
                     <div class="gbox-right-icons">
+                        <div class="gbox-right-icon"><i class="fa-solid fa-comments"></i></div>
+                    </div>
+                    <div class="gbox-right-icons">
                         <div class="gbox-right-icon"><i class="fa-solid fa-users"></i></div>
                     </div>
                     <div class="gbox-right-icons">
                         <div class="gbox-right-icon"><i class="fa-regular fa-images"></i></div>
                     </div>
-                    <div class="gbox-right-icons gbox-settings">
+                    <div class="gbox-right-icons">
                         <div class="gbox-right-icon"><i class="fa-solid fa-gear"></i></div>
+                    </div>
+                    <div class="gbox-right-icons gleave">
+                        <div class="gbox-right-icon"><i class="fa-solid fa-right-from-bracket"></i></div>
                     </div>
                 </div>
             </div>

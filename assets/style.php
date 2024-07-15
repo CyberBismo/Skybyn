@@ -1218,7 +1218,6 @@
             }
             .new_post .create_post {
                 width: 100%;
-                height: 90px;
                 margin: 0 auto;
                 padding: 20px;
                 color: black;
@@ -2586,38 +2585,19 @@
                 color: white;
             }
             <?php if (isMobile() == false) {?>
-            .gbox-left {
-                width: 25%;
-                background: rgba(255,255,255,.3);
-                border-radius: 20px;
-                overflow: hidden;
-            }
-            .gbox-feed {
-                width: 75%;
+            .gbox-main {
+                width: 90%;
                 height: 100%;
-                margin: 0 5px;
                 background: rgba(0,0,0,.1);
+                border-radius: 20px 0 0 20px;
             }
             .gbox-right {
                 width: 10%;
                 background: rgba(255,255,255,.2);
-                border-radius: 20px;
-                overflow: hidden;
+                border-radius: 0 20px 20px 0;
             }
             <?php } else {?>
-            .gbox-left {
-                position: fixed;
-                top: 75px;
-                left: 0;
-                width: 95%;
-                height: calc(100% - 75px);
-                background: rgba(var(--dark),.1);
-                border-top-right-radius: 20px;
-                transform: translateX(-100%);
-                overflow: hidden;
-                z-index: 5;
-            }
-            .gbox-feed {
+            .gbox-main {
                 width: calc(100% - 10px);
                 margin: 0 5px;
                 background: rgba(0,0,0,.1);
@@ -2637,15 +2617,7 @@
                 z-index: 5;
             }
             <?php }?>
-            .gbox-left hr {
-                width: 90%;
-                height: 1px;
-                background: rgba(0,0,0,.1);
-                border: none;
-            }
-            .gbox-left p {
-                text-align: center;
-            }
+
             .gbox-memberlist {
                 height: 40%;
                 margin: 5px;
@@ -2734,7 +2706,7 @@
             .gbox-right-icon {
                 width: 100%;
                 padding: 10px 0;
-                font-size: 2vw;
+                font-size: 1.5vw;
                 border-radius: 15px;
                 box-sizing: border-box;
             }
@@ -3271,14 +3243,13 @@
             .chat_text {
                 max-width: calc(100% - 60px);
                 padding: 15px;
-                background: white;
+                background: rgba(0,0,0,.2);
                 border-radius: 20px;
                 box-sizing: border-box;
             }
             .chat_message_box .chat_text {
                 max-width: calc(100% - 60px);
                 padding: 15px;
-                background: white;
                 border-radius: 20px;
                 box-sizing: border-box;
             }

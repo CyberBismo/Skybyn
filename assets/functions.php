@@ -12,11 +12,19 @@ if (isset($_COOKIE['qr_login'])) {
 }
 
 # Get full url
-function domain() {
-    $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+function domain($url) {
     $url = parse_url($url, PHP_URL_HOST);
     return $url;
 }
+
+function fullUrl() {
+    $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'];
+    $requestUri = $_SERVER['REQUEST_URI'];
+    $fullUrl = $scheme . '://' . $host . $requestUri;
+    return $fullUrl;
+}
+$domain = domain(fullUrl());
 
 # Get specified system_data
 function skybyn($x) {

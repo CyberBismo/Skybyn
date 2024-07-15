@@ -2,8 +2,7 @@
 header('Access-Control-Allow-Origin: *');
 
 $devDomain = 'dev.skybyn.no';
-$currentUrl = domain();
-if ($currentUrl == $devDomain) {
+if ($domain == $devDomain) {
     $dev_access = true;
 }
 ?>
@@ -13,7 +12,7 @@ if ($currentUrl == $devDomain) {
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title><?=skybyn("title")?></title>
-        <meta name="description" content="">
+        <meta name="description" content="Skybyn - Social Network">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
@@ -46,17 +45,24 @@ if ($currentUrl == $devDomain) {
     </head>
     <body>
         <div class="header" id="header">
-            <?php if (isset($_SESSION['user'])) {
-            if (isMobile() == false) {
+
+            <?php // Logo
+            if (isset($_SESSION['user'])) {
+                if (isMobile() == false) {
+                    include_once("assets/logo.php");
+                }
+            } else {
                 include_once("assets/logo.php");
-            }} else {
-                include_once("assets/logo.php");
-            }?>
-            <?php if (isset($_SESSION['user'])) {
+            }
+            ?>
+
+            <?php // New post if logged in
+            if (isset($_SESSION['user'])) {
                 if (isMobile() == false) {?>
             <div class="new_post_button" id="new_post_btn" onclick="newPost()">Anything new?</div>
-            <?php }?>
-            <?php }?>
+            <?php }
+            }?>
+
             <?php if (isset($_SESSION['user'])) {?>
             <div class="top">
                 <div class="top-nav">
@@ -84,6 +90,7 @@ if ($currentUrl == $devDomain) {
                     </ul>
                 </div>
             </div>
+
             <div class="user-dropdown" id="usermenu">
                 <ul>
                     <li onclick="window.location.href='./'"><i class="fa-solid fa-house"></i>Home</li>
@@ -106,6 +113,7 @@ if ($currentUrl == $devDomain) {
                 </ul>
             </div>
             <?php }?>
+
         </div>
 
         <?php if (isset($_SESSION['user'])) {?>
@@ -118,14 +126,14 @@ if ($currentUrl == $devDomain) {
                 </div>
                 <div class="new_post_files" id="new_post_files"></div>
                 <div class="create_post_actions create_post_actions_bottom">
-                    <span>
+                    <!--span>
                         <i class="fa-solid fa-earth-americas"></i>
                         <select id="new_post_public">
                             <option value="0">Private</option>
                             <option value="1" selected>Friends only</option>
                             <option value="2">Public</option>
                         </select>
-                    </span>
+                    </span-->
                     <span style="word-break: break-all">
                         <input type="file" id="image_to_share" accept=".jpg, .jpeg, .gif, .png" multiple hidden onchange="updateFileNameLabel()">
                         <label for="image_to_share"><i class="fa-solid fa-image"></i><span id="image_to_share_text">No image selected</span></label>
