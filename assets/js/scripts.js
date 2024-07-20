@@ -104,7 +104,7 @@ let dynamicUpdateInProgress = false;
 
 // Function to refresh the page
 function refreshPage() {
-    location.reload();
+    //location.reload();
 }
 
 // Function to observe DOM changes
@@ -124,7 +124,7 @@ function observeDOMChanges() {
 
         for (const mutation of mutationsList) {
             if (mutation.type === 'childList' || mutation.type === 'attributes') {
-                console.log('Detected modification in the DOM');
+                //console.log('Detected modification in the DOM');
                 refreshPage();
                 break;
             }

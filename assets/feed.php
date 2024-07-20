@@ -33,6 +33,11 @@ while ($post = $getPosts->fetch_assoc()) {
     $post_content_res = fixEmojis(nl2br(cleanUrls($post_content)), 1);
 ?>
 
+<?php if (isset($_SESSION['user'])) {?>
+<script src="assets/js/posts/updateFeed.js"></script>
+<script src="assets/js/comments/updateComments.js"></script>
+<?php }?>
+
 <div class="post" id="post_<?=$post_id?>">
     <div class="post_body">
         <div class="post_header">

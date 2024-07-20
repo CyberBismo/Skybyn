@@ -323,36 +323,6 @@ function changeImage(index,x) {
     });
 }
 
-function isScrolledToBottom() {
-    // Get the current scroll position
-    var scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
-    var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-    var windowHeight = window.innerHeight;
-
-    // Check if we're at the bottom of the page
-    return scrollHeight - scrollTop === windowHeight;
-}
-
-window.addEventListener("scroll", function () {
-    if (isScrolledToBottom()) {
-        loadMorePosts();
-    }
-});
-
-let loading = false;
-const limit = 3;
-
-// Attach the scroll event listener to load more posts when scrolled to the bottom
-window.addEventListener('scroll', function () {
-    const windowHeight = window.innerHeight;
-    const documentHeight = document.documentElement.scrollHeight;
-    const scrollPosition = window.scrollY;
-
-    if (documentHeight - (scrollPosition + windowHeight) < 200) {
-        loadMorePosts();
-    }
-});
-
 function hitEnter(input,x) {
     const button = document.getElementById('login');
 

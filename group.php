@@ -23,6 +23,10 @@ if (isset($_GET['id'])) {
         
         $groupPW = $groupData['password'];
         $groupPIN = $groupData['pin'];
+                    
+        if ($groupIcon == "") {
+            $groupIcon = "./assets/images/logo.png";
+        }
 
         $folder = "data/groups/";
         $filename = $groupID . ".json";
@@ -63,9 +67,9 @@ if (isset($_GET['id'])) {
 }
 
 ?>
-        <div class="page-container">
-            <div class="page-head group-head">
-                <?=$groupName?>
+        <div class="group-container">
+            <div class="group-head">
+                <?=$groupName?><img src="<?=$groupIcon?>">
             </div>
             <?php
             if ($groupPrivacy == "1") {
@@ -82,7 +86,7 @@ if (isset($_GET['id'])) {
                 </div>
                 <?php
             } else {?>
-            <div class="group-box">
+            <div class="group-box" id="gbox">
                 <div class="gbox-main">
                     <div id="gbox-chat">
                         <div class="gbox-chat" id="message-feed">
@@ -105,32 +109,34 @@ if (isset($_GET['id'])) {
                                     $guser_avatar = "./assets/images/logo_faded_clean.png";
                                 }
 
+                                $msgID = "chat_".$groupID."_$message_id";
+
                                 if ($guser_id == $uid) {?>
-                                            <div class="chat_message me" id="chat_<?=$message_id?>">
-                                                <div class="chat_message_options">
+                                            <div class="gchat-message me" id="<?=$msgID?>">
+                                                <div class="gchat-message-options">
                                                     <i class="fa-solid fa-ellipsis-vertical"></i>
-                                                    <div class="chat_message_option_list">
-                                                        <div class="chat_action">
+                                                    <div class="gchat-message-option-list">
+                                                        <div class="gchat-action" onclick="editMsg(<?=$message_id?>)">
                                                             <i class="fa-regular fa-pen-to-square"></i>Edit
                                                         </div>
-                                                        <div class="chat_action">
+                                                        <div class="gchat-action" onclick="delMsg(<?=$message_id?>)">
                                                             <i class="fa-solid fa-trash"></i>Delete
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="chat_message_box">
-                                                    <div class="chat_text"><?=$message_content?></div>
+                                                <div class="gchat-message-box">
+                                                    <div class="gchat-text"><?=$message_content?></div>
                                                 </div>
-                                                <div class="chat_user">
+                                                <div class="gchat-user">
                                                     <img src="<?=$guser_avatar?>">
                                                 </div>
                                             </div>
                                 <?php } else {?>
-                                            <div class="chat_message" id="chat_<?=$message_id?>">
-                                                <div class="chat_user">
+                                            <div class="gchat-message" id="<?=$msgID?>">
+                                                <div class="gchat-user">
                                                     <img src="<?=$guser_avatar?>">
                                                 </div>
-                                                <div class="chat_text"><?=$message_content?></div>
+                                                <div class="gchat-text"><?=$message_content?></div>
                                             </div>
                                 <?php 
                                 }
@@ -139,7 +145,7 @@ if (isset($_GET['id'])) {
                         <div class="gbox-msg-send form">
                             <?php if (getGM($groupID,$uid) == "ok") {?>
                             <input name="msg" placeholder="Message.." id="gmsg" onkeyup="sendMessage(event)" autofocus>
-                            <i class="fa-solid fa-paper-plane" onclick="sendMessage()"></i>
+                            <i class="fa-solid fa-paper-plane" onclick="sendMessage(null)"></i>
                             <?php } else {?>
                             <input type="button" value="Join Group" onclick="joinGroup()">
                             <?php }?>
@@ -171,7 +177,40 @@ if (isset($_GET['id'])) {
                         </div>
                     </div>
                     <div id="gbox-gallery" hidden></div>
-                    <div id="gbox-settings" hidden></div>
+                    <div id="gbox-settings" hidden>
+                        <div class="gbox-settings">
+                            <div class="split">
+                                <div class="divider">
+                                    <label>Icon:</label>
+                                    <div class="gbs-icon">
+                                        <img src="<?=$groupIcon?>">
+                                    </div>
+
+                                    <label>Name:</label>
+                                    <input placeholder="<?=$groupName?>">
+                                    
+                                    <label>Description:</label>
+                                    <textarea placeholder="<?=$groupDesc?>"></textarea>
+                                </div>
+                                <div class="divider">
+                                    <label>Security:</label>
+                                    <select>
+                                        <option>Open</option>
+                                        <option>Private</option>
+                                        <option>Locked</option>
+                                    </select>
+
+                                    <p>This group is only visible for your friends.</p>
+
+                                    <label>PIN</label>
+                                    <input placeholder="PIN code">
+
+                                    <label>Password</label>
+                                    <input placeholder="Password">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div id="gbox-logout" hidden></div>
                 </div>
                 <div class="gbox-right">
@@ -200,17 +239,17 @@ if (isset($_GET['id'])) {
         <?php if (isMobile() == false) {?>
         <script>
             function setChatboxHeight() {
-                const chatbox = document.getElementById('message-feed');
-                chatbox.style.height = window.innerHeight - 430 + 'px';
+                const gbox = document.getElementById('gbox');
+                gbox.style.height = window.innerHeight - 300 + 'px';
             }
-            //setChatboxHeight();
-            //window.addEventListener('resize', setChatboxHeight);
+            setChatboxHeight();
+            window.addEventListener('resize', setChatboxHeight);
         </script>
         <?php } else {?>
         <script>
             function setChatboxHeight() {
-                const chatbox = document.getElementById('message-feed');
-                chatbox.style.height = window.innerHeight - 270 + 'px';
+                const gbox = document.getElementById('gbox');
+                gbox.style.height = window.innerHeight - 300 + 'px';
             }
             setChatboxHeight();
             window.addEventListener('resize', setChatboxHeight);
@@ -229,17 +268,6 @@ if (isset($_GET['id'])) {
                     view.removeAttribute("hidden");
                 }
             }
-
-            function isChatFeedAtBottom() {
-                const messageFeed = document.getElementById('message-feed');
-                return messageFeed.scrollTop + messageFeed.clientHeight === messageFeed.scrollHeight;
-            }
-            const messageFeed = document.getElementById('message-feed');
-            messageFeed.addEventListener('mouseenter', () => {
-            });
-            messageFeed.addEventListener('mouseleave', () => {
-                isChatFeedAtBottom();
-            });
             
             function scrollMessageFeedToBottom() {
                 const messageFeed = document.getElementById('message-feed');
@@ -268,7 +296,17 @@ if (isset($_GET['id'])) {
                 const feed = document.getElementById('message-feed');
                 const msg = document.getElementById('gmsg');
 
-                if (event.key === "Enter") {
+                let send = false;
+
+                if (event != null) {
+                    if (event.key === "Enter") {
+                        send = true;
+                    }
+                } else {
+                    send = true;
+                }
+
+                if (send === true) {
                     $.ajax({
                         url: '../assets/group_send.php',
                         type: "POST",
@@ -277,53 +315,80 @@ if (isset($_GET['id'])) {
                             text : msg.value
                         }
                     }).done(function(response) {
-                        if (response != "error") {
-                            msg.value = "";
-                            scrollMessageFeedToBottom();
-                        }
+                        msg.value = "";
                     });
+                    getMsgs();
+                    scrollMessageFeedToBottom();
                 }
             }
 
             function getMsgs() {
-                const feed = document.getElementById('message-feed');
+                var feed = document.getElementById('message-feed');
 
-                var tempContainer = document.createElement('div');
-                tempContainer.innerHTML = response;
-                
-                while (tempContainer.firstChild) {
-                    feed.appendChild(tempContainer.firstChild);
+                var msgs = document.getElementsByClassName('gchat-message');
+                var count = msgs.length;
+
+                if (count > 0) {
+                    var id = msgs[count-1].id;
+                } else {
+                    var id = 'chat_<?=$groupID?>_0';
                 }
-                checkMsgs();
+
+                $.ajax({
+                    url: '../assets/group_get.php',
+                    type: "POST",
+                    data: {
+                        group : <?=$groupID?>,
+                        last : id
+                    }
+                }).done(function(response) {
+                    feed.innerHTML += response;
+                    scrollMessageFeedToBottom();
+                });
             }
 
             function checkMsgs() {
-                var msgs = document.getElementsByClassName('chat_message');
+                var msgs = document.getElementsByClassName('gchat-message');
+                var count = msgs.length;
                 
-                if (msgs.length > 0) {
-                    var lastMsg = msgs[msgs.length - 1];
-                    var gid = lastMsg.id;
+                if (count > 0) {
+                    var id = msgs[count-1].id;
                     $.ajax({
                         url: '../assets/group_check.php',
                         type: "POST",
                         data: {
                             group : <?=$groupID?>,
-                            last : gid
+                            last : id
                         }
                     }).done(function(response) {
-                        response = JSON.parse(response);
-                        console.log(response);
-                        if (response['responseCode'] === "ok") {
+                        if (response.responseCode === "ok") {
                             getMsgs();
-                        } else {
-                            setTimeout(() => {
-                                checkMsgs();
-                            }, 1000);
                         }
                     });
                 }
+
+                setTimeout(() => {
+                    checkMsgs();
+                    scrollMessageFeedToBottom();
+                }, 1000);
             }
             checkMsgs();
+
+            function delMsg(x) {
+                var msg = document.getElementById("chat_<?=$groupID?>_"+x);
+                $.ajax({
+                    url: '../assets/group_del_msg.php',
+                    type: "POST",
+                    data: {
+                        message : x
+                    }
+                }).done(function(response) {
+                    if (response.responseCode === "ok") {
+                        msg.remove();
+                    }
+                });
+            }
+            function editMsg(x) {}
         </script>
         <?php if (isset($_SESSION['user'])) {?>
         <script>

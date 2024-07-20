@@ -322,7 +322,6 @@ $Pavatar_bg = "background: black";
                 const avatar = document.getElementById('profile-left');
                 avatar.style.height = window.innerHeight - 125 +"px";
             }
-            stickyProfile();
 
             function friendship(friend,action) {
                 const actions = document.getElementById('friend_action');
@@ -383,6 +382,9 @@ $Pavatar_bg = "background: black";
                 }
             }
         </script>
+        <?php if (isMobile() == false) {?>
+        <script>stickyProfile();</script>
+        <?php }?>
         <?php }?>
     </body>
 </html>

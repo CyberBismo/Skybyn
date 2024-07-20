@@ -40,8 +40,6 @@ if ($domain == $devDomain) {
         <?php }?>
         <?php if (isset($_SESSION['user'])) {?>
         <script src="assets/js/scripts_logged.js"></script>
-        <script src="assets/js/posts/updateFeed.js"></script>
-        <script src="assets/js/comments/updateComments.js"></script>
         <script src="assets/js/notifications/notis.js"></script>
         <?php }?>
         <?php include_once "style.php"?>
@@ -283,9 +281,6 @@ if ($domain == $devDomain) {
             <div class="shortcuts groups">
                 <h3><div><i class="fa-solid fa-comments"></i> Group chats</div><i class="fa-solid fa-plus" onclick="window.location.href='/newgroup'" title="Create new group"></i></h3>
                 <div id="my-groups">
-                    <div class="shortcut-browse" onclick="window.location='/groups'">
-                        <div>Browse</div>
-                    </div>
                     <?php
                     $myGroups = $conn->query("SELECT * FROM `group_members` WHERE `user`='$uid'");
                     
@@ -323,9 +318,6 @@ if ($domain == $devDomain) {
             <div class="shortcuts pages">
                 <h3><div><i class="fa-regular fa-newspaper"></i> Pages</div><i class="fa-solid fa-plus" onclick="window.location.href='/newpage'" title="Create new page"></i></h3>
                 <div id="my-pages">
-                    <div class="shortcut-browse" onclick="window.location='/pages'">
-                        <div>Browse</div>
-                    </div>
                     <?php
                     $myPages = $conn->query("SELECT * FROM `page_members` WHERE `user_id`='$uid'");
                     $countPages = $myPages->num_rows;
@@ -354,9 +346,6 @@ if ($domain == $devDomain) {
             <div class="shortcuts markets">
                 <h3><div><i class="fa-solid fa-store"></i> Markets</div><i class="fa-solid fa-plus" onclick="window.location.href='./newmarket'" title="Add to market"></i></h3>
                 <div id="my-markets">
-                    <div class="shortcut-browse">
-                        <div>Browse</div>
-                    </div>
                     <?php
                     $getMarkets = $conn->query("SELECT * FROM `markets`");
                     if ($getMarkets->num_rows > 0) {
@@ -377,9 +366,6 @@ if ($domain == $devDomain) {
             <div class="shortcuts gaming">
                 <h3><div><i class="fa-solid fa-gamepad"></i> Gaming</div><!--i class="fa-solid fa-plus" title="Add new game"></i--></h3>
                 <div id="my-games">
-                    <div class="shortcut-browse">
-                        <div>Browse</div>
-                    </div>
                     <?php
                     $getGames = $conn->query("SELECT * FROM `games`");
                     if ($getGames->num_rows > 0) {

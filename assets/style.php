@@ -460,6 +460,23 @@
                 margin-top: 105px;
                 padding: 10px 0;
             }
+            .group-container {
+                min-width: 300px;
+                margin: 0 auto;
+                margin-top: 0px;
+                padding: 10px 0;
+            }
+            @media only screen and (min-width: 1240px) {
+                .group-container {
+                    max-width: calc(100% - 600px);
+                }
+            }
+            @media only screen and (max-width: 1239px) {
+                .group-container {
+                    max-width: calc(100% - 100px);
+                    margin-top: 80px;
+                }
+            }
             <?php } else {?>
             .page-container {
                 min-width: 300px;
@@ -467,6 +484,12 @@
                 max-width: 800px;
                 margin: 0 auto;
                 padding: 75px 0;
+            }
+            .group-container {
+                min-width: 300px;
+                margin: 0 auto;
+                margin-top: 100px;
+                padding: 10px 0;
             }
             <?php }?>
             .page-head {
@@ -1167,7 +1190,9 @@
                 width: auto;
                 height: 100px;
                 margin: 0 auto;
+                margin-top: -50px;
                 padding: 10px 20px;
+                box-sizing: border-box;
             }
             <?php }?>
 
@@ -2318,9 +2343,8 @@
                 align-items: center;
             }
             .logo {
-                width: 50px;
-                height: 50px;
-                margin-right: 10px;
+                width: 100%;
+                height: auto;
             }
             .title-description {
                 display: flex;
@@ -2443,12 +2467,14 @@
             .group {
                 display: flex;
                 justify-content: space-between;
+                align-items: center;
                 width: 100%;
-                padding: 0 10px;
+                height: 40px;
                 font-size: 14px;
-                border-radius: 10px;
+                border-radius: 50px;
                 box-sizing: border-box;
                 transition: background .5s;
+                overflow: hidden;
             }
             .group:hover {
                 background: rgba(0,0,0,.1);
@@ -2457,25 +2483,22 @@
             .group-icon {
                 width: 40px;
                 height: 40px;
-                margin: 10px 10px 10px 0;
+                border-radius: 40px;
                 overflow: hidden;
             }
             .group-icon img {
-                width: auto;
-                max-width: 100%;
-                height: auto;
-                max-height: 100%;
-                border-radius: 40px;
+                width: 100%;
+                height: 100%;
                 object-fit: cover;
             }
             .group-name {
-                width: calc(100% - 40px);
+                width: calc(100% - 80px);
                 word-break: break-all;
-                line-height: 60px;
                 overflow: hidden;
             }
             .group-extra {
                 line-height: 60px;
+                padding-right: 10px;
             }
 
             <?php if (isMobile() == false) {?>
@@ -2551,11 +2574,15 @@
 
             <?php if (isMobile() == false) {?>
             .group-head {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
                 width: 100%;
                 height: 50px;
                 line-height: 50px;
                 margin: 0 auto;
                 padding: 0 10px 10px 10px;
+                font-size: 28px;
                 text-align: left;
                 box-sizing: border-box;
                 overflow: hidden;
@@ -2563,6 +2590,9 @@
             }
             <?php } else {?>
             .group-head {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
                 width: 100%;
                 height: 50px;
                 line-height: 50px;
@@ -2574,9 +2604,15 @@
                 word-wrap: break-word;
             }
             <?php }?>
+            .group-head img {
+                width: 40px;
+                height: 40px;
+                margin: 0 5px;
+                border-radius: 40px;
+            }
             .group-box {
                 display: flex;
-                height: 500px;
+                height: 800px;
                 box-sizing: border-box;
             }
             .group-box p {
@@ -2586,7 +2622,7 @@
             }
             <?php if (isMobile() == false) {?>
             .gbox-main {
-                width: 90%;
+                width: calc(100% - 70px);
                 height: 100%;
                 background: rgba(0,0,0,.1);
                 border-radius: 20px 0 0 20px;
@@ -2599,7 +2635,7 @@
                 height: 100%;
             }
             .gbox-right {
-                width: 10%;
+                width: 70px;
                 background: rgba(255,255,255,.1);
                 border-radius: 0 20px 20px 0;
             }
@@ -2610,6 +2646,13 @@
                 background: rgba(0,0,0,.1);
                 border-radius: 10px;
                 box-sizing: border-box;
+            }
+            .gbox-main #gbox-chat,
+            .gbox-main #gbox-members,
+            .gbox-main #gbox-gallery,
+            .gbox-main #gbox-settings,
+            .gbox-main #gbox-logout {
+                height: 100%;
             }
             .gbox-right {
                 position: fixed;
@@ -2624,6 +2667,114 @@
                 z-index: 5;
             }
             <?php }?>
+
+            .gbox-chat {
+                width: auto;
+                height: 100%;
+                overflow: scroll;
+            }
+            .gbox-box::-webkit-scrollbar {
+                display: none;
+            }
+            .gchat-message {
+                display: flex;
+                align-items: center;
+                padding: 10px;
+                box-sizing: border-box;
+            }
+            .gchat-message.me {
+                justify-content: flex-end;
+            }
+            .gchat-message-options {
+                position: relative;
+                width: 10px;
+                padding: 10px;
+                text-align: left;
+                color: white;
+                cursor: pointer;
+                opacity: 0;
+            }
+            .gchat-message:hover .gchat-message-options {
+                opacity: 1;
+            }
+            .gchat-message-options:hover .gchat-message-option-list {
+                display: block;
+            }
+            .gchat-message-option-list {
+                display: none;
+                position: absolute;
+                background: rgba(255,255,255,.3);
+                backdrop-filter: blur(5px);
+                box-shadow: 10px 10px 23px -5px rgba(0,0,0,0.6);
+                border-radius: 0 10px 10px 10px;
+                overflow: hidden;
+            }
+            .gchat-action {
+                display: flex;
+                padding: 10px 20px;
+                color: white;
+            }
+            .gchat-action:hover {
+                background: rgba(0,212,255,.3);
+                cursor: pointer;
+            }
+            .gchat-action i {
+                margin-right: 10px;
+            }
+            .gchat-user {
+                width: 50px;
+                height: 50px;
+                border-radius: 25px;
+                overflow: hidden;
+            }
+            .me .gchat-user {
+                margin-right: 0px;
+            }
+            .gchat-user img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+            .gchat-message-box {
+                display: flex;
+                justify-content: end;
+                width: calc(100% - 60px);
+                box-sizing: border-box;
+            }
+            .gchat-text {
+                max-width: calc(100% - 60px);
+                padding: 15px;
+                background: rgba(0,0,0,.2);
+                border-radius: 20px;
+                box-sizing: border-box;
+            }
+            .me .gchat-text {
+                margin-right: 10px;
+            }
+            .gchat-message-box .gchat-text {
+                max-width: calc(100% - 60px);
+                padding: 15px;
+                border-radius: 20px;
+                box-sizing: border-box;
+            }
+            .gbox-msg-send {
+                display: flex;
+                justify-content: right;
+                margin-top: 20px;
+                padding: 0px;
+            }
+            .gbox-msg-send input {
+                padding: 0 10px;
+            }
+            .gbox-msg-send i {
+                position: absolute;
+                margin-right: 10px;
+                cursor: pointer;
+                opacity: 0;
+            }
+            .gbox-msg-send:hover i {
+                opacity: 1;
+            }
 
             .gbox-memberlist {
                 height: 40%;
@@ -2645,7 +2796,7 @@
             .gbox-member-name {
                 display: none;
                 position: absolute;
-                width: 100px;
+                max-width: 100px;
                 margin-top: 50px;
                 margin-left: -25px;
                 padding: 10px;
@@ -2657,10 +2808,13 @@
                 box-sizing: border-box;
                 overflow: scroll;
                 word-wrap: break-word;
+                overflow: hidden;
+                z-index: 9;
             }
             .gbox-member:hover .gbox-member-name {
                 display: block;
             }
+
             .gbox-gallery-grid {
                 text-align: center;
                 margin: 5px;
@@ -2678,27 +2832,63 @@
                 border-radius: 10px;
                 object-fit: cover;
             }
-            .gbox-chat {
-                width: auto;
-                height: 100%;
-                overflow: scroll;
+
+            .gbox-settings {
+                padding: 10px;
             }
-            .gbox-msg-send {
+            <?php if (isMobile() == false) {?>
+            .gbox-settings .split {
                 display: flex;
-                justify-content: right;
             }
-            .gbox-msg-send input {
+            .gbox-settings .split .divider {
+                width: 50%;
+            }
+            <?php } else {?>
+            .gbox-settings .split {
+                display: block;
+            }
+            .gbox-settings .split .divider {
+                width: 100%;
+            }
+            <?php }?>
+            .gbox-settings .split .divider p {
+                padding: 0;
+            }
+            .gbox-settings .gbs-icon {
+                width: 100px;
+                height: 100px;
+                margin-bottom: 20px;
+                border-radius: 50px;
+                overflow: hidden;
+            }
+            .gbox-settings .gbs-icon img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+            .gbox-settings label {
+                display: block;
+                margin-bottom: 10px;
+            }
+            .gbox-settings input,
+            .gbox-settings select {
+                height: 40px;
+                margin-bottom: 20px;
                 padding: 0 10px;
+                border: none;
+                outline: none;
+                border-radius: 5px;
             }
-            .gbox-msg-send i {
-                position: absolute;
-                margin-right: 10px;
-                cursor: pointer;
-                opacity: 0;
+            .gbox-settings textarea {
+                width: 200px;
+                height: 100px;
+                margin-bottom: 20px;
+                padding: 10px;
+                border: none;
+                outline: none;
+                border-radius: 5px;
             }
-            .gbox-msg-send:hover i {
-                opacity: 1;
-            }
+
             .gbox-right p {
                 text-align: center;
             }
@@ -3232,18 +3422,15 @@
             .chat_user {
                 width: 50px;
                 height: 50px;
-                margin-right: 10px;
-                border-radius: 50px;
+                border-radius: 25px;
                 overflow: hidden;
-                box-sizing: border-box;
             }
             .me .chat_user {
                 margin-right: 0px;
-                box-sizing: border-box;
             }
             .chat_user img {
-                width: 50px;
-                height: 50px;
+                width: 100%;
+                height: 100%;
                 object-fit: cover;
             }
             .chat_message_box {
@@ -3334,11 +3521,12 @@
                 cursor: pointer;
             }
             .profile-left .avatar {
-                width: 150px;
-                height: 150px;
+                max-width: 150px;
+                max-height: 150px;
+                aspect-ratio: 1/1;
                 margin: 0 auto;
                 background: rgba(var(--dark),.3);
-                border-radius: 25px;
+                border-radius: 150px;
                 overflow: hidden;
                 object-fit: cover;
             }
@@ -3426,6 +3614,8 @@
             <?php } else {?>
             .profile-left {
                 display: flex;
+                width: 100%;
+                height: 100px;
                 margin-bottom: 10px;
                 padding: 10px;
                 overflow-x: scroll;
