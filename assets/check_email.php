@@ -1,4 +1,7 @@
 <?php include "./functions.php";
+echo "verified";
+return false;
+
 $email = $_POST['email'];
 $code = rand();
 $resend = $_POST['resend'];

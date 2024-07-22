@@ -1049,10 +1049,6 @@
                 box-sizing: border-box;
                 transition: background .2s;
             }
-            .reg-pack-box:hover {
-                background: rgba(255,255,255,.1);
-                cursor: pointer;
-            }
             .reg-pack-box button {
                 width: 50%;
                 min-width: 100px;
@@ -1065,6 +1061,9 @@
             .reg-pack-box button:hover {
                 background: rgba(255,255,255,.2);
                 cursor: pointer;
+            }
+            .reg-pack-box p button {
+                transform: translateY(-50px);
             }
             .reg-pack h2 {
                 height: 50px;
@@ -1092,14 +1091,11 @@
                 text-align: center;
             }
 
-            .reg-pack-custom {
-                width: 100%;
-                height: auto;
-                text-align: left;
-                box-sizing: border-box;
-            }
             .reg-pack-box-custom {
                 display: flex;
+            }
+            #reg-pack-custom p button {
+                transform: translateY(0px);
             }
             .reg-pack-box:hover {
                 background: none;
@@ -1117,6 +1113,10 @@
             .rpbcb b {
                 line-height: 30px;
                 font-size: 18px;
+            }
+            .rpbcb label{
+                width: 50%;
+                cursor: pointer;
             }
             .rpbcb table {
                 width: 100%;

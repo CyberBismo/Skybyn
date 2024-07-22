@@ -69,8 +69,6 @@
                             const qrWidth = qrImage.style.width;
                             qrImage.style.height = qrWidth + 'px';
                         }
-                        setQRSize();
-                        window.addEventListener('resize', setQRSize);
                     </script>
                 </div>
                 <div class="normal_login">
@@ -184,6 +182,9 @@
                             normal.style.display = "none";
                             qr_tgl.innerHTML = "Sign in with <i class='fa-solid fa-at'></i>";
                             getLoginQR();
+                            
+                            setQRSize();
+                            window.addEventListener('resize', setQRSize);
                         }
                     }
 

@@ -1,4 +1,20 @@
-                <?php if (skybyn('register') == "1") {?>
+                <?php if (skybyn('register') == "1") {
+                    if (isset($_GET['complete'])) {
+                        if (isset($_GET['user']) && !empty($_GET['user'])) {
+                            if (isset($_GET['token']) && !empty($_GET['token'])) {
+                                $id = $_GET['user'];
+                                $token = $_GET['token'];
+                                $checkRegistration = $conn->query("SELECT * FROM `users` WHERE `id`='$id' AND `token`='$token'");
+                                if ($checkRegistration->num_rows == 1) {
+                                    $_SESSION['user'] = $id;
+                                    $conn->query("UPDATE `users` SET `token`='' WHERE `id`='$id'");
+                                    ?><script>window.location.href='../';</script><?php
+                                    return false;
+                                }
+                            }
+                        }
+                    }
+                ?>
                 <h2>Sign up</h2>
                 
                 <div id="set_dob">
@@ -64,14 +80,13 @@
                 </div>
 
                 <input type="submit" id="send_again" onclick="hitEnterRegister('resend')" style="display: none;margin-top: 3px">
-                <input type="submit" id="register" onclick="hitEnterRegister('')" value="Continue" style="margin-top: 3px">
+                <input type="submit" id="register" onclick="hitEnterRegister(null)" value="Continue" style="margin-top: 3px">
                 <input type="submit" id="step_back" onclick="stepBack()" value="Go back" style="display: none;margin-top: 3px">
 
                 <div id="err_msg" style="display: none; margin-top: 20px">
                     <br>
                     <p style="text-align: center"></p>
                 </div>
-
                 <?php } else {?>
                 <b><center>Registration is currently disabled</center></b>
                 <?php }?>
@@ -139,6 +154,7 @@
                         let register = document.getElementById('register');
                         let step_back = document.getElementById('step_back');
                         let info_text = document.getElementById('info_text');
+                        let intro = document.getElementById('intro');
                         let table = document.getElementById('reg_table');
                         let reg_info = document.getElementById('reg_info');
                         let reg_form = document.getElementById('log_reg_form');
@@ -146,8 +162,8 @@
                         if (reg_packs.style.display == "block") {
                             reg_packs.style.display = "none";
                             set_terms.style.display = "block";
-                            info_text.style.display = "block";
                             reg_form.style.display = "block";
+                            reg_info.style.display = "block";
                         } else
                         if (set_terms.style.display == "block") {
                             set_terms.style.display = "none";
@@ -213,6 +229,13 @@
                             setTimeout(() => {
                                 document.getElementById('reg-t-age').remove();
                             }, 100);
+
+                            info_text.style.display = "block";
+                            intro.style.display = "block";
+                            reg_info.style.display = "none";
+                            <?php if (isMobile() == true) {?>
+                            wel_inf.style.height = "200px";
+                            <?php }?>
                         }
                     }
 
@@ -249,18 +272,22 @@
                         const username = document.getElementById('username'); // Username
                         const pw = document.getElementById('register-password'); // Password
                         const cpw = document.getElementById('cpassword'); // Confirm password
-                        const refer = document.getElementById('refer').value; // Confirm password
-
-                        info_text.style.display = "none";
-                        reg_info.style.display = "block";
-                        
-                        <?php if (isMobile() == true) {?>
-                        wel_inf.style.height = "auto";
-                        <?php }?>
+                        const refer = document.getElementById('refer').value; // Referral code
                         
                         // Verify date of birth value and enter full name
                         if (set_dob.style.display != "none") {
-                            if (dob_v != "") {
+                            let step_one = false;
+                            if (dob_v) {
+                                step_one = true;
+                            }
+                            if (step_one == true) {
+                                info_text.style.display = "none";
+                                reg_info.style.display = "block";
+
+                                <?php if (isMobile() == true) {?>
+                                wel_inf.style.height = "auto";
+                                <?php }?>
+                                
                                 set_dob.style.display = "none";
                                 set_name.style.display = "block";
                                 step_back.style.display = "block";
@@ -321,6 +348,7 @@
                                     const seconds = unix % 60;
                                     return minutes + "m " + seconds + "s";
                                 }
+                                
                                 // Send an email verification code
                                 if (validateEmail(email.value)) {
                                     $.ajax({
@@ -330,7 +358,6 @@
                                             email: email.value
                                         }
                                     }).done(function(response) {
-                                        <?php if (isset($dev_access) && $dev_access == false) {?>
                                         if (response === "sent") {
                                             updateUIForEmailSent();
                                         } else
@@ -345,9 +372,6 @@
                                                 register.value = "Send code";
                                             }, 3000);
                                         }
-                                        <?php } else {?>
-                                        updateUIForEmailSent('v');
-                                        <?php }?>
                                     });
                                 }
                                 function updateUIForEmailSent(x) {
@@ -562,10 +586,53 @@
                             if (terms.checked) {
                                 info_text.style.display = "none";
                                 reg_form.style.display = "none";
+                                reg_info.style.display = "none";
                                 reg_packs.style.display = "block";
                             }
-                        } else
-                        // Select package
+                        }
+
+                        //if (age <= 14) {
+                        //     Action for age group 0-14
+                        //    youngChildAccount();
+                        //} else if (age >= 15 && age <= 17) {
+                        //     Action for age group 15-17
+                        //    childAccount();
+                        //} else if (age >= 18) {
+                        //     Action for age group 18+
+                        //    normalAccount();
+                        //}
+
+                        //input.addEventListener('keydown', handleKeyPress, { once: true });
+                    }
+
+                    function selectPackage(x) {
+                        let set_dob = document.getElementById('set_dob');
+                        let set_name = document.getElementById('set_name');
+                        let set_email = document.getElementById('set_email');
+                        let set_email_c = document.getElementById('set_email_verify');
+                        let set_username = document.getElementById('set_username');
+                        let set_pw = document.getElementById('set_password');
+                        let set_terms = document.getElementById('set_terms');
+                        let send_again = document.getElementById('send_again');
+                        let register = document.getElementById('register');
+                        let step_back = document.getElementById('step_back');
+                        let err_msg = document.getElementById('err_msg');
+
+                        const dob_v = document.getElementById('dob').value;
+                        const age = calculateAge(dob_v);
+                        
+                        const fname = document.getElementById('fname'); // First name
+                        const mname = document.getElementById('mname'); // Middle name
+                        const lname = document.getElementById('lname'); // Last name
+
+                        const email_c = document.getElementById('email-check'); // Email check (special)
+                        const email = document.getElementById('register-email'); // Email
+                        const email_verify = document.getElementById('email-verify'); // Email code verify
+                        const username = document.getElementById('username'); // Username
+                        const pw = document.getElementById('register-password'); // Password
+                        const cpw = document.getElementById('cpassword'); // Confirm password
+                        const refer = document.getElementById('refer').value; // Referral code
+                        
                         if (reg_packs.style.display != "none") {
                             const ppr = document.getElementById('ppr');
                             const ppu = document.getElementById('ppu');
@@ -573,18 +640,23 @@
                             const vi = document.getElementById('vi');
                             if (x == "op") {
                                 pack = "op";
-                            } else
+                            } else 
                             if (x == "pp") {
                                 pack = "pp";
                             } else {
                                 pack = "cp";
                             }
+                            
+                            var private;
+                            var public;
+                            var visible;
+                            var invisible;
 
                             if (pack == "cp") {
-                                const private = ppr.value;
-                                const public = ppu.value;
-                                const visible = vv.value;
-                                const invisible = vi.value;
+                                private = ppr.value;
+                                public = ppu.value;
+                                visible = vv.value;
+                                invisible = vi.value;
                             }
 
                             $.ajax({
@@ -607,24 +679,11 @@
                                     refer: refer
                                 }
                             }).done(function(response) {
-                                if (response === "signup_complete") {
-                                    window.location.href='../';
+                                if (response.responseCode === "ok") {
+                                    window.location.href='../register?complete&user='+response.user+'&token='+response.token;
                                 }
                             });
                         }
-
-                        //if (age <= 14) {
-                        //     Action for age group 0-14
-                        //    youngChildAccount();
-                        //} else if (age >= 15 && age <= 17) {
-                        //     Action for age group 15-17
-                        //    childAccount();
-                        //} else if (age >= 18) {
-                        //     Action for age group 18+
-                        //    normalAccount();
-                        //}
-
-                        //input.addEventListener('keydown', handleKeyPress, { once: true });
                     }
 
                     function showPassword(x) {

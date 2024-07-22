@@ -12,11 +12,6 @@ if (isset($_COOKIE['qr_login'])) {
 }
 
 # Get full url
-function domain($url) {
-    $url = parse_url($url, PHP_URL_HOST);
-    return $url;
-}
-
 function fullUrl() {
     $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
     $host = $_SERVER['HTTP_HOST'];
@@ -24,7 +19,19 @@ function fullUrl() {
     $fullUrl = $scheme . '://' . $host . $requestUri;
     return $fullUrl;
 }
+function domain($url) {
+    $url = parse_url($url, PHP_URL_HOST);
+    return $url;
+}
+function page($url) {
+    $parsedUrl = parse_url($url);
+    $path = $parsedUrl['path'];
+    $lastPart = basename($path);
+    return $lastPart;
+}
+
 $domain = domain(fullUrl());
+$currentPage = page(fullUrl());
 
 # Get specified system_data
 function skybyn($x) {
@@ -109,7 +116,7 @@ if (isset($_COOKIE['user'])) {
 # Create cookie with country information
 if (!isset($_COOKIE['country'])) {
     $country = geoData("country_name");
-    createCookie("country",$country, "1","6");
+    #createCookie("country",$country, "1","6");
 }
 
 # Get metadata from URL

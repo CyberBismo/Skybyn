@@ -184,11 +184,11 @@ if (isset($_COOKIE['logged'])) {
     </script>
     <?php }?>
 </div>
-
+<?php if ($currentPage == "register") {?>
 <div class="reg-packs" id="reg_packs" style="display: none">
     <h3>Select one of following options</h3>
     <div class="reg-packs-box">
-        <div class="reg-pack" onclick="hitEnterRegister('op')">
+        <div class="reg-pack">
             <div class="reg-pack-box">
                 <h2>Open Profile</h2>
                 <ul>
@@ -197,10 +197,10 @@ if (isset($_COOKIE['logged'])) {
                     <li>Anyone can message you</li>
                     <li>You appear for new users</li>
                 </ul>
-                <p>Click to Select</p>
+                <p id="open-set-btn"><button onclick="selectPackage('op')">Select</button></p>
             </div>
         </div>
-        <div class="reg-pack" onclick="hitEnterRegister('pp')">
+        <div class="reg-pack">
             <div class="reg-pack-box">
                 <h2>Private Profile</h2>
                 <ul>
@@ -208,7 +208,7 @@ if (isset($_COOKIE['logged'])) {
                     <li>Your profile is invisible</li>
                     <li>Only friends can message you</li>
                 </ul>
-                <p>Click to Select</p>
+                <p id="private-set-btn"><button onclick="selectPackage('pp')">Select</button></p>
             </div>
         </div>
         <div class="reg-pack" id="reg-pack-custom">
@@ -222,11 +222,11 @@ if (isset($_COOKIE['logged'])) {
                             A private profile will only show your picture and display name.
                         </p>
                         <table>
-                            <tr>
+                            <tr onclick="document.getElementById('ppr').click()">
                                 <td style="text-align: right"><input type="radio" name="private" value="1" id="ppr"></td>
                                 <td><label for="ppr">Private</label></td>
                             </tr>
-                            <tr>
+                            <tr onclick="document.getElementById('ppu').click()">
                                 <td style="text-align: right"><input type="radio" name="private" value="0" id="ppu"></td>
                                 <td><label for="ppu">Public</label></td>
                             </tr>
@@ -238,11 +238,11 @@ if (isset($_COOKIE['logged'])) {
                             As visible you will appear in search results.
                         </p>
                         <table>
-                            <tr>
+                            <tr onclick="document.getElementById('vv').click()">
                                 <td style="text-align: right"><input type="radio" name="visible" value="1" id="vv"></td>
                                 <td><label for="vv">Visible</label></td>
                             </tr>
-                            <tr>
+                            <tr onclick="document.getElementById('vi').click()">
                                 <td style="text-align: right"><input type="radio" name="visible" value="0" id="vi"></td>
                                 <td><label for="vi">Invisible</label></td>
                             </tr>
@@ -250,10 +250,11 @@ if (isset($_COOKIE['logged'])) {
                     </div>
 
                 </div>
-                <p id="custom-set-btn" style="display: none"><button onclick="hitEnterRegister('cp')">Confirm</button></p>
+                <p id="custom-set-btn" style="display: none"><button onclick="selectPackage('cp')">Confirm and select</button></p>
             </div>
         </div>
     </div>
     <button onclick="stepBack()">Go back</button>
 </div>
+<?php }?>
 <?php }?>

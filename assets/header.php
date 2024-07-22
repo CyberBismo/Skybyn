@@ -1,11 +1,11 @@
 <?php include_once "functions.php";
-header('Access-Control-Allow-Origin: *');
 
 $devDomain = 'dev.skybyn.no';
 if ($domain == $devDomain) {
     $dev_access = true;
     $homepage = "http://dev.skybyn.no/";
 } else {
+    $dev_access = false;
     $homepage ? "https://skybyn.com" : "https://skybyn.no";
 }
 ?>
