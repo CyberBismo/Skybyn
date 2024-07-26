@@ -13,10 +13,12 @@ if (isset($_GET['u'])) {
                 $friends = false;
             }
         } else {
-            ?><meta http-equiv="Refresh" content="url='./'" /><?php
+            ?><meta http-equiv="Refresh" content="url='../'" /><?php
+            return false;
         }
     } else {
         ?><meta http-equiv="Refresh" content="0; url='./profile'" /><?php
+        return false;
     }
 } else {
     if (isset($_SESSION['user'])) {
@@ -24,7 +26,8 @@ if (isset($_GET['u'])) {
         $myProfile = true;
         $friends = true;
     } else {
-        ?><meta http-equiv="Refresh" content="0; url='./'" /><?php
+        ?><meta http-equiv="Refresh" content="0; url='../'" /><?php
+        return false;
     }
 }
 

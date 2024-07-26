@@ -2785,6 +2785,10 @@
                 width: 50px;
                 margin: 5px;
             }
+            .gbox-member.active img {
+                border: 2px solid green;
+                box-sizing: border-box;
+            }
             .gbox-member img {
                 width: 50px;
                 height: 50px;

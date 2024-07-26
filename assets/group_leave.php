@@ -16,6 +16,13 @@ if (file_exists($filePath)) {
 
         $jsonData = json_encode($data, JSON_PRETTY_PRINT);
         file_put_contents($filePath, $jsonData);
+    } else {
+        if (isset($data["guests"][$user])) {
+            unset($data["guests"][$user]);
+    
+            $jsonData = json_encode($data, JSON_PRETTY_PRINT);
+            file_put_contents($filePath, $jsonData);
+        }
     }
 }
 ?>

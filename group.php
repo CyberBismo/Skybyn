@@ -32,33 +32,67 @@ if (isset($_GET['id'])) {
         $filename = $groupID . ".json";
         $filePath = $folder . $filename;
 
-        if (!file_exists($filePath)) {
-            $data = [
-                "members" => [
-                    "$uid" => [
-                        "username" => "$username",
-                        "avatar" => "$avatar",
+        $checkMembers = $conn->query("SELECT * FROM `group_members` WHERE `group`='$groupID' AND `user`='$uid'");
+        $countMembers = $checkMembers->num_rows;
+
+        if ($countMembers == 1) {
+            if (!file_exists($filePath)) {
+                $data = [
+                    "members" => [
+                        "$uid" => [
+                            "username" => "$username",
+                            "avatar" => "$avatar",
+                        ]
                     ]
-                ]
-            ];
-
-            $jsonData = json_encode($data, JSON_PRETTY_PRINT);
-
-            if (!is_dir($folder)) {
-                mkdir($folder, 0777, true);
+                ];
+    
+                $jsonData = json_encode($data, JSON_PRETTY_PRINT);
+    
+                if (!is_dir($folder)) {
+                    mkdir($folder, 0777, true);
+                }
+                file_put_contents($filePath, $jsonData);
+            } else {
+                $json = file_get_contents($filePath);
+                $data = json_decode($json, true);
+                $data["members"][$uid] = [
+                    "username" => "$username",
+                    "avatar" => "$avatar",
+                ];
+    
+                $jsonData = json_encode($data, JSON_PRETTY_PRINT);
+                file_put_contents($filePath, $jsonData);
             }
-            file_put_contents($filePath, $jsonData);
         } else {
-            $json = file_get_contents($filePath);
-            $data = json_decode($json, true);
-            $data["members"][$uid] = [
-                "username" => "$username",
-                "avatar" => "$avatar",
-            ];
-
-            $jsonData = json_encode($data, JSON_PRETTY_PRINT);
-            file_put_contents($filePath, $jsonData);
+            if (!file_exists($filePath)) {
+                $data = [
+                    "guests" => [
+                        "$uid" => [
+                            "username" => "$username",
+                            "avatar" => "$avatar",
+                        ]
+                    ]
+                ];
+    
+                $jsonData = json_encode($data, JSON_PRETTY_PRINT);
+    
+                if (!is_dir($folder)) {
+                    mkdir($folder, 0777, true);
+                }
+                file_put_contents($filePath, $jsonData);
+            } else {
+                $json = file_get_contents($filePath);
+                $data = json_decode($json, true);
+                $data["guests"][$uid] = [
+                    "username" => "$username",
+                    "avatar" => "$avatar",
+                ];
+    
+                $jsonData = json_encode($data, JSON_PRETTY_PRINT);
+                file_put_contents($filePath, $jsonData);
+            }
         }
+
     } else {
         ?><meta http-equiv="Refresh" content="0; url='.?notfound'" /><?php
     }
@@ -284,10 +318,28 @@ if (isset($_GET['id'])) {
                     type: "POST",
                     data: {
                         group : x
+                    },
+                    success: function(response) {
+                        if (response != "error") {
+                            window.location.href = "../";
+                        }
                     }
-                }).done(function(response) {
-                    if (response != "error") {
-                        window.location.href = "../";
+                });
+            }
+
+            function removeDuplicates(x) {
+                const allElements = document.querySelectorAll('*');
+                const idMap = {};
+                allElements.forEach(element => {
+                    const id = element.id;
+                    if (id) {
+                        if (idMap[id]) {
+                            // If the ID already exists in the map, remove the element
+                            element.parentNode.removeChild(element);
+                        } else {
+                            // Otherwise, add the element to the map
+                            idMap[id] = element;
+                        }
                     }
                 });
             }
@@ -295,6 +347,7 @@ if (isset($_GET['id'])) {
             function sendMessage(event) {
                 const feed = document.getElementById('message-feed');
                 const msg = document.getElementById('gmsg');
+                message = msg.value;
 
                 let send = false;
 
@@ -307,18 +360,21 @@ if (isset($_GET['id'])) {
                 }
 
                 if (send === true) {
+                    msg.value = "";
                     $.ajax({
                         url: '../assets/group_send.php',
                         type: "POST",
                         data: {
                             group : <?=$groupID?>,
-                            text : msg.value
+                            text : message
+                        },
+                        success: function(response) {
+                            if (response.responseCode === "ok") {
+                                var msgId = response.messageId;
+                                getMsgs();
+                            }
                         }
-                    }).done(function(response) {
-                        msg.value = "";
                     });
-                    getMsgs();
-                    scrollMessageFeedToBottom();
                 }
             }
 
@@ -340,11 +396,41 @@ if (isset($_GET['id'])) {
                     data: {
                         group : <?=$groupID?>,
                         last : id
+                    },
+                    success: function(response) {
+                        feed.innerHTML += response;
+                        scrollMessageFeedToBottom();
                     }
-                }).done(function(response) {
-                    feed.innerHTML += response;
-                    scrollMessageFeedToBottom();
                 });
+            }
+
+            function cleanUp() {
+                var msgs = document.getElementsByClassName('gchat-message');
+                var count = msgs.length;
+                
+                if (count > 0) {
+                    var first = msgs[0].id;
+                    var last = msgs[count-1].id;
+                    $.ajax({
+                        url: '../assets/group_clean.php',
+                        type: "POST",
+                        data: {
+                            group : <?=$groupID?>,
+                            first : first,
+                            last : last
+                        },
+                        success: function(response) {
+                            if (response.responseCode === "ok") {
+                                response.array.forEach(element => {
+                                    var el = document.getElementById(element);
+                                    if (el) {
+                                        el.remove();
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
             }
 
             function checkMsgs() {
@@ -359,20 +445,48 @@ if (isset($_GET['id'])) {
                         data: {
                             group : <?=$groupID?>,
                             last : id
-                        }
-                    }).done(function(response) {
-                        if (response.responseCode === "ok") {
-                            getMsgs();
+                        },
+                        success: function(response) {
+                            if (response.responseCode === "ok") {
+                                getMsgs();
+                            }
                         }
                     });
                 }
 
                 setTimeout(() => {
                     checkMsgs();
-                    scrollMessageFeedToBottom();
+                    removeDuplicates();
                 }, 1000);
             }
             checkMsgs();
+            function checkDeletedMsgs() {
+                var msgs = document.getElementsByClassName('gchat-message');
+                var count = msgs.length;
+                
+                if (count > 0) {
+                    var id = msgs[count-1].id;
+                    $.ajax({
+                        url: '../assets/group_check.php',
+                        type: "POST",
+                        data: {
+                            group : <?=$groupID?>,
+                            last : id
+                        },
+                        success: function(response) {
+                            if (response.responseCode === "ok") {
+                                getMsgs();
+                            }
+                        }
+                    });
+                }
+
+                setTimeout(() => {
+                    checkMsgs();
+                    removeDuplicates();
+                }, 1000);
+            }
+            checkDeletedMsgs();
 
             function delMsg(x) {
                 var msg = document.getElementById("chat_<?=$groupID?>_"+x);
@@ -381,28 +495,19 @@ if (isset($_GET['id'])) {
                     type: "POST",
                     data: {
                         message : x
+                    },
+                    success: function(response) {
+                        if (response.responseCode === "ok") {
+                            msg.remove();
+                        }
                     }
-                }).done(function(response) {
-                    if (response.responseCode === "ok") {
-                        msg.remove();
-                    }
-                });
+                })
             }
             function editMsg(x) {}
         </script>
         <?php if (isset($_SESSION['user'])) {?>
         <script>
         window.addEventListener("beforeunload", function () {
-            $.ajax({
-                url: '../assets/group_leave.php',
-                type: "POST",
-                data: {
-                    group : <?=$groupID?>,
-                    user : <?=$uid?>
-                }
-            });
-        });
-        window.addEventListener("unload", function () {
             $.ajax({
                 url: '../assets/group_leave.php',
                 type: "POST",
@@ -435,35 +540,44 @@ if (isset($_GET['id'])) {
             }
         }
 
-        fetch('../data/groups/<?=$groupID?>.json')
-        .then(response => response.json())
-        .then(data => {
-            if (Object.keys(data).length === 0) {
-                console.log("The data is empty.");
-                return;
-            }
-            const { id, username, avatar } = data;
-            //createGboxMemberElement(id, username, avatar);
-        });
-
         function checkUserActivity() {
-            var loggedInUserId = <?=$uid?>;
-
             fetch('../data/groups/<?=$groupID?>.json')
             .then(response => response.json())
             .then(data => {
+                if (Object.keys(data.members).length > 0) {
+                    Object.keys(data.members).forEach(memberId => {
+                        memberId = memberId.toString();
+                        const {username,avatar} = data.members[memberId];
+                        createGboxMemberElement(memberId, username, avatar);
+                    });
+                }
+                if (Object.keys(data.guests).length > 0) {
+                    Object.keys(data.guests).forEach(guestId => {
+                        guestId = guestId.toString();
+                        const {username,avatar} = data.guests[guestId];
+                        createGboxMemberElement(guestId, username, avatar);
+                    });
+                }
+            });
+            
+            fetch('../data/groups/<?=$groupID?>.json')
+            .then(response => response.json())
+            .then(data => {
+                document.querySelectorAll('.gbox-member').forEach(memberElement => {
+                    memberElement.classList.remove('active');
+                });
                 Object.keys(data.members).forEach(memberId => {
                     memberId = memberId.toString();
                     var memberElement = document.querySelector('.gbox-member[id="' + memberId + '"]');
-
                     if (memberElement) {
-                        if (memberId === loggedInUserId.toString()) {
-                            memberElement.classList.add('active');
-                        } else {
-                            memberElement.classList.remove('active');
-                        }
-                    } else {
-                        console.error('Element with id="' + memberId + '" not found.');
+                        memberElement.classList.add('active');
+                    }
+                });
+                Object.keys(data.guests).forEach(guestId => {
+                    guestId = guestId.toString();
+                    var guestElement = document.querySelector('.gbox-member[id="' + guestId + '"]');
+                    if (guestElement) {
+                        guestElement.classList.add('active');
                     }
                 });
             })

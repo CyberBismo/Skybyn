@@ -72,6 +72,8 @@
                     </script>
                 </div>
                 <div class="normal_login">
+                    <center><p id="login_msg"></p></center>
+                    
                     <h2>Sign in</h2>
 
                     <i class="fa-solid fa-at"></i>
@@ -84,8 +86,6 @@
                     <input type="checkbox" id="login-remember" onkeydown="hitEnterLogin(this)"><label for="login-remember">Remember me</label>
                     
                     <input type="submit" id="login" onclick="login()" value="Sign in">
-
-                    <center><p id="login_msg"></p></center>
 
                     <script>
                         function showPassword(x) {
@@ -129,10 +129,11 @@
                                     remember : remember
                                 }
                             }).done(function(response) {
-                                if (response === "login_ok" || response === "new_ip" || response === "verify") {
+                                console.log(response);
+                                if (response.responseCode === "ok") {
                                     window.location.href = "./";
                                 } else {
-                                    lmsg.innerHTML = response;
+                                    lmsg.innerHTML = response.message;
                                     setTimeout(() => {
                                         lmsg.innerHTML = null;
                                     }, 3000);
