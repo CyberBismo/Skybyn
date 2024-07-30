@@ -38,11 +38,13 @@
             }
             .panel {
                 display: flex;
-                flex-wrap: wrap;
-                gap: 10px;
-                width: auto;
             }
 
+            .parts {
+                display: grid;
+                gap: 10px;
+                box-sizing: border-box;
+            }
             .part {
                 max-width: 400px;
                 padding: 20px;
@@ -237,17 +239,23 @@
                         </ul>
                     </p>
                 </div>
-                <div class="part">
-                    <h2>Register API</h2>
-                    <p>Coming soon..</p>
-                </div>
-                <div class="part">
-                    <h2>Forgot API</h2>
-                    <p>Coming soon..</p>
-                </div>
-                <div class="part">
-                    <h2>AI</h2>
-                    <p>Future feature</p>
+                <div class="parts">
+                    <div class="part">
+                        <h2>Register API</h2>
+                        <p>Coming soon..</p>
+                    </div>
+                    <div class="part">
+                        <h2>Forgot API</h2>
+                        <p>Coming soon..</p>
+                    </div>
+                    <div class="part">
+                        <h2>Reset API</h2>
+                        <p>Coming soon..</p>
+                    </div>
+                    <div class="part">
+                        <h2>AI</h2>
+                        <p>Future feature</p>
+                    </div>
                 </div>
             </div>
         </div>
