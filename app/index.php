@@ -239,6 +239,42 @@
                         </ul>
                     </p>
                 </div>
+                <div class="part">
+                    <h2>Search API</h2>
+                    <p>
+                        <h3>Request: search</h3>
+                        <ul>
+                            <li>Post variables</li>
+                            <li>
+                                <ul>
+                                    <li>userID = [int]</li>
+                                    <li>keyword = [string]</li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li>Success response</li>
+                            <li>
+                                <ul>
+                                    <li>responseCode: 1</li>
+                                    <li>message: "# results found"</li>
+                                    <li>id: [int]</li>
+                                    <li>username: [string]</li>
+                                    <li>avatar: [string]</li>
+                                    <li>fname: [string]</li>
+                                    <li>mname: [string]</li>
+                                    <li>lname: [string]</li>
+                                    <li>nickname: [string]</li>
+                                    <li>title: [string]</li>
+                                    <li>color: [string]</li>
+                                    <li>friends: [int]</li>
+                                    <li>online: [int]</li>
+                                    <li>sex: [string]</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </p>
+                </div>
                 <div class="parts">
                     <div class="part">
                         <h2>Register API</h2>
