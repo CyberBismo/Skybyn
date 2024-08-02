@@ -240,6 +240,49 @@
                     </p>
                 </div>
                 <div class="part">
+                    <h2>Feed API</h2>
+                    <p>
+                        <h3>Request: feed</h3>
+                        <ul>
+                            <li>Post variables</li>
+                            <li>
+                                <ul>
+                                    <li>userID = [int]</li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li>Success response</li>
+                            <li>
+                                <ul>
+                                    <li>responseCode: 1</li>
+                                    <li>id: [int]</li>
+                                    <li>user: [array]
+                                        <ul>
+                                            <li>id: [int]</li>
+                                            <li>username: [string]</li>
+                                            <li>avatar: [string]</li>
+                                        </ul>
+                                    </li>
+                                    <li>content: [string]</li>
+                                    <li>created: [int]</li>
+                                    <li>urls: [string]</li>
+                                    <li>video: [string]</li>
+                                    <li>comments: [array]
+                                        <ul>
+                                            <li>id: [int] (comment ID)</li>
+                                            <li>user: [int]</li>
+                                            <li>username: [string]</li>
+                                            <li>avatar: [string]</li>
+                                            <li>content: [string]</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </p>
+                </div>
+                <div class="part">
                     <h2>Search API</h2>
                     <p>
                         <h3>Request: search</h3>

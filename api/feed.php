@@ -22,7 +22,6 @@ if (isset($_POST['userID']) && !empty($_POST['userID'])) {
         $post_user = $post['user'];
         $post_content = $post['content'];
         $post_created = date("d M. y H:i:s", $post['created']);
-        $post_links = $post['urls'];
 
         $getComments = $conn->query("SELECT * FROM `comments` WHERE `post`='$post_id'");
         $comments = array();
@@ -55,9 +54,11 @@ if (isset($_POST['userID']) && !empty($_POST['userID'])) {
         }
 
         $post_video = convertVideo($post_content);
-        $post_content_res = fixEmojis(nl2br(cleanUrls($post_content)), 1);
+        $post_content_res = fixEmojis(nl2br($post_content), 1);
+        $post_links = cleanUrls($post_content);
 
         $response[] = array(
+            'responseCode' => "1",
             'id' => $post_id,
             'user' => array(
                 'id' => $post_user,
