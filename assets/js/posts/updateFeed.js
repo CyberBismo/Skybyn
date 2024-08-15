@@ -1,5 +1,5 @@
 setInterval(() => {
-    checkPosts();
+    //checkPosts();
     cleanPosts();
 }, 300000); // Every 5 minutes
 removeDuplicateIds();

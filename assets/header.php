@@ -3,10 +3,10 @@
 $devDomain = 'dev.skybyn.no';
 if ($domain == $devDomain) {
     $dev_access = true;
-    $homepage = "http://dev.skybyn.no/";
+    $homepage = "https://dev.skybyn.com/";
 } else {
     $dev_access = false;
-    $homepage ? "https://skybyn.com" : "https://skybyn.no";
+    $homepage = "https://skybyn.com/";
 }
 ?>
 <!DOCTYPE html>
@@ -59,10 +59,9 @@ if ($domain == $devDomain) {
 
             <?php // New post if logged in
             if (isset($_SESSION['user'])) {
-                if (isMobile() == false) {
-                    if (fullUrl() == $homepage) {?>
+                if (isMobile() == false) {?>
             <div class="new_post_button" id="new_post_btn" onclick="newPost()">Anything new?</div>
-            <?php }}}?>
+            <?php }}?>
 
             <?php if (isset($_SESSION['user'])) {?>
             <div class="top">
@@ -595,23 +594,4 @@ if ($domain == $devDomain) {
                 }
             }
             <?php }?>
-
-            function updateThemeBasedOnSystemSettings() {
-                const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-
-                function applyThemeChange(e) {
-                    if (e.matches) {
-                    } else {
-                    }
-                }
-
-                // Initial check
-                applyThemeChange(mediaQuery);
-
-                // Listen for changes
-                mediaQuery.addListener(applyThemeChange);
-            }
-
-            // Call the function to apply initial theme and set up listener
-            updateThemeBasedOnSystemSettings();
         </script>
