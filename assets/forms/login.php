@@ -73,6 +73,7 @@
                 </div>
                 <div class="normal_login">
                     <center><p id="login_msg"></p></center>
+                    <div class="login_qr" onclick="tglLogin()" id="qr_tgl"><i class="fa-solid fa-qrcode"></i></div>
                     
                     <h2>Sign in</h2>
 
@@ -85,7 +86,10 @@
 
                     <input type="checkbox" id="login-remember" onkeydown="hitEnterLogin(this)"><label for="login-remember">Remember me</label>
                     
-                    <input type="submit" id="login" onclick="login()" value="Sign in">
+                    <div class="">
+                        <input type="submit" id="login" onclick="login()" value="Sign in">
+                        
+                    </div>
 
                     <script>
                         function showPassword(x) {
@@ -142,15 +146,6 @@
                         }
                     </script>
                 </div>
-                <div class="links">
-                    <?php if (skybyn('login-form') == "login") {
-                        if ($signup == false) {?>
-                    <span onclick="window.location.href='/forgot'">Forgot password?</span>
-                    <?php }}?>
-                    <?php if (isMobile() === false) { ?>
-                    <span class="show_qr_login" onclick="tglLogin()" id="qr_tgl">Sign in with <i class="fa-solid fa-qrcode"></i></span>
-                    <?php } ?>
-                </div>
                 <script>
                     function deleteCookie(name) {
                         document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
@@ -167,7 +162,7 @@
                                 let code = getCookieValue('qr');
                                 deleteCookie('qr');
                                 document.getElementById('login_qr').src = "#";
-                                qr_tgl.innerHTML = "Sign in with <i class='fa-solid fa-qrcode'></i>";
+                                qr_tgl.innerHTML = "<i class='fa-solid fa-qrcode'></i>";
                                 $.ajax({
                                     url: './qr/api.php',
                                     type: "POST",

@@ -1958,6 +1958,16 @@
                 background: linear-gradient(0deg, rgba(var(--greyblue),1) 0%, rgba(var(--lightblue),1) 100%);
             }
 
+            .login_qr {
+                float: right;
+                margin-top: -35px;
+                cursor: pointer;
+                transition: transform .3s;
+            }
+            .login_qr:hover {
+                transform: scale(1.1) translateX(-3px);
+            }
+
             <?php if (isMobile() == false) {?>
             .image_viewer {
                 position: fixed;

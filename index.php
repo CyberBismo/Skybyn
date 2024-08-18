@@ -100,9 +100,10 @@ if (isset($_COOKIE['logged'])) {
             if ($signup == false) {?>
         <div class="log-button" id="signup-btn">
             <span onclick="window.location.href='./register'">Sign up</span>
+            <span onclick="window.location.href='/forgot'">Forgot password?</span>
         </div>
         <?php } else {?>
-        <div class="log-button split" id="signup-btn">
+        <div class="log-button" id="signup-btn">
             <span onclick="window.location.href='./'" id="login-btn">Login here</span>
             <span onclick="window.location.href='/forgot'">Forgot password?</span>
         </div>
@@ -121,6 +122,7 @@ if (isset($_COOKIE['logged'])) {
             if ($signup == false) {?>
         <div class="reg-button" id="signup-btn">
             <span onclick="window.location.href='./register'">Sign up</span>
+            <span onclick="window.location.href='/forgot'">Forgot password?</span>
         </div>
         <?php } else {?>
         <div class="reg-button" id="signup-btn">
