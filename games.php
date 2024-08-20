@@ -9,8 +9,8 @@ if (isset($_GET['new'])) {
 }
 ?>
         <div class="page-container">
-            <div class="music-head">
-                <h3>Music Library</h3>
+            <div class="games-head">
+                <h3>GAMES</h3>
                 
             </div>
         </div>
