@@ -3,6 +3,10 @@
 if (!isset($_SESSION['user'])) {
     //?><meta http-equiv="Refresh" content="0; url='./'" /><?php
 }
+
+if (isset($_GET['new'])) {
+    
+}
 ?>
         <div class="page-container">
             <div class="market-head">
