@@ -342,10 +342,10 @@ if ($domain == $devDomain) {
                 </div>
             </div-->
 
-            <!--div class="shortcuts music">
+            <div class="shortcuts music">
                 <h3><i class="fa-solid fa-music"></i><div>Music</div><i class="fa-solid fa-plus" onclick="window.location.href='./music?add'" title="Add to music"></i></h3>
                 <div id="my-music">
-                    < ?php
+                    <?php
                     $getMusic = $conn->query("SELECT * FROM `music`");
                     if ($getMusic->num_rows > 0) {
                         while($mu_data = $getMusic->fetch_assoc()) {
@@ -353,20 +353,20 @@ if ($domain == $devDomain) {
                             ?>
                             <div class="sortcut">
                                 <div class="sortcut-icon"><img src=""></div>
-                                <div class="sortcut-name">< ?=$music_name?></div>
+                                <div class="sortcut-name"><?=$music_name?></div>
                             </div>
-                            < ?php
+                            <?php
                         }
                     }
                     ?>
                 </div>
-            </div-->
+            </div>
 
             <div class="shortcuts events">
-                <h3><i class="fa-solid fa-gamepad"></i><div>Events</div><i class="fa-solid fa-plus" title="Add new game"></i></h3>
-                <div id="my-games">
+                <h3><i class="fa-solid fa-calendar-days"></i><div>Events</div><i class="fa-solid fa-plus" title="Add new game"></i></h3>
+                <div id="my-events">
                     <?php
-                    $getEvents = $conn->query("SELECT * FROM `events`");
+                    $getEvents = $conn->query("SELECT * FROM `events` WHERE `private`='0'");
                     if ($getEvents->num_rows > 0) {
                         while($e_data = $getEvents->fetch_assoc()) {
                             $event_name = $e_data['name'];
@@ -380,12 +380,12 @@ if ($domain == $devDomain) {
                     }
                     ?>
                 </div>
-            </di>
+            </div>
 
-            <!--div class="shortcuts gaming">
-                <h3><i class="fa-solid fa-gamepad"></i><div>Gaming</div>< !--i class="fa-solid fa-plus" title="Add new game"></i- -></h3>
+            <div class="shortcuts gaming">
+                <h3><i class="fa-solid fa-gamepad"></i><div>Gaming</div><i class="fa-solid fa-plus" title="Add new game"></i></h3>
                 <div id="my-games">
-                    < ?php
+                    <?php
                     $getGames = $conn->query("SELECT * FROM `games`");
                     if ($getGames->num_rows > 0) {
                         while($g_data = $getGames->fetch_assoc()) {
@@ -393,14 +393,14 @@ if ($domain == $devDomain) {
                             ?>
                             <div class="sortcut">
                                 <div class="sortcut-icon"><img src=""></div>
-                                <div class="sortcut-name">< ?=$game_name?></div>
+                                <div class="sortcut-name"><?=$game_name?></div>
                             </div>
-                            < ?php
+                            <?php
                         }
                     }
                     ?>
                 </div>
-            </div-->
+            </div>
 
             <!--div class="shortcuts markets">
                 <h3><i class="fa-solid fa-store"></i><div>Markets</div><i class="fa-solid fa-plus" onclick="window.location.href='./market?new'" title="Add to market"></i></h3>
