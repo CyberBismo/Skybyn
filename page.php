@@ -26,9 +26,9 @@ if (isset($_GET['new'])) {?>
                 <i class="fa-solid fa-quote-right"></i>
                 <textarea name="group_desc" id="ng-desc" placeholder="Who is this group for"></textarea>
                 <div class="new-group-privacy">
-                    <span><input type="radio" name="group_privacy" value="open" id="ng-p-open" checked> Open</span>
-                    <span><input type="radio" name="group_privacy" value="locked" id="ng-p-locked"> Locked</span>
-                    <span><input type="radio" name="group_privacy" value="private" id="ng-p-private"> Private</span>
+                    <span><input type="radio" name="group_privacy" value="open" id="ng-p-open" checked><i class="fa-regular fa-eye"></i> Open</span>
+                    <span><input type="radio" name="group_privacy" value="locked" id="ng-p-locked"><i class="fa-solid fa-key"></i> Locked</span>
+                    <span><input type="radio" name="group_privacy" value="private" id="ng-p-private"><i class="fa-solid fa-user-secret"></i> Private</span>
                 </div>
                 <div id="lock-options" style="display: none">
                     <select name="group_lock_type" id="ng-lt" onchange="lockType(this)">
