@@ -362,6 +362,26 @@ if ($domain == $devDomain) {
                 </div>
             </div-->
 
+            <div class="shortcuts events">
+                <h3><i class="fa-solid fa-gamepad"></i><div>Events</div><i class="fa-solid fa-plus" title="Add new game"></i></h3>
+                <div id="my-games">
+                    <?php
+                    $getEvents = $conn->query("SELECT * FROM `events`");
+                    if ($getEvents->num_rows > 0) {
+                        while($e_data = $getEvents->fetch_assoc()) {
+                            $event_name = $e_data['name'];
+                            ?>
+                            <div class="sortcut">
+                                <div class="sortcut-icon"><img src=""></div>
+                                <div class="sortcut-name"><?=$event_name?></div>
+                            </div>
+                            <?php
+                        }
+                    }
+                    ?>
+                </div>
+            </di>
+
             <!--div class="shortcuts gaming">
                 <h3><i class="fa-solid fa-gamepad"></i><div>Gaming</div>< !--i class="fa-solid fa-plus" title="Add new game"></i- -></h3>
                 <div id="my-games">
