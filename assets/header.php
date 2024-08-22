@@ -277,10 +277,31 @@ if ($domain == $devDomain) {
         </div>
 
         <div class="left-panel" id="left-panel">
-            <!--div class="shortcuts groups">
-                <h3><i class="fa-solid fa-comments"></i><div>Group chats</div><i class="fa-solid fa-plus" onclick="window.location.href='/newgroup'" title="Create new group"></i></h3>
+
+            <div class="shortcuts music">
+                <h3><i class="fa-solid fa-music"></i><div>Music</div><i class="fa-solid fa-cloud-arrow-up" onclick="window.location.href='./music?add'" title="Add to music"></i></h3>
+                <div id="my-music">
+                    <?php
+                    $getMusic = $conn->query("SELECT * FROM `music`");
+                    if ($getMusic->num_rows > 0) {
+                        while($mu_data = $getMusic->fetch_assoc()) {
+                            $music_name = $mu_data['title'];
+                            ?>
+                            <div class="sortcut sortcut-music">
+                                <div class="sortcut-icon"><img src=""></div>
+                                <div class="sortcut-name"><?=$music_name?></div>
+                            </div>
+                            <?php
+                        }
+                    }
+                    ?>
+                </div>
+            </div>
+
+            <div class="shortcuts groups">
+                <h3><i class="fa-solid fa-comments"></i><div>Group chats</div><i class="fa-solid fa-comment-medical" onclick="window.location.href='/newgroup'" title="Create new group"></i></h3>
                 <div id="my-groups">
-                    < ?php
+                    <?php
                     $myGroups = $conn->query("SELECT * FROM `group_members` WHERE `user`='$uid'");
                     
                     $countOwnedGroups = $myOwnedGroups->num_rows;
@@ -300,24 +321,24 @@ if ($domain == $devDomain) {
                                 $group_icon = "./assets/images/logo.png";
                             }
                             ?>
-                            <div class="group" onclick="window.location.href='../group?id=< ?=$gid?>'">
-                                <div class="group-icon"><img src="< ?=$group_icon?>"></div>
-                                <div class="group-name">< ?=$group_name?></div>
-                                < ?php if ($group_owner == $uid) {?>
+                            <div class="sortcut shortcut-group" onclick="window.location.href='../group?id=<?=$gid?>'">
+                                <div class="group-icon"><img src="<?=$group_icon?>"></div>
+                                <div class="group-name"><?=$group_name?></div>
+                                <?php if ($group_owner == $uid) {?>
                                 <div class="group-extra"><i class="fa-solid fa-crown"></i></div>
-                                < ?php }?>
+                                <?php }?>
                             </div>
-                            < ?php
+                            <?php
                         }
                     }                    
                     ?>
                 </div>
-            </div-->
+            </div>
 
-            <!--div class="shortcuts pages">
-                <h3><i class="fa-regular fa-newspaper"></i><div>Pages</div><i class="fa-solid fa-plus" onclick="window.location.href='/newpage'" title="Create new page"></i></h3>
+            <div class="shortcuts pages">
+                <h3><i class="fa-regular fa-newspaper"></i><div>Pages</div><i class="fa-solid fa-file-circle-plus" onclick="window.location.href='/newpage'" title="Create new page"></i></h3>
                 <div id="my-pages">
-                    < ?php
+                    <?php
                     $myPages = $conn->query("SELECT * FROM `page_members` WHERE `user_id`='$uid'");
                     $countPages = $myPages->num_rows;
                     if ($countPages > 0) {
@@ -331,29 +352,9 @@ if ($domain == $devDomain) {
                             $page_icon = $pageData['icon'];
                             $page_locked = $pageData['locked'];
                             ?>
-                            <div class="page">
-                                <div class="page-icon"><img src="< ?=$page_icon?>"></div>
-                                <div class="page-name">< ?=$page_name?></div>
-                            </div>
-                            < ?php
-                        }
-                    }
-                    ?>
-                </div>
-            </div-->
-
-            <div class="shortcuts music">
-                <h3><i class="fa-solid fa-music"></i><div>Music</div><i class="fa-solid fa-plus" onclick="window.location.href='./music?add'" title="Add to music"></i></h3>
-                <div id="my-music">
-                    <?php
-                    $getMusic = $conn->query("SELECT * FROM `music`");
-                    if ($getMusic->num_rows > 0) {
-                        while($mu_data = $getMusic->fetch_assoc()) {
-                            $music_name = $mu_data['title'];
-                            ?>
-                            <div class="sortcut">
-                                <div class="sortcut-icon"><img src=""></div>
-                                <div class="sortcut-name"><?=$music_name?></div>
+                            <div class="sortcut shortcut-page">
+                                <div class="page-icon"><img src="<?=$page_icon?>"></div>
+                                <div class="page-name"><?=$page_name?></div>
                             </div>
                             <?php
                         }
@@ -363,7 +364,7 @@ if ($domain == $devDomain) {
             </div>
 
             <div class="shortcuts events">
-                <h3><i class="fa-solid fa-calendar-days"></i><div>Events</div><i class="fa-solid fa-plus" title="Add new game"></i></h3>
+                <h3><i class="fa-solid fa-calendar-days"></i><div>Events</div><i class="fa-regular fa-calendar-plus" onclick="window.location.href='./event?new'" title="Create new event"></i></h3>
                 <div id="my-events">
                     <?php
                     $getEvents = $conn->query("SELECT * FROM `events` WHERE `private`='0'");
@@ -371,7 +372,7 @@ if ($domain == $devDomain) {
                         while($e_data = $getEvents->fetch_assoc()) {
                             $event_name = $e_data['name'];
                             ?>
-                            <div class="sortcut">
+                            <div class="sortcut sortcut-event">
                                 <div class="sortcut-icon"><img src=""></div>
                                 <div class="sortcut-name"><?=$event_name?></div>
                             </div>
@@ -383,7 +384,7 @@ if ($domain == $devDomain) {
             </div>
 
             <div class="shortcuts gaming">
-                <h3><i class="fa-solid fa-gamepad"></i><div>Gaming</div><i class="fa-solid fa-plus" title="Add new game"></i></h3>
+                <h3><i class="fa-solid fa-gamepad"></i><div>Gaming</div><i></i></h3>
                 <div id="my-games">
                     <?php
                     $getGames = $conn->query("SELECT * FROM `games`");
@@ -391,7 +392,7 @@ if ($domain == $devDomain) {
                         while($g_data = $getGames->fetch_assoc()) {
                             $game_name = $g_data['name'];
                             ?>
-                            <div class="sortcut">
+                            <div class="sortcut sortcut-game">
                                 <div class="sortcut-icon"><img src=""></div>
                                 <div class="sortcut-name"><?=$game_name?></div>
                             </div>
@@ -402,25 +403,26 @@ if ($domain == $devDomain) {
                 </div>
             </div>
 
-            <!--div class="shortcuts markets">
-                <h3><i class="fa-solid fa-store"></i><div>Markets</div><i class="fa-solid fa-plus" onclick="window.location.href='./market?new'" title="Add to market"></i></h3>
+            <div class="shortcuts markets">
+                <h3><i class="fa-solid fa-store"></i><div>Market</div><i class="fa-solid fa-plus" onclick="window.location.href='./market?new'" title="Add to market"></i></h3>
                 <div id="my-markets">
-                    < ?php
-                    $getMarkets = $conn->query("SELECT * FROM `markets`");
+                    <?php
+                    $getMarkets = $conn->query("SELECT * FROM `market`");
                     if ($getMarkets->num_rows > 0) {
                         while($m_data = $getMarkets->fetch_assoc()) {
                             $market_name = $m_data['name'];
                             ?>
-                            <div class="sortcut">
+                            <div class="sortcut sortcut-market">
                                 <div class="sortcut-icon"><img src=""></div>
-                                <div class="sortcut-name">< ?=$market_name?></div>
+                                <div class="sortcut-name"><?=$market_name?></div>
                             </div>
-                            < ?php
+                            <?php
                         }
                     }
                     ?>
                 </div>
-            </div-->
+            </div>
+
         </div>
 
         <div class="right-panel" id="right-panel">

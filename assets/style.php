@@ -2446,6 +2446,10 @@
             }
 
             /** Shortcuts */
+            .shortcuts {
+                background: rgba(0,0,0,.1);
+                border-radius: 20px;
+            }
             .shortcuts h3 {
                 display: flex;
                 justify-content: space-between;
@@ -2454,6 +2458,8 @@
                 border-radius: 10px;
             }
             .shortcuts i {
+                width: 25px;
+                text-align: center;
                 cursor: pointer;
             }
             .shortcut-browse {
@@ -2463,8 +2469,11 @@
                 border-radius: 10px;
             }
             .shortcut-browse:hover {
-                background: rgba(255,255,255,.1);
+                background: rgba(255,255,255,.3);
                 cursor: pointer;
+            }
+            .shortcuts .shortcut {
+                background: rgba(255,255,255,.1);
             }
 
             /** Group list */
@@ -2474,7 +2483,7 @@
             #my-groups {
                 padding: 10px;
             }
-            .group {
+            .shortcut-group {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
@@ -2938,7 +2947,7 @@
             #my-pages {
                 padding: 10px;
             }
-            .page {
+            .shortcut-page {
                 display: flex;
                 justify-content: space-between;
                 width: 100%;
@@ -3127,11 +3136,19 @@
                 text-align: left;
             }
 
-            /** Market list */
-            .markets {
+            /** Music list */
+            .music {
                 width: 100%;
             }
-            #my-markets {
+            #my-music {
+                padding: 10px;
+            }
+
+            /** Event list */
+            .events {
+                width: 100%;
+            }
+            #my-events {
                 padding: 10px;
             }
 
@@ -3140,6 +3157,14 @@
                 width: 100%;
             }
             #my-games {
+                padding: 10px;
+            }
+
+            /** Market list */
+            .markets {
+                width: 100%;
+            }
+            #my-markets {
                 padding: 10px;
             }
 

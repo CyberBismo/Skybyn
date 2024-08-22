@@ -71,7 +71,7 @@
                         }
                     </script>
                 </div>
-                <div class="normal_login">
+                <form class="normal_login" onsubmit="return false">
                     <center><p id="login_msg"></p></center>
                     <div class="login_qr" onclick="tglLogin()" id="qr_tgl"><i class="fa-solid fa-qrcode"></i></div>
                     
@@ -86,10 +86,7 @@
 
                     <input type="checkbox" id="login-remember" onkeydown="hitEnterLogin(this)"><label for="login-remember">Remember me</label>
                     
-                    <div class="">
-                        <input type="submit" id="login" onclick="login()" value="Sign in">
-                        
-                    </div>
+                    <input type="submit" id="login" onclick="login()" value="Sign in">
 
                     <script>
                         function showPassword(x) {
@@ -145,7 +142,7 @@
                             });
                         }
                     </script>
-                </div>
+                </form>
                 <script>
                     function deleteCookie(name) {
                         document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
