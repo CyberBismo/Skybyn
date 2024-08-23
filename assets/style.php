@@ -2475,6 +2475,10 @@
             .shortcuts .shortcut {
                 background: rgba(255,255,255,.1);
             }
+            .shortcuts .shortcut:hover {
+                background: rgba(255,255,255,.3);
+                cursor: pointer;
+            }
 
             /** Group list */
             .groups {
@@ -2495,13 +2499,15 @@
                 transition: background .5s;
                 overflow: hidden;
             }
-            .group:hover {
-                background: rgba(0,0,0,.1);
+            .shortcut-group:hover {
+                background: rgba(255,255,255,.1);
                 cursor: pointer;
             }
             .group-icon {
-                width: 40px;
-                height: 40px;
+                width: 30px;
+                height: 30px;
+                margin: 5px;
+                margin-right: 10px;
                 border-radius: 40px;
                 overflow: hidden;
             }
@@ -2940,6 +2946,30 @@
                 vertical-align: bottom;
             }
 
+            /** Browse */
+            .pages-browse,
+            .groups-browse {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                margin-top: 20px;
+            }
+            .pb-intro,
+            .gb-intro {
+                text-align: center;
+                padding: 20px 30px;
+                font-size: 24px;
+                color: rgba(100,100,100,1);
+                border: 1px dashed rgba(100,100,100,1);
+                border-radius: 100%;
+                cursor: pointer;
+            }
+            .pb-intro:hover,
+            .gb-intro:hover {
+                color: rgba(255,255,255,.5);
+                background: rgba(255,255,255,.05);
+            }
+
             /** Page list */
             .pages {
                 width: 100%;
@@ -2956,7 +2986,7 @@
                 box-sizing: border-box;
                 transition: background .5s;
             }
-            .page:hover {
+            .shortcut-page:hover {
                 background: rgba(0,0,0,.1);
                 cursor: pointer;
             }
@@ -2981,29 +3011,77 @@
                 overflow: hidden;
             }
 
-            /** Browse */
-            .pages-browse,
-            .groups-browse {
+            <?php if (isMobile() == false) {?>
+            .new-group-create {
                 display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
+            }
+            .new-group-create .left {
+                width: 400px;
+                padding: 10px 20px;
+                color: white;
+                background: rgba(var(--dark),.5);
+                border-radius: 10px;
+                box-sizing: border-box;
+            }
+            .new-group-create .left span {
+                display: none;
+            }
+            <?php } else {?>
+            .new-group-create {
+                display: block;
+            }
+            .new-group-create .left {
+                width: calc(100% - 20px);
+                height: 80px;
+                margin: 0 10px;
                 margin-top: 20px;
+                padding: 10px 20px;
+                color: white;
+                background: rgba(var(--dark),.5);
+                border-radius: 10px;
+                box-sizing: border-box;
+                overflow: hidden;
             }
-            .pb-intro,
-            .gb-intro {
-                text-align: center;
-                padding: 20px 30px;
-                font-size: 24px;
-                color: rgba(100,100,100,1);
-                border: 1px dashed rgba(100,100,100,1);
-                border-radius: 100%;
-                cursor: pointer;
+            .new-group-create .left span {
+                padding: 0 20px;
+                color: grey;
+                font-size: 12px;
+                text-transform: uppercase;
             }
-            .pb-intro:hover,
-            .gb-intro:hover {
-                color: rgba(255,255,255,.5);
-                background: rgba(255,255,255,.05);
+            <?php }?>
+            .new-group-create .left ul {
+                padding: 0 10px;
             }
+            .new-group-create .left li {
+                padding: 10px;
+            }
+            .new-group-create input[type=radio] {
+                width: 30px;
+            }
+            .new-group-create select {
+                width: 100%;
+                height: 40px;
+                margin-bottom: 5px;
+                padding: 0 10px;
+                color: white;
+                background: rgba(0,0,0,.1);
+                border: none;
+                border-radius: 10px;
+                outline: none;
+            }
+            .new-group-create option {
+                background: black;
+            }
+            .new-group-privacy {
+                display: flex;
+                justify-content: space-evenly;
+            }
+            .new-group-privacy span {
+                display: flex;
+                align-items: center;
+                color: white;
+            }
+
             .pb-box {
                 float: left;
                 width: 300px;

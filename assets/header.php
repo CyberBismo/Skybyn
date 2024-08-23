@@ -279,7 +279,7 @@ if ($domain == $devDomain) {
         <div class="left-panel" id="left-panel">
 
             <div class="shortcuts music">
-                <h3><i class="fa-solid fa-music"></i><div>Music</div><i class="fa-solid fa-cloud-arrow-up" onclick="window.location.href='./music?add'" title="Add to music"></i></h3>
+                <h3><i class="fa-solid fa-music"></i><div>Music</div><i class="fa-solid fa-record-vinyl" onclick="window.location.href='./music?add'" title="Add to music"></i></h3>
                 <div id="my-music">
                     <?php
                     $getMusic = $conn->query("SELECT * FROM `music`");
@@ -290,6 +290,46 @@ if ($domain == $devDomain) {
                             <div class="sortcut sortcut-music">
                                 <div class="sortcut-icon"><img src=""></div>
                                 <div class="sortcut-name"><?=$music_name?></div>
+                            </div>
+                            <?php
+                        }
+                    }
+                    ?>
+                </div>
+            </div>
+
+            <div class="shortcuts gaming">
+                <h3><i class="fa-solid fa-gamepad"></i><div>Gaming</div><i></i></h3>
+                <div id="my-games">
+                    <?php
+                    $getGames = $conn->query("SELECT * FROM `games`");
+                    if ($getGames->num_rows > 0) {
+                        while($g_data = $getGames->fetch_assoc()) {
+                            $game_name = $g_data['name'];
+                            ?>
+                            <div class="sortcut sortcut-game">
+                                <div class="sortcut-icon"><img src=""></div>
+                                <div class="sortcut-name"><?=$game_name?></div>
+                            </div>
+                            <?php
+                        }
+                    }
+                    ?>
+                </div>
+            </div>
+
+            <div class="shortcuts events">
+                <h3><i class="fa-solid fa-calendar-days"></i><div>Events</div><i class="fa-regular fa-calendar-plus" onclick="window.location.href='./event?new'" title="Create new event"></i></h3>
+                <div id="my-events">
+                    <?php
+                    $getEvents = $conn->query("SELECT * FROM `events` WHERE `private`='0'");
+                    if ($getEvents->num_rows > 0) {
+                        while($e_data = $getEvents->fetch_assoc()) {
+                            $event_name = $e_data['name'];
+                            ?>
+                            <div class="sortcut sortcut-event">
+                                <div class="sortcut-icon"><img src=""></div>
+                                <div class="sortcut-name"><?=$event_name?></div>
                             </div>
                             <?php
                         }
@@ -336,7 +376,7 @@ if ($domain == $devDomain) {
             </div>
 
             <div class="shortcuts pages">
-                <h3><i class="fa-regular fa-newspaper"></i><div>Pages</div><i class="fa-solid fa-file-circle-plus" onclick="window.location.href='/newpage'" title="Create new page"></i></h3>
+                <h3><i class="fa-regular fa-newspaper"></i><div>Pages</div><i class="fa-solid fa-file-circle-plus" onclick="window.location.href='/page?new'" title="Create new page"></i></h3>
                 <div id="my-pages">
                     <?php
                     $myPages = $conn->query("SELECT * FROM `page_members` WHERE `user_id`='$uid'");
@@ -355,46 +395,6 @@ if ($domain == $devDomain) {
                             <div class="sortcut shortcut-page">
                                 <div class="page-icon"><img src="<?=$page_icon?>"></div>
                                 <div class="page-name"><?=$page_name?></div>
-                            </div>
-                            <?php
-                        }
-                    }
-                    ?>
-                </div>
-            </div>
-
-            <div class="shortcuts events">
-                <h3><i class="fa-solid fa-calendar-days"></i><div>Events</div><i class="fa-regular fa-calendar-plus" onclick="window.location.href='./event?new'" title="Create new event"></i></h3>
-                <div id="my-events">
-                    <?php
-                    $getEvents = $conn->query("SELECT * FROM `events` WHERE `private`='0'");
-                    if ($getEvents->num_rows > 0) {
-                        while($e_data = $getEvents->fetch_assoc()) {
-                            $event_name = $e_data['name'];
-                            ?>
-                            <div class="sortcut sortcut-event">
-                                <div class="sortcut-icon"><img src=""></div>
-                                <div class="sortcut-name"><?=$event_name?></div>
-                            </div>
-                            <?php
-                        }
-                    }
-                    ?>
-                </div>
-            </div>
-
-            <div class="shortcuts gaming">
-                <h3><i class="fa-solid fa-gamepad"></i><div>Gaming</div><i></i></h3>
-                <div id="my-games">
-                    <?php
-                    $getGames = $conn->query("SELECT * FROM `games`");
-                    if ($getGames->num_rows > 0) {
-                        while($g_data = $getGames->fetch_assoc()) {
-                            $game_name = $g_data['name'];
-                            ?>
-                            <div class="sortcut sortcut-game">
-                                <div class="sortcut-icon"><img src=""></div>
-                                <div class="sortcut-name"><?=$game_name?></div>
                             </div>
                             <?php
                         }
