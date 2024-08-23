@@ -94,15 +94,11 @@ if (isset($_GET['id'])) {
         }
 
     } else {
-        ?><meta http-equiv="Refresh" content="0; url='.?notfound'" /><?php
+        ?><meta http-equiv="Refresh" content="0; url='./group?new'" /><?php
     }
 } else {
-    ?><meta http-equiv="Refresh" content="0; url='./'" /><?php
-}
-
 if (isset($_GET['new'])) {?>
-
-<div class="page-container">
+        <div class="group-container">
             <div class="page-head">
                 Create New Group
             </div>
@@ -218,7 +214,7 @@ if (isset($_GET['new'])) {?>
                 });
             }
         </script>
-        <?php } else {?>
+<?php } else {?>
         <div class="group-container">
             <div class="group-head">
                 <?=$groupName?><img src="<?=$groupIcon?>">
@@ -705,6 +701,8 @@ if (isset($_GET['new'])) {?>
         }
         setInterval(checkUserActivity, 1000);
         </script>
-        <?php }}?>
+        <?php }?>
+<?php }
+}?>
     </body>
 </html>

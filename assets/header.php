@@ -63,6 +63,18 @@ if ($domain == $devDomain) {
             <div class="new_post_button" id="new_post_btn" onclick="newPost()">Anything new?</div>
             <?php }}?>
 
+            <script>// Display new post button only when the user is on the home page
+            const homePage = window.location.href;
+            const pages = ['group', 'page', 'search', 'notifications', 'settings', 'profile', 'post'];
+            if (!pages.some(page => homePage.includes(page))) {
+                const newPostBtn = document.getElementById('new_post_btn');
+                newPostBtn.style.display = 'block';
+            } else {
+                const newPostBtn = document.getElementById('new_post_btn');
+                newPostBtn.style.display = 'none';
+            }
+            </script>
+
             <?php if (isset($_SESSION['user'])) {?>
             <div class="top">
                 <div class="top-nav">
@@ -279,7 +291,7 @@ if ($domain == $devDomain) {
         <div class="left-panel" id="left-panel">
 
             <div class="shortcuts music">
-                <h3><i class="fa-solid fa-music"></i><div>Music</div><i class="fa-solid fa-record-vinyl" onclick="window.location.href='./music?add'" title="Add to music"></i></h3>
+                <h3><i class="fa-solid fa-music"></i><div>Music</div><i class="fa-solid fa-record-vinyl" onclick="window.location.href='./music?upload'" title="Add to music"></i></h3>
                 <div id="my-music">
                     <?php
                     $getMusic = $conn->query("SELECT * FROM `music`");
@@ -339,7 +351,7 @@ if ($domain == $devDomain) {
             </div>
 
             <div class="shortcuts groups">
-                <h3><i class="fa-solid fa-comments"></i><div>Group chats</div><i class="fa-solid fa-comment-medical" onclick="window.location.href='/newgroup'" title="Create new group"></i></h3>
+                <h3><i class="fa-solid fa-comments"></i><div>Groups</div><i class="fa-solid fa-comment-medical" onclick="window.location.href='/group?new'" title="Create new group"></i></h3>
                 <div id="my-groups">
                     <?php
                     $myGroups = $conn->query("SELECT * FROM `group_members` WHERE `user`='$uid'");
@@ -404,7 +416,7 @@ if ($domain == $devDomain) {
             </div>
 
             <div class="shortcuts markets">
-                <h3><i class="fa-solid fa-store"></i><div>Market</div><i class="fa-solid fa-plus" onclick="window.location.href='./market?new'" title="Add to market"></i></h3>
+                <h3><i class="fa-solid fa-store"></i><div>Market</div><i class="fa-solid fa-cash-register" onclick="window.location.href='./market?new'" title="Sell on market"></i></h3>
                 <div id="my-markets">
                     <?php
                     $getMarkets = $conn->query("SELECT * FROM `market`");
