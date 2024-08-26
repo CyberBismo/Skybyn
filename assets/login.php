@@ -187,8 +187,7 @@ if ($checkEmail->num_rows == 1) {
             }
             $data = array(
                 "responseCode" => "ok",
-                "message" => "Logged in successfully",
-                "user" => "$uid",
+                "message" => "Welcome back, $username!",
                 "remember" => "$remember",
                 "token" => "$token"
             );

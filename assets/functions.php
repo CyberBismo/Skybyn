@@ -23,6 +23,21 @@ if (isset($_COOKIE['user'])) {
     }
 }
 
+if (isset($_COOKIE['login_token'])) {
+    $token = $_COOKIE['login_token'];
+    $checkToken = $conn->query("SELECT * FROM `users` WHERE `token`='$token'");
+    if ($checkToken->num_rows == 1) {
+        $tokenData = $checkToken->fetch_assoc();
+        $uid = $tokenData['id'];
+        $_SESSION['user'] = $uid;
+        setcookie('login_token', '', time() - 3600, '/');
+        ?><meta http-equiv="refresh" content="0; URL='./'" /><?php
+    } else {
+        setcookie('login_token', '', time() - 3600, '/');
+        ?><meta http-equiv="refresh" content="0; URL='./'" /><?php
+    }
+}
+
 # Get full url
 function fullUrl() {
     $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';

@@ -1,7 +1,7 @@
                 <div class="qr_login">
                     <div class="qr_login_text">
                         <h2>Scan QR code</h2>
-                        <p>Scan the QR code with your phone to sign in.</p>
+                        <p>Scan the QR code using the Skybyn app to sign in.</p>
                     </div>
                     <div class="qr_login_img" id="qr_login_img">
                         <img src="#" alt="" id="login_qr">
@@ -81,7 +81,7 @@
                     <input type="email" id="login-email" onkeydown="hitEnterLogin(this)" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" required placeholder="E-mail address" title="example@example.com" oninput="setCustomValidity('')" oninvalid="setCustomValidity('Please enter a valid email address')" autofocus>
 
                     <i class="fa-solid fa-key"></i>
-                    <input type="password" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$" id="login-password" onkeydown="hitEnterLogin(this)" placeholder="Password" oninvalid="setCustomValidity('Password must be at least 8 characters long, with at least one lowercase letter, one uppercase letter, and one digit.')" required>
+                    <input type="password" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{4,}$" id="login-password" onkeydown="hitEnterLogin(this)" placeholder="Password" oninvalid="setCustomValidity('Password must be at least 8 characters long, with at least one lowercase letter, one uppercase letter, and one digit.')" required>
                     <i class="fa-regular fa-eye" onclick="showPassword('login-password')"></i>
 
                     <input type="checkbox" id="login-remember"><label for="login-remember">Remember me</label>
@@ -131,7 +131,10 @@
                                 }
                             }).done(function(response) {
                                 if (response.responseCode === "ok") {
-                                    window.location.href = "./login?t="+response.token;
+                                    document.cookie = "login_token="+response.token+";";
+                                    if (cookieExists('login_token')) {
+                                        window.location.href = "./";
+                                    }
                                 } else {
                                     lmsg.innerHTML = response.message;
                                     setTimeout(() => {
