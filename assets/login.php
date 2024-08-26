@@ -12,11 +12,11 @@ if ($checkEmail->num_rows == 1) {
     $salt = $UserRow['salt'];
     $pw = hash("sha512", $salt."_".$password);
     $qCheckPassword = $conn->query("SELECT * FROM `users` WHERE `id`='$uid' AND `password`='$pw'");
-    $UserRow = $qCheckPassword->fetch_assoc();
-    $username = $UserRow['username'];
-    $token = $UserRow['token'];
-    $lastIP = $UserRow['ip'];
     if ($qCheckPassword->num_rows == 1) {
+        $UserRow = $qCheckPassword->fetch_assoc();
+        $username = $UserRow['username'];
+        $token = $UserRow['token'];
+        $lastIP = $UserRow['ip'];
         //if ($lastIP != $currentIP) {
         //    $token = rand(100000, 999999);
         //    
@@ -170,20 +170,27 @@ if ($checkEmail->num_rows == 1) {
         //        echo json_encode($data);
         //    }
         //} else {
-            $checkWallet = $conn->query("SELECT * FROM `wallets` WHERE `user`='$uid'");
+            //$checkWallet = $conn->query("SELECT * FROM `wallets` WHERE `user`='$uid'");
             //if ($countWallet->num_rows == 0) {
             //    $conn->query("INSERT INTO `wallets` (`user`) VALUES (`$uid`)");
             //}
+            //
+            //$conn->query("UPDATE `ip_history` SET `date`='$now' WHERE `ip`='$currentIP' AND `user_id`='$uid'");
+            
+            if ($token == "") {
+                $token = rand(100000000, 999999999);
+                $conn->query("UPDATE `users` SET `token`='$token' WHERE `id`='$uid'");
+            }
 
-            $conn->query("UPDATE `ip_history` SET `date`='$now' WHERE `ip`='$currentIP' AND `user_id`='$uid'");
-            $_SESSION['user'] = $uid;
             if ($remember == "true") {
                 createCookie("logged",rand(1000,9999).$uid,"1","6");
             }
             $data = array(
                 "responseCode" => "ok",
+                "message" => "Logged in successfully",
                 "user" => "$uid",
-                "remember" => "$remember"
+                "remember" => "$remember",
+                "token" => "$token"
             );
             header('Content-Type: application/json; charset=utf-8');
             echo json_encode($data);

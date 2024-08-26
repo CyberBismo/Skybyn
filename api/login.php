@@ -3,7 +3,7 @@
 header('Content-Type: application/json');
 
 if (isset($_POST['user']) && isset($_POST['password'])) {
-    $email = mysqli_real_escape_string($conn, $_POST['email']);
+    $user = mysqli_real_escape_string($conn, $_POST['user']);
     $pass = mysqli_real_escape_string($conn, $_POST['password']);
 
     $check = $conn->query("SELECT * FROM `users` WHERE `email`='$user'");
@@ -18,7 +18,7 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
         $vcheck->execute();
         $vresult = $vcheck->get_result();
         
-        if ($vcheck->num_rows == 1) {
+        if ($vresult->num_rows == 1) {
             $json = array("responseCode"=>"1","message"=>"Welcome!","userID"=>"$id");
             echo json_encode($json);
         } else {

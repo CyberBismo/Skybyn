@@ -11,6 +11,18 @@ if (isset($_COOKIE['qr_login'])) {
     }
 }
 
+if (isset($_COOKIE['user'])) {
+    $uid = $_COOKIE['user'];
+    $checkUser = $conn->query("SELECT * FROM `users` WHERE `id`='$uid'");
+    if ($checkUser->num_rows == 1) {
+        $_SESSION['user'] = $uid;
+        setcookie('user', '', time() - 3600, '/');
+        ?><meta http-equiv="refresh" content="0; URL='./'" /><?php
+    } else {
+        setcookie('user', '', time() - 3600, '/');
+    }
+}
+
 # Get full url
 function fullUrl() {
     $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
@@ -100,17 +112,6 @@ function geoData($x) {
     
 // Example of usage
 // echo geoData("city.names.en"); // Outputs: Oslo (Grünerløkka District)
-}
-
-if (isset($_COOKIE['user'])) {
-    $uid = $_COOKIE['user'];
-    $checkUser = $conn->query("SELECT * FROM `users` WHERE `id`='$uid'");
-    if ($checkUser->num_rows > 0) {
-        $userData = $checkUser->fetch_assoc();
-        $_SESSION['user'] = $uid;
-        setcookie('user', '', time() - 3600, '/');
-        ?><meta http-equiv="refresh" content="0; URL='./'" /><?php
-    }
 }
 
 # Create cookie with country information

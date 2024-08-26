@@ -71,7 +71,7 @@
                         }
                     </script>
                 </div>
-                <form class="normal_login" onsubmit="return false">
+                <div class="normal_login">
                     <center><p id="login_msg"></p></center>
                     <div class="login_qr" onclick="tglLogin()" id="qr_tgl"><i class="fa-solid fa-qrcode"></i></div>
                     
@@ -84,7 +84,7 @@
                     <input type="password" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$" id="login-password" onkeydown="hitEnterLogin(this)" placeholder="Password" oninvalid="setCustomValidity('Password must be at least 8 characters long, with at least one lowercase letter, one uppercase letter, and one digit.')" required>
                     <i class="fa-regular fa-eye" onclick="showPassword('login-password')"></i>
 
-                    <input type="checkbox" id="login-remember" onkeydown="hitEnterLogin(this)"><label for="login-remember">Remember me</label>
+                    <input type="checkbox" id="login-remember"><label for="login-remember">Remember me</label>
                     
                     <input type="submit" id="login" onclick="login()" value="Sign in">
 
@@ -130,9 +130,8 @@
                                     remember : remember
                                 }
                             }).done(function(response) {
-                                console.log(response);
                                 if (response.responseCode === "ok") {
-                                    window.location.href = "./";
+                                    window.location.href = "./login?t="+response.token;
                                 } else {
                                     lmsg.innerHTML = response.message;
                                     setTimeout(() => {
@@ -142,7 +141,7 @@
                             });
                         }
                     </script>
-                </form>
+                </div>
                 <script>
                     function deleteCookie(name) {
                         document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
