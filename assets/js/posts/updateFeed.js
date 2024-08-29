@@ -34,17 +34,6 @@ window.addEventListener('scroll', function () {
     }
 });
 
-function checkEnter() {
-    let text = document.getElementById('new_post_input');
-
-    text.addEventListener('keydown', function(event) {
-        if (event.key === "Enter" && !event.shiftKey) {
-            event.preventDefault();
-            createPost(); // Call the createPost function directly
-        }
-    });
-}
-
 function createPost() {
     if (isCreatingPost) {
         // If post creation is already in progress, do nothing
@@ -64,10 +53,10 @@ function createPost() {
     }
 
     formData.append('text', text.value);
-    formData.append('public', public.value); // Visibility
+    //formData.append('public', public.value); // Visibility
 
     $.ajax({
-        url: 'assets/post_new.php',
+        url: './assets/post_new.php',
         type: "POST",
         data: formData,
         processData: false,
@@ -94,7 +83,7 @@ function loadMorePosts() {
 
     loading = true;
     $.ajax({
-        url: 'assets/posts_load.php',
+        url: './assets/posts_load.php',
         type: 'POST',
         data: {
             offset: offset
@@ -121,7 +110,7 @@ function checkPosts() {
     });
 
     $.ajax({
-        url: 'assets/posts_check.php',
+        url: './assets/posts_check.php',
         type: "POST",
         data: {
             last: highestNumber
@@ -161,7 +150,7 @@ function cleanPosts() {
 
     if (postIds.length > 0) {
         $.ajax({
-            url: 'assets/posts_clean.php',
+            url: './assets/posts_clean.php',
             type: "POST",
             data: {
                 ids: postIds
@@ -205,7 +194,7 @@ function editPost(x) {
 function deletePost(x) {
     const post = document.getElementById('post_'+ x);
     $.ajax({
-        url: 'assets/functions.php',
+        url: './assets/functions.php',
         type: "POST",
         data: {
             deletePost : null,

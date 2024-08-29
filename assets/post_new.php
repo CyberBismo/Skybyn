@@ -1,5 +1,5 @@
 <?php
-include "./functions.php";
+include "functions.php";
 
 $public = isset($_POST['public']) ? $_POST['public'] : '';
 $text = isset($_POST['text']) ? $_POST['text'] : '';
@@ -18,7 +18,7 @@ if (!empty($image['name'][0])) {
 
 if ($proceed == true) {
     // Use prepared statements to safely insert data into the database.
-    $stmt = $conn->prepare("INSERT INTO `posts` (`user`, `content`, `public`, `created`,`urls`) VALUES (?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO `posts` (`user`, `content`, `public`, `created`) VALUES (?, ?, ?, ?)");
     $stmt->bind_param("sssss", $uid, $text, $public, $now, $urls);
     $stmt->execute();
     $stmt->close();

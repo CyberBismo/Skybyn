@@ -47,6 +47,9 @@ if ($domain == $devDomain) {
         <script src="assets/js/big_screen.js"></script>
         <?php }?>
         <?php if (isset($_SESSION['user'])) {?>
+        <script src="assets/js/notifications/notis.js"></script>
+        <script src="assets/js/comments/updateComments.js"></script>
+        <script src="assets/js/posts/updateFeed.js"></script>
         <script src="assets/js/scripts_logged.js"></script>
         <script src="assets/js/notifications/notis.js"></script>
         <?php }?>
@@ -138,29 +141,41 @@ if ($domain == $devDomain) {
 
         <?php if (isset($_SESSION['user'])) {?>
         <div class="new_post" id="new_post" hidden>
-        <div class="create_post">
-            <div class="create_post_actions_top">
-                <img src="<?=$avatar?>">
-                <textarea type="text" placeholder="What's on your mind?" id="new_post_input" oninput="adjustTextareaHeight()" onkeydown="checkEnter()" onkeyup="convertEmoji(this.value)"></textarea>
-                <i class="fa-solid fa-paper-plane share" id="create_post_btn" onclick="createPost()"></i>
-            </div>
-            <div class="new_post_files" id="new_post_files"></div>
-            <div class="create_post_actions create_post_actions_bottom">
-                <!--span>
-                    <i class="fa-solid fa-earth-americas"></i>
-                    <select id="new_post_public">
-                        <option value="0">Private</option>
-                        <option value="1" selected>Friends only</option>
-                        <option value="2">Public</option>
-                    </select>
-                </span-->
-                <span style="word-break: break-all">
-                    <input type="file" id="image_to_share" accept=".jpg, .jpeg, .gif, .png" multiple hidden onchange="updateFileNameLabel()">
-                    <label for="image_to_share"><i class="fa-solid fa-image"></i><span id="image_to_share_text">No image selected</span></label>
-                </span>
+            <div class="create_post">
+                <div class="create_post_actions_top">
+                    <img src="<?=$avatar?>">
+                    <textarea type="text" placeholder="What's on your mind?" id="new_post_input" oninput="adjustTextareaHeight()" onkeydown="checkEnter()" onkeyup="convertEmoji(this.value)"></textarea>
+                    <i class="fa-solid fa-paper-plane share" id="create_post_btn" onclick="createPost()"></i>
+                </div>
+                <div class="new_post_files" id="new_post_files"></div>
+                <div class="create_post_actions create_post_actions_bottom">
+                    <!--span>
+                        <i class="fa-solid fa-earth-americas"></i>
+                        <select id="new_post_public">
+                            <option value="0">Private</option>
+                            <option value="1" selected>Friends only</option>
+                            <option value="2">Public</option>
+                        </select>
+                    </span-->
+                    <span style="word-break: break-all">
+                        <input type="file" id="image_to_share" accept=".jpg, .jpeg, .gif, .png" multiple hidden onchange="updateFileNameLabel()">
+                        <label for="image_to_share"><i class="fa-solid fa-image"></i><span id="image_to_share_text">No image selected</span></label>
+                    </span>
+                </div>
             </div>
         </div>
-        </div>
+        <script>
+            function checkEnter() {
+                let text = document.getElementById('new_post_input');
+
+                text.addEventListener('keydown', function(event) {
+                    if (event.key === "Enter" && !event.shiftKey) {
+                        event.preventDefault();
+                        createPost();
+                    }
+                });
+            }
+        </script>
         <?php }?>
 
         <script>
