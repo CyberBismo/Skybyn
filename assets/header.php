@@ -129,7 +129,7 @@ if ($domain == $devDomain) {
                 <li class="balance"><i class="fa-solid fa-coins"></i><?=$wallet?></li>
                 <?php }?>
                 <hr>
-                <li onclick="window.location.href='./logout'"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</li>
+                <li onclick="window.location.href='./logout.php'"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</li>
             </ul>
         </div>
         <?php }?>
