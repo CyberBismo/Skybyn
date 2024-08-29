@@ -322,7 +322,7 @@ if ($domain == $devDomain) {
             <h3><i class="fa-solid fa-gamepad"></i><div>Gaming</div><i></i></h3>
             <div id="my-games">
                 <?php
-                $getGames = $conn->query("SELECT * FROM `games`");
+                $getGames = $conn->query("SELECT * FROM `game_store`");
                 if ($getGames->num_rows > 0) {
                     while($g_data = $getGames->fetch_assoc()) {
                         $game_name = $g_data['name'];
