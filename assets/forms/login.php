@@ -131,10 +131,7 @@
                                 }
                             }).done(function(response) {
                                 if (response.responseCode === "ok") {
-                                    document.cookie = "login_token="+response.token+";";
-                                    if (cookieExists('login_token')) {
-                                        window.location.href = "./";
-                                    }
+                                    window.location.href = "./";
                                 } else {
                                     lmsg.innerHTML = response.message;
                                     setTimeout(() => {

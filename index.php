@@ -10,6 +10,7 @@ if (isset($_GET['signup'])) {
 	$signup = false;
 }
 
+
 ?>
 
 <?php if (isset($_SESSION['user'])) {?>
@@ -28,7 +29,6 @@ if (isset($_COOKIE['logged'])) {
     } else {
         ?><meta http-equiv="refresh" content="0; URL='./logout'" /><?php
     }
-    exit;
 }
 ?>
 

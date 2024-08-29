@@ -176,11 +176,6 @@ if ($checkEmail->num_rows == 1) {
             //}
             //
             //$conn->query("UPDATE `ip_history` SET `date`='$now' WHERE `ip`='$currentIP' AND `user_id`='$uid'");
-            
-            if ($token == "") {
-                $token = rand(100000000, 999999999);
-                $conn->query("UPDATE `users` SET `token`='$token' WHERE `id`='$uid'");
-            }
 
             if ($remember == "true") {
                 createCookie("logged",rand(1000,9999).$uid,"1","6");
@@ -189,10 +184,11 @@ if ($checkEmail->num_rows == 1) {
                 "responseCode" => "ok",
                 "message" => "Welcome back, $username!",
                 "remember" => "$remember",
-                "token" => "$token"
+                "user" => "$uid"
             );
             header('Content-Type: application/json; charset=utf-8');
             echo json_encode($data);
+            $_SESSION['user'] = $uid;
         //}
     } else {
         $msg = "Wrong/Invalid password!";

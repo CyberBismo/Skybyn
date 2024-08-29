@@ -7,7 +7,6 @@ if (isset($_COOKIE['qr_login'])) {
         $_SESSION['user'] = $uid;
         setcookie('qr_login', '', time() - 3600, '/');
         setcookie('qr', '', time() - 3600, '/');
-        ?><meta http-equiv="refresh" content="0; URL='./'" /><?php
     }
 }
 
@@ -17,7 +16,6 @@ if (isset($_COOKIE['user'])) {
     if ($checkUser->num_rows == 1) {
         $_SESSION['user'] = $uid;
         setcookie('user', '', time() - 3600, '/');
-        ?><meta http-equiv="refresh" content="0; URL='./'" /><?php
     } else {
         setcookie('user', '', time() - 3600, '/');
     }
@@ -31,10 +29,8 @@ if (isset($_COOKIE['login_token'])) {
         $uid = $tokenData['id'];
         $_SESSION['user'] = $uid;
         setcookie('login_token', '', time() - 3600, '/');
-        ?><meta http-equiv="refresh" content="0; URL='./'" /><?php
     } else {
         setcookie('login_token', '', time() - 3600, '/');
-        ?><meta http-equiv="refresh" content="0; URL='./'" /><?php
     }
 }
 
@@ -823,7 +819,6 @@ if (isset($_COOKIE['first-time'])) {
 # Create cookie if first time
 if (isset($_POST['first-time'])) {
     createCookie("first-time","","1","6");
-    ?><meta http-equiv="Refresh" content="0; url='.'" /><?php
 }
 
 # Forgot password

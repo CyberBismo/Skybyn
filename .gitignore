@@ -6166,3 +6166,5 @@ app/images/Thumbs.db
 web.config
 data/new_users.json
 data/new_users.json
+assets/conn.php
+web.config
