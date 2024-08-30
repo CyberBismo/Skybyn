@@ -71,8 +71,7 @@ if ($domain == $devDomain) {
         if (isset($_SESSION['user'])) {
             if (isMobile() == false) {?>
         <div class="new_post_button" id="new_post_btn" onclick="newPost()">Anything new?</div>
-        <?php }}?>
-
+        <?php }?>
         <script>// Display new post button only when the user is on the home page
         const homePage = window.location.href;
         const pages = ['group', 'page', 'search', 'notifications', 'settings', 'profile', 'post'];
@@ -84,6 +83,7 @@ if ($domain == $devDomain) {
             newPostBtn.style.display = 'none';
         }
         </script>
+        <?php }?>
 
         <?php if (isset($_SESSION['user'])) {?>
         <div class="top">
