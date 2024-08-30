@@ -155,19 +155,3 @@ window.addEventListener('load', observeDOMChanges);
 
 
 /// / /// / /// / /// / /// / /// / /// / /// / /// / /// / ///
-
-// Function to send a message to a pyhton script on a remote server
-function triggerPythonScript() {
-    fetch('https://dev.skybyn.no:5000/trigger', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ message: "Hello from JavaScript!" })
-    })
-    .then(response => response.json())
-    .then(data => console.log(data))
-    .catch(error => console.error('Error:', error));
-}
-
-window.onload = triggerPythonScript;
