@@ -47,11 +47,10 @@ if ($domain == $devDomain) {
         <script src="assets/js/big_screen.js"></script>
         <?php }?>
         <?php if (isset($_SESSION['user'])) {?>
-        <script src="assets/js/notifications/notis.js"></script>
-        <script src="assets/js/comments/updateComments.js"></script>
-        <script src="assets/js/posts/updateFeed.js"></script>
         <script src="assets/js/scripts_logged.js"></script>
+        <script src="assets/js/comments/updateComments.js"></script>
         <script src="assets/js/notifications/notis.js"></script>
+        <script src="assets/js/posts/updateFeed.js"></script>
         <?php }?>
         <?php include_once "style.php"?>
     </head>
@@ -461,59 +460,59 @@ if ($domain == $devDomain) {
         </div>
 
         <div class="right-panel" id="right-panel">
-        <?php if (isMobile() == false) {?>
-        <div class="search">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" id="searchInput" onkeyup="startSearch(this)" placeholder="Search...">
-        </div>
-        <?php }?>
-        <div class="friend-list">
-            <h3>Friends</h3>
-            <div id="friend-list">
-                <?php
-                $myFriends = $conn->query("SELECT * FROM `friendship` WHERE `user_id`='$uid' AND `status`='accepted'");
-                $countFriends = $myFriends->num_rows;
-                if ($countFriends > 0) {
-                    while($friendId = $myFriends->fetch_assoc()) {
-                        $fid = $friendId['friend_id'];
-                        $getFriendData = $conn->query("SELECT * FROM `users` WHERE `id`='$fid'");
-                        $friendData = $getFriendData->fetch_assoc();
+            <?php if (isMobile() == false) {?>
+            <div class="search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="searchInput" onkeyup="startSearch(this)" placeholder="Search...">
+            </div>
+            <?php }?>
+            <div class="friend-list">
+                <h3>Friends</h3>
+                <div id="friend-list">
+                    <?php
+                    $myFriends = $conn->query("SELECT * FROM `friendship` WHERE `user_id`='$uid' AND `status`='accepted'");
+                    $countFriends = $myFriends->num_rows;
+                    if ($countFriends > 0) {
+                        while($friendId = $myFriends->fetch_assoc()) {
+                            $fid = $friendId['friend_id'];
+                            $getFriendData = $conn->query("SELECT * FROM `users` WHERE `id`='$fid'");
+                            $friendData = $getFriendData->fetch_assoc();
 
-                        $f_id = rand(1000,9999).$fid;
-                        $friend_username = $friendData['username'];
-                        $friend_avatar = "./".$friendData['avatar'];
-                        
-                        if ($friend_avatar == "./") {
-                            $friend_avatar = "./assets/images/logo_faded_clean.png";
-                        }
-                        ?>
-                        <div class="friend">
-                            <div class="friend-user">
-                                <div class="friend-avatar"><img src="<?=$friend_avatar?>"></div>
-                                <div class="friend-name"><?=$friend_username?></div>
-                            </div>
-                            <div class="friend-actions">
-                                <div class="friend-action" onclick="window.location.href='./profile?u=<?=$f_id?>'">
-                                    <i class="fa-solid fa-user"></i>
+                            $f_id = rand(1000,9999).$fid;
+                            $friend_username = $friendData['username'];
+                            $friend_avatar = "./".$friendData['avatar'];
+                            
+                            if ($friend_avatar == "./") {
+                                $friend_avatar = "./assets/images/logo_faded_clean.png";
+                            }
+                            ?>
+                            <div class="friend">
+                                <div class="friend-user">
+                                    <div class="friend-avatar"><img src="<?=$friend_avatar?>"></div>
+                                    <div class="friend-name"><?=$friend_username?></div>
+                                </div>
+                                <div class="friend-actions">
+                                    <div class="friend-action" onclick="window.location.href='./profile?u=<?=$f_id?>'">
+                                        <i class="fa-solid fa-user"></i>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <?php
+                            <?php
+                        }
                     }
-                }
-                ?>
-            </div>
-            <div class="friend-referral" id="fr">
-                <h3 onclick="expandFR()">Refer a friend</h3>
-                <div class="fr_code" id="frc" <?php if($referral == "error") {?>onclick="genRef()"<?php }?>>
-                    <?php if($referral == "error") {?>Generate code<?php } else { echo $referral;}?>
+                    ?>
                 </div>
-                <div class="fr_info" onclick="friExpand()">
-                    <i class="fa-regular fa-circle-question"></i> What is this? <span id="fri">+</span>
-                    <div class="fr_info_text" id="frit"><br>Refer a friend simply works as an invitation. By inviting a friend, you instantly become friends and earn 10 <a href="#">points</a>.</div>
+                <div class="friend-referral" id="fr">
+                    <h3 onclick="expandFR()">Refer a friend</h3>
+                    <div class="fr_code" id="frc" <?php if($referral == "error") {?>onclick="genRef()"<?php }?>>
+                        <?php if($referral == "error") {?>Generate code<?php } else { echo $referral;}?>
+                    </div>
+                    <div class="fr_info" onclick="friExpand()">
+                        <i class="fa-regular fa-circle-question"></i> What is this? <span id="fri">+</span>
+                        <div class="fr_info_text" id="frit"><br>Refer a friend simply works as an invitation. By inviting a friend, you instantly become friends and earn 10 <a href="#">points</a>.</div>
+                    </div>
                 </div>
             </div>
-        </div>
         </div>
 
         <?php if (isMobile() == false) {?>
@@ -523,10 +522,35 @@ if ($domain == $devDomain) {
 
         <?php if (isMobile() == true) {?>
         <div class="mobile-search" id="mobile-search">
-        <div class="search">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" id="searchInput" onkeyup="startSearch(this)" placeholder="Search">
+            <div class="search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="searchInput" onkeyup="startSearch(this)" placeholder="Search">
+            </div>
+            <div class="search_result" id="search_result" hidden>
+                <div id="search_res_users" hidden>
+                    <p>Users</p>
+                    <div id="search_r_users"></div>
+                </div>
+                <div id="search_res_groups" hidden>
+                    <p>Groups</p>
+                    <div id="search_r_groups"></div>
+                </div>
+                <div id="search_res_pages" hidden>
+                    <p>Pages</p>
+                    <div id="search_r_pages"></div>
+                </div>
+                <div id="search_res_markets" hidden>
+                    <p>Markets</p>
+                    <div id="search_r_markets"></div>
+                </div>
+            </div>
         </div>
+        <div class="bottom-nav" id="bottom-nav">
+            <div class="bnav-btn" onclick="showSearch()"><i class="fa-solid fa-magnifying-glass"></i></div>
+            <div class="bnav-btn" onclick="newPost()"><i class="fa-solid fa-plus" id="mobile_new_post"></i></div>
+            <div class="bnav-btn" onclick="showRightPanel()"><i class="fa-solid fa-user-group"></i></div>
+        </div>
+        <?php } else {?>
         <div class="search_result" id="search_result" hidden>
             <div id="search_res_users" hidden>
                 <p>Users</p>
@@ -545,40 +569,15 @@ if ($domain == $devDomain) {
                 <div id="search_r_markets"></div>
             </div>
         </div>
-        </div>
-        <div class="bottom-nav" id="bottom-nav">
-        <div class="bnav-btn" onclick="showSearch()"><i class="fa-solid fa-magnifying-glass"></i></div>
-        <div class="bnav-btn" onclick="newPost()"><i class="fa-solid fa-plus" id="mobile_new_post"></i></div>
-        <div class="bnav-btn" onclick="showRightPanel()"><i class="fa-solid fa-user-group"></i></div>
-        </div>
-        <?php } else {?>
-        <div class="search_result" id="search_result" hidden>
-        <div id="search_res_users" hidden>
-            <p>Users</p>
-            <div id="search_r_users"></div>
-        </div>
-        <div id="search_res_groups" hidden>
-            <p>Groups</p>
-            <div id="search_r_groups"></div>
-        </div>
-        <div id="search_res_pages" hidden>
-            <p>Pages</p>
-            <div id="search_r_pages"></div>
-        </div>
-        <div id="search_res_markets" hidden>
-            <p>Markets</p>
-            <div id="search_r_markets"></div>
-        </div>
-        </div>
         <?php }?>
 
         <div class="image_viewer" id="image_viewer" style="display: none">
-        <div class="image_post" id="image_post" <?php if (isMobile() == true) {?>hidden<?php }?>></div>
-        <div class="image_box">
-            <div class="image_box_close" onclick="showImage(null)"><i class="fa-solid fa-xmark"></i></div>
-            <div class="image_frame" id="image_frame" onclick="toggleImageSlider()"></div>
-            <div class="image_slider" id="image_slider"></div>
-        </div>
+            <div class="image_post" id="image_post" <?php if (isMobile() == true) {?>hidden<?php }?>></div>
+            <div class="image_box">
+                <div class="image_box_close" onclick="showImage(null)"><i class="fa-solid fa-xmark"></i></div>
+                <div class="image_frame" id="image_frame" onclick="toggleImageSlider()"></div>
+                <div class="image_slider" id="image_slider"></div>
+            </div>
         </div>
 
         <script>

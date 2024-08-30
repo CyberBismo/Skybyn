@@ -9,6 +9,7 @@ window.addEventListener('load', function() {
 function hideWelcome() {
     const welcomeScreen = document.getElementById('welcome-screen');
     const login_email = document.getElementById('login-email');
+    welcomeScreen.style.pointerEvents = "none";
     welcomeScreen.style.opacity = "0";
     setTimeout(() => {
         welcomeScreen.remove();
