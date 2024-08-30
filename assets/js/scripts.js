@@ -152,3 +152,22 @@ window.addEventListener('load', observeDOMChanges);
 // safelyUpdateDOM(() => {
 //     // Your dynamic update code here
 // });
+
+
+/// / /// / /// / /// / /// / /// / /// / /// / /// / /// / ///
+
+// Function to send a message to a pyhton script on a remote server
+function triggerPythonScript() {
+    fetch('http://dev.skybyn.no:5000/python/trigger', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ message: "Trigger the script" })
+    })
+    .then(response => response.text())
+    .then(data => console.log(data))
+    .catch(error => console.error('Error:', error));
+}
+
+window.onload = triggerPythonScript;
