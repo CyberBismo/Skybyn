@@ -158,6 +158,7 @@ window.addEventListener('load', observeDOMChanges);
 
 // Function to send a message to a pyhton script on a remote server
 function triggerPythonScript() {
+    console.log('Triggering the Python script');
     fetch('http://dev.skybyn.no:5000/python/trigger', {
         method: 'POST',
         headers: {
