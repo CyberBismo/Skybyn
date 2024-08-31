@@ -232,9 +232,9 @@ function convertEmoji(string) {
 
 function adjustTextareaHeight() {
     const newPost = document.getElementById("new_post");
-    const textarea = document.getElementById("new_post_input");0 
+    const textarea = document.getElementById("new_post_input");
     textarea.rows = textarea.value.split("\n").length;
-    newPost.style.height = 40 + textarea.clientHeight + "px";
+    newPost.style.height = newPost.innerHeight + textarea.clientHeight + "px";
 }
 
 function hideMenus(event) {

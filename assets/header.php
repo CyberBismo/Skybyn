@@ -47,10 +47,10 @@ if ($domain == $devDomain) {
         <script src="assets/js/big_screen.js"></script>
         <?php }?>
         <?php if (isset($_SESSION['user'])) {?>
-        <script src="assets/js/scripts_logged.js"></script>
         <script src="assets/js/comments/updateComments.js"></script>
         <script src="assets/js/notifications/notis.js"></script>
         <script src="assets/js/posts/updateFeed.js"></script>
+        <script src="assets/js/scripts_logged.js"></script>
         <?php }?>
         <?php include_once "style.php"?>
     </head>
@@ -142,10 +142,13 @@ if ($domain == $devDomain) {
         <div class="new_post" id="new_post" hidden>
             <div class="create_post">
                 <div class="create_post_actions_top">
-                    <img src="<?=$avatar?>">
-                    <textarea type="text" placeholder="What's on your mind?" id="new_post_input" oninput="adjustTextareaHeight()" onkeydown="checkEnter()" onkeyup="convertEmoji(this.value)"></textarea>
+                    <div class="create_post_user">
+                        <img src="<?=$avatar?>">
+                        <div><?=$username?></div>
+                    </div>
                     <i class="fa-solid fa-paper-plane share" id="create_post_btn" onclick="createPost()"></i>
                 </div>
+                <textarea type="text" placeholder="What's on your mind?" id="new_post_input" oninput="adjustTextareaHeight()" onkeydown="checkEnter()" onkeyup="convertEmoji(this.value)"></textarea>
                 <div class="new_post_files" id="new_post_files"></div>
                 <div class="create_post_actions create_post_actions_bottom">
                     <!--span>

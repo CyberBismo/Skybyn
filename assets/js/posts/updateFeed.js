@@ -20,9 +20,6 @@ window.addEventListener("scroll", function () {
     }
 });
 
-let loading = false;
-const limit = 3;
-
 // Attach the scroll event listener to load more posts when scrolled to the bottom
 window.addEventListener('scroll', function () {
     const windowHeight = window.innerHeight;
@@ -35,6 +32,9 @@ window.addEventListener('scroll', function () {
 });
 
 function createPost() {
+    loading = false;
+    const limit = 3;
+
     if (isCreatingPost) {
         // If post creation is already in progress, do nothing
         return;
@@ -134,11 +134,11 @@ function checkPosts() {
     });
 }
 
-let initialPosts = document.querySelectorAll('.post');
-for (let i = 0; i < initialPosts.length; i++) {
-    let postId = initialPosts[i].id.replace("post_", "");
-    insertedPostIds.push(postId);
-}
+//let initialPosts = document.querySelectorAll('.post');
+//for (let i = 0; i < initialPosts.length; i++) {
+//    let postId = initialPosts[i].id.replace("post_", "");
+//    insertedPostIds.push(postId);
+//}
 
 function cleanPosts() {
     let posts = document.querySelectorAll('.post');

@@ -1256,16 +1256,34 @@
             }
             .create_post_actions_top {
                 display: flex;
+                justify-content: space-between;
                 width: 100%;
+                color: white;
                 overflow: hidden;
             }
-            .create_post_actions_top img {
+            .create_post_user {
+                display: flex;
+                justify-content: space-between;
+            }
+            .create_post_user img {
                 width: 50px;
                 height: 50px;
                 border-radius: 25px;
                 object-fit: cover;
             }
-            .create_post_actions_top textarea {
+            .create_post_user div {
+                line-height: 50px;
+                padding: 0 10px;
+                box-sizing: border-box;
+            }
+            .create_post_actions_top i {
+                width: 50px;
+                height: 50px;
+                line-height: 50px;
+                text-align: center;
+                cursor: pointer;
+            }
+            .create_post textarea {
                 min-width: calc(100% - 100px);
                 max-width: calc(100% - 100px);
                 min-height: 50px;
@@ -1277,14 +1295,6 @@
                 outline: none;
                 box-sizing: border-box;
                 resize: none;
-            }
-            .create_post_actions_top i {
-                width: 50px;
-                height: 50px;
-                line-height: 50px;
-                text-align: center;
-                color: white;
-                cursor: pointer;
             }
             .new_post .new_post_files {
                 display: flex;
