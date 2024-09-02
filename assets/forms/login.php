@@ -71,13 +71,13 @@
                         }
                     </script>
                 </div>
-                <div class="normal_login">
+                <div class="normal_login" id="normal_login">
                     <center><p id="login_msg"></p></center>
                     <?php if (!isMobile()) { ?>
                         <div class="login_qr" onclick="tglLogin()" id="qr_tgl"><i class="fa-solid fa-qrcode"></i></div>
                     <?php } ?>
                     
-                    <h2>Sign in</h2>
+                    <h2 id="normal_login_header">Sign in</h2>
 
                     <i class="fa-solid fa-at"></i>
                     <input type="email" id="login-email" onkeydown="hitEnterLogin(this)" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" required placeholder="E-mail address" title="example@example.com" oninput="setCustomValidity('')" oninvalid="setCustomValidity('Please enter a valid email address')" autofocus>
@@ -112,6 +112,8 @@
                         }
 
                         function login() {
+                            let normal_login = document.querySelector('.normal_login');
+                            let nlh = document.getElementById('normal_login_header');
                             let email = document.getElementById('login-email');
                             let password = document.getElementById('login-password');
                             let lmsg = document.getElementById('login_msg');
@@ -127,18 +129,29 @@
                                 url: './assets/login.php',
                                 type: "POST",
                                 data: {
-                                    email : email.value,
-                                    password : password.value,
-                                    remember : remember
-                                }
-                            }).done(function(response) {
-                                if (response.responseCode === "ok") {
-                                    window.location.href = "./";
-                                } else {
-                                    lmsg.innerHTML = response.message;
-                                    setTimeout(() => {
-                                        lmsg.innerHTML = null;
-                                    }, 3000);
+                                    email: email.value,
+                                    password: password.value,
+                                    remember: remember
+                                },
+                                beforeSend: function() {
+                                    nlh.innerHTML = "Logging in...";
+                                    normal_login.style.opacity = "0.5";
+                                    normal_login.style.pointerEvents = "none";
+                                    normal_login.style.userSelect = "none";
+                                    normal_login.style.cursor = "wait";
+                                },
+                                success: function(response) {
+                                    if (response.responseCode === "ok") {
+                                        nlh.innerHTML = response.message;
+                                        window.location.href = "./";
+                                    } else {
+                                        lmsg.innerHTML = response.message;
+                                        setTimeout(() => {
+                                            lmsg.innerHTML = null;
+                                        }, 3000);
+                                    }
+                                },
+                                complete: function() {
                                 }
                             });
                         }
