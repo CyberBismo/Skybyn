@@ -4,10 +4,9 @@ RewriteEngine On
 RewriteCond %{HTTPS} off
 RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-# Remove .php extension
-RewriteCond %{REQUEST_FILENAME} !-d
+# Ignore .php extension
 RewriteCond %{REQUEST_FILENAME}.php -f
-RewriteRule ^([^/]+)/?$ $1.php[L]
+RewriteRule !.*\.php$ %{REQUEST_FILENAME}.php [QSA,L]
 
 # Rewrite /register to ?register
 RewriteRule ^register$ ?signup [L,QSA]
