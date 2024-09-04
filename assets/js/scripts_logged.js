@@ -374,7 +374,7 @@ function checkRef() {
         url: 'assets/check_refer_code.php',
         type: "POST",
         data: {
-            code: ref.value
+            code: ref.innerHTML
         }
     }).done(function(response) {
         if (response == "expired") {
@@ -382,9 +382,6 @@ function checkRef() {
         }
     });
 }
-setInterval(() => {
-    checkRef();
-}, 300000);
 checkRef();
 
 function expandFR() {
