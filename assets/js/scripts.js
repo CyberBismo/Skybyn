@@ -43,7 +43,6 @@ function logClientInfo() {
             saveData: navigator.connection.saveData,
         },
         deviceMemory: navigator.deviceMemory,
-        permissions: [],
         storage: {
             localStorage: {
                 length: localStorage.length,
@@ -69,7 +68,7 @@ function logClientInfo() {
             clientInfo: JSON.stringify(clientInfo)
         },
         success: function(response) {
-            //console.log('Client information logged successfully:', response);
+            //console.log(response['message']+'\n'+response['client']);
         },
         error: function(error) {
             //console.error('Error logging client information:', error);

@@ -1,5 +1,5 @@
 <?php
-
+include_once "functions.php";
 $data = json_decode($_POST['clientInfo'], true);
 
 $path = "./logs/";
@@ -11,8 +11,6 @@ if (!file_exists($path)) {
 
 $fileContent = file_get_contents($path.$file);
 $clients = json_decode($fileContent, true);
-
-session_start();
 
 if (isset($_SESSION['client'])) {
     $cid = $_SESSION['client'];
@@ -51,12 +49,6 @@ $info = [
             'doNotTrack' => $data['browser']['doNotTrack'],
             'hardwareConcurrency' => $data['browser']['hardwareConcurrency']
         ],
-        'plugins' => [
-            'name' => $data['plugins']['name'],
-            'filename' => $data['plugins']['filename'],
-            'description' => $data['plugins']['description'],
-            'version' => $data['plugins']['version']
-        ],
         'languages' => $data['languages'],
         'connection' => [
             'effectiveType' => $data['connection']['effectiveType'],
@@ -64,24 +56,7 @@ $info = [
             'rtt' => $data['connection']['rtt'],
             'saveData' => $data['connection']['saveData']
         ],
-        'deviceMemory' => $data['deviceMemory'],
-        'permissions' => $data['permissions'],
-        'storage' => [
-            'localStorage' => [
-                'length' => $data['storage']['localStorage']['length'],
-                'items' => [
-                    'key' => $data['storage']['localStorage']['items']['key'],
-                    'value' => $data['storage']['localStorage']['items']['value']
-                ],
-                'sessionStorage' => [
-                    'length' => $data['storage']['sessionStorage']['length'],
-                    'items' => [
-                        'key' => $data['storage']['sessionStorage']['items']['key'],
-                        'value' => $data['storage']['sessionStorage']['items']['value']
-                    ]
-                ]
-            ]
-        ]
+        'deviceMemory' => $data['deviceMemory']
     ]
 ];
 
@@ -97,12 +72,9 @@ foreach ($clients as &$client) {
         $client[$cid]['windowDevicePixelRatio'] = $info[$cid]['windowDevicePixelRatio'];
         $client[$cid]['windowLocation'] = $info[$cid]['windowLocation'];
         $client[$cid]['browser'] = $info[$cid]['browser'];
-        $client[$cid]['plugins'] = $info[$cid]['plugins'];
         $client[$cid]['languages'] = $info[$cid]['languages'];
         $client[$cid]['connection'] = $info[$cid]['connection'];
         $client[$cid]['deviceMemory'] = $info[$cid]['deviceMemory'];
-        $client[$cid]['permissions'] = $info[$cid]['permissions'];
-        $client[$cid]['storage'] = $info[$cid]['storage'];
         $exists = true;
         break;
     }
@@ -115,4 +87,12 @@ if (!$exists) {
 
 $fileContent = json_encode($clients, JSON_PRETTY_PRINT);
 file_put_contents($path.$file, $fileContent);
+
+$data = [
+    'responseCode' => 1,
+    'message' => "Client info saved.",
+    'client' => $cid
+];
+header('Content-Type: application/json; charset=utf-8');
+echo json_encode($data);
 ?>
