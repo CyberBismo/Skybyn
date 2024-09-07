@@ -29,11 +29,13 @@ $currentTimestamp = time();
 $fiveMinutesAgo = $currentTimestamp - (5 * 60);
 
 foreach ($clients as &$client) {
-    $clientTimestamp = strtotime($client[$cid]['time']);
-    if ($clientTimestamp <= $fiveMinutesAgo) {
-        $client[$cid]['time'] = $info[$cid]['time'];
-    } else {
-        unset($client[$cid]);
+    for ($i = 0; $i < count($client); $i++) {
+        $clientTimestamp = strtotime($client[$i]['time']);
+        if ($clientTimestamp <= $fiveMinutesAgo) {
+            $client[$i]['time'] = $client[$i]['time'];
+        } else {
+            unset($client[$i]);
+        }
     }
     break;
 }
