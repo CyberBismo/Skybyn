@@ -8,14 +8,14 @@ $clients = json_decode($fileContent, true);
 $currentTimestamp = time();
 $fiveMinutesAgo = $currentTimestamp - (5 * 60);
 
-$cleaned = false; // Variable to track if any entries were cleaned
+$cleaned = false;
 
 foreach ($clients as &$client) {
-    for ($i = 0; $i < count($client); $i++) {
-        $clientTimestamp = strtotime($client[$i]['time']);
+    foreach ($client as $key => $entry) {
+        $clientTimestamp = strtotime($entry['time']);
         if ($clientTimestamp >= $fiveMinutesAgo) {
-            unset($client[$i]);
-            $cleaned = true; // Set cleaned to true if any entry is removed
+            unset($client[$key]);
+            $cleaned = true;
         }
     }
 }
