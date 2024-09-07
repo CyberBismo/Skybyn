@@ -6170,3 +6170,4 @@ assets/conn.php
 web.config
 monitor/cert.pfx
 monitor/server.py
+assets/logs/clients.json
