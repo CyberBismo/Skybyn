@@ -29,15 +29,13 @@ $currentTimestamp = time();
 $fiveMinutesAgo = $currentTimestamp - (5 * 60);
 
 foreach ($clients as &$client) {
-    if (isset($client[$cid])) {
-        $clientTimestamp = strtotime($client[$cid]['time']);
-        if ($clientTimestamp <= $fiveMinutesAgo) {
-            $client[$cid]['time'] = $info[$cid]['time'];
-        } else {
-            unset($client[$cid]);
-        }
-        break;
+    $clientTimestamp = strtotime($client[$cid]['time']);
+    if ($clientTimestamp <= $fiveMinutesAgo) {
+        $client[$cid]['time'] = $info[$cid]['time'];
+    } else {
+        unset($client[$cid]);
     }
+    break;
 }
 
 $fileContent = json_encode($clients, JSON_PRETTY_PRINT);

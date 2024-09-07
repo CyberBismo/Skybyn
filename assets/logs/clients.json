@@ -2,7 +2,7 @@
     {
         "196809": {
             "ip": "88.90.210.141",
-            "time": "2024-09-07T14:57:44.991Z",
+            "time": "2024-09-07T16:16:23.127Z",
             "platform": "Win32",
             "screenWidth": 1920,
             "screenHeight": 1080,
@@ -39,7 +39,7 @@
             "connection": {
                 "effectiveType": "4g",
                 "downlink": 10,
-                "rtt": 50,
+                "rtt": 0,
                 "saveData": false
             },
             "deviceMemory": 4
@@ -87,6 +87,52 @@
                 "effectiveType": "3g",
                 "downlink": 1.35,
                 "rtt": 500,
+                "saveData": false
+            },
+            "deviceMemory": 8
+        }
+    },
+    {
+        "283815": {
+            "ip": "::1",
+            "time": "2024-09-07T16:18:01.148Z",
+            "platform": "Win32",
+            "screenWidth": 1920,
+            "screenHeight": 1080,
+            "screenResolution": "1920x1080",
+            "windowDevicePixelRatio": 1,
+            "windowLocation": {
+                "href": "https:\/\/localhost\/",
+                "origin": "https:\/\/localhost",
+                "protocol": "https:",
+                "host": "localhost",
+                "hostname": "localhost",
+                "port": "",
+                "pathname": "\/",
+                "search": "",
+                "hash": ""
+            },
+            "browser": {
+                "appName": "Netscape",
+                "appVersion": "5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/128.0.0.0 Safari\/537.36 Edg\/128.0.0.0",
+                "product": "Gecko",
+                "userAgent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/128.0.0.0 Safari\/537.36 Edg\/128.0.0.0",
+                "vendor": "Google Inc.",
+                "cookieEnabled": true,
+                "doNotTrack": "1",
+                "hardwareConcurrency": 8
+            },
+            "languages": [
+                "en-US",
+                "en",
+                "nb",
+                "en-GB",
+                "pt-BR"
+            ],
+            "connection": {
+                "effectiveType": "4g",
+                "downlink": 10,
+                "rtt": 50,
                 "saveData": false
             },
             "deviceMemory": 8
