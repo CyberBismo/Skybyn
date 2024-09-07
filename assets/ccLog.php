@@ -7,7 +7,9 @@
         xhr.onreadystatechange = function() {
             if (xhr.readyState === 4 && xhr.status === 200) {
                 var response = JSON.parse(xhr.responseText);
-                console.log(response.message);
+                const status = document.getElementById('status');
+                const time = new Date().toLocaleTimeString();
+                status.innerHTML += `<p>${time}: ${response.message}</p>`;
                 setTimeout(() => {
                     readClientInfoLog();
                 }, 10000);
@@ -17,4 +19,5 @@
     }
     readClientInfoLog();
 </script>
+<div id="status"></div>
 <?php }?>
