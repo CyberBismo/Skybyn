@@ -89,13 +89,16 @@ function readClientInfoLog() {
         success: function(data) {
             const terminal = document.getElementById('console');
             const term_client = document.getElementById('term_clients');
+            let currentTime = new Date().toISOString()
             if (data.length > 0) {
                 var clients = [];
                 for (let client of data) {
                     for (let key in client) {
                         let entry = client[key];
-                        let clientTimestamp = Date.parse(entry.time);
-                        if (Date.now() - clientTimestamp < 60000) {
+                        let clientTime = entry.time;
+                        currentTime = Math.floor(Date.now() / 1000);
+                        clientTime = Math.floor(Date.parse(clientTime) / 1000);
+                        if (currentTime - clientTime < 60) {
                             clients.push(entry);
                         }
                     }
@@ -114,7 +117,7 @@ function readClientInfoLog() {
 }
 setInterval(() => {
     readClientInfoLog();
-}, 1000);
+}, 3000);
 
 // Prioritixe loading speed by loading images "lazy"
 document.addEventListener("DOMContentLoaded", function() {
