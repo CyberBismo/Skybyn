@@ -7,7 +7,11 @@ if (isset($_POST['pw'])) {
     $pw = "";
 }
 
-$data = $_POST['data'];
+if (isset($_POST['data'])) {
+    $data = $_POST['data'];
+} else {
+    $data = "";
+}
 
 $access = false;
 
