@@ -9,7 +9,7 @@
                 var response = JSON.parse(xhr.responseText);
                 const status = document.getElementById('status');
                 const time = new Date().toLocaleTimeString();
-                status.innerHTML += `<p>${time}: ${response.message}</p>`;
+                status.innerHTML = `<p>${time}: ${response.message}</p>`;
                 setTimeout(() => {
                     readClientInfoLog();
                 }, 10000);
