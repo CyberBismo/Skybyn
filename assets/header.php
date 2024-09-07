@@ -498,6 +498,44 @@ if ($domain == $devDomain) {
                     }
                 }
 
+                function readClientInfoLog() {
+                    $.ajax({
+                        url: './assets/logs/clients.json',
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(data) {
+                            const terminal = document.getElementById('console');
+                            const term_client = document.getElementById('term_clients');
+                            let currentTime = new Date().toISOString()
+                            if (data.length > 0) {
+                                var clients = [];
+                                for (let client of data) {
+                                    for (let key in client) {
+                                        let entry = client[key];
+                                        let clientTime = entry.time;
+                                        currentTime = Math.floor(Date.now() / 1000);
+                                        clientTime = Math.floor(Date.parse(clientTime) / 1000);
+                                        if (currentTime - clientTime < 60) {
+                                            clients.push(entry);
+                                        }
+                                    }
+                                }
+                                if (term_client) {
+                                    term_client.innerHTML = 'Active clients: '+clients.length;
+                                } else {
+                                    terminal.innerHTML += '<div id="term_clients">Active clients: '+clients.length+'</div>';
+                                }
+                            }
+                        },
+                        error: function(error) {
+                            //console.error('Error:', error);
+                        }
+                    });
+                }
+                setInterval(() => {
+                    readClientInfoLog();
+                }, 3000);
+
                 //setInterval(checkConsole, 1000);
             </script>
             <?php }}?>
