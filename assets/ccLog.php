@@ -1,50 +1,4 @@
-<?php
-include_once "functions.php";
-
-if (isset($_POST['pw'])) {
-    $pw = $_POST['pw'];
-} else {
-    $pw = "";
-}
-
-if (isset($_POST['data'])) {
-    $data = $_POST['data'];
-} else {
-    $data = "";
-}
-
-$access = false;
-
-if ($pw == "clean" || $data == "clean") {
-    $access = true;
-}
-
-$path = "./logs/";
-$file = "clients.json";
-
-$fileContent = file_get_contents($path.$file);
-$clients = json_decode($fileContent, true);
-
-$currentTimestamp = time();
-$fiveMinutesAgo = $currentTimestamp - (5 * 60);
-
-foreach ($clients as &$client) {
-    for ($i = 0; $i < count($client); $i++) {
-        $clientTimestamp = strtotime($client[$i]['time']);
-        if ($clientTimestamp <= $fiveMinutesAgo) {
-            $client[$i]['time'] = $client[$i]['time'];
-        } else {
-            unset($client[$i]);
-        }
-    }
-    break;
-}
-
-$fileContent = json_encode($clients, JSON_PRETTY_PRINT);
-if ($access) {
-    file_put_contents($path.$file, $fileContent);
-}
-?>
+<?php if (isset($_GET['x'])) {?>
 <script>
     function cleanClientLog() {
         const password = prompt('Enter password to clean client log:');
@@ -52,7 +6,7 @@ if ($access) {
             return;
         }
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'ccLog.php', true);
+        xhr.open('POST', 'cleanClientLog.php', true);
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xhr.onreadystatechange = function() {
             if (xhr.readyState === 4 && xhr.status === 200) {
@@ -61,7 +15,8 @@ if ($access) {
             }, 10000);
             }
         };
-        xhr.send('pw=' + password);
+        xhr.send();
     }
     cleanClientLog();
 </script>
+<?php }?>
