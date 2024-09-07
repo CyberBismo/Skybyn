@@ -47,21 +47,17 @@ if ($access) {
         if (password == null) {
             return;
         }
-        $.ajax({
-            url: '../ccLog.php',
-            type: 'POST',
-            data: {
-                pw: password
-            },
-            success: function(response) {
-                setTimeout(() => {
-                    readClientInfoLog();
-                }, 10000);
-            },
-            error: function(error) {
-                //console.error('Error:', error);
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'ccLog.php', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+            setTimeout(() => {
+                readClientInfoLog();
+            }, 10000);
             }
-        });
+        };
+        xhr.send('pw=' + password);
     }
     cleanClientLog();
 </script>
