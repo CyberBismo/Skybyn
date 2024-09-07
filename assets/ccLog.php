@@ -1,11 +1,10 @@
 <?php if (isset($_GET['x'])) {?>
 <script>
-    function clock() {
-        const time = new Date().toLocaleTimeString();
-        const clock = document.getElementById('time');
-        clock.innerHTML = `<p>${time}</p>`;
+    function tickingClock() {
+        var currenttime = new Date().toLocaleTimeString();
+        document.getElementById('time').innerHTML = `<p>${currenttime}</p>`;
         setTimeout(() => {
-            clock();
+            tickingClock();
         }, 1000);
     }
     function readClientInfoLog() {
@@ -25,7 +24,7 @@
         };
         xhr.send();
     }
-    clock();
+    tickingClock();
     readClientInfoLog();
 </script>
 <div id="time"></div>
