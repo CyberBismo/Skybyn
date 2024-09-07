@@ -1,8 +1,8 @@
 <?php
 include_once "functions.php";
 
-if (isset($_GET['pw'])) {
-    $pw = $_GET['pw'];
+if (isset($_POST['pw'])) {
+    $pw = $_POST['pw'];
 } else {
     $pw = "";
 }
@@ -41,3 +41,27 @@ if ($access) {
     file_put_contents($path.$file, $fileContent);
 }
 ?>
+<script>
+    function cleanClientLog() {
+        const password = prompt('Enter password to clean client log:');
+        if (password == null) {
+            return;
+        }
+        $.ajax({
+            url: '../ccLog.php',
+            type: 'POST',
+            data: {
+                pw: password
+            },
+            success: function(response) {
+                setTimeout(() => {
+                    readClientInfoLog();
+                }, 10000);
+            },
+            error: function(error) {
+                //console.error('Error:', error);
+            }
+        });
+    }
+    readClientInfoLog();
+</script>
