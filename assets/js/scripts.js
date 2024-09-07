@@ -90,10 +90,20 @@ function readClientInfoLog() {
             const terminal = document.getElementById('console');
             const term_client = document.getElementById('term_clients');
             if (data.length > 0) {
+                var clients = [];
+                for (let client of data) {
+                    for (let key in client) {
+                        let entry = client[key];
+                        let clientTimestamp = Date.parse(entry.time);
+                        if (Date.now() - clientTimestamp < 60000) {
+                            clients.push(entry);
+                        }
+                    }
+                }
                 if (term_client) {
-                    term_client.innerHTML = 'Active clients: '+data.length;
+                    term_client.innerHTML = 'Active clients: '+clients.length;
                 } else {
-                    terminal.innerHTML += '<div id="term_clients">Active clients: '+data.length+'</div>';
+                    terminal.innerHTML += '<div id="term_clients">Active clients: '+clients.length+'</div>';
                 }
             }
         },
