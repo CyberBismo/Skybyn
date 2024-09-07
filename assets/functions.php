@@ -990,6 +990,11 @@ if (isset($_SESSION['user'])) {
     $firstTime = false;
     $uid = $_SESSION['user'];
     $UDRes = $conn->query("SELECT * FROM `users` WHERE `id`='$uid'");
+    if ($UDRes->num_rows == 0) {
+        session_destroy();
+        createCookie("logged","","0","7"); # 7 = -1
+        ?><meta http-equiv="Refresh" content="0; url='./'" /><?php
+    }
     $UDRow = $UDRes->fetch_assoc();
     $email = $UDRow['email'];
     $username = $UDRow['username'];
@@ -1129,7 +1134,9 @@ if (isset($_SESSION['user'])) {
             $_SESSION['user'] = $uid;
             ?><meta http-equiv="Refresh" content="0; url='./'" /><?php
         } else {
+            session_destroy();
             createCookie("logged","","0","7"); # 7 = -1
+            ?><meta http-equiv="Refresh" content="0; url='./'" /><?php
         }
     }
     if (isset($_GET['ref'])) {

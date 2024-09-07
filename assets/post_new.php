@@ -1,71 +1,48 @@
 <?php
-include "./functions.php";
+include "./functions.php"; // contains: $conn, $uid, $now
 
-//$public = isset($_POST['public']) ? $_POST['public'] : '';
-$text = isset($_POST['text']) ? $_POST['text'] : '';
-$image = isset($_FILES['files']) ? $_FILES['files'] : '';
+if (!empty($_POST['text'])) {
+    $text = $_POST['text'];
 
-$proceed = false;
+    $conn->query("INSERT INTO `posts` (`user`,`content`,`created`) VALUES ('$uid','$text','$now')");
+    $post_id = $conn->insert_id;
 
-if (!empty($text)) {
-    $proceed = true;
-}
-if (!empty($image['name'][0])) {
-    $proceed = true;
-}
-
-if ($proceed == true) {
-    // Use prepared statements to safely insert data into the database.
-    $stmt = $conn->prepare("INSERT INTO `posts` (`user`, `content`, `created`) VALUES (?, ?, ?)");
-    $stmt->bind_param("sss", $uid, $text, $now);
-    $stmt->execute();
-    $stmt->close();
-
-    // Get the inserted post ID
-    $postId = $conn->insert_id;
-
-    if (!empty($image['name'][0])) {
-        // Upload the file(s) only if there are files present
-        $uploadDir = "../uploads/posts/$uid/$postId/"; // Directory to store the uploaded files
-
-        // Make sure the directory exists or create it
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
+    if (isset($_FILES['image'])) {
+        $files = $_FILES['image'];
+        $file_count = count($files['name']);
+        
+        $upload_dir = "../uploads/posts/$uid/$post_id/";
+        if (!file_exists($upload_dir)) {
+            mkdir($upload_dir, 0777, true);
         }
-
-        if (is_array($image['tmp_name'])) {
-            // If multiple files are uploaded, process each file
-            foreach ($image['tmp_name'] as $index => $tmpName) {
-                $fileName = $image['name'][$index];
-                $filePath = $uploadDir . $fileName;
-
-                // Move the uploaded file to the destination directory
-                if (move_uploaded_file($tmpName, $filePath)) {
-                    // Use prepared statements to safely insert file data into the database
-                    $stmt = $conn->prepare("INSERT INTO `uploads` (`user`, `post`, `file_url`, `date`) VALUES (?, ?, ?, ?)");
-                    $stmt->bind_param("ssss", $uid, $postId, $filePath, $now);
-                    $stmt->execute();
-                    $stmt->close();
-                }
-            }
-        } else {
-            // Only one file is uploaded
-            $fileName = $image['name'];
-            $filePath = $uploadDir . $fileName;
-
-            // Move the uploaded file to the destination directory
-            if (move_uploaded_file($image['tmp_name'], $filePath)) {
-                // Use prepared statements to safely insert file data into the database
-                $stmt = $conn->prepare("INSERT INTO `uploads` (`user`, `post`, `file_url`, `date`) VALUES (?, ?, ?, ?)");
-                $stmt->bind_param("ssss", $uid, $postId, $filePath, $now);
-                $stmt->execute();
-                $stmt->close();
+        
+        $success_count = 0;
+        for ($i = 0; $i < $file_count; $i++) {
+            $file_name = $files['name'][$i];
+            $file_tmp = $files['tmp_name'][$i];
+            $file_path = $upload_dir . $file_name;
+            
+            if (move_uploaded_file($file_tmp, $file_path)) {
+                $conn->query("INSERT INTO `uploads` (`user`,`post`,`file_url`,`date`) VALUES ('$uid','$post_id','$file_path','$now')");
+                $success_count++;
             }
         }
+    } else {
+        $data = [
+            'responseCode' => 1,
+            'message' => "Post shared successfully.",
+            'post_id' => $post_id
+        ];
     }
-
-    echo "";
 } else {
-    echo "error"; // Indicate an error if the text is empty
+    $data = [
+        'responseCode' => 0,
+        'message' => "Please enter some text"
+    ];
+}
+
+if (!empty($data)) {
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode($data);
 }
 ?>

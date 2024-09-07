@@ -1,8 +1,9 @@
 setInterval(() => {
-    //checkPosts();
+    checkPosts(null);
     cleanPosts();
 }, 300000); // Every 5 minutes
 removeDuplicateIds();
+checkPosts(null);
 
 function isScrolledToBottom() {
     // Get the current scroll position
@@ -32,46 +33,105 @@ window.addEventListener('scroll', function () {
 });
 
 function createPost() {
-    loading = false;
-    const limit = 3;
-
-    if (isCreatingPost) {
-        // If post creation is already in progress, do nothing
-        return;
-    }
-
-    isCreatingPost = true; // Set the flag to indicate post creation is in progress
-
     const text = document.getElementById('new_post_input');
-    const public = document.getElementById('new_post_public');
     const image = document.getElementById('image_to_share');
     const filesDiv = document.getElementById('new_post_files');
 
-    var formData = new FormData();
-    for (var i = 0; i < image.files.length; i++) {
-        formData.append('files[]', image.files[i]);
+    if (isCreatingPost) return;
+
+    isCreatingPost = true;
+    
+    const formData = new FormData();
+    formData.append('text', text.value);
+    for (let i = 0; i < image.files.length; i++) {
+        formData.append('image[]', image.files[i]);
     }
 
-    formData.append('text', text.value);
-    //formData.append('public', public.value); // Visibility
+    if (text.value.length > 0) {
+        $.ajax({
+            url: './assets/post_new.php',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                post_id = response.post_id;
+                newPost();
+                loadNewPosts(post_id);
+                text.value = "";
+                image.value = "";
+                filesDiv.innerHTML = "";
+                isCreatingPost = false;
+                const console = document.getElementById('console');
+                console.innerHTML = "SUCCESS\n\n" + response;
+            },
+            error: function (response) {
+                isCreatingPost = false;
+                const console = document.getElementById('console');
+                console.innerHTML = "ERROR!\n\n" + response;
+            }
+        });
+    } else {
+        text.placeholder = "Please enter a message";
+        isCreatingPost = false;
+    }
+}
+
+function checkPosts(x) {
+    const posts = document.querySelectorAll('[id^="post_"]');
+    let highestNumber = -Infinity;
+    posts.forEach((post) => {
+        const numberPart = parseInt(post.id.replace('post_', ''), 10);
+        if (numberPart > highestNumber) {
+            highestNumber = numberPart;
+        }
+    });
 
     $.ajax({
-        url: './assets/post_new.php',
-        type: "POST",
-        data: formData,
-        processData: false,
-        contentType: false
-    }).done(function(response) {
-        if (response == "") {
-            newPost();
-            checkPosts(); 
-            text.value = "";
-            image.value = "";
-            filesDiv.innerHTML = "";
-            isCreatingPost = false;
+        url: './assets/posts_check.php',
+        type: 'POST',
+        data: {
+            last: highestNumber,
+            post_id: x
+        },
+        success: function(response) {
+            const console = document.getElementById('console');
+            const cons_post = document.getElementById('cons_post');
+            if (cons_post) {
+                cons_post.innerHTML = 'Checked posts...';
+            } else {
+                console.innerHTML += '<div id="cons_post">Checked posts...</div>';
+            }
+            if (response.responseCode === 1) {
+                loadMorePosts();
+            } else {
+                const cons_post = document.getElementById('cons_post');
+                if (cons_post) {
+                    cons_post.innerHTML += ' No new posts';
+                } else {
+                    console.innerHTML += '<div id="cons_post">Checked posts... No new posts</div>';
+                }
+            }
         }
     });
 }
+
+function loadNewPosts(post_id) {
+    $.ajax({
+        url: './assets/post_load.php',
+        type: 'POST',
+        data: {
+            post_id: post_id
+        },
+        success: function (response) {
+            const postsContainer = document.getElementById('posts');
+            postsContainer.insertAdjacentHTML('beforeend', response);
+        },
+        error: function () {
+        }
+    });
+}
+
 
 function loadMorePosts() {
     if (loading) {
@@ -98,47 +158,6 @@ function loadMorePosts() {
         }
     });
 }
-
-function checkPosts() {
-    const posts = document.querySelectorAll('[id^="post_"]');
-    let highestNumber = -Infinity;
-    posts.forEach((post) => {
-        const numberPart = parseInt(post.id.replace('post_', ''), 10);
-        if (numberPart > highestNumber) {
-            highestNumber = numberPart;
-        }
-    });
-
-    $.ajax({
-        url: './assets/posts_check.php',
-        type: "POST",
-        data: {
-            last: highestNumber
-        }
-    }).done(function (response) {
-        if (response != "last") {
-            let newPosts = document.createElement('div');
-            newPosts.innerHTML = response;
-            let postElements = newPosts.querySelectorAll('.post');
-
-            for (let i = 0; i < postElements.length; i++) {
-                let postId = postElements[i].id.replace("post_", "");
-                if (!insertedPostIds.includes(postId)) {
-                    document.getElementById("posts").insertAdjacentElement('afterbegin', postElements[i]);
-                    insertedPostIds.push(postId);
-                }
-            }
-
-            removeDuplicateIds();
-        }
-    });
-}
-
-//let initialPosts = document.querySelectorAll('.post');
-//for (let i = 0; i < initialPosts.length; i++) {
-//    let postId = initialPosts[i].id.replace("post_", "");
-//    insertedPostIds.push(postId);
-//}
 
 function cleanPosts() {
     let posts = document.querySelectorAll('.post');
@@ -202,6 +221,6 @@ function deletePost(x) {
         }
     }).done(function(response) {
         post.remove();
-        checkPosts();
+        checkPosts(x);
     });
 }

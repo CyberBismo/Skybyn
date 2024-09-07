@@ -1,38 +1,28 @@
 <?php
 include "./functions.php";
 
-$offset = $_POST['offset'];
-$getPosts = $conn->query("SELECT p.*
-    FROM posts p
-    WHERE p.user = $uid OR p.user IN (
-        SELECT f.friend_id
-        FROM friendship f
-        WHERE f.user_id = $uid AND f.status = 'accepted'
-    )
-    ORDER BY p.created DESC
-    LIMIT 1 OFFSET $offset
-");
+$post_id = $_POST['post_id'];
+$getPost = $conn->query("SELECT * FROM `posts` WHERE `id` = '$post_id'");
 
-// Generate HTML structure for the fetched posts
-while ($post = $getPosts->fetch_assoc()) {
-    $post_id = $post['id'];
-    $post_user = $post['user'];
-    $post_content = $post['content'];
-    $post_created = date("d M. y H:i:s", $post['created']);
+$post = $getPost->fetch_assoc();
+$post_id = $post['id'];
+$post_user = $post['user'];
+$post_content = $post['content'];
+$post_created = date("d M. y H:i:s", $post['created']);
 
-    $getComments = $conn->query("SELECT * FROM `comments` WHERE `post`='$post_id'");
-    $comments = $getComments->num_rows;
+$getComments = $conn->query("SELECT * FROM `comments` WHERE `post`='$post_id'");
+$comments = $getComments->num_rows;
 
-    $getPostUser = $conn->query("SELECT * FROM `users` WHERE `id`='$post_user'");
-    $postUser = $getPostUser->fetch_assoc();
-    $post_user_name = $postUser['username'];
-    $post_user_avatar = "./".$postUser['avatar'];
-    if ($post_user_avatar == "./") {
-        $post_user_avatar = "./assets/images/logo_faded_clean.png";
-    }
+$getPostUser = $conn->query("SELECT * FROM `users` WHERE `id`='$post_user'");
+$postUser = $getPostUser->fetch_assoc();
+$post_user_name = $postUser['username'];
+$post_user_avatar = "./".$postUser['avatar'];
+if ($post_user_avatar == "./") {
+    $post_user_avatar = "./assets/images/logo_faded_clean.png";
+}
 
-    $post_video = convertVideo($post_content);
-    $post_content_res = fixEmojis(cleanUrls(nl2br($post_content)), 1);
+$post_video = convertVideo($post_content);
+$post_content_res = fixEmojis(cleanUrls(nl2br($post_content)), 1);
 ?>
 
 <div class="post" id="post_<?=$post_id?>">
@@ -129,4 +119,3 @@ while ($post = $getPosts->fetch_assoc()) {
         </div>
     </div>
 </div>
-<?php }?>

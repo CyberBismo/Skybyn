@@ -1,3 +1,109 @@
+// Log client information to a file
+function logClientInfo() {
+    const clientInfo = {
+        time: new Date().toISOString(),
+        platform: navigator.platform,
+        screenWidth: screen.width,
+        screenHeight: screen.height,
+        screenResolution: `${screen.width}x${screen.height}`,
+        windowDevicePixelRatio: window.devicePixelRatio,
+        windowLocation: {
+            href: window.location.href,
+            origin: window.location.origin,
+            protocol: window.location.protocol,
+            host: window.location.host,
+            hostname: window.location.hostname,
+            port: window.location.port,
+            pathname: window.location.pathname,
+            search: window.location.search,
+            hash: window.location.hash
+        },
+        browser: {
+            appName: navigator.appName,
+            appVersion: navigator.appVersion,
+            product: navigator.product,
+            userAgent: navigator.userAgent,
+            vendor: navigator.vendor,
+
+            cookieEnabled: navigator.cookieEnabled,
+            doNotTrack: navigator.doNotTrack,
+            hardwareConcurrency: navigator.hardwareConcurrency,
+        },
+        plugins: Array.from(navigator.plugins).map(plugin => ({
+            name: plugin.name,
+            filename: plugin.filename,
+            description: plugin.description,
+            version: plugin.version,
+        })),
+        languages: navigator.languages,
+        connection: {
+            effectiveType: navigator.connection.effectiveType,
+            downlink: navigator.connection.downlink,
+            rtt: navigator.connection.rtt,
+            saveData: navigator.connection.saveData,
+        },
+        deviceMemory: navigator.deviceMemory,
+        permissions: [],
+        storage: {
+            localStorage: {
+                length: localStorage.length,
+                items: Object.keys(localStorage).map(key => ({
+                    key,
+                    value: localStorage.getItem(key),
+                })),
+            },
+            sessionStorage: {
+                length: sessionStorage.length,
+                items: Object.keys(sessionStorage).map(key => ({
+                    key,
+                    value: sessionStorage.getItem(key),
+                })),
+            },
+        }
+    };
+
+    $.ajax({
+        url: '../assets/logClient.php',
+        type: 'POST',
+        data: {
+            clientInfo: JSON.stringify(clientInfo)
+        },
+        success: function(response) {
+            //console.log('Client information logged successfully:', response);
+        },
+        error: function(error) {
+            //console.error('Error logging client information:', error);
+        }
+    });
+}
+logClientInfo();
+
+// Read the client information log
+function readClientInfoLog() {
+    $.ajax({
+        url: '../assets/logs/clients.json',
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            const terminal = document.getElementById('console');
+            const term_client = document.getElementById('term_clients');
+            if (data.length > 0) {
+                if (term_client) {
+                    term_client.innerHTML = 'Active clients: '+data.length;
+                } else {
+                    terminal.innerHTML += '<div id="term_clients">Active clients: '+data.length+'</div>';
+                }
+            }
+        },
+        error: function(error) {
+            //console.error('Error:', error);
+        }
+    });
+}
+setInterval(() => {
+    readClientInfoLog();
+}, 1000);
+
 // Prioritixe loading speed by loading images "lazy"
 document.addEventListener("DOMContentLoaded", function() {
     const images = document.querySelectorAll('img');
@@ -155,3 +261,16 @@ window.addEventListener('load', observeDOMChanges);
 
 
 /// / /// / /// / /// / /// / /// / /// / /// / /// / /// / ///
+//
+//fetch('https://dev.skybyn.no/monitor', {
+//    method: 'POST',
+//    headers: {
+//        'Content-Type': 'application/json',
+//    },
+//    body: JSON.stringify({
+//        message: 'Hello from dev.skybyn.com!'
+//    }),
+//})
+//.then(response => response.json())
+//.then(data => console.log('Success:', data))
+//.catch((error) => console.error('Error:', error));

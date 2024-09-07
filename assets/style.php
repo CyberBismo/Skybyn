@@ -1296,7 +1296,7 @@
                 box-sizing: border-box;
                 resize: none;
             }
-            .new_post .new_post_files {
+            .new_post_files {
                 display: flex;
                 justify-content: left;
                 width: 100%;
@@ -1307,24 +1307,24 @@
                 box-sizing: border-box;
                 overflow: scroll;
             }
-            .new_post .new_post_files img {
+            .new_post_files img {
                 max-width: 100px;
                 max-height: 200px;
                 margin: 3px 0;
                 border-radius: 10px;
                 transition: all .5s;
             }
-            .new_post .new_post_files img:hover {
+            .new_post_files img:hover {
                 max-width: 100%;
                 max-height: 200px;
             }
-            .new_post .create_post_actions_bottom {
+            .create_post_actions_bottom {
                 display: flex;
                 justify-content: space-between;
                 margin-top: 20px;
                 color: white;
             }
-            .new_post .create_post_actions_bottom span select {
+            .create_post_actions_bottom span select {
                 appearance: none;
                 padding: 10px;
                 color: black;
@@ -1334,11 +1334,11 @@
                 outline: none;
                 cursor: pointer;
             }
-            .new_post .create_post_actions_bottom span select::before,
-            .new_post .create_post_actions_bottom span select::after {
+            .create_post_actions_bottom span select::before,
+            .create_post_actions_bottom span select::after {
                 color: black;
             }
-            .new_post .create_post_actions_bottom .share {
+            .create_post_actions_bottom .share {
                 width: 50px;
                 padding: 0;
                 text-align: center;
@@ -1346,10 +1346,10 @@
                 justify-self: right;
                 cursor: pointer;
             }
-            .new_post .create_post_actions_bottom .share:hover {
+            .create_post_actions_bottom .share:hover {
                 background: rgba(255,255,255,.3);
             }
-            .new_post .create_post_actions_bottom i {
+            .create_post_actions_bottom i {
                 line-height: 50px;
                 padding: 0 10px;
             }
@@ -1412,7 +1412,7 @@
                 color: black;
                 box-sizing: border-box;
             }
-            .new_post .create_post textarea {
+            .create_post textarea {
                 width: 100%;
                 min-width: 100%;
                 max-width: 100%;
@@ -1427,49 +1427,80 @@
                 outline: none;
                 box-sizing: border-box;
             }
-            .new_post .create_post textarea::placeholder {
+            .new_post_files {
+                display: flex;
+                width: 100%;
+                padding: 0 10px;
+                padding-top: 10px;
+            }
+            .new_post_files img {
+                max-width: 100px;
+                max-height: 100px;
+                border-radius: 0;
+            }
+
+            .create_post textarea::placeholder {
                 color: white;
             }
-            .new_post .create_post textarea::-webkit-scrollbar {
+            .create_post textarea::-webkit-scrollbar {
                 display: none;
             }
-            .new_post img {
-                float: left;
-                width: 50px;
-                margin: -10px 0 0 -10px;
-                border-radius: 20px;
-            }
-            .new_post .create_post_actions_top {
+            .create_post_actions_top {
                 display: flex;
-                justify-content: end;
+                justify-content: space-between;
+                width: 100%;
+                color: white;
+                overflow: hidden;
             }
-            .new_post .create_post_actions_top span {
+            .create_post_user {
+                display: flex;
+                justify-content: space-between;
+            }
+            .create_post_user img {
+                width: 50px;
+                height: 50px;
+                border-radius: 25px;
+                object-fit: cover;
+            }
+            .create_post_user div {
+                line-height: 50px;
+                padding: 0 10px;
+                box-sizing: border-box;
+            }
+            .create_post_actions_top i {
+                width: 50px;
+                height: 50px;
+                line-height: 50px;
+                text-align: center;
+                cursor: pointer;
+            }
+            .create_post_actions_top span {
                 padding: 0 10px;
                 color: white;
             }
-            .new_post .create_post_actions_top span select {
+            .create_post_actions_top span select {
                 color: white;
                 background: none;
                 outline: none;
                 border: none;
             }
-            .new_post .create_post_actions_top span select option {
+            .create_post_actions_top span select option {
                 color: black;
             }
-            .new_post .create_post_actions_top span.close {
+             .create_post_actions_top span.close {
                 width: 40px;
                 margin-right: -10px;
                 text-align: center;
                 border-left: 1px solid white;
                 cursor: pointer;
             }
-            .new_post .create_post_actions_bottom {
+            .create_post_actions_bottom {
                 display: flex;
                 justify-content: space-between;
                 margin-top: 20px;
                 color: white;
             }
-            .new_post .create_post_actions_bottom .share {
+            .create_post_actions_bottom .share {
                 width: 40px;
                 line-height: 40px;
                 margin-top: -10px;
@@ -1479,25 +1510,17 @@
                 justify-self: right;
                 cursor: pointer;
             }
-            .new_post .create_post_actions_bottom .share:hover {
+            .create_post_actions_bottom .share:hover {
                 background: rgba(255,255,255,.3);
             }
-            .new_post .create_post_actions_bottom label,
-            .new_post .create_post_actions_bottom span {
+            .create_post_actions_bottom label,
+            .create_post_actions_bottom span {
                 cursor: pointer;
             }
-            .new_post .create_post_actions_bottom i {
+            .create_post_actions_bottom i {
                 padding: 0 10px;
             }
-            .new_post .new_post_files {
-                display: flex;
-                width: 100%;
-                padding: 0 10px;
-                padding-top: 10px;
-            }
-            .new_post .new_post_files img {
-                border-radius: 0;
-            }
+
             .header .create_post {
                 position: relative;
                 width: 100%;
@@ -2247,6 +2270,7 @@
             }
             .post_gallery {
                 display: flex;
+                justify-content: center;
                 gap: 10px;
                 overflow: auto;
             }
@@ -3254,6 +3278,38 @@
             }
             #my-markets {
                 padding: 10px;
+            }
+
+            /** Console */
+            .terminal {
+                position: relative;
+                width: 100%;
+                padding-bottom: 10px;
+            }
+            .terminal span {
+                position: absolute;
+                right: 0;
+                margin-top: 5px;
+                margin-right: 15px;
+                color: #555;
+                font-size: 12px;
+            }
+            #console {
+                width: calc(100% - 20px);
+                height: 300px;
+                max-height: 300px;
+                margin: 0 auto;
+                padding: 10px;
+                color: White;
+                font-size: 12px;
+                background: rgba(255,255,255,.05);
+                border-radius: 10px;
+                box-sizing: border-box;
+                overflow: auto;
+            }
+            #console div {
+                width: 100%;
+                padding: 5px 0;
             }
 
             /** Friend list */

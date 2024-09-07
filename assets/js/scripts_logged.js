@@ -374,7 +374,7 @@ function checkRef() {
         url: 'assets/check_refer_code.php',
         type: "POST",
         data: {
-            code: ref.innerHTML
+            code: ref
         }
     }).done(function(response) {
         if (response == "expired") {
