@@ -63,5 +63,5 @@ if ($access) {
             }
         });
     }
-    readClientInfoLog();
+    cleanClientLog();
 </script>
