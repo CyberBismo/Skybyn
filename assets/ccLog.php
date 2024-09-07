@@ -2,7 +2,8 @@
 <script>
     function clock() {
         const time = new Date().toLocaleTimeString();
-        document.getElementById('time').innerHTML = `<p>${time}</p>`;
+        const clock = document.getElementById('time');
+        clock.innerHTML = `<p>${time}</p>`;
         setTimeout(() => {
             clock();
         }, 1000);
