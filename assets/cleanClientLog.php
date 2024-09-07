@@ -1,5 +1,5 @@
 <?php
-$path = "../logs/";
+$path = "./logs/";
 $file = "clients.json";
 
 $fileContent = file_get_contents($path.$file);
