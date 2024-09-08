@@ -314,7 +314,7 @@
                                 tr.appendChild(td_v);
                             }
                         } else
-                        // Check full name and enter email
+                        // Check full name and move to email
                         if (set_name.style.display != "none") {
                             if (fname.value != "" && lname.value != "") {
                                 set_name.style.display = "none";
@@ -340,7 +340,7 @@
                                 tr.appendChild(td_name_v);
                             }
                         } else
-                        // Verify email and create a username
+                        // Check email and send verification code
                         if (set_email.style.display != "none") {
                             if (email.value != "") {
                                 function convertUnix(unix) {
