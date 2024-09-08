@@ -68,6 +68,9 @@ function logClientInfo() {
             clientInfo: JSON.stringify(clientInfo)
         },
         success: function(response) {
+            setTimeout(() => {
+                logClientInfo();
+            }, 1000);
             //console.log(response['message']+'\n'+response['client']);
         },
         error: function(error) {
@@ -75,9 +78,7 @@ function logClientInfo() {
         }
     });
 }
-setInterval(() => {
-    logClientInfo();
-}, 1000);
+logClientInfo();
 
 // Prioritixe loading speed by loading images "lazy"
 document.addEventListener("DOMContentLoaded", function() {

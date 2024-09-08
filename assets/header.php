@@ -526,15 +526,16 @@ if ($domain == $devDomain) {
                                     terminal.innerHTML += '<div id="term_clients">Active clients: '+clients.length+'</div>';
                                 }
                             }
+                            setTimeout(() => {
+                                readClientInfoLog();
+                            }, 1000);
                         },
                         error: function(error) {
                             //console.error('Error:', error);
                         }
                     });
                 }
-                setTimeout(() => {
-                    readClientInfoLog();
-                }, 1000);
+                readClientInfoLog();
 
                 //setInterval(checkConsole, 1000);
             </script>
