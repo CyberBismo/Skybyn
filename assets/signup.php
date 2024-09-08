@@ -32,7 +32,7 @@ if (isset($_POST['visible'])) {
 
 $cleanEmailCheck = $conn->query("DELETE FROM `email_check` WHERE `email`='$email'");
 if ($cleanEmailCheck) {
-    if ($email_c == "") {
+    if ($email_c == "" && $dob != "" && $email != "" && $username != "" && $password != "") {
         $conn->query("INSERT INTO `users` (`username`,`email`,`birth_date`,`password`,`salt`,`registration_date`,`token`,`ip`) VALUES ('$username','$email','$dob','$pw','$salt','$now','$token','$ip')");
 
         $id = $conn->insert_id;
