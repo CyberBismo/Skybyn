@@ -441,10 +441,10 @@ if ($domain == $devDomain) {
             </div>
 
             <div class="shortcuts markets">
-                <h3><i class="fa-solid fa-store"></i><div>Market</div><i class="fa-solid fa-cash-register" onclick="window.location.href='./market?new'" title="Sell on market"></i></h3>
+                <h3><i class="fa-solid fa-store"></i><div>Markets</div><i class="fa-solid fa-cash-register" onclick="window.location.href='./market?new'" title="Sell on market"></i></h3>
                 <div id="my-markets">
                     <?php
-                    $getMarkets = $conn->query("SELECT * FROM `market`");
+                    $getMarkets = $conn->query("SELECT * FROM `markets`");
                     if ($getMarkets->num_rows > 0) {
                         while($m_data = $getMarkets->fetch_assoc()) {
                             $market_name = $m_data['name'];
@@ -499,6 +499,9 @@ if ($domain == $devDomain) {
                 }
 
                 function readClientInfoLog() {
+                    setTimeout(() => {
+                        readClientInfoLog();
+                    }, 1000);
                     $.ajax({
                         url: './assets/logs/clients.json',
                         type: 'GET',
@@ -532,9 +535,7 @@ if ($domain == $devDomain) {
                         }
                     });
                 }
-                setInterval(() => {
-                    readClientInfoLog();
-                }, 5000);
+                readClientInfoLog();
 
                 //setInterval(checkConsole, 1000);
             </script>

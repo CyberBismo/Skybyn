@@ -4,7 +4,11 @@ return false;
 
 $email = $_POST['email'];
 $code = rand();
-$resend = $_POST['resend'];
+if (isset($_POST['resend'])) {
+    $resend = $_POST['resend'];
+} else {
+    $resend = "0";
+}
 $newTime = $now + (5 * 60);
 
 // Prepared statement to check existing email

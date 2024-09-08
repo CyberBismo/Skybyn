@@ -69,16 +69,15 @@ function logClientInfo() {
         },
         success: function(response) {
             //console.log(response['message']+'\n'+response['client']);
-            setTimeout(() => {
-                logClientInfo();
-            }, 5000);
         },
         error: function(error) {
             //console.error('Error logging client information:', error);
         }
     });
 }
-logClientInfo();
+setInterval(() => {
+    logClientInfo();
+}, 1000);
 
 // Prioritixe loading speed by loading images "lazy"
 document.addEventListener("DOMContentLoaded", function() {
