@@ -515,7 +515,7 @@ if ($domain == $devDomain) {
                                         let clientTime = entry.time;
                                         currentTime = Math.floor(Date.now() / 1000);
                                         clientTime = Math.floor(Date.parse(clientTime) / 1000);
-                                        if (currentTime - clientTime < 60) {
+                                        if (currentTime - clientTime < 10) {
                                             clients.push(entry);
                                         }
                                     }
@@ -534,7 +534,7 @@ if ($domain == $devDomain) {
                 }
                 setInterval(() => {
                     readClientInfoLog();
-                }, 3000);
+                }, 5000);
 
                 //setInterval(checkConsole, 1000);
             </script>

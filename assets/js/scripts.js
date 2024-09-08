@@ -71,7 +71,7 @@ function logClientInfo() {
             //console.log(response['message']+'\n'+response['client']);
             setTimeout(() => {
                 logClientInfo();
-            }, 3000);
+            }, 5000);
         },
         error: function(error) {
             //console.error('Error logging client information:', error);
