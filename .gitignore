@@ -6172,3 +6172,4 @@ monitor/cert.pfx
 monitor/server.py
 assets/logs/clients.json
 /assets/logs
+assets/logs/clients.json
