@@ -499,9 +499,6 @@ if ($domain == $devDomain) {
                 }
 
                 function readClientInfoLog() {
-                    setTimeout(() => {
-                        readClientInfoLog();
-                    }, 1000);
                     $.ajax({
                         url: './assets/logs/clients.json',
                         type: 'GET',
@@ -535,7 +532,9 @@ if ($domain == $devDomain) {
                         }
                     });
                 }
-                readClientInfoLog();
+                setTimeout(() => {
+                    readClientInfoLog();
+                }, 1000);
 
                 //setInterval(checkConsole, 1000);
             </script>
