@@ -20,8 +20,8 @@ if (isset($_GET['new'])) {?>
                         <option value="furniture">Furniture</option>
                         <option value="jewelry">Jewelry</option>
                         <option value="toys">Toys</option>
+                        <option value="games">Games</option>
                         <option value="vehicles">Vehicles</option>
-                        <option value="other">Other</option>
                     </select>
                     <?php if ($rank > 5) {?>
                     <input type="checkbox" name="default" value="1"> System default
@@ -40,17 +40,49 @@ if (isset($_GET['new'])) {?>
                 
                 <?php if (!isset($_GET['category'])) {?>
                 <div class="market-categories">
-                    <a href="?category=art">Art</a>
-                    <a href="?category=clothing">Clothing</a>
-                    <a href="?category=electronics">Electronics</a>
-                    <a href="?category=food">Food</a>
-                    <a href="?category=furniture">Furniture</a>
-                    <a href="?category=jewelry">Jewelry</a>
-                    <a href="?category=toys">Toys</a>
-                    <a href="?category=vehicles">Vehicles</a>
-                    <a href="?category=other">Other</a>
+                    <div class="market-category" onclick="window.location.href='?category=art'">
+                        <h4>Art</h4>
+                        <p>Paintings, sculptures, and other art pieces.</p>
+                    </div>
+                    <div class="market-category" onclick="window.location.href='?category=clothing'">
+                        <h4>Clothing</h4>
+                        <p>Shirts, pants, and other clothing items.</p>
+                    </div>
+                    <div class="market-category" onclick="window.location.href='?category=electronics'">
+                        <h4>Electronics</h4>
+                        <p>Phones, computers, and other electronic devices.</p>
+                    </div>
+                    <div class="market-category" onclick="window.location.href='?category=food'">
+                        <h4>Food</h4>
+                        <p>Meals, snacks, and other food items.</p>
+                    </div>
+                    <div class="market-category" onclick="window.location.href='?category=furniture'">
+                        <h4>Furniture</h4>
+                        <p>Tables, chairs, and other furniture items.</p>
+                    </div>
+                    <div class="market-category" onclick="window.location.href='?category=jewelry'">
+                        <h4>Jewelry</h4>
+                        <p>Necklaces, rings, and other jewelry items.</p>
+                    </div>
+                    <div class="market-category" onclick="window.location.href='?category=toys'">
+                        <h4>Toys</h4>
+                        <p>Stuffed animals, action figures, and other toys.</p>
+                    </div>
+                    <div class="market-category" onclick="window.location.href='?category=games'">
+                        <h4>Games</h4>
+                        <p>Board games, video games, and other games.</p>
+                    </div>
+                    <div class="market-category" onclick="window.location.href='?category=vehicles'">
+                        <h4>Vehicles</h4>
+                        <p>Cars, motorcycles, and other vehicles.</p>
+                    </div>
 
-                    <a href="?new">New market</a>
+                    <?php if (isset($_SESSION['user'])) {?>
+                    <div class="market-category" onclick="window.location.href='?new'">
+                        <h4>New Market</h4>
+                        <p>Register a new market.</p>
+                    </div>
+                    <?php }?>
                 </div>
                 <?php } else {
                     $category = $_GET['category'];

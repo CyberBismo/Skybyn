@@ -315,6 +315,7 @@ if ($domain == $devDomain) {
 
         <div class="left-panel" id="left-panel">
 
+            <?php if ($rank > 3) {?>
             <div class="shortcuts music">
                 <h3><i class="fa-solid fa-music"></i><div>Music</div><i class="fa-solid fa-record-vinyl" onclick="window.location.href='./music?upload'" title="Add to music"></i></h3>
                 <div id="my-music">
@@ -334,7 +335,9 @@ if ($domain == $devDomain) {
                     ?>
                 </div>
             </div>
+            <?php }?>
 
+            <?php if ($rank > 3) {?>
             <div class="shortcuts gaming">
                 <h3><i class="fa-solid fa-gamepad"></i><div>Gaming</div><i></i></h3>
                 <div id="my-games">
@@ -354,7 +357,9 @@ if ($domain == $devDomain) {
                     ?>
                 </div>
             </div>
+            <?php }?>
 
+            <?php if ($rank > 3) {?>
             <div class="shortcuts events">
                 <h3><i class="fa-solid fa-calendar-days"></i><div>Events</div><i class="fa-regular fa-calendar-plus" onclick="window.location.href='./event?new'" title="Create new event"></i></h3>
                 <div id="my-events">
@@ -374,7 +379,9 @@ if ($domain == $devDomain) {
                     ?>
                 </div>
             </div>
+            <?php }?>
 
+            <?php if ($rank > 3) {?>
             <div class="shortcuts groups">
                 <h3><i class="fa-solid fa-comments"></i><div>Groups</div><i class="fa-solid fa-comment-medical" onclick="window.location.href='/group?new'" title="Create new group"></i></h3>
                 <div id="my-groups">
@@ -411,7 +418,9 @@ if ($domain == $devDomain) {
                     ?>
                 </div>
             </div>
+            <?php }?>
 
+            <?php if ($rank > 3) {?>
             <div class="shortcuts pages">
                 <h3><i class="fa-regular fa-newspaper"></i><div>Pages</div><i class="fa-solid fa-file-circle-plus" onclick="window.location.href='/page?new'" title="Create new page"></i></h3>
                 <div id="my-pages">
@@ -439,7 +448,9 @@ if ($domain == $devDomain) {
                     ?>
                 </div>
             </div>
+            <?php }?>
 
+            <?php if ($rank > 3) {?>
             <div class="shortcuts markets">
                 <h3><i class="fa-solid fa-store"></i><div>Markets</div><i class="fa-solid fa-cash-register" onclick="window.location.href='./market?new'" title="Sell on market"></i></h3>
                 <div id="my-markets">
@@ -459,9 +470,9 @@ if ($domain == $devDomain) {
                     ?>
                 </div>
             </div>
+            <?php }?>
 
-            <?php if (isset($_SESSION['user'])) {
-                if ($rank > 3) {?>
+            <?php if ($rank > 3) {?>
             <div class="shortcuts terminal">
                 <h3><i class="fa-solid fa-terminal"></i><div>Terminal</div><i class="fa-solid fa-delete-left" onclick="clearConsole()"></i></h3>
                 <span id="console_countdown"></span>
@@ -539,7 +550,7 @@ if ($domain == $devDomain) {
 
                 //setInterval(checkConsole, 1000);
             </script>
-            <?php }}?>
+            <?php }?>
 
         </div>
 
