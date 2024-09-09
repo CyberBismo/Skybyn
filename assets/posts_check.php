@@ -8,7 +8,7 @@ if ($last_id == "-Infinity") {
     $last_id = 0;
 }
 
-if (!empty($post_id)) {
+if ($post_id != 0) {
     $getPosts = $conn->query("SELECT * FROM `posts` WHERE `id` = '$post_id'");
     if ($getPosts->num_rows > 0) {
         $data = [

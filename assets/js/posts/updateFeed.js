@@ -1,9 +1,8 @@
-setInterval(() => {
-    checkPosts(null);
-    cleanPosts();
-}, 300000); // Every 5 minutes
-removeDuplicateIds();
-checkPosts(null);
+//setInterval(() => {
+//    checkPosts(null);
+//    cleanPosts();
+//}, 10000); // Every 5 minutes (300000)
+//removeDuplicateIds();
 
 function isScrolledToBottom() {
     // Get the current scroll position
@@ -37,17 +36,26 @@ function createPost() {
     const image = document.getElementById('image_to_share');
     const filesDiv = document.getElementById('new_post_files');
 
-    if (isCreatingPost) return;
-
-    isCreatingPost = true;
+    const formattedText = encodeURIComponent(text.value);
     
     const formData = new FormData();
-    formData.append('text', text.value);
+    formData.append('text', formattedText);
     for (let i = 0; i < image.files.length; i++) {
         formData.append('image[]', image.files[i]);
     }
 
+    let continuePost = false;
+    
     if (text.value.length > 0) {
+        continuePost = true;
+    }
+
+    if (continuePost) {
+        text.value = "";
+        image.value = "";
+        filesDiv.innerHTML = "";
+        newPost();
+        continuePost = false;
         $.ajax({
             url: './assets/post_new.php',
             type: 'POST',
@@ -56,24 +64,33 @@ function createPost() {
             contentType: false,
             success: function (response) {
                 post_id = response.post_id;
-                newPost();
                 loadNewPosts(post_id);
-                text.value = "";
-                image.value = "";
-                filesDiv.innerHTML = "";
-                isCreatingPost = false;
-                const console = document.getElementById('console');
-                console.innerHTML = "SUCCESS\n\n" + response;
+                if (document.getElementById('console')) {
+                    const console = document.getElementById('console');
+                    if (document.getElementById('cons_post')) {
+                        const cons_post = document.getElementById('cons_post');
+                        cons_post.innerHTML = response.message;
+                    } else {
+                        console.innerHTML += '<p id="cons_post">'+response.message+'</p>';
+                    }
+                }
+                continuePost = true;
             },
             error: function (response) {
-                isCreatingPost = false;
-                const console = document.getElementById('console');
-                console.innerHTML = "ERROR!\n\n" + response;
+                if (document.getElementById('console')) {
+                    const console = document.getElementById('console');
+                    if (document.getElementById('cons_post')) {
+                        const cons_post = document.getElementById('cons_post');
+                        cons_post.innerHTML = response.message;
+                    } else {
+                        console.innerHTML += '<p id="cons_post">'+response.message+'</p>';
+                    }
+                }
+                continuePost = true;
             }
         });
     } else {
         text.placeholder = "Please enter a message";
-        isCreatingPost = false;
     }
 }
 
@@ -86,6 +103,12 @@ function checkPosts(x) {
             highestNumber = numberPart;
         }
     });
+
+    if (x) {
+        x = x;
+    } else {
+        x = 0;
+    }
 
     $.ajax({
         url: './assets/posts_check.php',
@@ -125,7 +148,7 @@ function loadNewPosts(post_id) {
         },
         success: function (response) {
             const postsContainer = document.getElementById('posts');
-            postsContainer.insertAdjacentHTML('beforeend', response);
+            postsContainer.insertAdjacentHTML('afterbegin', response);
         },
         error: function () {
         }
@@ -134,14 +157,8 @@ function loadNewPosts(post_id) {
 
 
 function loadMorePosts() {
-    if (loading) {
-        return;
-    }
-
     const countPosts = document.querySelectorAll('div.post');
     const offset = countPosts.length;
-
-    loading = true;
     $.ajax({
         url: './assets/posts_load.php',
         type: 'POST',
@@ -151,10 +168,8 @@ function loadMorePosts() {
         success: function (response) {
             const postsContainer = document.getElementById('posts');
             postsContainer.insertAdjacentHTML('beforeend', response);
-            loading = false;
         },
         error: function () {
-            loading = false;
         }
     });
 }

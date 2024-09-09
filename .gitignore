@@ -6173,3 +6173,5 @@ monitor/server.py
 assets/logs/clients.json
 /assets/logs
 assets/logs/clients.json
+/uploads
+/assets/logs

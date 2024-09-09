@@ -2887,10 +2887,12 @@
                 background: rgba(255,255,255,.05);
                 border-radius: 10px;
                 box-sizing: border-box;
+                word-break: break-all;
                 overflow: auto;
             }
-            #console div {
+            #console p {
                 width: 100%;
+                margin: 0;
                 padding: 5px 0;
             }
 

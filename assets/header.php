@@ -477,7 +477,7 @@ if ($domain == $devDomain) {
                 <h3><i class="fa-solid fa-terminal"></i><div>Terminal</div><i class="fa-solid fa-delete-left" onclick="clearConsole()"></i></h3>
                 <span id="console_countdown"></span>
                 <div id="console">
-                    <?php if (isset($_COOKIE['logged'])) echo '<div id="term_rem">Remember ON</div>'; else echo '<div id="term_rem">Remember OFF</div>';?>
+                    <?php if (isset($_COOKIE['logged'])) echo '<p id="term_rem">Remember ON</p>'; else echo '<p id="term_rem">Remember OFF</p>';?>
                 </div>
             </div>
             <script>
@@ -534,7 +534,7 @@ if ($domain == $devDomain) {
                                 if (term_client) {
                                     term_client.innerHTML = 'Active clients: '+clients.length;
                                 } else {
-                                    terminal.innerHTML += '<div id="term_clients">Active clients: '+clients.length+'</div>';
+                                    terminal.innerHTML += '<p id="term_clients">Active clients: '+clients.length+'</p>';
                                 }
                             }
                             setTimeout(() => {
