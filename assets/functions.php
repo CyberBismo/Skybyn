@@ -131,65 +131,115 @@ if (!isset($_COOKIE['country'])) {
     #createCookie("country",$country, "1","6");
 }
 
-# Get metadata from URL
-function getMetadata($url) {
-    // Get the HTML content from the URL
-    $html = file_get_contents($url);
-    
-    if ($html === false) {
-        return "Failed to fetch URL.";
-    }
-
-    // Parse the HTML and extract meta tags
-    $metaTags = get_meta_tags($url);
-
-    // Return the extracted meta tags as an associative array
-    return $metaTags;
-}
-
-# Extract URL's from text
 function extractUrls($text) {
-    // Regular expression for URL extraction
     $urlPattern = '/\b(?:https?|ftp):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*[a-z0-9-+&@#\/%=~_|]/i';
-
-    // Array to hold all extracted URLs
     $urls = array();
-
-    // Perform the regular expression match
     if (preg_match_all($urlPattern, $text, $matches)) {
-        // Add all matched URLs to the array
         $urls = $matches[0];
     }
-
     return $urls;
 }
 
-function cleanUrls($text) {
-    // Regular expression for URL extraction
-    $urlPattern = '/\b(?:https?):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*[a-z0-9-+&@#\/%=~_|]/i';
-
-    // Replace URLs with clickable links
-    $text = preg_replace_callback($urlPattern, function($match) {
-        $url = $match[0];
-        if (!empty(shortenUrlToDomain($url))) {
-            return '<a href="' . $url . '" target="_blank">' . shortenUrlToDomain($url) . '</a>';
-        }
-    }, $text);
-
-    return $text;
+function cleanUrls($url) {
+    $urlPattern = '/\b(?:https?|ftp):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*[a-z0-9-+&@#\/%=~_|]/i';
+    $cleanedUrl = preg_replace($urlPattern, '', $url);
+    return $cleanedUrl;
 }
 
 function shortenUrlToDomain($url) {
+    $urlPattern = '/\b(?:https?):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*[a-z0-9-+&@#\/%=~_|]/i';
+    $url = preg_replace_callback($urlPattern, function($match) {
+        $text = $match[0];
+        if (!empty(shortenUrlToDomain($text))) {
+            return shortenUrlToDomain($text);
+        }
+    }, $url);
+    
     $parsedUrl = parse_url($url);
 
     if (isset($parsedUrl['host'])) {
-        $domain = preg_replace('/^www\./i', '', $parsedUrl['host']); // Remove 'www.' if present
-        if (isVideoPlatformUrl($domain) == false) {
-            return $domain;
+        $domain = $parsedUrl['host'];
+        $domain = preg_replace('/^www\./', '', $domain);
+
+        $pageData = getMetaData($url);
+        if (!empty($title)) {
+            $title = $pageData['title'];
+        } else {
+            $title = $domain;
         }
+        if (!empty($description)) {
+            $description = $pageData['description'];
+        } else {
+            $description = "";
+        }
+        if (!empty($image)) {
+            $image = $pageData['image'];
+        } else {
+            $image = "";
+        }
+        if (!empty($favicon)) {
+            $favicon = $pageData['favicon'];
+        } else {
+            $favicon = "";
+        }
+
+        $google_favicon = 'https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://'.$domain.'&size=128';
+
+        if ($domain == in_array($domain, array('skybyn.com', 'skybyn.no'))) {
+            $title = 'Skybyn';
+        }
+        if ($domain == 'google.com') {
+            $query = isset($parsedUrl['query']) ? $parsedUrl['query'] : '';
+            parse_str($query, $params);
+            $q = isset($params['q']) ? $params['q'] : '';
+            $title = 'Google Search';
+            $description = $q;
+        }
+
+        if ($image == "") {
+            if ($favicon == "") {
+                $image = $google_favicon;
+            } else {
+                $image = $favicon;
+            }
+        }
+        
+        $preview = '<div class="post_link_preview" onclick="window.open(\''.$url.'\', \'_blank\')">';
+        $preview_image = '<div class="post_link_preview_image">';
+        $preview_info = '</div><div class="post_link_preview_info">';
+        $preview_title = '<div class="post_link_preview_title">';
+        $preview_description = '</div><div class="post_link_preview_description">';
+        $preview_end = '</div></div></div>';
+        
+        $preview_image .= '<img src="'.$image.'" alt="'.$title.'">';
+        $preview_title .= $title;
+        $preview_description .= $description;
+
+        return $preview.$preview_image.$preview_info.$preview_title.$preview_description.$preview_end;
     } else {
-        return $url; // Return the original URL if the host cannot be extracted.
+        return $url;
     }
+}
+
+function getMetaData($url) {
+    $htmlContent = file_get_contents($url);
+    $doc = new DOMDocument();
+    @$doc->loadHTML($htmlContent);
+    $metaData = [];
+    $metaTags = $doc->getElementsByTagName('meta');
+    foreach ($metaTags as $meta) {
+        if ($meta->hasAttribute('name')) {
+            $metaName = $meta->getAttribute('name');
+            $metaContent = $meta->getAttribute('content');
+            $metaData[$metaName] = $metaContent;
+        }
+    }
+    $title = $doc->getElementsByTagName('title');
+    if ($title->length > 0) {
+        $metaData['title'] = $title->item(0)->textContent;
+    }
+
+    return $metaData;
 }
 
 # Check if URL points to a video platform

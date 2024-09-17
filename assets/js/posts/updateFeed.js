@@ -35,11 +35,9 @@ function createPost() {
     const text = document.getElementById('new_post_input');
     const image = document.getElementById('image_to_share');
     const filesDiv = document.getElementById('new_post_files');
-
-    const formattedText = encodeURIComponent(text.value);
     
     const formData = new FormData();
-    formData.append('text', formattedText);
+    formData.append('text', text.value);
     for (let i = 0; i < image.files.length; i++) {
         formData.append('image[]', image.files[i]);
     }
@@ -127,6 +125,7 @@ function checkPosts(x) {
             }
             if (response.responseCode === 1) {
                 loadMorePosts();
+                lazyLoadLinkPreview();
             } else {
                 const cons_post = document.getElementById('cons_post');
                 if (cons_post) {
@@ -149,12 +148,20 @@ function loadNewPosts(post_id) {
         success: function (response) {
             const postsContainer = document.getElementById('posts');
             postsContainer.insertAdjacentHTML('afterbegin', response);
+            lazyLoadLinkPreview();
         },
         error: function () {
         }
     });
 }
 
+function lazyLoadLinkPreview(x) {
+    const post_urls = post_urls.innerHTML;
+    for (let i = 0; i < x.length; i++) {
+        const link = post_urls[i].innerHTML;
+        console.log(link);
+    }
+}
 
 function loadMorePosts() {
     const countPosts = document.querySelectorAll('div.post');
@@ -168,6 +175,7 @@ function loadMorePosts() {
         success: function (response) {
             const postsContainer = document.getElementById('posts');
             postsContainer.insertAdjacentHTML('beforeend', response);
+            lazyLoadLinkPreview();
         },
         error: function () {
         }

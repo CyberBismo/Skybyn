@@ -22,6 +22,7 @@ if ($post_user_avatar == "./") {
 }
 
 $post_video = convertVideo($post_content);
+$post_links = extractUrls($post_content);
 $post_content_res = fixEmojis(cleanUrls(nl2br($post_content)), 1);
 ?>
 
@@ -57,6 +58,11 @@ $post_content_res = fixEmojis(cleanUrls(nl2br($post_content)), 1);
         <?php if (!empty($post_video)) {?>
         <div class="post_links">
             <?=$post_video?>
+        </div>
+        <?php }?>
+        <?php if (!empty($post_links)) {?>
+        <div class="link_preview">
+            <?=$post_links?>
         </div>
         <?php }?>
         <?php $getUploads = $conn->query("SELECT * FROM `uploads` WHERE `post`='$post_id'");

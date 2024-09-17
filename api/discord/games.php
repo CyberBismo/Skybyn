@@ -1,42 +1,48 @@
-<?php
-
-include '../../assets/conn.php';
-
-header('Content-Type: application/json');
+<?php include '../../assets/conn.php';
 
 if (isset($_GET['update'])) {
-    $games = ["Counter-Strike 2",
-        "Dota 2",
-        "PUBG: BATTLEGROUNDS",
-        "Rust",
+    $games = [
+        "Minecraft",
+        "ROBLOX",
+        "Fortnite",
+        "The Sims 4",
+        "Counter-Strike 2",
+        "League of Legends",
+        "Valorant",
+        "Call of Duty",
         "Grand Theft Auto V",
-        "Path of Exile",
-        "Once Human",
-        "ELDEN RING",
-        "Apex Legends",
-        "Team Fortress 2",
-        "Baldur's Gate 3",
-        "Call of Duty®",
-        "Tom Clancy's Rainbow Six Siege",
-        "War Thunder",
-        "7 Days to Die",
-        "Football Manager 2024",
-        "Stardew Valley",
-        "Crab Game",
-        "The First Descendant",
-        "EA SPORTS FC™ 24"];
-    $conn->query("TRUNCATE TABLE `games`;");
+        "Rocket League"
+    ];
     foreach ($games as $game) {
+        if ($conn->query("SELECT * FROM `discord_games` WHERE `title` = '$game'")->num_rows > 0) {
+            continue;
+        }
         $game = $conn->real_escape_string($game);
-        $conn->query("INSERT INTO games (`title`) VALUES ('$game')");
+        $conn->query("INSERT INTO `discord_games` (`title`,`popular`) VALUES ('$game','1')");
     }
-    header("Location: games.php");
-} else {
-    $getGames = $conn->query("SELECT * FROM games");
+    exit();
+}
+
+if (isset($_GET['popular'])) {
+    $getGames = $conn->query("SELECT * FROM `discord_games` WHERE `popular` = '1' LIMIT 10");
     $games = array();
     while($row = $getGames->fetch_assoc()){
-        $games[] = $row;
+        $games[] = $row['title'];
     }
+
+    header('Content-Type: application/json');
+    echo json_encode($games);
+    return;
+}
+
+if (isset($_GET['custom'])) {
+    $getGames = $conn->query("SELECT * FROM `discord_games` WHERE `popular` = '0' LIMIT 10");
+    $games = array();
+    while($row = $getGames->fetch_assoc()){
+        $games[] = $row['title'];
+    }
+
+    header('Content-Type: application/json');
     echo json_encode($games);
     return;
 }

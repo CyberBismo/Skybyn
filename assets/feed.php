@@ -30,7 +30,8 @@ while ($post = $getPosts->fetch_assoc()) {
     }
 
     $post_video = convertVideo($post_content);
-    $post_content_res = fixEmojis(nl2br(cleanUrls($post_content)), 1);
+    $post_links = extractUrls($post_content);
+    $post_content_res = fixEmojis(cleanUrls(nl2br($post_content)), 1);
 ?>
 
 <?php if (isset($_SESSION['user'])) {?>
@@ -70,6 +71,21 @@ while ($post = $getPosts->fetch_assoc()) {
         <?php if (!empty($post_video)) {?>
         <div class="post_links">
             <?=$post_video?>
+        </div>
+        <?php }?>
+        <?php if (!empty($post_links)) { ?>
+        <div class="link_preview">
+            <?php ?>
+                <div class="post_link_preview" onclick="window.open(<?php ?>,'_blank')">
+                    <div class="post_link_preview_image">
+                        <img src="<?php ?>" alt="<?php ?>">
+                    </div>
+                    <div class="post_link_preview_info">
+                        <div class="post_link_preview_title"><?php ?></div>
+                        <div class="post_link_preview_description"><?php ?></div>
+                    </div>
+                </div>
+            <?php ?>
         </div>
         <?php }?>
         <?php $getUploads = $conn->query("SELECT * FROM `uploads` WHERE `post`='$post_id'");

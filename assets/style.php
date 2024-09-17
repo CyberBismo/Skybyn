@@ -2204,6 +2204,46 @@
                 word-break: break-all;
                 overflow: hidden;
             }
+            .post_link_preview {
+                display: flex;
+                justify-content: left;
+                gap: 10px;
+                height: 100px;
+                margin: 0 -10px;
+                margin-top: 10px;
+                border-radius: 20px;
+                overflow: auto;
+                background: rgba(0,0,0,.1);
+                overflow: hidden;
+                cursor: pointer;
+            }
+            .post_link_preview_image {
+                width: 100px;
+                max-width: 100px;
+                height: 100px;
+                max-height: 100px;
+                border-radius: 10px;
+            }
+            .post_link_preview_image img {
+                width: 100%;
+                height: 100%;
+                padding: 20px;
+                object-fit: cover;
+                box-sizing: border-box;
+            }
+            .post_link_preview_info {
+                padding: 10px;
+                border-radius: 10px;
+                box-sizing: border-box;
+                overflow: hidden;
+            }
+            .post_link_preview_title {
+                line-height: 50px;
+                font-weight: bold;
+            }
+            .post_link_preview_description {
+                font-size: 18px;
+            } 
             .post_full {
                 margin-bottom: 10px;
                 padding-bottom: 30px;
@@ -2281,7 +2321,6 @@
             }
             .post_comments {
                 width: 100%;
-                margin-top: 20px;
                 padding: 0 10px;
                 box-sizing: border-box;
             }
