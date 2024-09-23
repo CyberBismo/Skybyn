@@ -264,6 +264,7 @@ if ($domain == $devDomain) {
                 <?php } else {?>
                 new_post_btn.innerHTML = "Anything new?";
                 <?php }?>
+                new_post_input.value = "";
             } else {
                 new_post.style.display = "block";
                 <?php if (isMobile() == true) {?>
@@ -646,7 +647,7 @@ if ($domain == $devDomain) {
 
         <div class="bottom-nav" id="bottom-nav">
             <div class="bnav-btn" onclick="showSearch()"><i class="fa-solid fa-magnifying-glass"></i></div>
-            <div class="bnav-btn" onclick="newPost()"><i class="fa-solid fa-plus" id="mobile_new_post"></i></div>
+            <div class="bnav-btn" onclick="newPost()" id="mobile_new_post"><i class="fa-solid fa-plus"></i></div>
             <div class="bnav-btn" onclick="showUserMenu(event)"><i class="fa-solid fa-bars"></i></div>
         </div>
 
