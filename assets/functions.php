@@ -193,8 +193,17 @@ function getLinkData($url) {
 
         if (in_array(parse_url($url, PHP_URL_HOST), $ageRestrictedUrls) || isVideoPlatformUrl($url)) {
 
-            $doc = new DOMDocument();
-            @$doc->loadHTML($response);
+            if (!empty($response)) {
+                $doc = new DOMDocument();
+                @$doc->loadHTML($response);
+            } else {
+                return [
+                    'restricted' => false,
+                    'title' => 'No content',
+                    'description' => 'The URL did not return any content.',
+                    'favicon' => '../assets/images/logo_faded_clean.png'
+                ];
+            }
         
             // Get title
             $titleTag = $doc->getElementsByTagName('title')->item(0);
