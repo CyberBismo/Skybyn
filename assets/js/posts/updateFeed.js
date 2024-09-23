@@ -217,9 +217,19 @@ function removeDuplicateIds() {
 function editPost(x) {
     const post = document.getElementById('post_c_'+ x);
     const new_post_input = document.getElementById('new_post_input');
-    new_post_input.value = post.innerHTML;
-    new_post_input.focus();
-    newPost();
+    $.ajax({
+        url: './assets/getPost.php',
+        type: "POST",
+        data: {
+            id : x
+        }
+    }).done(function(response) {
+        if (response.status === "success") {
+            new_post_input.value = response.content;
+            new_post_input.focus();
+            newPost();
+        }
+    });
 }
 
 function deletePost(x) {
