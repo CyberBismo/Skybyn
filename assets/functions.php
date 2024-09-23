@@ -145,8 +145,6 @@ function getLinkData($url) {
     $ageRestrictedUrls = array(
         # Social media
         'facebook.com',
-        'instagram.com',
-
         'tiktok.com',
 
         # Adult content
@@ -168,20 +166,13 @@ function getLinkData($url) {
         'imlive.com',
         'streamate.com',
         'manyvids.com',
-    );
-
-    $videoPlatforms = array(
-        "youtu.be",
-        "youtube.com",
-        "vimeo.com",
-        "tiktok.com",
-        "twitch.tv",
-        "dailymotion.com",
-        "instagram.com/igtv",
-        "d.tube",
-        "9gag.com",
-        "ted.com",
-        "flickr.com"
+        'onlyfans.com',
+        'justfor.fans',
+        'fanpage.com',
+        'fansly.com',
+        'loyalfans.com',
+        'seegore.com',
+        'documentingreality.com',
     );
 
     // Initialize curl
@@ -191,48 +182,85 @@ function getLinkData($url) {
     $response = curl_exec($ch);
     curl_close($ch);
 
-    if (in_array(parse_url($url, PHP_URL_HOST), $ageRestrictedUrls) || isVideoPlatformUrl($url)) {
+    $parsedUrlHost = parse_url($url, PHP_URL_HOST);
+    $parsedUrlHostWithWww = 'www.' . $parsedUrlHost;
+    $parsedUrlHttps = 'https://' . $parsedUrlHost;
 
-        #$doc = new DOMDocument();
-        #@$doc->loadHTML($response);
-    #
-        #// Get title
-        #$titleTag = $doc->getElementsByTagName('title')->item(0);
-        #$title = $titleTag ? $titleTag->nodeValue : '';
-    #
-        #// Get description (meta tag)
-        #$description = '';
-        #$metas = $doc->getElementsByTagName('meta');
-        #foreach ($metas as $meta) {
-        #    if (strtolower($meta->getAttribute('name')) === 'description') {
-        #        $description = $meta->getAttribute('content');
-        #        break;
-        #    }
-        #}
-    #
-        #// Get favicon (link tag)
-        #$favicon = 'https://www.google.com/s2/favicons?sz=128&domain=' . parse_url($url, PHP_URL_HOST);
-#
-        #$date = getUser('id', $_SESSION['user'], 'dob');
-        #$dob = new DateTime($date);
-        #$now = new DateTime();
-        #$age = $now->diff($dob)->y;
-        #
-        #if ($age > 18) {
-        #    $data = [
-        #        'restricted' => true, # This user is over 18 (false)
-        #        'title' => $title,
-        #        'description' => $description,
-        #        'favicon' => $favicon
-        #    ];
-        #} else {
+    if (in_array($parsedUrlHost, $ageRestrictedUrls) || 
+        in_array($parsedUrlHostWithWww, $ageRestrictedUrls) || 
+        in_array($parsedUrlHttps, $ageRestrictedUrls) || 
+        isVideoPlatformUrl($url)) {
+
+        if (in_array(parse_url($url, PHP_URL_HOST), $ageRestrictedUrls) || isVideoPlatformUrl($url)) {
+
+            $doc = new DOMDocument();
+            @$doc->loadHTML($response);
+        
+            // Get title
+            $titleTag = $doc->getElementsByTagName('title')->item(0);
+            $title = $titleTag ? $titleTag->nodeValue : '';
+        
+            // Get description (meta tag)
+            $description = '';
+            $metas = $doc->getElementsByTagName('meta');
+            foreach ($metas as $meta) {
+                if ($meta instanceof DOMElement && strtolower($meta->getAttribute('name')) === 'description') {
+                    $description = $meta->getAttribute('content');
+                    break;
+                }
+            }
+        
+            // Get favicon (link tag)
+            $favicon = 'https://www.google.com/s2/favicons?sz=128&domain=' . parse_url($url, PHP_URL_HOST);
+
+            $date = getUser('id', $_SESSION['user'], 'dob');
+            $dob = new DateTime($date);
+            $now = new DateTime();
+            $age = $now->diff($dob)->y;
+            
+            if ($age > 18) {
+                $data = [
+                    'restricted' => true, # This user is over 18 (false)
+                    'title' => $title,
+                    'description' => $description,
+                    'favicon' => $favicon
+                ];
+            } else {
+                $data = [
+                    'restricted' => true,
+                    'title' => 'Restricted content',
+                    'description' => 'This content is restricted and cannot be displayed.',
+                    'favicon' => '../assets/images/logo_faded_clean.png'
+                ];
+            }
+        } else {
+            $doc = new DOMDocument();
+            @$doc->loadHTML($response);
+
+            // Get title
+            $titleTag = $doc->getElementsByTagName('title')->item(0);
+            $title = $titleTag ? $titleTag->nodeValue : '';
+
+            // Get description (meta tag)
+            $description = '';
+            $metas = $doc->getElementsByTagName('meta');
+            foreach ($metas as $meta) {
+                if ($meta instanceof DOMElement && strtolower($meta->getAttribute('name')) === 'description') {
+                    $description = $meta->getAttribute('content');
+                    break;
+                }
+            }
+
+            // Get favicon (link tag)
+            $favicon = 'https://www.google.com/s2/favicons?sz=128&domain=' . parse_url($url, PHP_URL_HOST);
+
             $data = [
-                'restricted' => true,
-                'title' => 'Restricted content',
-                'description' => 'This content is restricted and cannot be displayed.',
-                'favicon' => '../assets/images/logo_faded_clean.png'
+                'restricted' => false,
+                'title' => $title,
+                'description' => $description,
+                'favicon' => $favicon
             ];
-        #}
+        }
     } else {
         $doc = new DOMDocument();
         @$doc->loadHTML($response);
