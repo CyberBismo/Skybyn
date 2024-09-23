@@ -509,7 +509,7 @@
     {
         "600199": {
             "ip": "147.161.147.106",
-            "time": "2024-09-23T08:15:24.802Z",
+            "time": "2024-09-23T09:45:27.385Z",
             "platform": "Win32",
             "screenWidth": 1920,
             "screenHeight": 1200,
@@ -546,7 +546,7 @@
             "connection": {
                 "effectiveType": "4g",
                 "downlink": 10,
-                "rtt": 0,
+                "rtt": 50,
                 "saveData": false
             },
             "deviceMemory": 8
@@ -640,6 +640,142 @@
             "connection": {
                 "effectiveType": "4g",
                 "downlink": 3.15,
+                "rtt": 150,
+                "saveData": false
+            },
+            "deviceMemory": 8
+        }
+    },
+    {
+        "846099": {
+            "ip": "46.46.202.64",
+            "time": "2024-09-23T08:25:03.257Z",
+            "platform": "Linux armv81",
+            "screenWidth": 345,
+            "screenHeight": 883,
+            "screenResolution": "345x883",
+            "windowDevicePixelRatio": 2.625,
+            "windowLocation": {
+                "href": "https:\/\/dev.skybyn.no\/",
+                "origin": "https:\/\/dev.skybyn.no",
+                "protocol": "https:",
+                "host": "dev.skybyn.no",
+                "hostname": "dev.skybyn.no",
+                "port": "",
+                "pathname": "\/",
+                "search": "",
+                "hash": ""
+            },
+            "browser": {
+                "appName": "Netscape",
+                "appVersion": "5.0 (Linux; Android 10; K) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/128.0.0.0 Mobile Safari\/537.36 EdgA\/128.0.0.0",
+                "product": "Gecko",
+                "userAgent": "Mozilla\/5.0 (Linux; Android 10; K) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/128.0.0.0 Mobile Safari\/537.36 EdgA\/128.0.0.0",
+                "vendor": "Google Inc.",
+                "cookieEnabled": true,
+                "doNotTrack": "1",
+                "hardwareConcurrency": 8
+            },
+            "languages": [
+                "en-GB",
+                "nb-NO",
+                "nb",
+                "en-US",
+                "en",
+                "pt-BR"
+            ],
+            "connection": {
+                "effectiveType": "4g",
+                "downlink": 1.75,
+                "rtt": 100,
+                "saveData": false
+            },
+            "deviceMemory": 8
+        }
+    },
+    {
+        "435863": {
+            "ip": "104.197.69.115",
+            "time": "2024-09-23T08:30:52.727Z",
+            "platform": "Linux x86_64",
+            "screenWidth": 800,
+            "screenHeight": 600,
+            "screenResolution": "800x600",
+            "windowDevicePixelRatio": 1,
+            "windowLocation": {
+                "href": "https:\/\/dev.skybyn.com\/",
+                "origin": "https:\/\/dev.skybyn.com",
+                "protocol": "https:",
+                "host": "dev.skybyn.com",
+                "hostname": "dev.skybyn.com",
+                "port": "",
+                "pathname": "\/",
+                "search": "",
+                "hash": ""
+            },
+            "browser": {
+                "appName": "Netscape",
+                "appVersion": "5.0 (X11; Linux x86_64) AppleWebKit\/537.36 (KHTML, like Gecko) HeadlessChrome\/92.0.4515.159 Safari\/537.36",
+                "product": "Gecko",
+                "userAgent": "Mozilla\/5.0 (X11; Linux x86_64) AppleWebKit\/537.36 (KHTML, like Gecko) HeadlessChrome\/92.0.4515.159 Safari\/537.36",
+                "vendor": "Google Inc.",
+                "cookieEnabled": true,
+                "doNotTrack": null,
+                "hardwareConcurrency": 16
+            },
+            "languages": [
+                "en-US"
+            ],
+            "connection": {
+                "effectiveType": "4g",
+                "downlink": 9.9,
+                "rtt": 0,
+                "saveData": false
+            },
+            "deviceMemory": 8
+        }
+    },
+    {
+        "933301": {
+            "ip": "46.46.202.64",
+            "time": "2024-09-23T08:57:45.594Z",
+            "platform": "Linux armv81",
+            "screenWidth": 345,
+            "screenHeight": 883,
+            "screenResolution": "345x883",
+            "windowDevicePixelRatio": 2.625,
+            "windowLocation": {
+                "href": "https:\/\/dev.skybyn.no\/",
+                "origin": "https:\/\/dev.skybyn.no",
+                "protocol": "https:",
+                "host": "dev.skybyn.no",
+                "hostname": "dev.skybyn.no",
+                "port": "",
+                "pathname": "\/",
+                "search": "",
+                "hash": ""
+            },
+            "browser": {
+                "appName": "Netscape",
+                "appVersion": "5.0 (Linux; Android 10; K) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/128.0.0.0 Mobile Safari\/537.36 EdgA\/128.0.0.0",
+                "product": "Gecko",
+                "userAgent": "Mozilla\/5.0 (Linux; Android 10; K) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/128.0.0.0 Mobile Safari\/537.36 EdgA\/128.0.0.0",
+                "vendor": "Google Inc.",
+                "cookieEnabled": true,
+                "doNotTrack": "1",
+                "hardwareConcurrency": 8
+            },
+            "languages": [
+                "en-GB",
+                "nb-NO",
+                "nb",
+                "en-US",
+                "en",
+                "pt-BR"
+            ],
+            "connection": {
+                "effectiveType": "4g",
+                "downlink": 2.75,
                 "rtt": 150,
                 "saveData": false
             },

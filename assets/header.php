@@ -90,7 +90,7 @@ if ($domain == $devDomain) {
             <div class="top-nav">
                 <ul>
                     <?php if (isMobile() == true) {?>
-                    <li onclick="showLeftPanel()"><i class="fa-solid fa-list-ul"></i></li>
+                    <li onclick="showLeftPanel()"><i class="fa-solid fa-star"></i></li>
                     <?php } else {?>
                     <li onclick="showNotifications(event)" id="notification">
                         <div class="notification_alert" id="noti_alert"><i class="fa-solid fa-circle-exclamation"></i></div>

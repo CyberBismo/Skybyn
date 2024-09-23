@@ -12,19 +12,26 @@ $post_user = $post['user'];
 $post_content = $post['content'];
 $post_created = date("d M. y H:i:s", $post['created']);
 
+$getComments = $conn->query("SELECT * FROM `comments` WHERE `post`='$post_id'");
+$comments = $getComments->num_rows;
+
 $getPostUser = $conn->query("SELECT * FROM `users` WHERE `id`='$post_user'");
 $postUser = $getPostUser->fetch_assoc();
-
 $post_user_name = $postUser['username'];
-$post_user_avatar = "./" . $postUser['avatar'];
-
+$post_user_avatar = "./".$postUser['avatar'];
 if ($post_user_avatar == "./") {
     $post_user_avatar = "./assets/images/logo_faded_clean.png";
 }
 
 $post_video = convertVideo($post_content);
+$post_links = extractUrls($post_content);
 $post_content_res = fixEmojis(cleanUrls(nl2br($post_content)), 1);
 ?>
+
+<?php if (isset($_SESSION['user'])) {?>
+<script src="assets/js/posts/updateFeed.js"></script>
+<script src="assets/js/comments/updateComments.js"></script>
+<?php }?>
 
 <div class="post_header">
     <div class="post_details">
@@ -36,26 +43,55 @@ $post_content_res = fixEmojis(cleanUrls(nl2br($post_content)), 1);
         </div>
         <div class="post_date"><?=$post_created?></div>
     </div>
-    <div class="post_actions">
+    <div class="post_actions" onclick="showPostActions(<?=$post_id?>)">
         <i class="fa-solid fa-ellipsis-vertical"></i>
-        <div class="post_action_list" hidden>
+        <div class="post_action_list" id="pal_<?=$post_id?>" hidden>
             <?php if ($post_user == $uid || $rank > 0) {?>
             <div class="post_action" onclick="editPost(<?=$post_id?>)">
-                <i class="fa-solid fa-pen-to-square"></i> Edit
+                <i class="fa-solid fa-pen-to-square"></i><span>Edit</span>
             </div>
             <div class="post_action" onclick="deletePost(<?=$post_id?>)">
-                <i class="fa-solid fa-trash"></i> Delete
+                <i class="fa-solid fa-trash"></i><span>Delete</span>
             </div>
             <?php }?>
         </div>
     </div>
 </div>
-<div class="post_content">
+<div class="post_content" id="post_c_<?=$post_id?>">
     <?=$post_content_res?>
 </div>
 <?php if (!empty($post_video)) {?>
 <div class="post_links">
     <?=$post_video?>
+</div>
+<?php }?>
+<?php if (!empty($post_links)) { ?>
+<div class="link_preview">
+    <?php for ($i = 0; $i < count($post_links); $i++) {
+        if ($i <= count($post_links)) {
+            if (strpos($post_links[$i], "http") === false) {
+                $post_links[$i] = "http://".$post_links[$i];
+            }
+            $urlData = getLinkData($post_links[$i]);
+            $urlRestricted = $urlData['restricted'];
+            $urlLogo = $urlData['favicon'];
+            $urlTitle = $urlData['title'];
+            $urlDescription = $urlData['description'];
+
+            if ($urlRestricted == 0) {
+        ?>
+        <div class="post_link_preview">
+            <div class="post_link_preview_image">
+                <img src="<?=$urlLogo?>" alt="">
+            </div>
+            <div class="post_link_preview_info">
+                <div class="post_link_preview_title"><?=$urlTitle?></div>
+                <div class="post_link_preview_description"><?=$urlDescription?></div>
+            </div>
+        </div>
+        <?php }
+        }
+    }?>
 </div>
 <?php }?>
 <div class="post_comments">

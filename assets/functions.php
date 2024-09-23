@@ -143,9 +143,13 @@ function extractUrls($text) {
 function getLinkData($url) {
 
     $ageRestrictedUrls = array(
+        # Social media
         'facebook.com',
         'instagram.com',
+
         'tiktok.com',
+
+        # Adult content
         'pornhub.com',
         'xvideos.com',
         'xhamster.com',
@@ -166,6 +170,20 @@ function getLinkData($url) {
         'manyvids.com',
     );
 
+    $videoPlatforms = array(
+        "youtu.be",
+        "youtube.com",
+        "vimeo.com",
+        "tiktok.com",
+        "twitch.tv",
+        "dailymotion.com",
+        "instagram.com/igtv",
+        "d.tube",
+        "9gag.com",
+        "ted.com",
+        "flickr.com"
+    );
+
     // Initialize curl
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
@@ -173,7 +191,7 @@ function getLinkData($url) {
     $response = curl_exec($ch);
     curl_close($ch);
 
-    if (in_array(parse_url($url, PHP_URL_HOST), $ageRestrictedUrls)) {
+    if (in_array(parse_url($url, PHP_URL_HOST), $ageRestrictedUrls) || isVideoPlatformUrl($url)) {
 
         #$doc = new DOMDocument();
         #@$doc->loadHTML($response);

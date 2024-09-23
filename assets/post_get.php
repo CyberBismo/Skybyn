@@ -79,11 +79,7 @@ $post_content_res = fixEmojis(cleanUrls(nl2br($post_content)), 1);
                     $urlTitle = $urlData['title'];
                     $urlDescription = $urlData['description'];
 
-                    if ($urlRestricted == 1) {
-                        $urlLogo = "./assets/images/logo_faded_clean.png";
-                        $urlTitle = "Restricted content";
-                        $urlDescription = "This content is restricted and cannot be displayed.";
-                    }
+                    if ($urlRestricted == 0) {
                 ?>
                 <div class="post_link_preview">
                     <div class="post_link_preview_image">
@@ -94,7 +90,9 @@ $post_content_res = fixEmojis(cleanUrls(nl2br($post_content)), 1);
                         <div class="post_link_preview_description"><?=$urlDescription?></div>
                     </div>
                 </div>
-            <?php }}?>
+                <?php }
+                }
+            }?>
         </div>
         <?php }?>
         <?php $getUploads = $conn->query("SELECT * FROM `uploads` WHERE `post`='$post_id'");
