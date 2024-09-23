@@ -264,7 +264,7 @@ if ($domain == $devDomain) {
                 <?php } else {?>
                 new_post_btn.innerHTML = "Anything new?";
                 <?php }?>
-                new_post_input.value = "";
+                new_post_input.innerHTML = "";
             } else {
                 new_post.style.display = "block";
                 <?php if (isMobile() == true) {?>
