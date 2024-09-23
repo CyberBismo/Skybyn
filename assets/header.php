@@ -117,7 +117,8 @@ if ($domain == $devDomain) {
             <ul>
                 <li onclick="window.location.href='./'"><i class="fa-solid fa-house"></i>Home</li>
                 <li onclick="window.location.href='./profile'"><i class="fa-solid fa-user"></i></i>Profile</li>
-                <?php if ($rank > 0) {?>
+                <?php if (isset($rank)) {
+                if ($rank > 0) {?>
                 <li><i class="fa-solid fa-people-group"></i>Groups</li>
                 <?php }?>
                 <?php if ($rank > 0) {?>
@@ -129,7 +130,7 @@ if ($domain == $devDomain) {
                 <li onclick="window.location.href='./settings'"><i class="fa-solid fa-gears"></i>Settings</li>
                 <?php if ($rank > 0) {?>
                 <li class="balance"><i class="fa-solid fa-coins"></i><?=$wallet?></li>
-                <?php }?>
+                <?php }}?>
                 <hr>
                 <li onclick="window.location.href='./logout.php'"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</li>
             </ul>
@@ -144,7 +145,9 @@ if ($domain == $devDomain) {
                 <div class="create_post_actions_top">
                     <div class="create_post_user">
                         <img src="<?=$avatar?>">
+                        <?php if (isset($username)) {?>
                         <div><?=$username?></div>
+                        <?php }?>
                     </div>
                     <i class="fa-solid fa-paper-plane share" id="create_post_btn" onclick="createPost()"></i>
                 </div>
@@ -315,7 +318,7 @@ if ($domain == $devDomain) {
 
         <div class="left-panel" id="left-panel">
 
-            <?php if ($rank > 3) {?>
+            <?php if (isset($rank) && $rank > 3) {?>
             <div class="shortcuts music">
                 <h3><i class="fa-solid fa-music"></i><div>Music</div><i class="fa-solid fa-record-vinyl" onclick="window.location.href='./music?upload'" title="Add to music"></i></h3>
                 <div id="my-music">
@@ -337,7 +340,7 @@ if ($domain == $devDomain) {
             </div>
             <?php }?>
 
-            <?php if ($rank > 3) {?>
+            <?php if (isset($rank) && $rank > 3) {?>
             <div class="shortcuts gaming">
                 <h3><i class="fa-solid fa-gamepad"></i><div>Gaming</div><i></i></h3>
                 <div id="my-games">
@@ -359,7 +362,7 @@ if ($domain == $devDomain) {
             </div>
             <?php }?>
 
-            <?php if ($rank > 3) {?>
+            <?php if (isset($rank) && $rank > 3) {?>
             <div class="shortcuts events">
                 <h3><i class="fa-solid fa-calendar-days"></i><div>Events</div><i class="fa-regular fa-calendar-plus" onclick="window.location.href='./event?new'" title="Create new event"></i></h3>
                 <div id="my-events">
@@ -381,7 +384,7 @@ if ($domain == $devDomain) {
             </div>
             <?php }?>
 
-            <?php if ($rank > 3) {?>
+            <?php if (isset($rank) && $rank > 3) {?>
             <div class="shortcuts groups">
                 <h3><i class="fa-solid fa-comments"></i><div>Groups</div><i class="fa-solid fa-comment-medical" onclick="window.location.href='/group?new'" title="Create new group"></i></h3>
                 <div id="my-groups">
@@ -420,7 +423,7 @@ if ($domain == $devDomain) {
             </div>
             <?php }?>
 
-            <?php if ($rank > 3) {?>
+            <?php if (isset($rank) && $rank > 3) {?>
             <div class="shortcuts pages">
                 <h3><i class="fa-regular fa-newspaper"></i><div>Pages</div><i class="fa-solid fa-file-circle-plus" onclick="window.location.href='/page?new'" title="Create new page"></i></h3>
                 <div id="my-pages">
@@ -450,7 +453,7 @@ if ($domain == $devDomain) {
             </div>
             <?php }?>
 
-            <?php if ($rank > 3) {?>
+            <?php if (isset($rank) && $rank > 3) {?>
             <div class="shortcuts markets">
                 <h3><i class="fa-solid fa-store"></i><div>Markets</div><i class="fa-solid fa-cash-register" onclick="window.location.href='./market?new'" title="Sell on market"></i></h3>
                 <div id="my-markets">
@@ -472,7 +475,7 @@ if ($domain == $devDomain) {
             </div>
             <?php }?>
 
-            <?php if ($rank > 3) {?>
+            <?php if (isset($rank) && $rank > 3) {?>
             <div class="shortcuts terminal">
                 <h3><i class="fa-solid fa-terminal"></i><div>Terminal</div><i class="fa-solid fa-delete-left" onclick="clearConsole()"></i></h3>
                 <span id="console_countdown"></span>
@@ -599,8 +602,8 @@ if ($domain == $devDomain) {
                 </div>
                 <div class="friend-referral" id="fr">
                     <h3 onclick="expandFR()">Refer a friend</h3>
-                    <div class="fr_code" id="frc" <?php if($referral == "error") {?>onclick="genRef()"<?php }?>>
-                        <?php if($referral == "error") {?>Generate code<?php } else { echo $referral;}?>
+                    <div class="fr_code" id="frc" <?php if(isset($referral) && $referral == "error") {?>onclick="genRef()"<?php }?>>
+                        <?php if(isset($referral)) { if($referral == "error") {?>Generate code<?php } else { echo $referral;}}?>
                     </div>
                     <div class="fr_info" onclick="friExpand()">
                         <i class="fa-regular fa-circle-question"></i> What is this? <span id="fri">+</span>

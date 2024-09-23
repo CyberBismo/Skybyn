@@ -515,6 +515,7 @@
                 color: white;
                 backdrop-filter: blur(5px);
                 transition: transform .5s;
+                overflow-y: auto;
                 z-index: 3;
             }
             <?php if (isMobile() == false) {?>
@@ -530,9 +531,9 @@
             <?php } else {?>
             .left-panel,
             .right-panel {
-                width: 90%;
+                width: 100%;
                 height: calc(100% - 75px);
-                background: rgba(var(--dark),.3);
+                background: rgba(var(--dark),.1);
             }
             <?php }?>
             
@@ -558,11 +559,11 @@
                 transform: scale(1.1);
             }
             .left-panel-open {
-                border-top: 1px solid rgba(255,255,255,.3);
+                /** border-top: 1px solid rgba(255,255,255,.3);
                 border-right: 1px solid rgba(255,255,255,.3);
                 border-bottom: 1px solid rgba(255,255,255,.3);
                 border-top-right-radius: 10px;
-                border-bottom-right-radius: 10px;
+                border-bottom-right-radius: 10px; */
             }
             
             .right-panel {
@@ -576,11 +577,11 @@
             }
             .right-panel-open {
                 right: 0;
-                border-top: 1px solid rgba(255,255,255,.3);
+                /** border-top: 1px solid rgba(255,255,255,.3);
                 border-left: 1px solid rgba(255,255,255,.3);
                 border-bottom: 1px solid rgba(255,255,255,.3);
                 border-top-left-radius: 10px;
-                border-bottom-left-radius: 10px;
+                border-bottom-left-radius: 10px; */
             }
 
             .left-panel-open,
@@ -2920,8 +2921,8 @@
             }
             #console {
                 width: calc(100% - 20px);
-                height: 300px;
-                max-height: 300px;
+                height: auto;
+                max-height: 200px;
                 margin: 0 auto;
                 padding: 10px;
                 color: White;

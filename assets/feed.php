@@ -125,7 +125,7 @@ while ($post = $getPosts->fetch_assoc()) {
                     <div class="post_comment_user_avatar">
                         <img src="<?=$avatar?>">
                     </div>
-                    <span><?=$username?></span>
+                    <span><?php if(isset($username)) {echo $username;}?></span>
                 </div>
                 <div class="post_comment_content"><input type="text" id="pc_<?=$post_id?>" onkeydown="hitEnter(this,<?=$post_id?>)" placeholder="Write a comment"></div>
                 <div class="post_comment_actions">
