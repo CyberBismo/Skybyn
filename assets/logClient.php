@@ -10,7 +10,7 @@ if (!file_exists($path)) {
 }
 
 $fileContent = file_get_contents($path.$file);
-$clients = json_decode($fileContent, true);
+$clients = json_decode($fileContent, true) ?? [];
 
 if (isset($_SESSION['client'])) {
     $cid = $_SESSION['client'];
@@ -90,7 +90,7 @@ file_put_contents($path.$file, $fileContent);
 
 $data = [
     'responseCode' => 1,
-    'message' => "Client info saved.",
+    'message' => "Client info saved/updated.",
     'client' => $cid
 ];
 header('Content-Type: application/json; charset=utf-8');

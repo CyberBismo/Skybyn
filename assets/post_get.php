@@ -23,8 +23,14 @@ if ($post_user_avatar == "./") {
 }
 
 $post_video = convertVideo($post_content);
+$post_links = extractUrls($post_content);
 $post_content_res = fixEmojis(cleanUrls(nl2br($post_content)), 1);
 ?>
+
+<?php if (isset($_SESSION['user'])) {?>
+<script src="assets/js/posts/updateFeed.js"></script>
+<script src="assets/js/comments/updateComments.js"></script>
+<?php }?>
 
 <div class="post" id="post_<?=$post_id?>">
     <div class="post_body">
@@ -52,22 +58,52 @@ $post_content_res = fixEmojis(cleanUrls(nl2br($post_content)), 1);
                 </div>
             </div>
         </div>
-        <div id="post_c_<?=$post_id?>" hidden><?=$post_content?></div>
-        <div class="post_content">
+        <div class="post_content" id="post_c_<?=$post_id?>">
             <?=$post_content_res?>
         </div>
+        <?php if (!empty($post_video)) {?>
         <div class="post_links">
             <?=$post_video?>
         </div>
-        <div class="post_uploads">
-            <?php $getUploads = $conn->query("SELECT * FROM `uploads` WHERE `post`='$post_id'");
-            if ($getUploads->num_rows > 0) {
-                while($upload = $getUploads->fetch_assoc()) {
-                    $file = $upload['file_url'];?>
-                <img src="<?=$file?>">
+        <?php }?>
+        <?php if (!empty($post_links)) { ?>
+        <div class="link_preview">
+            <?php for ($i = 0; $i < count($post_links); $i++) {
+                if ($i <= count($post_links)) {
+                    if (strpos($post_links[$i], "http") === false) {
+                        $post_links[$i] = "http://".$post_links[$i];
+                    }
+                    $urlData = getLinkData($post_links[$i]);
+                    $urlLogo = $urlData['favicon'];
+                    $urlTitle = $urlData['title'];
+                    $urlDescription = $urlData['description'];
+                ?>
+                <div class="post_link_preview">
+                    <div class="post_link_preview_image">
+                        <img src="<?=$urlLogo?>" alt="">
+                    </div>
+                    <div class="post_link_preview_info">
+                        <div class="post_link_preview_title"><?=$urlTitle?></div>
+                        <div class="post_link_preview_description"><?=$urlDescription?></div>
+                    </div>
+                </div>
             <?php }}?>
         </div>
-        <i><?=$comment_count?> comment(s)</i>
+        <?php }?>
+        <?php $getUploads = $conn->query("SELECT * FROM `uploads` WHERE `post`='$post_id'");
+        if ($getUploads->num_rows > 0) {?>
+        <div class="post_uploads" id="post_u_<?=$post_id?>">
+            <div class="post_gallery" id="post_g_<?=$post_id?>">
+                <?php while($upload = $getUploads->fetch_assoc()) {
+                    $file = $upload['file_url'];?>
+                <img src="<?=$file?>" onclick="showImage(<?=$post_id?>)">
+            <?php }?>
+            </div>
+        </div>
+        <div class="post_expand" id="post_expand" onclick="expandPost(<?=$post_id?>)">
+            Show more
+        </div>
+        <?php }?>
         <div class="post_comments">
             <div class="post_comment_post">
                 <div class="post_comment_post_user">

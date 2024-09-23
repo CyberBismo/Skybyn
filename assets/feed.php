@@ -75,17 +75,26 @@ while ($post = $getPosts->fetch_assoc()) {
         <?php }?>
         <?php if (!empty($post_links)) { ?>
         <div class="link_preview">
-            <?php ?>
-                <div class="post_link_preview" onclick="window.open(<?php ?>,'_blank')">
+            <?php for ($i = 0; $i < count($post_links); $i++) {
+                if ($i <= count($post_links)) {
+                    if (strpos($post_links[$i], "http") === false) {
+                        $post_links[$i] = "http://".$post_links[$i];
+                    }
+                    $urlData = getLinkData($post_links[$i]);
+                    $urlLogo = $urlData['favicon'];
+                    $urlTitle = $urlData['title'];
+                    $urlDescription = $urlData['description'];
+                ?>
+                <div class="post_link_preview">
                     <div class="post_link_preview_image">
-                        <img src="<?php ?>" alt="<?php ?>">
+                        <img src="<?=$urlLogo?>" alt="">
                     </div>
                     <div class="post_link_preview_info">
-                        <div class="post_link_preview_title"><?php ?></div>
-                        <div class="post_link_preview_description"><?php ?></div>
+                        <div class="post_link_preview_title"><?=$urlTitle?></div>
+                        <div class="post_link_preview_description"><?=$urlDescription?></div>
                     </div>
                 </div>
-            <?php ?>
+            <?php }}?>
         </div>
         <?php }?>
         <?php $getUploads = $conn->query("SELECT * FROM `uploads` WHERE `post`='$post_id'");

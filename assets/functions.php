@@ -140,6 +140,59 @@ function extractUrls($text) {
     return $urls;
 }
 
+function getLinkData($url) {
+
+    // Initialize curl
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    // Load HTML to DOMDocument
+    $doc = new DOMDocument();
+    @$doc->loadHTML($response);
+
+    // Get title
+    $titleTag = $doc->getElementsByTagName('title')->item(0);
+    $title = $titleTag ? $titleTag->nodeValue : 'No title found';
+
+    // Get description (meta tag)
+    $description = '';
+    $metas = $doc->getElementsByTagName('meta');
+    foreach ($metas as $meta) {
+        if (strtolower($meta->getAttribute('name')) === 'description') {
+            $description = $meta->getAttribute('content');
+            break;
+        }
+    }
+
+    // Get favicon (link tag)
+    $favicon = '';
+    $links = $doc->getElementsByTagName('link');
+    foreach ($links as $link) {
+        if (strpos($link->getAttribute('rel'), 'icon') !== false) {
+            $favicon = $link->getAttribute('href');
+            if (!preg_match('/^http/', $favicon)) {
+                // Handle relative URL for favicon
+                $favicon = rtrim($url, '/') . '/' . ltrim($favicon, '/');
+            }
+            break;
+        }
+    }
+
+    if (empty($favicon)) {
+        $favicon = 'https://www.google.com/s2/favicons?sz=128&domain=' . parse_url($url, PHP_URL_HOST);
+    }
+
+    // Return the fetched data
+    return [
+        'title' => $title,
+        'description' => $description ?: 'No description found',
+        'favicon' => $favicon
+    ];
+}
+
 function cleanUrls($url) {
     $urlPattern = '/\b(?:https?|ftp):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*[a-z0-9-+&@#\/%=~_|]/i';
     $cleanedUrl = preg_replace($urlPattern, '', $url);

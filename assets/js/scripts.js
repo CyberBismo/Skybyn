@@ -68,17 +68,20 @@ function logClientInfo() {
             clientInfo: JSON.stringify(clientInfo)
         },
         success: function(response) {
-            setTimeout(() => {
-                logClientInfo();
-            }, 1000);
-            //console.log(response['message']+'\n'+response['client']);
+            //console.log(response
         },
         error: function(error) {
-            //console.error('Error logging client information:', error);
+            console.error('Error:', error);
         }
     });
 }
-logClientInfo();
+setInterval(() => {
+    logClientInfo();
+}, 1000);
+
+//document.addEventListener('mousemove', logClientInfo);
+//document.addEventListener('keydown', logClientInfo);
+//document.addEventListener('click', logClientInfo);
 
 // Prioritixe loading speed by loading images "lazy"
 document.addEventListener("DOMContentLoaded", function() {

@@ -145,13 +145,31 @@
                                         nlh.innerHTML = response.message;
                                         window.location.href = "./";
                                     } else {
-                                        lmsg.innerHTML = response.message;
+                                        nlh.innerHTML = response.message;
                                         setTimeout(() => {
-                                            lmsg.innerHTML = null;
+                                            nlh.innerHTML = "Sign in";
                                         }, 3000);
+                                        normal_login.style.opacity = "1";
+                                        normal_login.style.pointerEvents = "auto";
+                                        normal_login.style.userSelect = "auto";
+                                        normal_login.style.cursor = "auto";
                                     }
                                 },
+                                error: function() {
+                                    nlh.innerHTML = "An error occurred. Please try again.";
+                                    setTimeout(() => {
+                                        nlh.innerHTML = "Sign in";
+                                    }, 3000);
+                                    normal_login.style.opacity = "1";
+                                    normal_login.style.pointerEvents = "auto";
+                                    normal_login.style.userSelect = "auto";
+                                    normal_login.style.cursor = "auto";
+                                },
                                 complete: function() {
+                                    normal_login.style.opacity = "1";
+                                    normal_login.style.pointerEvents = "auto";
+                                    normal_login.style.userSelect = "auto";
+                                    normal_login.style.cursor = "auto";
                                 }
                             });
                         }

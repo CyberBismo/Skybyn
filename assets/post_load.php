@@ -26,6 +26,11 @@ $post_links = extractUrls($post_content);
 $post_content_res = fixEmojis(cleanUrls(nl2br($post_content)), 1);
 ?>
 
+<?php if (isset($_SESSION['user'])) {?>
+<script src="assets/js/posts/updateFeed.js"></script>
+<script src="assets/js/comments/updateComments.js"></script>
+<?php }?>
+
 <div class="post" id="post_<?=$post_id?>">
     <div class="post_body">
         <div class="post_header">
@@ -60,9 +65,28 @@ $post_content_res = fixEmojis(cleanUrls(nl2br($post_content)), 1);
             <?=$post_video?>
         </div>
         <?php }?>
-        <?php if (!empty($post_links)) {?>
+        <?php if (!empty($post_links)) { ?>
         <div class="link_preview">
-            <?=$post_links?>
+            <?php for ($i = 0; $i < count($post_links); $i++) {
+                if ($i <= count($post_links)) {
+                    if (strpos($post_links[$i], "http") === false) {
+                        $post_links[$i] = "http://".$post_links[$i];
+                    }
+                    $urlData = getLinkData($post_links[$i]);
+                    $urlLogo = $urlData['favicon'];
+                    $urlTitle = $urlData['title'];
+                    $urlDescription = $urlData['description'];
+                ?>
+                <div class="post_link_preview">
+                    <div class="post_link_preview_image">
+                        <img src="<?=$urlLogo?>" alt="">
+                    </div>
+                    <div class="post_link_preview_info">
+                        <div class="post_link_preview_title"><?=$urlTitle?></div>
+                        <div class="post_link_preview_description"><?=$urlDescription?></div>
+                    </div>
+                </div>
+            <?php }}?>
         </div>
         <?php }?>
         <?php $getUploads = $conn->query("SELECT * FROM `uploads` WHERE `post`='$post_id'");
