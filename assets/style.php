@@ -2219,18 +2219,18 @@
                 cursor: pointer;
             }
             .post_link_preview_image {
-                width: 100px;
-                max-width: 100px;
-                height: 100px;
+                width: auto;
+                max-width: 300px;
+                height: auto;
                 max-height: 100px;
+                padding: 0 20px;
                 border-radius: 10px;
+                box-sizing: border-box;
             }
             .post_link_preview_image img {
-                width: 100%;
+                width: auto;
                 height: 100%;
-                padding: 20px;
                 object-fit: cover;
-                box-sizing: border-box;
             }
             .post_link_preview_info {
                 padding: 10px;

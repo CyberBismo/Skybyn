@@ -73,9 +73,16 @@ $post_content_res = fixEmojis(cleanUrls(nl2br($post_content)), 1);
                         $post_links[$i] = "http://".$post_links[$i];
                     }
                     $urlData = getLinkData($post_links[$i]);
+                    $urlRestricted = $urlData['restricted'];
                     $urlLogo = $urlData['favicon'];
                     $urlTitle = $urlData['title'];
                     $urlDescription = $urlData['description'];
+
+                    if ($urlRestricted == 1) {
+                        $urlLogo = "./assets/images/logo_faded_clean.png";
+                        $urlTitle = "Restricted content";
+                        $urlDescription = "This content is restricted and cannot be displayed.";
+                    }
                 ?>
                 <div class="post_link_preview">
                     <div class="post_link_preview_image">

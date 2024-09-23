@@ -142,6 +142,30 @@ function extractUrls($text) {
 
 function getLinkData($url) {
 
+    $ageRestrictedUrls = array(
+        'facebook.com',
+        'instagram.com',
+        'tiktok.com',
+        'pornhub.com',
+        'xvideos.com',
+        'xhamster.com',
+        'redtube.com',
+        'youporn.com',
+        'xnxx.com',
+        'brazzers.com',
+        'chaturbate.com',
+        'livejasmin.com',
+        'myfreecams.com',
+        'camsoda.com',
+        'stripchat.com',
+        'bongacams.com',
+        'cam4.com',
+        'flirt4free.com',
+        'imlive.com',
+        'streamate.com',
+        'manyvids.com',
+    );
+
     // Initialize curl
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
@@ -149,33 +173,78 @@ function getLinkData($url) {
     $response = curl_exec($ch);
     curl_close($ch);
 
-    // Load HTML to DOMDocument
-    $doc = new DOMDocument();
-    @$doc->loadHTML($response);
+    if (in_array(parse_url($url, PHP_URL_HOST), $ageRestrictedUrls)) {
 
-    // Get title
-    $titleTag = $doc->getElementsByTagName('title')->item(0);
-    $title = $titleTag ? $titleTag->nodeValue : 'No title found';
+        #$doc = new DOMDocument();
+        #@$doc->loadHTML($response);
+    #
+        #// Get title
+        #$titleTag = $doc->getElementsByTagName('title')->item(0);
+        #$title = $titleTag ? $titleTag->nodeValue : '';
+    #
+        #// Get description (meta tag)
+        #$description = '';
+        #$metas = $doc->getElementsByTagName('meta');
+        #foreach ($metas as $meta) {
+        #    if (strtolower($meta->getAttribute('name')) === 'description') {
+        #        $description = $meta->getAttribute('content');
+        #        break;
+        #    }
+        #}
+    #
+        #// Get favicon (link tag)
+        #$favicon = 'https://www.google.com/s2/favicons?sz=128&domain=' . parse_url($url, PHP_URL_HOST);
+#
+        #$date = getUser('id', $_SESSION['user'], 'dob');
+        #$dob = new DateTime($date);
+        #$now = new DateTime();
+        #$age = $now->diff($dob)->y;
+        #
+        #if ($age > 18) {
+        #    $data = [
+        #        'restricted' => true, # This user is over 18 (false)
+        #        'title' => $title,
+        #        'description' => $description,
+        #        'favicon' => $favicon
+        #    ];
+        #} else {
+            $data = [
+                'restricted' => true,
+                'title' => 'Restricted content',
+                'description' => 'This content is restricted and cannot be displayed.',
+                'favicon' => '../assets/images/logo_faded_clean.png'
+            ];
+        #}
+    } else {
+        $doc = new DOMDocument();
+        @$doc->loadHTML($response);
 
-    // Get description (meta tag)
-    $description = '';
-    $metas = $doc->getElementsByTagName('meta');
-    foreach ($metas as $meta) {
-        if (strtolower($meta->getAttribute('name')) === 'description') {
-            $description = $meta->getAttribute('content');
-            break;
+        // Get title
+        $titleTag = $doc->getElementsByTagName('title')->item(0);
+        $title = $titleTag ? $titleTag->nodeValue : '';
+
+        // Get description (meta tag)
+        $description = '';
+        $metas = $doc->getElementsByTagName('meta');
+        foreach ($metas as $meta) {
+            if ($meta instanceof DOMElement && strtolower($meta->getAttribute('name')) === 'description') {
+                $description = $meta->getAttribute('content');
+                break;
+            }
         }
+
+        // Get favicon (link tag)
+        $favicon = 'https://www.google.com/s2/favicons?sz=128&domain=' . parse_url($url, PHP_URL_HOST);
+
+        $data = [
+            'restricted' => false,
+            'title' => $title,
+            'description' => $description,
+            'favicon' => $favicon
+        ];
     }
 
-    // Get favicon (link tag)
-    $favicon = 'https://www.google.com/s2/favicons?sz=128&domain=' . parse_url($url, PHP_URL_HOST);
-
-    // Return the fetched data
-    return [
-        'title' => $title,
-        'description' => $description ?: 'No description found',
-        'favicon' => $favicon
-    ];
+    return $data;
 }
 
 function cleanUrls($url) {
@@ -266,7 +335,7 @@ function getMetaData($url) {
     $metaData = [];
     $metaTags = $doc->getElementsByTagName('meta');
     foreach ($metaTags as $meta) {
-        if ($meta->hasAttribute('name')) {
+        if ($meta instanceof DOMElement && $meta->hasAttribute('name')) {
             $metaName = $meta->getAttribute('name');
             $metaContent = $meta->getAttribute('content');
             $metaData[$metaName] = $metaContent;
