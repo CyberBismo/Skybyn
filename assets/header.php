@@ -106,9 +106,9 @@ if ($domain == $devDomain) {
                 <img src="<?=$avatar?>" onclick="window.location.href='./profile'">
                 <?php }?>
             </div>
-            <div class="user-nav" onclick="showUserMenu(event)">
+            <div class="user-nav" onclick="showRightPanel()">
                 <ul>
-                    <li><i class="fa-solid fa-bars"></i></li>
+                    <li><i class="fa-solid fa-user-group"></i></li>
                 </ul>
             </div>
         </div>
@@ -643,11 +643,13 @@ if ($domain == $devDomain) {
                 </div>
             </div>
         </div>
+
         <div class="bottom-nav" id="bottom-nav">
             <div class="bnav-btn" onclick="showSearch()"><i class="fa-solid fa-magnifying-glass"></i></div>
             <div class="bnav-btn" onclick="newPost()"><i class="fa-solid fa-plus" id="mobile_new_post"></i></div>
-            <div class="bnav-btn" onclick="showRightPanel()"><i class="fa-solid fa-user-group"></i></div>
+            <div class="bnav-btn" onclick="showUserMenu(event)"><i class="fa-solid fa-bars"></i></div>
         </div>
+
         <?php } else {?>
         <div class="search_result" id="search_result" hidden>
             <div id="search_res_users" hidden>

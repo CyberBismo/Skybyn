@@ -511,7 +511,7 @@
             .left-panel,
             .right-panel {
                 position: fixed;
-                top: 75px;
+                top: 0;
                 color: white;
                 backdrop-filter: blur(5px);
                 transition: transform .5s;
@@ -525,6 +525,7 @@
                 max-width: 300px;
                 height: 100%;
                 padding: 0 10px;
+                padding-top: 75px;
                 box-sizing: border-box;
                 backdrop-filter: blur(5px);
             }
@@ -533,6 +534,7 @@
             .right-panel {
                 width: 100%;
                 height: calc(100% - 75px);
+                padding-top: 75px;
                 background: rgba(var(--dark),.1);
             }
             <?php }?>
