@@ -168,22 +168,7 @@ function getLinkData($url) {
     }
 
     // Get favicon (link tag)
-    $favicon = '';
-    $links = $doc->getElementsByTagName('link');
-    foreach ($links as $link) {
-        if (strpos($link->getAttribute('rel'), 'icon') !== false) {
-            $favicon = $link->getAttribute('href');
-            if (!preg_match('/^http/', $favicon)) {
-                // Handle relative URL for favicon
-                $favicon = rtrim($url, '/') . '/' . ltrim($favicon, '/');
-            }
-            break;
-        }
-    }
-
-    if (empty($favicon)) {
-        $favicon = 'https://www.google.com/s2/favicons?sz=128&domain=' . parse_url($url, PHP_URL_HOST);
-    }
+    $favicon = 'https://www.google.com/s2/favicons?sz=128&domain=' . parse_url($url, PHP_URL_HOST);
 
     // Return the fetched data
     return [
