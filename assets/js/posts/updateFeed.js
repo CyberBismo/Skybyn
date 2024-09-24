@@ -32,7 +32,6 @@ window.addEventListener('scroll', function () {
 });
 
 function createPost() {
-    const new_post = document.getElementById('new_post');
     const text = document.getElementById('new_post_input');
     const image = document.getElementById('image_to_share');
     const filesDiv = document.getElementById('new_post_files');
@@ -50,55 +49,44 @@ function createPost() {
     }
 
     if (continuePost) {
+        text.value = "";
+        image.value = "";
+        filesDiv.innerHTML = "";
+        newPost();
         continuePost = false;
-        // Make the new post button unclickable
-        new_post.disabled = true;
-
-        alert('Posting...');
-
-        if (!new_post.disabled) {
-            $.ajax({
+        $.ajax({
             url: './assets/post_new.php',
             type: 'POST',
             data: formData,
             processData: false,
             contentType: false,
             success: function (response) {
-                text.value = "";
-                image.value = "";
-                filesDiv.innerHTML = "";
-                newPost();
                 post_id = response.post_id;
                 loadNewPosts(post_id);
                 if (document.getElementById('console')) {
-                const console = document.getElementById('console');
-                if (document.getElementById('cons_post')) {
-                    const cons_post = document.getElementById('cons_post');
-                    cons_post.innerHTML = response.message;
-                } else {
-                    console.innerHTML += '<p id="cons_post">'+response.message+'</p>';
-                }
+                    const console = document.getElementById('console');
+                    if (document.getElementById('cons_post')) {
+                        const cons_post = document.getElementById('cons_post');
+                        cons_post.innerHTML = response.message;
+                    } else {
+                        console.innerHTML += '<p id="cons_post">'+response.message+'</p>';
+                    }
                 }
                 continuePost = true;
-                // Re-enable the new post button
-                new_post.disabled = false;
             },
             error: function (response) {
                 if (document.getElementById('console')) {
-                const console = document.getElementById('console');
-                if (document.getElementById('cons_post')) {
-                    const cons_post = document.getElementById('cons_post');
-                    cons_post.innerHTML = response.message;
-                } else {
-                    console.innerHTML += '<p id="cons_post">'+response.message+'</p>';
-                }
+                    const console = document.getElementById('console');
+                    if (document.getElementById('cons_post')) {
+                        const cons_post = document.getElementById('cons_post');
+                        cons_post.innerHTML = response.message;
+                    } else {
+                        console.innerHTML += '<p id="cons_post">'+response.message+'</p>';
+                    }
                 }
                 continuePost = true;
-                // Re-enable the new post button
-                new_post.disabled = false;
             }
-            });
-        }
+        });
     } else {
         text.placeholder = "Please enter a message";
     }
