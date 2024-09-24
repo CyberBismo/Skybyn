@@ -359,14 +359,16 @@ function checkRegistrationDuration(registrationTimestamp, unlockDuration) {
 
 function genRef() {
     const code = document.getElementById('frc');
-    $.ajax({
-        url: 'assets/generate_ref_code.php',
-        type: "POST"
-    }).done(function(response) {
-        if (response != null) {
-            code.innerHTML = response;
-        }
-    });
+    if (isNaN(code.innerHTML)) {
+        $.ajax({
+            url: 'assets/generate_ref_code.php',
+            type: "POST"
+        }).done(function(response) {
+            if (response != null) {
+                code.innerHTML = response;
+            }
+        });
+    }
 }
 function checkRef() {
     let ref = document.getElementById('frc');

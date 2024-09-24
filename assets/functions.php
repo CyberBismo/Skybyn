@@ -143,11 +143,6 @@ function extractUrls($text) {
 function getLinkData($url) {
 
     $ageRestrictedUrls = array(
-        # Social media
-        'facebook.com',
-        'tiktok.com',
-
-        # Adult content
         'pornhub.com',
         'xvideos.com',
         'xhamster.com',
@@ -182,28 +177,11 @@ function getLinkData($url) {
     $response = curl_exec($ch);
     curl_close($ch);
 
-    $parsedUrlHost = parse_url($url, PHP_URL_HOST);
-    $parsedUrlHostWithWww = 'www.' . $parsedUrlHost;
-    $parsedUrlHttps = 'https://' . $parsedUrlHost;
-
-    if (in_array($parsedUrlHost, $ageRestrictedUrls) || 
-        in_array($parsedUrlHostWithWww, $ageRestrictedUrls) || 
-        in_array($parsedUrlHttps, $ageRestrictedUrls) || 
-        isVideoPlatformUrl($url)) {
-
+    if (!empty($response)) {
         if (in_array(parse_url($url, PHP_URL_HOST), $ageRestrictedUrls) || isVideoPlatformUrl($url)) {
 
-            if (!empty($response)) {
-                $doc = new DOMDocument();
-                @$doc->loadHTML($response);
-            } else {
-                return [
-                    'restricted' => false,
-                    'title' => 'No content',
-                    'description' => 'The URL did not return any content.',
-                    'favicon' => '../assets/images/logo_faded_clean.png'
-                ];
-            }
+            $doc = new DOMDocument();
+            @$doc->loadHTML($response);
         
             // Get title
             $titleTag = $doc->getElementsByTagName('title')->item(0);
@@ -222,7 +200,7 @@ function getLinkData($url) {
             // Get favicon (link tag)
             $favicon = 'https://www.google.com/s2/favicons?sz=128&domain=' . parse_url($url, PHP_URL_HOST);
 
-            $date = getUser('id', $_SESSION['user'], 'dob');
+            $date = getUser('id', $_SESSION['user'], 'birth_date');
             $dob = new DateTime($date);
             $now = new DateTime();
             $age = $now->diff($dob)->y;
@@ -271,31 +249,11 @@ function getLinkData($url) {
             ];
         }
     } else {
-        $doc = new DOMDocument();
-        @$doc->loadHTML($response);
-
-        // Get title
-        $titleTag = $doc->getElementsByTagName('title')->item(0);
-        $title = $titleTag ? $titleTag->nodeValue : '';
-
-        // Get description (meta tag)
-        $description = '';
-        $metas = $doc->getElementsByTagName('meta');
-        foreach ($metas as $meta) {
-            if ($meta instanceof DOMElement && strtolower($meta->getAttribute('name')) === 'description') {
-                $description = $meta->getAttribute('content');
-                break;
-            }
-        }
-
-        // Get favicon (link tag)
-        $favicon = 'https://www.google.com/s2/favicons?sz=128&domain=' . parse_url($url, PHP_URL_HOST);
-
         $data = [
             'restricted' => false,
-            'title' => $title,
-            'description' => $description,
-            'favicon' => $favicon
+            'title' => 'Empty content',
+            'description' => 'This content is empty',
+            'favicon' => '../assets/images/logo_faded_clean.png'
         ];
     }
 
@@ -423,7 +381,8 @@ function isVideoPlatformUrl($url) {
 
     // Check if the URL matches any of the video platforms
     foreach ($videoPlatforms as $platform) {
-        if (strpos($url, $platform) !== false) {
+        $parsedUrl = parse_url($url);
+        if (strpos($url, $platform) !== false && isset($parsedUrl['path']) && !empty($parsedUrl['path'])) {
             return true;
         }
     }
@@ -1241,7 +1200,10 @@ if (isset($_SESSION['user'])) {
         setcookie("qr", "", time() - 3600);
     }
     
-    #$conn->query("UPDATE `users` SET `ip`='$newIP' WHERE `id`='$uid'");
+    $newIP = $_SERVER['REMOTE_ADDR'];
+    if ($ip != $newIP) {
+        $conn->query("INSERT INTO `ip_logs` (`user`,`ip`,`date`) VALUES ('$uid','$newIP','$now')");
+    }
 
     if(isset($_SERVER['HTTP_REFERER']) && !empty($_SERVER['HTTP_REFERER'])) {
         $previousUrl = $_SERVER['HTTP_REFERER'];
@@ -1272,8 +1234,13 @@ if (isset($_SESSION['user'])) {
         $color_one = "";
     }
 
-    function referralCode($uid) {
+    function referralCode() {
         global $conn;
+        global $uid;
+        
+        $code = rand(10000000, 99999999);
+        $in_five_min = strtotime(' +5 minutes ');
+
         $checkReferral = $conn->query("SELECT * FROM `referral_code` WHERE `user`='$uid'");
         if ($checkReferral->num_rows == 1) {
             $referrals = $checkReferral->fetch_assoc();
@@ -1282,15 +1249,21 @@ if (isset($_SESSION['user'])) {
 
             if ($date < time()) {
                 $conn->query("DELETE FROM `referral_code` WHERE `user`='$uid'");
-                return "error";
+                $stmt = $conn->prepare("INSERT INTO `referral_code` (`referral_code`,`created`,`user`) VALUES (?, ?, ?)");
+                $stmt->bind_param("iii", $code, $in_five_min, $uid);
+                $stmt->execute();
+                return $code;
             } else {
                 return $code;
             }
         } else {
-            return "error";
+            $stmt = $conn->prepare("INSERT INTO `referral_code` (`referral_code`,`created`,`user`) VALUES (?, ?, ?)");
+            $stmt->bind_param("iii", $code, $in_five_min, $uid);
+            $stmt->execute();
+            return $code;
         }
     }
-    $referral = referralCode($uid);
+    $referral = referralCode();
 
     $countryName = language('id',$country,'country_name');
     #$CName = strtolower($countryName);
