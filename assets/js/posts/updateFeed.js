@@ -2,7 +2,7 @@ setInterval(() => {
     checkPosts(null);
     cleanPosts();
 }, 5000); // Every 5 minutes (300000)
-//removeDuplicateIds();
+removeDuplicateIds();
 
 function isScrolledToBottom() {
     // Get the current scroll position
