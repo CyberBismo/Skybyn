@@ -1,7 +1,7 @@
-//setInterval(() => {
-//    checkPosts(null);
-//    cleanPosts();
-//}, 10000); // Every 5 minutes (300000)
+setInterval(() => {
+    checkPosts(null);
+    cleanPosts();
+}, 5000); // Every 5 minutes (300000)
 //removeDuplicateIds();
 
 function isScrolledToBottom() {
