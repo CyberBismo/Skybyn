@@ -1237,7 +1237,7 @@ if (isset($_SESSION['user'])) {
     function referralCode() {
         global $conn;
         global $uid;
-        
+
         $code = rand(10000000, 99999999);
         $in_five_min = strtotime(' +5 minutes ');
 
@@ -1248,8 +1248,7 @@ if (isset($_SESSION['user'])) {
             $date = $referrals['created'];
 
             if ($date < time()) {
-                $conn->query("DELETE FROM `referral_code` WHERE `user`='$uid'");
-                $stmt = $conn->prepare("INSERT INTO `referral_code` (`referral_code`,`created`,`user`) VALUES (?, ?, ?)");
+                $stmt = $conn->prepare("UPDATE `referral_code` SET `referral_code` = ?, `created` = ? WHERE `user` = ?");
                 $stmt->bind_param("iii", $code, $in_five_min, $uid);
                 $stmt->execute();
                 return $code;
