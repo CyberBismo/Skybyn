@@ -54,6 +54,8 @@ function createPost() {
         // Make the new post button unclickable
         new_post.disabled = true;
 
+        alert('Posting...');
+
         $.ajax({
             url: './assets/post_new.php',
             type: 'POST',
