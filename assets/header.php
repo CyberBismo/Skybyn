@@ -113,7 +113,7 @@ if ($domain == $devDomain) {
                 </ul>
             </div>
             <?php } else {?>
-            <div class="user-nav" onclick="showUserMenu()">
+            <div class="user-nav" onclick="showUserMenu(event)">
                 <ul>
                     <li><i class="fa-solid fa-bars"></i></li>
                 </ul>
