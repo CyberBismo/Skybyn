@@ -1203,7 +1203,7 @@
                 display: flex;
                 min-width: 300px;
                 max-width: 33.33%;
-                text-align: center;
+                text-align: left;
             }
             .header .top-left .logo-name {
                 width: auto;

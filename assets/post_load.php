@@ -26,11 +26,6 @@ $post_links = extractUrls($post_content);
 $post_content_res = fixEmojis(cleanUrls(nl2br($post_content)), 1);
 ?>
 
-<?php if (isset($_SESSION['user'])) {?>
-<script src="assets/js/posts/updateFeed.js"></script>
-<script src="assets/js/comments/updateComments.js"></script>
-<?php }?>
-
 <div class="post" id="post_<?=$post_id?>">
     <div class="post_body">
         <div class="post_header">

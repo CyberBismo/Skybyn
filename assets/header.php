@@ -106,11 +106,19 @@ if ($domain == $devDomain) {
                 <img src="<?=$avatar?>" onclick="window.location.href='./profile'">
                 <?php }?>
             </div>
+            <?php if (isMobile() == true) {?>
             <div class="user-nav" onclick="showRightPanel()">
                 <ul>
                     <li><i class="fa-solid fa-user-group"></i></li>
                 </ul>
             </div>
+            <?php } else {?>
+            <div class="user-nav" onclick="showUserMenu()">
+                <ul>
+                    <li><i class="fa-solid fa-bars"></i></li>
+                </ul>
+            </div>
+            <?php }?>
         </div>
 
         <div class="user-dropdown" id="usermenu">

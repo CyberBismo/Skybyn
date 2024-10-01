@@ -1,8 +1,7 @@
-setInterval(() => {
-    checkPosts(null);
-    cleanPosts();
-}, 5000); // Every 5 minutes (300000)
-removeDuplicateIds();
+setTimeout(() => {
+    checkPosts();
+}, 300000); // Every 5 minutes (300000)
+//removeDuplicateIds();
 
 function isScrolledToBottom() {
     // Get the current scroll position
@@ -13,12 +12,6 @@ function isScrolledToBottom() {
     // Check if we're at the bottom of the page
     return scrollHeight - scrollTop === windowHeight;
 }
-
-window.addEventListener("scroll", function () {
-    if (isScrolledToBottom()) {
-        loadMorePosts();
-    }
-});
 
 // Attach the scroll event listener to load more posts when scrolled to the bottom
 window.addEventListener('scroll', function () {
@@ -92,7 +85,7 @@ function createPost() {
     }
 }
 
-function checkPosts(x) {
+function checkPosts() {
     const posts = document.querySelectorAll('[id^="post_"]');
     let highestNumber = -Infinity;
     posts.forEach((post) => {
@@ -101,36 +94,43 @@ function checkPosts(x) {
             highestNumber = numberPart;
         }
     });
-
-    if (x) {
-        x = x;
-    } else {
-        x = 0;
+    
+    const console = document.getElementById('console');
+    if (console) {
+        const cons_post = document.getElementById('cons_post');
+        if (cons_post) {
+            cons_post.innerHTML = 'Checking posts...';
+        } else {
+            console.innerHTML += '<div id="cons_post">Checking posts...</div>';
+        }
     }
 
     $.ajax({
         url: './assets/posts_check.php',
         type: 'POST',
         data: {
-            last: highestNumber,
-            post_id: x
+            last: highestNumber
         },
         success: function(response) {
-            const console = document.getElementById('console');
-            const cons_post = document.getElementById('cons_post');
-            if (cons_post) {
-                cons_post.innerHTML = 'Checked posts...';
-            } else {
-                console.innerHTML += '<div id="cons_post">Checked posts...</div>';
-            }
             if (response.responseCode === 1) {
+                if (console) {
+                    if (cons_post) {
+                        cons_post.innerHTML = 'Adding new posts';
+                    } else {
+                        console.innerHTML += '<div id="cons_post">Adding new posts</div>';
+                    }
+                }
                 loadMorePosts();
             } else {
-                const cons_post = document.getElementById('cons_post');
-                if (cons_post) {
-                    cons_post.innerHTML += ' No new posts';
-                } else {
-                    console.innerHTML += '<div id="cons_post">Checked posts... No new posts</div>';
+                setTimeout(() => {
+                    checkPosts();
+                }, 3000);
+                if (console) {
+                    if (cons_post) {
+                        cons_post.innerHTML += ' up to date';
+                    } else {
+                        console.innerHTML += '<div id="cons_post">Checking posts... up to date</div>';
+                    }
                 }
             }
         }
@@ -156,6 +156,17 @@ function loadNewPosts(post_id) {
 function loadMorePosts() {
     const countPosts = document.querySelectorAll('div.post');
     const offset = countPosts.length;
+
+    const console = document.getElementById('console');
+    if (console) {
+        const cons_post = document.getElementById('cons_post');
+        if (cons_post) {
+            cons_post.innerHTML = '';
+        } else {
+            console.innerHTML += '<div id="cons_post"></div>';
+        }
+    }
+
     $.ajax({
         url: './assets/posts_load.php',
         type: 'POST',
@@ -243,6 +254,5 @@ function deletePost(x) {
         }
     }).done(function(response) {
         post.remove();
-        checkPosts(x);
     });
 }

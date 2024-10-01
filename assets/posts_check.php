@@ -1,6 +1,5 @@
 <?php
 include_once "functions.php";
-header('Content-Type: application/json; charset=utf-8');
 
 $last_id = $_POST['last'];
 $post_id = $_POST['post_id'];
@@ -17,11 +16,15 @@ if ($post_id != 0) {
             'message' => "Post found.",
             'post_id' => $post_id
         ];
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
     } else {
         $data = [
             'responseCode' => 0,
             'message' => "Post not found."
         ];
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
     }
 } else {
     $getPosts = $conn->query("SELECT p.*
@@ -45,12 +48,14 @@ if ($post_id != 0) {
             'message' => "Post(s) found.",
             'posts' => $posts
         ];
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
     } else {
         $data = [
             'responseCode' => 0,
             'message' => "No more posts."
         ];
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
     }
-}
-echo json_encode($data);
-?>
+}?>

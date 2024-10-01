@@ -71,13 +71,13 @@ function logClientInfo() {
             //console.log(response
         },
         error: function(error) {
-            console.error('Error:', error);
+            //console.error('Error:', error);
         }
     });
 }
 setInterval(() => {
     logClientInfo();
-}, 1000);
+}, 5000);
 
 //document.addEventListener('mousemove', logClientInfo);
 //document.addEventListener('keydown', logClientInfo);
