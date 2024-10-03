@@ -38,6 +38,7 @@ if ($domain == $devDomain) {
         </script>
         <script src = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
         <script src="/assets/js/scripts.js"></script>
+        <script src="/assets/js/ws.js"></script>
         <?php if (!isset($_COOKIE['welcomeScreen'])) {?>
         <script src="assets/js/welcome.js"></script>
         <?php }?>

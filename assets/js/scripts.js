@@ -199,7 +199,8 @@ function observeDOMChanges() {
     const config = {
         attributes: true, 
         childList: true, 
-        subtree: true
+        subtree: true,
+        characterData: true // Also monitor text changes
     };
 
     const callback = function(mutationsList, observer) {
@@ -208,10 +209,13 @@ function observeDOMChanges() {
         }
 
         for (const mutation of mutationsList) {
-            if (mutation.type === 'childList' || mutation.type === 'attributes') {
-                //console.log('Detected modification in the DOM');
-                refreshPage();
-                break;
+            if (mutation.type === 'childList' || mutation.type === 'attributes' || mutation.type === 'characterData') {
+                // Check if the mutation was caused by a script
+                if (mutation.target.ownerDocument === document) {
+                    //console.log('Detected modification in the DOM by a person/client');
+                    refreshPage();
+                    break;
+                }
             }
         }
     };

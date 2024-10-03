@@ -1,7 +1,7 @@
 <?php
 include "./functions.php";
 
-$offset = $_POST['offset'];
+$created = $_POST['created'];
 $getPosts = $conn->query("SELECT p.*
     FROM posts p
     WHERE p.user = $uid OR p.user IN (
@@ -9,9 +9,9 @@ $getPosts = $conn->query("SELECT p.*
         FROM friendship f
         WHERE f.user_id = $uid AND f.status = 'accepted'
     )
+    AND p.created < $created
     ORDER BY p.created DESC
-    LIMIT 1 OFFSET $offset
-");
+    LIMIT 10");
 
 // Generate HTML structure for the fetched posts
 while ($post = $getPosts->fetch_assoc()) {

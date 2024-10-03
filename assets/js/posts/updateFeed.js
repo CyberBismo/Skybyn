@@ -1,7 +1,7 @@
-setTimeout(() => {
+setInterval(() => {
     checkPosts();
-}, 300000); // Every 5 minutes (300000)
-//removeDuplicateIds();
+}, 300000); // Every 5 minutes
+removeDuplicateIds();
 
 function isScrolledToBottom() {
     // Get the current scroll position
@@ -86,14 +86,20 @@ function createPost() {
 }
 
 function checkPosts() {
-    const posts = document.querySelectorAll('[id^="post_"]');
-    let highestNumber = -Infinity;
-    posts.forEach((post) => {
-        const numberPart = parseInt(post.id.replace('post_', ''), 10);
-        if (numberPart > highestNumber) {
-            highestNumber = numberPart;
+    const posts = document.querySelectorAll('post_date');
+    let last_post_date = 0;
+    if (posts.length > 0 && posts[0]) {
+        const firstPost = posts[0];
+        const postDateStr = firstPost.innerHTML;
+        const postDate = new Date(postDateStr);
+        if (!isNaN(postDate.getTime())) {
+            last_post_date = Math.floor(postDate.getTime() / 1000);
         }
-    });
+    } else {
+        highestNumlast_post_dateber = Math.floor(Date.now() / 1000);
+    }
+
+    console.log(postDateStr);
     
     const console = document.getElementById('console');
     if (console) {
@@ -106,13 +112,13 @@ function checkPosts() {
     }
 
     $.ajax({
-        url: './assets/posts_check.php',
+        url: './assets/posts_load.php',
         type: 'POST',
         data: {
-            last: highestNumber
+            created: last_post_date
         },
         success: function(response) {
-            if (response.responseCode === 1) {
+            if (response !== '') {
                 if (console) {
                     if (cons_post) {
                         cons_post.innerHTML = 'Adding new posts';
@@ -120,11 +126,9 @@ function checkPosts() {
                         console.innerHTML += '<div id="cons_post">Adding new posts</div>';
                     }
                 }
-                loadMorePosts();
+                const postsContainer = document.getElementById('posts');
+                postsContainer.insertAdjacentHTML('beforeend', response);
             } else {
-                setTimeout(() => {
-                    checkPosts();
-                }, 3000);
                 if (console) {
                     if (cons_post) {
                         cons_post.innerHTML += ' up to date';
@@ -147,35 +151,6 @@ function loadNewPosts(post_id) {
         success: function (response) {
             const postsContainer = document.getElementById('posts');
             postsContainer.insertAdjacentHTML('afterbegin', response);
-        },
-        error: function () {
-        }
-    });
-}
-
-function loadMorePosts() {
-    const countPosts = document.querySelectorAll('div.post');
-    const offset = countPosts.length;
-
-    const console = document.getElementById('console');
-    if (console) {
-        const cons_post = document.getElementById('cons_post');
-        if (cons_post) {
-            cons_post.innerHTML = '';
-        } else {
-            console.innerHTML += '<div id="cons_post"></div>';
-        }
-    }
-
-    $.ajax({
-        url: './assets/posts_load.php',
-        type: 'POST',
-        data: {
-            offset: offset
-        },
-        success: function (response) {
-            const postsContainer = document.getElementById('posts');
-            postsContainer.insertAdjacentHTML('beforeend', response);
         },
         error: function () {
         }
