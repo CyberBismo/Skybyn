@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vehicle Plate Recognition</title>
+</head>
+<body>
+  <h1>Vehicle Plate Recognition</h1>
+  <video id="video" width="640" height="480" autoplay></video>
+  <canvas id="canvas" width="640" height="480" style="display: none;"></canvas>
+  <button id="capture">Capture Plate</button>
+  
+  <ul id="plate-list"></ul>
+  
+  <script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const captureButton = document.getElementById('capture');
+    const plateList = document.getElementById('plate-list');
+    const context = canvas.getContext('2d');
+
+    // Ask for camera permissions and display the video feed
+    async function initCamera() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = stream;
+      } catch (err) {
+        console.error('Error accessing camera:', err);
+      }
+    }
+
+    // Capture image from the video feed
+    captureButton.addEventListener('click', async () => {
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const imageData = canvas.toDataURL('image/png');
+      
+      // Send image to the back-end for plate recognition
+      const response = await fetch('/detect-plate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ image: imageData }),
+      });
+      const result = await response.json();
+      
+      // Display plate and status
+      const li = document.createElement('li');
+      li.textContent = `Plate: ${result.plate} | Status: ${result.status}`;
+      plateList.appendChild(li);
+    });
+
+    // Initialize the camera
+    initCamera();
+  </script>
+</body>
+</html>
