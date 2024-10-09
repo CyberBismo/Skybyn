@@ -6184,3 +6184,8 @@ assets/logs/clients.json
 /video/node_modules
 ocr/google-cloud-credentials.json
 api/vehicleregister/app-debug.apk
+ws/cert.pem
+ws/certificate.pem
+ws/certificate.pfx
+ws/key.pem
+/ws/node_modules

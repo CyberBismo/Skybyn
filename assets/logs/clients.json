@@ -831,7 +831,7 @@
     {
         "283615": {
             "ip": "88.90.210.141",
-            "time": "2024-10-09T16:56:19.513Z",
+            "time": "2024-10-09T20:41:12.486Z",
             "platform": "Win32",
             "screenWidth": 1920,
             "screenHeight": 1080,
@@ -868,7 +868,7 @@
             "connection": {
                 "effectiveType": "4g",
                 "downlink": 10,
-                "rtt": 0,
+                "rtt": 50,
                 "saveData": false
             },
             "deviceMemory": 8

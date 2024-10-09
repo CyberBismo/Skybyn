@@ -4117,4 +4117,17 @@
                 background: white;
                 z-index: 5;
             }
+
+            /** BROADCAST MESSAGE */
+            .broadcast-msg {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                max-width: 90%;
+                max-height: 50%;
+                color: white;
+                background: rgba(0,0,0,.5);
+                z-index: 5;
+            }
         </style>

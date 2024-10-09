@@ -101,8 +101,8 @@ function checkPosts() {
 
     console.log(postDateStr);
     
-    const console = document.getElementById('console');
-    if (console) {
+    if (document.getElementById('console')) {
+        const console = document.getElementById('console');
         const cons_post = document.getElementById('cons_post');
         if (cons_post) {
             cons_post.innerHTML = 'Checking posts...';

@@ -58,93 +58,93 @@ if ($domain == $devDomain) {
     <head>
         <div class="header" id="header">
 
-        <?php // Logo
-        if (isset($_SESSION['user'])) {
-            if (isMobile() == false) {
+            <?php // Logo
+            if (isset($_SESSION['user'])) {
+                if (isMobile() == false) {
+                    include_once("assets/logo.php");
+                }
+            } else {
                 include_once("assets/logo.php");
             }
-        } else {
-            include_once("assets/logo.php");
-        }
-        ?>
+            ?>
 
-        <?php // New post if logged in
-        if (isset($_SESSION['user'])) {
-            if (isMobile() == false) {?>
-        <div class="new_post_button" id="new_post_btn" onclick="newPost()">Anything new?</div>
-        <?php }?>
-        <script>// Display new post button only when the user is on the home page
-        const homePage = window.location.href;
-        const pages = ['group', 'page', 'search', 'notifications', 'settings', 'profile', 'post'];
-        if (!pages.some(page => homePage.includes(page))) {
-            const newPostBtn = document.getElementById('new_post_btn');
-            newPostBtn.style.display = 'block';
-        } else {
-            const newPostBtn = document.getElementById('new_post_btn');
-            newPostBtn.style.display = 'none';
-        }
-        </script>
-        <?php }?>
+            <?php // New post if logged in
+            if (isset($_SESSION['user'])) {
+                if (isMobile() == false) {?>
+            <div class="new_post_button" id="new_post_btn" onclick="newPost()">Anything new?</div>
+            <?php }?>
+            <script>// Display new post button only when the user is on the home page
+            const homePage = window.location.href;
+            const pages = ['group', 'page', 'search', 'notifications', 'settings', 'profile', 'post'];
+            if (!pages.some(page => homePage.includes(page))) {
+                const newPostBtn = document.getElementById('new_post_btn');
+                newPostBtn.style.display = 'block';
+            } else {
+                const newPostBtn = document.getElementById('new_post_btn');
+                newPostBtn.style.display = 'none';
+            }
+            </script>
+            <?php }?>
 
-        <?php if (isset($_SESSION['user'])) {?>
-        <div class="top">
-            <div class="top-nav">
-                <ul>
+            <?php if (isset($_SESSION['user'])) {?>
+            <div class="top">
+                <div class="top-nav">
+                    <ul>
+                        <?php if (isMobile() == true) {?>
+                        <li onclick="showLeftPanel()"><i class="fa-solid fa-star"></i></li>
+                        <?php } else {?>
+                        <li onclick="showNotifications(event)" id="notification">
+                            <div class="notification_alert" id="noti_alert"><i class="fa-solid fa-circle-exclamation"></i></div>
+                            <i class="fa-solid fa-bell"></i>
+                        </li>
+                        <?php }?>
+                    </ul>
+                </div>
+                <div class="user-avatar">
                     <?php if (isMobile() == true) {?>
-                    <li onclick="showLeftPanel()"><i class="fa-solid fa-star"></i></li>
+                    <img src="./assets/images/logo_faded_clean.png" onclick="window.location.href='./'">
                     <?php } else {?>
-                    <li onclick="showNotifications(event)" id="notification">
-                        <div class="notification_alert" id="noti_alert"><i class="fa-solid fa-circle-exclamation"></i></div>
-                        <i class="fa-solid fa-bell"></i>
-                    </li>
+                    <img src="<?=$avatar?>" onclick="window.location.href='./profile'">
                     <?php }?>
-                </ul>
-            </div>
-            <div class="user-avatar">
+                </div>
                 <?php if (isMobile() == true) {?>
-                <img src="./assets/images/logo_faded_clean.png" onclick="window.location.href='./'">
+                <div class="user-nav" onclick="showRightPanel()">
+                    <ul>
+                        <li><i class="fa-solid fa-user-group"></i></li>
+                    </ul>
+                </div>
                 <?php } else {?>
-                <img src="<?=$avatar?>" onclick="window.location.href='./profile'">
+                <div class="user-nav" onclick="showUserMenu(event)">
+                    <ul>
+                        <li><i class="fa-solid fa-bars"></i></li>
+                    </ul>
+                </div>
                 <?php }?>
             </div>
-            <?php if (isMobile() == true) {?>
-            <div class="user-nav" onclick="showRightPanel()">
+
+            <div class="user-dropdown" id="usermenu">
                 <ul>
-                    <li><i class="fa-solid fa-user-group"></i></li>
-                </ul>
-            </div>
-            <?php } else {?>
-            <div class="user-nav" onclick="showUserMenu(event)">
-                <ul>
-                    <li><i class="fa-solid fa-bars"></i></li>
+                    <li onclick="window.location.href='./'"><i class="fa-solid fa-house"></i>Home</li>
+                    <li onclick="window.location.href='./profile'"><i class="fa-solid fa-user"></i></i>Profile</li>
+                    <?php if (isset($rank)) {
+                    if ($rank > 0) {?>
+                    <li><i class="fa-solid fa-people-group"></i>Groups</li>
+                    <?php }?>
+                    <?php if ($rank > 0) {?>
+                    <li><i class="fa-solid fa-book-open"></i>Pages</li>
+                    <?php }?>
+                    <?php if ($rank > 0) {?>
+                    <li class="pet"><i class="fa-solid fa-paw"></i>My Pets</li>
+                    <?php }?>
+                    <li onclick="window.location.href='./settings'"><i class="fa-solid fa-gears"></i>Settings</li>
+                    <?php if ($rank > 0) {?>
+                    <li class="balance"><i class="fa-solid fa-coins"></i><?=$wallet?></li>
+                    <?php }}?>
+                    <hr>
+                    <li onclick="window.location.href='./logout.php'"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</li>
                 </ul>
             </div>
             <?php }?>
-        </div>
-
-        <div class="user-dropdown" id="usermenu">
-            <ul>
-                <li onclick="window.location.href='./'"><i class="fa-solid fa-house"></i>Home</li>
-                <li onclick="window.location.href='./profile'"><i class="fa-solid fa-user"></i></i>Profile</li>
-                <?php if (isset($rank)) {
-                if ($rank > 0) {?>
-                <li><i class="fa-solid fa-people-group"></i>Groups</li>
-                <?php }?>
-                <?php if ($rank > 0) {?>
-                <li><i class="fa-solid fa-book-open"></i>Pages</li>
-                <?php }?>
-                <?php if ($rank > 0) {?>
-                <li class="pet"><i class="fa-solid fa-paw"></i>My Pets</li>
-                <?php }?>
-                <li onclick="window.location.href='./settings'"><i class="fa-solid fa-gears"></i>Settings</li>
-                <?php if ($rank > 0) {?>
-                <li class="balance"><i class="fa-solid fa-coins"></i><?=$wallet?></li>
-                <?php }}?>
-                <hr>
-                <li onclick="window.location.href='./logout.php'"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</li>
-            </ul>
-        </div>
-        <?php }?>
 
         </div>
 
