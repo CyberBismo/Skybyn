@@ -27,10 +27,10 @@ ws.onmessage = (event) => {
     if (msg.includes('broadcast')) {
         const broadcastMsg = document.createElement('div');
         broadcastMsg.classList.add('broadcast-msg');
-        broadcastMsg.textContent = event.data;
-        const messageBox = document.getElementsByTagName('body')[0].appendChild(broadcastMsg);
+        broadcastMsg.textContent = event.data.replace('broadcast:', '');
+        document.getElementsByTagName('body')[0].appendChild(broadcastMsg);
         setTimeout(() => {
-        messageBox.style.display = 'none';
+            broadcastMsg.style.display = 'none';
         }, 5000);
     } else {
         
