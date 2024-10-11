@@ -82,7 +82,7 @@ function startSearch(x) {
             });
         } else
         // Search pages
-        if (x.value.startsWith("!p ")) {
+        if (x.value.startsWith("page: ")) {
             $.ajax({
                 url: 'assets/search_pages.php',
                 type: "POST",
@@ -101,7 +101,7 @@ function startSearch(x) {
             });
         } else
         // Search groups
-        if (x.value.startsWith("/g ")) {
+        if (x.value.startsWith("group: ")) {
             $.ajax({
                 url: 'assets/search_groups.php',
                 type: "POST",

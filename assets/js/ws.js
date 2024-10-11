@@ -83,9 +83,6 @@ ws.onmessage = (event) => {
             let url = msgData.url;
             window.location.href = url;
         } else
-        if (msgData.type === 'close') {
-            window.close();
-        } else
         if (msgData.type === 'active_clients') {
             let count = msgData.count;
             if (document.getElementById('console')) {
