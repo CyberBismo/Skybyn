@@ -76,7 +76,7 @@ function logClientInfo() {
     });
 }
 setInterval(() => {
-    logClientInfo();
+    //logClientInfo();
 }, 5000);
 
 //document.addEventListener('mousemove', logClientInfo);

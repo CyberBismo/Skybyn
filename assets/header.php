@@ -551,7 +551,7 @@ if ($domain == $devDomain) {
                                 }
                             }
                             setTimeout(() => {
-                                readClientInfoLog();
+                                //readClientInfoLog();
                             }, 1000);
                         },
                         error: function(error) {
@@ -559,7 +559,7 @@ if ($domain == $devDomain) {
                         }
                     });
                 }
-                readClientInfoLog();
+                //readClientInfoLog();
 
                 //setInterval(checkConsole, 1000);
             </script>

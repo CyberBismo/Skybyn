@@ -6189,3 +6189,4 @@ ws/certificate.pem
 ws/certificate.pfx
 ws/key.pem
 /ws/node_modules
+ws/start.bat

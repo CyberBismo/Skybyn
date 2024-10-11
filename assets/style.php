@@ -4126,8 +4126,11 @@
                 transform: translate(-50%, -50%);
                 max-width: 90%;
                 max-height: 50%;
+                padding: 20px;
                 color: white;
                 background: rgba(0,0,0,.5);
+                box-sizing: border-box;
+                border-radius: 20px;
                 z-index: 5;
             }
         </style>
