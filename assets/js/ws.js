@@ -15,7 +15,6 @@ $.ajax({
     },
     success: function(response) {
         let sessionData = JSON.parse(response);
-        sessionStorage.setItem('user', sessionData.user);
         
         ws.onopen = () => {
             let clientInfo = {
@@ -45,8 +44,9 @@ ws.onmessage = (event) => {
     if (isJsonString(message)) {
         let msgData = JSON.parse(message);
         if (msgData.type == 'qr_login') {
-            const code = getCookieValue('qr');
+            const code = getcookie('code');
             if (data.code == code) {
+                console.log('QR code matched');
                 const user = data.user;
                 setCookie('user', user, 1);
                 window.location.href = "./";
