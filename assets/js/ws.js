@@ -48,8 +48,21 @@ ws.onmessage = (event) => {
             if (data.code == code) {
                 console.log('QR code matched');
                 const user = data.user;
-                setCookie('user', user, 1);
-                window.location.href = "./";
+                $.ajax({
+                    url: './assets/session.php',
+                    type: 'POST',
+                    data: {
+                        user: user
+                    },
+                    success: function (response) {
+                        let sessionData = JSON.parse(response);
+                        if (sessionData.user === user) {
+                            window.location.href = "./";
+                        }
+                    },
+                    error: function () {
+                    }
+                });
             }
         }
         if (msgData.type === 'new_post') {
