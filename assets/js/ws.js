@@ -44,6 +44,14 @@ ws.onmessage = (event) => {
 
     if (isJsonString(message)) {
         let msgData = JSON.parse(message);
+        if (msgData.type == 'qr_login') {
+            const code = getCookieValue('qr');
+            if (data.code == code) {
+                const user = data.user;
+                setCookie('user', user, 1);
+                window.location.href = "./";
+            }
+        }
         if (msgData.type === 'new_post') {
             let postId = msgData.id;
 

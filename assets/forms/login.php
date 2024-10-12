@@ -32,19 +32,6 @@
                             });
                         }
 
-                        const ws = new WebSocket('wss://dev.skybyn.no:4433');
-                        ws.onmessage = (event) => {
-                            const data = JSON.parse(event.data);
-                            const code = getCookieValue('qr');
-                            if (data.type == 'qr_login') {
-                                if (data.code == code) {
-                                    const user = data.user;
-                                    setCookie('user', user, 1);
-                                    window.location.href = "./";
-                                }
-                            }
-                        };
-
                         function setQRSize() {
                             const qrImage = document.getElementById('qr_login');
                             const qrWidth = qrImage.style.width;
