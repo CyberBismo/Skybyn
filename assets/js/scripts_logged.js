@@ -51,97 +51,115 @@ function showSearch() {
 // Start searching while typing
 function startSearch(x) {
     const searchResult = document.getElementById('search_result');
-    const searchRes = document.getElementById('search_res');
     const searchResUsers = document.getElementById('search_res_users');
-    const searchRUsers = document.getElementById('search_r_users');
     const searchResGroups = document.getElementById('search_res_groups');
-    const searchRGroups = document.getElementById('search_r_groups');
     const searchResPages = document.getElementById('search_res_pages');
-    const searchRPages = document.getElementById('search_r_pages');
+    const searchResPosts = document.getElementById('search_res_posts');
 
     if (x.value.length >= 4) {
         searchResult.style.display = "block";
-
-        // Check if the input starts with "@" to search for users
-        if (x.value.startsWith("@")) {
-            $.ajax({
-                url: 'assets/search_users.php',
-                type: "POST",
-                data: {
-                    text: x.value
-                }
-            }).done(function(response) {
-                // Handle the response for user search
-                if (response != "") {
+        $.ajax({
+            url: 'assets/search.php',
+            type: "POST",
+            data: {
+                text: x.value
+            }
+        }).done(function(response) {
+            console.log(response);
+            if (response != "") {
+                searchResult.removeAttribute("hidden");
+                if (response.user) {
                     searchResUsers.removeAttribute("hidden");
-                    searchRUsers.innerHTML = response;
+
+                    const user = response.user;
+                    
+                    const userDiv = document.createElement('div');
+                    userDiv.classList.add('search_res_user');
+                    userDiv.onclick = () => window.location.href = `./profile?u=${user.username}`;
+
+                    const avatarDiv = document.createElement('div');
+                    avatarDiv.classList.add('search_res_user_avatar');
+
+                    const avatarImg = document.createElement('img');
+                    avatarImg.src = user.avatar;
+
+                    avatarDiv.appendChild(avatarImg);
+                    userDiv.appendChild(avatarDiv);
+                    userDiv.appendChild(document.createTextNode(user.username));
+
+                    searchResUsers.appendChild(userDiv);
+                } else
+                if (response.groups) {
+                    searchResGroups.removeAttribute("hidden");
+                    response.groups.forEach(group => {
+                        const groupDiv = document.createElement('div');
+                        groupDiv.classList.add('search_res_group');
+                        groupDiv.onclick = () => window.location.href = `./group?g=${group.id}`;
+
+                        const avatarDiv = document.createElement('div');
+                        avatarDiv.classList.add('search_res_group_avatar');
+
+                        const avatarImg = document.createElement('img');
+                        avatarImg.src = group.avatar;
+
+                        avatarDiv.appendChild(avatarImg);
+                        groupDiv.appendChild(avatarDiv);
+                        groupDiv.appendChild(document.createTextNode(group.name));
+
+                        searchRGroups.appendChild(groupDiv);
+                    });
+                } else
+                if (response.pages) {
+                    searchResPages.removeAttribute("hidden");
+                    response.pages.forEach(page => {
+                        const pageDiv = document.createElement('div');
+                        pageDiv.classList.add('search_res_page');
+                        pageDiv.onclick = () => window.location.href = `./page?p=${page.id}`;
+
+                        const avatarDiv = document.createElement('div');
+                        avatarDiv.classList.add('search_res_page_avatar');
+
+                        const avatarImg = document.createElement('img');
+                        avatarImg.src = page.avatar;
+
+                        avatarDiv.appendChild(avatarImg);
+                        pageDiv.appendChild(avatarDiv);
+                        pageDiv.appendChild(document.createTextNode(page.name));
+
+                        searchRPages.appendChild(pageDiv);
+                    });
+                } else
+                if (response.posts) {
+                    searchResPosts.removeAttribute("hidden");
+                    response.forEach(result => {
+                        const resultDiv = document.createElement('div');
+                        resultDiv.classList.add('search_res_post');
+                        resultDiv.onclick = () => window.location.href = `./post?id=${result.id}`;
+
+                        const iconDiv = document.createElement('div');
+                        iconDiv.classList.add('search_res_post_icon');
+
+                        const iconImg = document.createElement('img');
+                        iconImg.src = result.icon;
+
+                        iconDiv.appendChild(iconImg);
+                        resultDiv.appendChild(iconDiv);
+                        resultDiv.appendChild(document.createTextNode(result.title));
+
+                        searchRes.appendChild(resultDiv);
+                    });
                 } else {
                     searchResUsers.setAttribute("hidden", "");
-                    searchRUsers.innerHTML = "";
-                }
-            });
-        } else
-        // Search pages
-        if (x.value.startsWith("page: ")) {
-            $.ajax({
-                url: 'assets/search_pages.php',
-                type: "POST",
-                data: {
-                    text: x.value
-                }
-            }).done(function(response) {
-                // Handle the response for page search
-                if (response != "") {
-                    searchResPages.removeAttribute("hidden");
-                    searchRPages.innerHTML = response;
-                } else {
+                    searchResGroups.setAttribute("hidden", "");
                     searchResPages.setAttribute("hidden", "");
-                    searchRPages.innerHTML = "";
+                    searchResPosts.setAttribute("hidden", "");
                 }
-            });
-        } else
-        // Search groups
-        if (x.value.startsWith("group: ")) {
-            $.ajax({
-                url: 'assets/search_groups.php',
-                type: "POST",
-                data: {
-                    text: x.value
-                }
-            }).done(function(response) {
-                // Handle the response for page search
-                if (response != "") {
-                    searchResPages.removeAttribute("hidden");
-                    searchRPages.innerHTML = response;
-                } else {
-                    searchResPages.setAttribute("hidden", "");
-                    searchRPages.innerHTML = "";
-                }
-            });
-        } else {
-            // Search general
-            $.ajax({
-                url: 'assets/search.php',
-                type: "POST",
-                data: {
-                    text: x.value
-                }
-            }).done(function(response) {
-                // Handle the response for page search
-                if (response != "") {
-                    searchResult.removeAttribute("hidden");
-                    searchRes.innerHTML = response;
-                } else {
-                    searchResult.setAttribute("hidden", "");
-                    searchRes.innerHTML = "";
-                }
-            });
-        }
-
-        // Add more conditions here if needed for other types of searches
-
+            } else {
+                searchResult.innerHTML += "No results found";
+            }
+        });
     } else {
-        searchResult.style.display = "none";
+        searchResult.setAttribute("hidden", "");
     }
 }
 

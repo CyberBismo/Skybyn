@@ -1,5 +1,9 @@
 RewriteEngine On
 
+<FilesMatch "\.(html|css|js)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+</FilesMatch>
+
 # Force HTTPS
 RewriteCond %{HTTPS} off
 RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]

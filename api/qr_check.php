@@ -21,6 +21,19 @@ if ($check->num_rows == 1) {
     }
     $json = array("responseCode"=>1,"message"=>"You logged in successfully");
     echo json_encode($json);
+    ?>
+    <script>
+    // Connect to the WebSocket server
+    const ws = new WebSocket('wss://dev.skybyn.no:4433');
+    ws.onopen = () => {
+        ws.send(JSON.stringify({
+            type: 'qr_login',
+            code: '<?=$code?>',
+            user: '<?=$user?>'
+        }));
+    };
+    </script>
+    <?php
     exit();
 } else {
     $json = array("responseCode"=>0,"message"=>"Invalid QR code");

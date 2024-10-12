@@ -2412,10 +2412,11 @@
             <?php }?>
             .post_comment_actions {
                 width: 30px;
-                margin-left: auto;
             }
             .post_comment_actions .btn {
+                width: 30px;
                 padding: 10px 10px 0 10px;
+                box-sizing: border-box;
                 cursor: pointer;
             }
 
@@ -2954,7 +2955,9 @@
                 box-sizing: border-box;
             }
             .friend-list h3 {
-                padding: 0 20px;
+                padding: 10px 20px;
+                background: rgba(0,0,0,.1);
+                border-radius: 10px;
             }
             .friend {
                 width: 100%;
@@ -3033,6 +3036,7 @@
             .friend-referral h3 {
                 margin: 0 0 10px 0;
                 padding: 0 10px;
+                background: none;
                 cursor: pointer;
             }
             .fr_code {

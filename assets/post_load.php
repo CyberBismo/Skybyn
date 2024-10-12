@@ -2,28 +2,33 @@
 include "./functions.php";
 
 $post_id = $_POST['post_id'];
-$getPost = $conn->query("SELECT * FROM `posts` WHERE `id` = '$post_id'");
 
-$post = $getPost->fetch_assoc();
-$post_id = $post['id'];
-$post_user = $post['user'];
-$post_content = $post['content'];
-$post_created = date("d M. y H:i:s", $post['created']);
+$stmt = $conn->prepare("SELECT * FROM `posts` WHERE `id` = ? AND (`user` = ? OR `user` IN (SELECT `friend_id` FROM `friendship` WHERE `user_id` = ? AND `status` = 'friends'))");
+$stmt->bind_param('iii', $post_id, $uid, $uid);
+$stmt->execute();
+$checkPost = $stmt->get_result();
 
-$getComments = $conn->query("SELECT * FROM `comments` WHERE `post`='$post_id'");
-$comments = $getComments->num_rows;
+if ($checkPost->num_rows == 1) {
+    $post = $checkPost->fetch_assoc();
+    $post_id = $post['id'];
+    $post_user = $post['user'];
+    $post_content = $post['content'];
+    $post_created = date("d M. y H:i:s", $post['created']);
 
-$getPostUser = $conn->query("SELECT * FROM `users` WHERE `id`='$post_user'");
-$postUser = $getPostUser->fetch_assoc();
-$post_user_name = $postUser['username'];
-$post_user_avatar = "./".$postUser['avatar'];
-if ($post_user_avatar == "./") {
-    $post_user_avatar = "./assets/images/logo_faded_clean.png";
-}
+    $getComments = $conn->query("SELECT * FROM `comments` WHERE `post`='$post_id'");
+    $comments = $getComments->num_rows;
 
-$post_video = convertVideo($post_content);
-$post_links = extractUrls($post_content);
-$post_content_res = fixEmojis(cleanUrls(nl2br($post_content)), 1);
+    $getPostUser = $conn->query("SELECT * FROM `users` WHERE `id`='$post_user'");
+    $postUser = $getPostUser->fetch_assoc();
+    $post_user_name = $postUser['username'];
+    $post_user_avatar = "./".$postUser['avatar'];
+    if ($post_user_avatar == "./") {
+        $post_user_avatar = "./assets/images/logo_faded_clean.png";
+    }
+
+    $post_video = convertVideo($post_content);
+    $post_links = extractUrls($post_content);
+    $post_content_res = fixEmojis(cleanUrls(nl2br($post_content)), 1);
 ?>
 
 <div class="post" id="post_<?=$post_id?>">
@@ -149,3 +154,4 @@ $post_content_res = fixEmojis(cleanUrls(nl2br($post_content)), 1);
         </div>
     </div>
 </div>
+<?php }?>

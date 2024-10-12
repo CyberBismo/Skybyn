@@ -1,18 +1,19 @@
 <?php include "./functions.php";
 
-$post_id = $_POST['post'];
+$comment_id = $_POST['comment_id'];
+$post_id = $_POST['post_id'];
 
-$getComment = $conn->query("SELECT * FROM `comments` WHERE `post`='$post_id' ORDER BY `date` DESC");
-if ($getComment->num_rows > 0) {
-    while($commentData = $getComment->fetch_assoc()) {
-        $commentID = $commentData['id'];
-        $commentUsername = getUser("id",$commentData['user'],"username");
-        $commentAvatar = getUser("id",$commentData['user'],"avatar");
-        $commentText = $commentData['content'];
-        
-        if ($commentAvatar == "") {
-            $commentAvatar = "./assets/images/logo_faded_clean.png";
-        }?>
+$getComment = $conn->query("SELECT * FROM `comments` WHERE `post`='$post_id' AND `id`='$comment_id'");
+if ($getComment->num_rows == 1) {
+    $commentData = $getComment->fetch_assoc();
+    $commentID = $commentData['id'];
+    $commentUsername = getUser("id",$commentData['user'],"username");
+    $commentAvatar = getUser("id",$commentData['user'],"avatar");
+    $commentText = $commentData['content'];
+    
+    if ($commentAvatar == "") {
+        $commentAvatar = "./assets/images/logo_faded_clean.png";
+    }?>
 <div class="post_comment" id="comment_<?=$commentID?>">
     <div class="post_comment_user">
         <div class="post_comment_user_avatar">
@@ -25,4 +26,4 @@ if ($getComment->num_rows > 0) {
         <div class="btn" onclick="delComment(<?=$commentID?>)"><i class="fa-solid fa-trash"></i></div>
     </div>
 </div>
-<?php }}?>
+<?php }?>

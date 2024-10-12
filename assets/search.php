@@ -1,43 +1,58 @@
 <?php
 include_once "./functions.php";
 
-$text = $_POST['text'];
+$text = strtoupper($_POST['text']);
 
-if (strpos($text, "@user ") === 0) {
+if (strpos($text, "@") === 0) {
     // User search
-    $username = substr($text, 6); // 6 is the length of "@user "
-    $getUsers = $conn->query("SELECT * FROM `users` WHERE `username` LIKE '$username%'");
+    $username = substr($text, 1); // 2 is the length of "@"
+    $stmt = $conn->prepare("SELECT * FROM `users` WHERE `username` LIKE UPPER(?)");
+    $likeUsername = $username . '%';
+    $stmt->bind_param("s", $likeUsername);
+    $stmt->execute();
+    $getUsers = $stmt->get_result();
 
     if ($getUsers->num_rows > 0) {
+        $users = [];
         while ($user = $getUsers->fetch_assoc()) {
+            $userid = $user['id'];
             $username = $user['username'];
             $avatar = "./" . $user['avatar'];
 
             if ($avatar == "./") {
                 $avatar = "./assets/images/logo_faded_clean.png";
             }
-?>
-            <div class="search_res_user" onclick="window.location.href='./profile?u=<?= $username ?>'">
-                <div class="search_res_user_avatar">
-                    <img src="<?= $avatar ?>">
-                </div>
-                <?= $username ?>
-            </div>
-<?php
+            
+            $users = [
+                'user' => [
+                    'id' => $userid,
+                    'username' => $username,
+                    'avatar' => $avatar
+                ]
+            ];
         }
+
+        echo json_encode($users);
     } else {
-        ?>
-        <div class="search_res_user">
-            No users found
-        </div>
-        <?php
+        $data = [
+            'username' => "No users found",
+            'avatar' => "./assets/images/logo_faded_clean.png"
+        ];
+
+        echo json_encode($data);
     }
-} elseif (strpos($text, "/page ") === 0) {
+} else
+if (strpos($text, "page: ") === 0) {
     // Page search
-    $pageName = substr($text, 6); // 6 is the length of "/page "
-    $getPages = $conn->query("SELECT * FROM `pages` WHERE `name` LIKE '$pageName%' OR `id` LIKE '$pageName%'");
+    $pageName = substr($text, 6); // 6 is the length of "page: "
+    $getPages = $conn->prepare("SELECT * FROM `pages` WHERE `name` LIKE ? OR `id` LIKE ?");
+    $likePageName = $pageName . '%';
+    $getPages->bind_param("ss", $likePageName, $likePageName);
+    $getPages->execute();
+    $getPages = $getPages->get_result();
 
     if ($getPages->num_rows > 0) {
+        $pages = [];
         while ($page = $getPages->fetch_assoc()) {
             $pid = $page['id'];
             $name = $page['name'];
@@ -46,28 +61,38 @@ if (strpos($text, "@user ") === 0) {
             if ($icon == "./") {
                 $icon = "./assets/images/logo_faded_clean.png";
             }
-?>
-            <div class="search_res_page" onclick="window.location.href='./page?id=<?= $pid ?>'">
-                <div class="search_res_page_icon">
-                    <img src="<?= $icon ?>">
-                </div>
-                <?= $name ?>
-            </div>
-<?php
+            
+            $pages = [
+                'page' => [
+                    'pid' => $pid,
+                    'name' => $name,
+                    'icon' => $icon
+                ]
+            ];
         }
+
+        echo json_encode($pages);
     } else {
-        ?>
-        <div class="search_res_page">
-            No pages found
-        </div>
-        <?php
+        $data = [
+            'pid' => "No pages found",
+            'name' => "No pages found",
+            'icon' => "./assets/images/logo_faded_clean.png"
+        ];
+
+        echo json_encode($data);
     }
-} elseif (strpos($text, "/group ") === 0) {
+} else
+if (strpos($text, "group: ") === 0) {
     // Group search
-    $groupName = substr($text, 6); // 6 is the length of "/group "
-    $getGroups = $conn->query("SELECT * FROM `groups` WHERE `name` LIKE '$groupName%' OR `id` LIKE '$groupName%'");
+    $groupName = substr($text, 6); // 6 is the length of "group: "
+    $getGroups = $conn->prepare("SELECT * FROM `groups` WHERE `name` LIKE ? OR `id` LIKE ?");
+    $likeGroupName = $groupName . '%';
+    $getGroups->bind_param("ss", $likeGroupName, $likeGroupName);
+    $getGroups->execute();
+    $getGroups = $getGroups->get_result();
 
     if ($getGroups->num_rows > 0) {
+        $groups = [];
         while ($group = $getGroups->fetch_assoc()) {
             $gid = $group['id'];
             $name = $group['name'];
@@ -76,27 +101,36 @@ if (strpos($text, "@user ") === 0) {
             if ($icon == "./") {
                 $icon = "./assets/images/logo_faded_clean.png";
             }
-?>
-            <div class="search_res_group" onclick="window.location.href='./group?id=<?= $gid ?>'">
-                <div class="search_res_group_icon">
-                    <img src="<?= $icon ?>">
-                </div>
-                <?= $name ?>
-            </div>
-<?php
+            
+            $groups = [
+                'group' => [
+                    'gid' => $gid,
+                    'name' => $name,
+                    'icon' => $icon
+                ]
+            ];
         }
+
+        echo json_encode($groups);
     } else {
-        ?>
-        <div class="search_res_group">
-            No groups found
-        </div>
-        <?php
+        $data = [
+            'gid' => "No groups found",
+            'name' => "No groups found",
+            'icon' => "./assets/images/logo_faded_clean.png"
+        ];
+
+        echo json_encode($data);
     }
 } else {
     // Post search
-    $getPost = $conn->query("SELECT * FROM `posts` WHERE `content` LIKE '%$text%'");
+    $getPost = $conn->prepare("SELECT * FROM `posts` WHERE `content` LIKE UPPER(?)");
+    $likeContent = '%' . $text . '%';
+    $getPost->bind_param("s", $likeContent);
+    $getPost->execute();
+    $getPost = $getPost->get_result();
 
     if ($getPost->num_rows > 0) {
+        $posts = [];
         while ($post = $getPost->fetch_assoc()) {
             $pid = $post['id'];
             $uid = $post['uid'];
@@ -133,21 +167,43 @@ if (strpos($text, "@user ") === 0) {
 
             $getReplies = $conn->query("SELECT * FROM `replies` WHERE `pid` = '$pid'");
             $replies = $getReplies->num_rows;
-            ?>
-                        <div class="search_res_group" onclick="window.location.href='./group?id=<?= $gid ?>'">
-                            <div class="search_res_group_icon">
-                                <img src="<?= $icon ?>">
-                            </div>
-                            <?= $name ?>
-                        </div>
-            <?php
+            
+            $posts = [
+                'post' => [
+                    'pid' => $pid,
+                    'uid' => $uid,
+                    'username' => $username,
+                    'avatar' => $avatar,
+                    'content' => $content,
+                    'time' => $time,
+                    'likes' => $likes,
+                    'comments' => $comments,
+                    'shares' => $shares,
+                    'reposts' => $reposts,
+                    'views' => $views,
+                    'replies' => $replies
+                ]
+            ];
         }
+
+        echo json_encode($posts);
     } else {
-        ?>
-        <div class="search_res_post">
-            No posts found
-        </div>
-        <?php
+        $data = [
+            'pid' => "No posts found",
+            'uid' => "No posts found",
+            'username' => "No posts found",
+            'avatar' => "./assets/images/logo_faded_clean.png",
+            'content' => "No posts found",
+            'time' => "No posts found",
+            'likes' => "No posts found",
+            'comments' => "No posts found",
+            'shares' => "No posts found",
+            'reposts' => "No posts found",
+            'views' => "No posts found",
+            'replies' => "No posts found"
+        ];
+
+        echo json_encode($data);
     }
 }
 ?>

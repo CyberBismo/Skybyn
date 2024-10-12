@@ -147,8 +147,12 @@ while ($post = $getPosts->fetch_assoc()) {
                     </div>
                     <div class="post_comment_content"><?=$commentText?></div>
                     <div class="post_comment_actions">
-                        <?php if ($rank > 0 || $commentUser == $uid) {?>
+                        <?php if (isset($_SESSION['user'])) {
+                            $rank = getUser("id",$_SESSION['user'],"rank");
+                            if ($rank > 0 || $commentUser == $uid) {?>
                         <div class="btn" onclick="delComment(<?=$commentID?>)"><i class="fa-solid fa-trash"></i></div>
+                        <?php }} else {?>
+                        <div class="btn"></div>
                         <?php }?>
                     </div>
                 </div>

@@ -11,7 +11,14 @@ function sendComment(x) {
             }
         }).done(function(response) {
             input.value = "";
-            checkComments(x);
+            cid = response.id;
+            pid = response.post_id;
+            const data = {
+                type: 'new_comment',
+                cid: cid,
+                pid: pid
+            };
+            ws.send(JSON.stringify(data)); // Send the new post ID to the server
         });
     }
 }

@@ -77,11 +77,15 @@ if ($domain == $devDomain) {
             const homePage = window.location.href;
             const pages = ['group', 'page', 'search', 'notifications', 'settings', 'profile', 'post'];
             if (!pages.some(page => homePage.includes(page))) {
-                const newPostBtn = document.getElementById('new_post_btn');
-                newPostBtn.style.display = 'block';
+                if (document.getElementById('new_post_btn')) {
+                    const newPostBtn = document.getElementById('new_post_btn');
+                    newPostBtn.style.display = 'block';
+                }
             } else {
-                const newPostBtn = document.getElementById('new_post_btn');
-                newPostBtn.style.display = 'none';
+                if (document.getElementById('new_post_btn')) {
+                    const newPostBtn = document.getElementById('new_post_btn');
+                    newPostBtn.style.display = 'block';
+                }
             }
             </script>
             <?php }?>
@@ -277,8 +281,8 @@ if ($domain == $devDomain) {
             } else {
                 new_post.style.display = "block";
                 <?php if (isMobile() == true) {?>
-                newPostIcon.classList.add("fa-xmark");
                 newPostIcon.classList.remove("fa-plus");
+                newPostIcon.classList.add("fa-xmark");
                 mobile_nav_btn.style.transform = "rotate(45deg)";
                 new_post.style.background = "rgba(var(--dark),1)";
                 header.style.background = "rgba(var(--dark),1)";
@@ -674,9 +678,9 @@ if ($domain == $devDomain) {
                 <p>Pages</p>
                 <div id="search_r_pages"></div>
             </div>
-            <div id="search_res_markets" hidden>
-                <p>Markets</p>
-                <div id="search_r_markets"></div>
+            <div id="search_res_posts" hidden>
+                <p>Posts</p>
+                <div id="search_r_posts"></div>
             </div>
         </div>
         <?php }?>
@@ -684,7 +688,7 @@ if ($domain == $devDomain) {
         <div class="image_viewer" id="image_viewer" style="display: none">
             <div class="image_post" id="image_post" <?php if (isMobile() == true) {?>hidden<?php }?>></div>
             <div class="image_box">
-                <div class="image_box_close" onclick="showImage(null)"><i class="fa-solid fa-xmark"></i></div>
+                <div class="image_box_close" onclick="showImage(null)"><i id="newPostIcon" class="fa-solid fa-xmark"></i></div>
                 <div class="image_frame" id="image_frame" onclick="toggleImageSlider()"></div>
                 <div class="image_slider" id="image_slider"></div>
             </div>

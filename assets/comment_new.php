@@ -8,7 +8,11 @@ $escapedText = addslashes($escapedText);
 $text = nl2br($escapedText);
 
 if (!empty($text)) {
-    $conn->query("INSERT INTO `comments` (`post`,`user`,`content`,`date`) VALUES ('$pid','$uid','$text','$now')");
+    $addComment = $conn->prepare("INSERT INTO `comments` (`post`,`user`,`content`,`date`) VALUES (?,?,?,?)");
+    $addComment->bind_param("iiss", $pid, $uid, $text, $now);
+    $addComment->execute();
+    $cid = $addComment->insert_id;
+    $addComment->close();
 }
 
 $checkPostData = $conn->query("SELECT * FROM `posts` WHERE `id`='$pid'");
@@ -19,5 +23,10 @@ if ($postUser != $uid) {
     $conn->query("INSERT INTO `notifications` (`to`,`from`,`content`,`date`,`post`,`type`) VALUES ('$postUser','$uid','$text','$now','$pid','comment')");
 }
 
-echo $text;
+$data = [
+    'id' => $cid,
+    'post_id' => $pid,
+];
+
+echo json_encode($data);
 ?>

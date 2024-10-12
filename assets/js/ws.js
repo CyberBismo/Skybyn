@@ -6,52 +6,37 @@ ws.onerror = (error) => {
 
 let url = new URL(window.location.href);
 
-const getCookie = (name) => {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-
-    if (parts.length === 2) return parts.pop().split(';').shift();
-};
-
-let userId = getCookie('logged');
-
-if (userId && userId.length === 5) {
-    userId = userId.substring(4);
-}
-
-if (getCookie('logged')) {
-    logged = 'User ID: ';
-} else {
-    logged = null;
-}
-
-let ip = '';
-
 // Send a message to the server when the client connects
-ws.onopen = () => {
-    if (logged !== null) {
-        logged = logged + userId;
-    } else {
-        logged = 'Visitor';
+$.ajax({
+    url: '../assets/functions.php',
+    method: 'POST',
+    data: {
+        get_session: null
+    },
+    success: function(response) {
+        let sessionData = JSON.parse(response);
+        sessionStorage.setItem('user', sessionData.user);
+        
+        ws.onopen = () => {
+            let clientInfo = {
+                type: 'client',
+                id: sessionData.user
+            };
+
+            ws.send(JSON.stringify(clientInfo));
+        };
+    },
+    error: function() {
+        ws.onopen = () => {
+            let clientInfo = {
+                type: 'client',
+                id: 'guest'
+            };
+
+            ws.send(JSON.stringify(clientInfo));
+        };
     }
-
-
-// Get the client's IP address
-fetch('https://api.ipify.org?format=json')
-    .then(response => response.json())
-    .then(data => {
-        ip = data.ip.includes('::1') ? 'localhost' : data.ip;
-        if (ws.readyState === WebSocket.OPEN) {
-            ws.send(JSON.stringify({
-                type: 'client_online',
-                logged: logged,
-                url: url.href,
-                userAgent: navigator.userAgent,
-                ip: ip
-            }));
-        }
-    });
-};
+});
 
 // Receive messages from the server
 ws.onmessage = (event) => {
@@ -59,6 +44,55 @@ ws.onmessage = (event) => {
 
     if (isJsonString(message)) {
         let msgData = JSON.parse(message);
+        if (msgData.type === 'new_post') {
+            let postId = msgData.id;
+
+            $.ajax({
+                url: './assets/post_load.php',
+                type: 'POST',
+                data: {
+                    post_id: postId
+                },
+                success: function (response) {
+                    if (response !== null) {
+                        const postsContainer = document.getElementById('posts');
+                        postsContainer.insertAdjacentHTML('afterbegin', response);
+                    }
+                },
+                error: function () {
+                }
+            });
+        } else
+        if (msgData.type === 'delete_post') {
+            let postId = msgData.id;
+            if (document.getElementById('post_'+postId)) {
+                let post = document.getElementById('post_'+postId);
+                post.remove();
+            }
+        } else
+        if (msgData.type === 'new_comment') {
+            let commentId = msgData.cid;
+            let postId = msgData.pid;
+
+            if (document.getElementById('post_comments_'+postId)) {
+                $.ajax({
+                    url: './assets/comment_check.php',
+                    type: 'POST',
+                    data: {
+                        comment_id: commentId,
+                        post_id: postId
+                    },
+                    success: function (response) {
+                        if (response !== null) {
+                            const commentsContainer = document.getElementById('post_comments_' + postId);
+                            commentsContainer.insertAdjacentHTML('beforeend', response);
+                        }
+                    },
+                    error: function () {
+                    }
+                });
+            }
+        } else
         if (msgData.type === 'broadcast') {
             const broadcastMsg = document.createElement('div');
             broadcastMsg.classList.add('broadcast-msg');
@@ -105,10 +139,10 @@ ws.onmessage = (event) => {
 // Function to check if a string is a valid JSON
 function isJsonString(value) {
     try {
-      JSON.parse(value);
-      return true;
+        JSON.parse(value);
+        return true;
     } catch (e) {
-      return false;
+        return false;
     }
 }
 
@@ -117,30 +151,39 @@ ws.onclose = () => {
     setTimeout(() => {
         const newWs = new WebSocket('wss://dev.skybyn.no:4433');
 
-        newWs.onopen = () => {
-            newWs.send(JSON.stringify({
-                type: 'client_online',
-                logged: logged + userId,
-                url: url.href,
-                userAgent: navigator.userAgent,
-                ip: ip
-            }));
-        };
+        newWs.onopen = ws.onopen; // Reassign onopen handler
+        newWs.onmessage = ws.onmessage; // Reassign message handler
+        newWs.onclose = ws.onclose; // Reassign close handler
+        newWs.onerror = ws.onerror; // Reassign error handler
 
-        newWs.onclose = ws.onclose; // Reassign the onclose handler for reconnection
-        newWs.onmessage = ws.onmessage; // Reassign any other event handlers you have for the new WebSocket
-        ws = newWs; // Update the original reference
+        ws = newWs; // Update the reference to the new WebSocket
     }, 3000);
 };
 
 // Send a message to the server when the client closes the window
 window.addEventListener('beforeunload', () => {
-    ws.send(JSON.stringify({
-        type: 'client_offline',
-        logged: logged + userId,
-        url: url.href,
-        userAgent: navigator.userAgent,
-        ip: ip
-    }));
     ws.close();
 });
+
+// Helper function to show temporary messages
+function showTemporaryMessage(message) {
+    const broadcastMsg = document.createElement('div');
+    broadcastMsg.classList.add('broadcast-msg');
+    broadcastMsg.innerHTML = message;
+    document.body.appendChild(broadcastMsg);
+
+    setTimeout(() => {
+        broadcastMsg.remove();
+    }, 5000);
+}
+
+// Function to update active clients in the console element
+function updateActiveClients(count) {
+    const terminal = document.getElementById('console');
+    const termClient = document.getElementById('term_clients');
+    if (termClient) {
+        termClient.innerHTML = 'Active clients: ' + count;
+    } else if (terminal) {
+        terminal.innerHTML += '<p id="term_clients">Active clients: ' + count + '</p>';
+    }
+}

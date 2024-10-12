@@ -55,16 +55,11 @@ function createPost() {
             contentType: false,
             success: function (response) {
                 post_id = response.post_id;
-                loadNewPosts(post_id);
-                if (document.getElementById('console')) {
-                    const console = document.getElementById('console');
-                    if (document.getElementById('cons_post')) {
-                        const cons_post = document.getElementById('cons_post');
-                        cons_post.innerHTML = response.message;
-                    } else {
-                        console.innerHTML += '<p id="cons_post">'+response.message+'</p>';
-                    }
-                }
+                const data = {
+                    type: 'new_post',
+                    id: post_id
+                };
+                ws.send(JSON.stringify(data)); // Send the new post ID to the server
                 continuePost = true;
             },
             error: function (response) {
@@ -77,7 +72,6 @@ function createPost() {
                         console.innerHTML += '<p id="cons_post">'+response.message+'</p>';
                     }
                 }
-                continuePost = true;
             }
         });
     } else {
@@ -137,22 +131,6 @@ function checkPosts() {
                     }
                 }
             }
-        }
-    });
-}
-
-function loadNewPosts(post_id) {
-    $.ajax({
-        url: './assets/post_load.php',
-        type: 'POST',
-        data: {
-            post_id: post_id
-        },
-        success: function (response) {
-            const postsContainer = document.getElementById('posts');
-            postsContainer.insertAdjacentHTML('afterbegin', response);
-        },
-        error: function () {
         }
     });
 }
@@ -227,7 +205,13 @@ function deletePost(x) {
             deletePost : null,
             post_id : x
         }
-    }).done(function(response) {
+    }).done(function() {
+        post_id = x;
+        const data = {
+            type: 'delete_post',
+            id: post_id
+        };
+        ws.send(JSON.stringify(data)); // Send the new post ID to the server
         post.remove();
     });
 }

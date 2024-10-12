@@ -1211,6 +1211,10 @@ if (isset($_SESSION['user'])) {
         $previousUrl = "";
     }
 
+    if (isset($_POST['get_session'])) {
+        echo json_encode(['user' => $_SESSION['user']]);
+    }
+
     if (isset($_SESSION['gta'])) {
         if ($_SESSION['gta'] == "login") {
             ?><meta http-equiv="Refresh" content="0; url='https://skybyn.no/gta/ressurser" /><?php
@@ -1309,6 +1313,9 @@ if (isset($_SESSION['user'])) {
     $myWallet = $getWallet->fetch_assoc();
     $wallet = $myWallet['wallet'];
 } else {
+    if (isset($_POST['get_session'])) {
+        echo json_encode(['user' => 'guest']);
+    }
     if (isset($_COOKIE['logged'])) {
         $user = $_COOKIE['logged'];
         $uid = substr($user, 4);

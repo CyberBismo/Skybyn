@@ -26,43 +26,24 @@
                                     data : code
                                 }
                             }).done(function(response) {
-                                if (response === "404") {
-                                    setTimeout(() => {
-                                        getLoginQR();
-                                    }, 1000);
-                                } else {
+                                if (response != null) {
                                     document.getElementById('login_qr').src = "../qr/temp/" + response + ".png";
-                                    setTimeout(() => {
-                                        checkQR(code);
-                                    }, 3000);
                                 }
                             });
                         }
-                        function checkQR(code) {
-                            console.log('Checking QR code');
-                            $.ajax({
-                                url: './qr/api.php',
-                                type: "POST",
-                                data: {
-                                    check : code
-                                }
-                            }).done(function(response) {
-                                if (response === "pending") {
-                                    setTimeout(() => {
-                                        checkQR(code);
-                                    }, 1000);
-                                } else
-                                if (response === "404") {
-                                    return;
-                                } else
-                                if (response === "expired") {
-                                    getLoginQR();
-                                } else
-                                if (response === "success"){
+
+                        const ws = new WebSocket('wss://dev.skybyn.no:4433');
+                        ws.onmessage = (event) => {
+                            const data = JSON.parse(event.data);
+                            const code = getCookieValue('qr');
+                            if (data.type == 'qr_login') {
+                                if (data.code == code) {
+                                    const user = data.user;
+                                    setCookie('user', user, 1);
                                     window.location.href = "./";
                                 }
-                            });
-                        }
+                            }
+                        };
 
                         function setQRSize() {
                             const qrImage = document.getElementById('qr_login');
