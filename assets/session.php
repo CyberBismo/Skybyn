@@ -7,7 +7,7 @@ if (isset($_POST['user'])) {
         $user = $_POST['user'];
         $checkUser = $conn->query("SELECT * FROM `users` WHERE `id`='$user'");
         if ($checkUser->num_rows == 0) {
-            echo json_encode(['user' => '']);
+            echo json_encode(['user' => 'guest']);
             exit();
         } else {
             $row = $checkUser->fetch_assoc();
