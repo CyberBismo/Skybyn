@@ -8,10 +8,10 @@ let url = new URL(window.location.href);
 
 // Send a message to the server when the client connects
 $.ajax({
-    url: '../assets/functions.php',
+    url: '../assets/session.php',
     method: 'POST',
     data: {
-        get_session: null
+        user: null
     },
     success: function(response) {
         let sessionData = JSON.parse(response);
