@@ -44,7 +44,7 @@ ws.onmessage = (event) => {
     if (isJsonString(message)) {
         let msgData = JSON.parse(message);
         if (msgData.type == 'qr_login') {
-            const code = getcookie('code');
+            const code = getcookie('qr');
             if (data.code == code) {
                 console.log('QR code matched');
                 const user = data.user;
