@@ -26,17 +26,58 @@
                                     data : code
                                 }
                             }).done(function(response) {
-                                if (response != null) {
-                                    document.getElementById('login_qr').src = "../qr/temp/" + response + ".png";
+                                if (response === "404") {
                                     setTimeout(() => {
                                         getLoginQR();
-                                    }, 60000);
+                                    }, 1000);
+                                } else {
+                                    document.getElementById('login_qr').src = "../qr/temp/" + response + ".png";
+                                    checkQR(code);
+                                }
+                            });
+                        }
+                        function checkQR(code) {
+                            $.ajax({
+                                url: './qr/api.php',
+                                type: "POST",
+                                data: {
+                                    check : code
+                                }
+                            }).done(function(response) {
+                                if (response === "pending") {
+                                    setTimeout(() => {
+                                        checkQR(code);
+                                    }, 1000);
+                                } else
+                                if (response === "404") {
+                                    return;
+                                } else
+                                if (response === "expired") {
+                                    getLoginQR(code);
+                                } else
+                                if (response === "success"){
+                                    delQR();
+                                    window.location.href = "./";
                                 }
                             });
                         }
 
+                        function delQR(code) {
+                            deleteCookie('qr');
+                            document.getElementById('login_qr').src = "#";
+                            $.ajax({
+                                url: './qr/api.php',
+                                type: "POST",
+                                data: {
+                                    delete : code
+                                }
+                            }).done(function(response) {
+                                console.clear();
+                            });
+                        }
+
                         function setQRSize() {
-                            const qrImage = document.getElementById('qr_login_img');
+                            const qrImage = document.getElementById('qr_login');
                             const qrWidth = qrImage.style.width;
                             qrImage.style.height = qrWidth + 'px';
                         }
@@ -51,7 +92,8 @@
                     <h2 id="normal_login_header">Sign in</h2>
 
                     <i class="fa-solid fa-at"></i>
-                    <input type="email" id="login-email" onkeydown="hitEnterLogin(this)" pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$" required placeholder="E-mail address" title="example@example.com" oninput="setCustomValidity('')" oninvalid="setCustomValidity('Please enter a valid email address')" autofocus>
+                    <input type="email" id="login-email" onkeydown="hitEnterLogin(this)" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" required placeholder="E-mail address" title="example@example.com" oninput="setCustomValidity('')" oninvalid="setCustomValidity('Please enter a valid email address')" autofocus>
+
                     <i class="fa-solid fa-key"></i>
                     <input type="password" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{4,}$" id="login-password" onkeydown="hitEnterLogin(this)" placeholder="Password" oninvalid="setCustomValidity('Password must be at least 8 characters long, with at least one lowercase letter, one uppercase letter, and one digit.')" required>
                     <i class="fa-regular fa-eye" onclick="showPassword('login-password')"></i>
@@ -169,6 +211,7 @@
                                         delete : code
                                     }
                                 }).done(function(response) {
+                                    console.clear();
                                 });
                             }
                         } else {
