@@ -106,23 +106,20 @@ ws.onmessage = (event) => {
                         if (response !== null) {
                             const commentsContainer = document.getElementById('post_comments_' + postId);
                             commentsContainer.insertAdjacentHTML('beforeend', response);
-                            $.ajax({
-                                url: './assets/comments.php',
-                                type: 'POST',
-                                data: {
-                                    post_id: postId
-                                },
-                                success: function (response) {
-                                    document.getElementById('comments_count_'+postId).innerHTML = response;
-                                },
-                                error: function () {
-                                }
-                            });
+                            document.getElementById('comments_count_'+postId).innerHTML = parseInt(document.getElementById('comments_count_'+postId).innerHTML) + 1;
                         }
                     },
                     error: function () {
                     }
                 });
+            }
+        } else
+        if (msgData.type === 'delete_comment') {
+            let commentId = msgData.id;
+            if (document.getElementById('comment_'+commentId)) {
+                let comment = document.getElementById('comment_'+commentId);
+                comment.remove();
+                document.getElementById('comments_count_'+postId).innerHTML = parseInt(document.getElementById('comments_count_'+postId).innerHTML) - 1;
             }
         } else
         if (msgData.type === 'broadcast') {
