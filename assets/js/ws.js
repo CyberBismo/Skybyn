@@ -10,9 +10,6 @@ let url = new URL(window.location.href);
 $.ajax({
     url: '../assets/session.php',
     method: 'POST',
-    data: {
-        user: null
-    },
     success: function(response) {
         let sessionData = JSON.parse(response);
         
@@ -63,10 +60,9 @@ ws.onmessage = (event) => {
                     }
                 });
             }
-        }
+        } else
         if (msgData.type === 'new_post') {
             let postId = msgData.id;
-
             $.ajax({
                 url: './assets/post_load.php',
                 type: 'POST',
@@ -93,23 +89,26 @@ ws.onmessage = (event) => {
         if (msgData.type === 'new_comment') {
             let commentId = msgData.cid;
             let postId = msgData.pid;
+            let postElement = document.getElementById('post_' + postId);
+            let commentsContainer = document.getElementById('post_comments_' + postId);
+            let commentsCountElement = document.getElementById('comments_count_' + postId);
 
-            if (document.getElementById('post_comments_'+postId)) {
+            if (postElement && commentsContainer && commentsCountElement) {
                 $.ajax({
                     url: './assets/comments_check.php',
                     type: 'POST',
                     data: {
-                        comment_id: commentId,
-                        post_id: postId
+                    comment_id: commentId,
+                    post_id: postId
                     },
                     success: function (response) {
-                        if (response !== null) {
-                            const commentsContainer = document.getElementById('post_comments_'+postId);
-                            commentsContainer.insertAdjacentHTML('afterbegin', response);
-                            document.getElementById('comments_count_'+postId).innerHTML = parseInt(document.getElementById('comments_count_'+postId).innerHTML) + 1;
-                        }
+                    if (response) {
+                        commentsContainer.insertAdjacentHTML('afterbegin', response);
+                        commentsCountElement.textContent = parseInt(commentsCountElement.textContent) + 1;
+                    }
                     },
                     error: function () {
+                    console.error('Failed to load new comment.');
                     }
                 });
             }
@@ -117,10 +116,11 @@ ws.onmessage = (event) => {
         if (msgData.type === 'delete_comment') {
             let commentId = msgData.id;
             let postId = msgData.pid;
-            if (document.getElementById('comment_'+commentId)) {
-                let comment = document.getElementById('comment_'+commentId);
-                comment.remove();
-                document.getElementById('comments_count_'+postId).innerHTML = parseInt(document.getElementById('comments_count_'+postId).innerHTML) - 1;
+            if (document.getElementById('post_'+postId)) {
+                if (document.getElementById('comment_'+commentId)) {
+                    document.getElementById('comment_'+commentId).remove();
+                }
+                document.getElementById('comments_count_'+postId).textContent = parseInt(document.getElementById('comments_count_'+postId).textContent) - 1;
             }
         } else
         if (msgData.type === 'broadcast') {
