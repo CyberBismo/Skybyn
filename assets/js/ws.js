@@ -18,7 +18,7 @@ $.ajax({
         
         ws.onopen = () => {
             let clientInfo = {
-                type: 'client',
+                type: 'client_connected',
                 id: sessionData.user
             };
 
@@ -28,7 +28,7 @@ $.ajax({
     error: function() {
         ws.onopen = () => {
             let clientInfo = {
-                type: 'client',
+                type: 'client_connected',
                 id: 'guest'
             };
 
@@ -96,7 +96,7 @@ ws.onmessage = (event) => {
 
             if (document.getElementById('post_comments_'+postId)) {
                 $.ajax({
-                    url: './assets/comment_check.php',
+                    url: './assets/comments_check.php',
                     type: 'POST',
                     data: {
                         comment_id: commentId,
@@ -104,8 +104,8 @@ ws.onmessage = (event) => {
                     },
                     success: function (response) {
                         if (response !== null) {
-                            const commentsContainer = document.getElementById('post_comments_' + postId);
-                            commentsContainer.insertAdjacentHTML('beforeend', response);
+                            const commentsContainer = document.getElementById('post_comments_'+postId);
+                            commentsContainer.insertAdjacentHTML('afterbegin', response);
                             document.getElementById('comments_count_'+postId).innerHTML = parseInt(document.getElementById('comments_count_'+postId).innerHTML) + 1;
                         }
                     },
@@ -116,6 +116,7 @@ ws.onmessage = (event) => {
         } else
         if (msgData.type === 'delete_comment') {
             let commentId = msgData.id;
+            let postId = msgData.pid;
             if (document.getElementById('comment_'+commentId)) {
                 let comment = document.getElementById('comment_'+commentId);
                 comment.remove();

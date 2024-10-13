@@ -13,20 +13,20 @@ if (!empty($text)) {
     $addComment->execute();
     $cid = $addComment->insert_id;
     $addComment->close();
+
+    $checkPostData = $conn->query("SELECT * FROM `posts` WHERE `id`='$pid'");
+    $postData = $checkPostData->fetch_assoc();
+    $postUser = $postData['user'];
+
+    if ($postUser != $uid) {
+        $conn->query("INSERT INTO `notifications` (`to`,`from`,`content`,`date`,`post`,`type`) VALUES ('$postUser','$uid','$text','$now','$pid','comment')");
+    }
+
+    $data = [
+        'comment_id' => $cid,
+        'post_id' => $pid,
+    ];
+
+    echo json_encode($data);
 }
-
-$checkPostData = $conn->query("SELECT * FROM `posts` WHERE `id`='$pid'");
-$postData = $checkPostData->fetch_assoc();
-$postUser = $postData['user'];
-
-if ($postUser != $uid) {
-    $conn->query("INSERT INTO `notifications` (`to`,`from`,`content`,`date`,`post`,`type`) VALUES ('$postUser','$uid','$text','$now','$pid','comment')");
-}
-
-$data = [
-    'id' => $cid,
-    'post_id' => $pid,
-];
-
-echo json_encode($data);
 ?>
