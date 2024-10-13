@@ -682,6 +682,8 @@
                                 if (response.responseCode === "ok") {
                                     window.location.href='../register?complete&user='+response.user+'&token='+response.token;
                                 }
+                            }).fail(function(response) {
+                                console.log(response);
                             });
                         }
                     }

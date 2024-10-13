@@ -50,14 +50,19 @@ function showSearch() {
 
 // Start searching while typing
 function startSearch(x) {
+    const friend_list = document.getElementById('friend_list');
     const searchResult = document.getElementById('search_result');
     const searchResUsers = document.getElementById('search_res_users');
+    const searchRUsers = document.getElementById('search_r_users');
     const searchResGroups = document.getElementById('search_res_groups');
+    const searchRGroups = document.getElementById('search_r_groups');
     const searchResPages = document.getElementById('search_res_pages');
+    const searchRPages = document.getElementById('search_r_pages');
     const searchResPosts = document.getElementById('search_res_posts');
+    const searchRPosts = document.getElementById('search_r_posts');
 
     if (x.value.length >= 4) {
-        searchResult.style.display = "block";
+        searchResult.removeAttribute("hidden");
         $.ajax({
             url: 'assets/search.php',
             type: "POST",
@@ -65,33 +70,31 @@ function startSearch(x) {
                 text: x.value
             }
         }).done(function(response) {
-            console.log(response);
-            if (response != "") {
-                searchResult.removeAttribute("hidden");
-                if (response.user) {
+            const res = JSON.parse(response);
+            if (res != "") {
+                if (res.user) {
                     searchResUsers.removeAttribute("hidden");
+                    res.user.forEach(user => {
+                        const userDiv = document.createElement('div');
+                        userDiv.classList.add('search_res_user');
+                        userDiv.onclick = () => window.location.href = `./profile?u=${user.username}`;
 
-                    const user = response.user;
-                    
-                    const userDiv = document.createElement('div');
-                    userDiv.classList.add('search_res_user');
-                    userDiv.onclick = () => window.location.href = `./profile?u=${user.username}`;
+                        const avatarDiv = document.createElement('div');
+                        avatarDiv.classList.add('search_res_user_avatar');
 
-                    const avatarDiv = document.createElement('div');
-                    avatarDiv.classList.add('search_res_user_avatar');
+                        const avatarImg = document.createElement('img');
+                        avatarImg.src = user.avatar;
 
-                    const avatarImg = document.createElement('img');
-                    avatarImg.src = user.avatar;
+                        avatarDiv.appendChild(avatarImg);
+                        userDiv.appendChild(avatarDiv);
+                        userDiv.appendChild(document.createTextNode(user.username));
 
-                    avatarDiv.appendChild(avatarImg);
-                    userDiv.appendChild(avatarDiv);
-                    userDiv.appendChild(document.createTextNode(user.username));
-
-                    searchResUsers.appendChild(userDiv);
+                        searchRUsers.appendChild(userDiv);
+                    });
                 } else
-                if (response.groups) {
+                if (res.groups) {
                     searchResGroups.removeAttribute("hidden");
-                    response.groups.forEach(group => {
+                    res.groups.forEach(group => {
                         const groupDiv = document.createElement('div');
                         groupDiv.classList.add('search_res_group');
                         groupDiv.onclick = () => window.location.href = `./group?g=${group.id}`;
@@ -109,9 +112,9 @@ function startSearch(x) {
                         searchRGroups.appendChild(groupDiv);
                     });
                 } else
-                if (response.pages) {
+                if (res.pages) {
                     searchResPages.removeAttribute("hidden");
-                    response.pages.forEach(page => {
+                    res.pages.forEach(page => {
                         const pageDiv = document.createElement('div');
                         pageDiv.classList.add('search_res_page');
                         pageDiv.onclick = () => window.location.href = `./page?p=${page.id}`;
@@ -129,9 +132,9 @@ function startSearch(x) {
                         searchRPages.appendChild(pageDiv);
                     });
                 } else
-                if (response.posts) {
+                if (res.posts) {
                     searchResPosts.removeAttribute("hidden");
-                    response.forEach(result => {
+                    res.forEach(result => {
                         const resultDiv = document.createElement('div');
                         resultDiv.classList.add('search_res_post');
                         resultDiv.onclick = () => window.location.href = `./post?id=${result.id}`;
@@ -146,7 +149,7 @@ function startSearch(x) {
                         resultDiv.appendChild(iconDiv);
                         resultDiv.appendChild(document.createTextNode(result.title));
 
-                        searchRes.appendChild(resultDiv);
+                        searchRPosts.appendChild(resultDiv);
                     });
                 } else {
                     searchResUsers.setAttribute("hidden", "");

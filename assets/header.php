@@ -577,8 +577,26 @@ if ($domain == $devDomain) {
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <input type="text" id="searchInput" onkeyup="startSearch(this)" placeholder="Search...">
             </div>
+            <div class="search_result" id="search_result" hidden>
+                <div id="search_res_users" hidden>
+                    <h3>Users</h3>
+                    <div id="search_r_users"></div>
+                </div>
+                <div id="search_res_groups" hidden>
+                    <h3>Groups</h3>
+                    <div id="search_r_groups"></div>
+                </div>
+                <div id="search_res_pages" hidden>
+                    <h3>Pages</h3>
+                    <div id="search_r_pages"></div>
+                </div>
+                <div id="search_res_posts" hidden>
+                    <h3>Posts</h3>
+                    <div id="search_r_posts"></div>
+                </div>
+            </div>
             <?php }?>
-            <div class="friend-list">
+            <div class="friend-list" id="friend_list">
                 <h3>Friends</h3>
                 <div id="friend-list">
                     <?php
@@ -664,25 +682,6 @@ if ($domain == $devDomain) {
             <div class="bnav-btn" onclick="showUserMenu(event)"><i class="fa-solid fa-bars"></i></div>
         </div>
 
-        <?php } else {?>
-        <div class="search_result" id="search_result" hidden>
-            <div id="search_res_users" hidden>
-                <p>Users</p>
-                <div id="search_r_users"></div>
-            </div>
-            <div id="search_res_groups" hidden>
-                <p>Groups</p>
-                <div id="search_r_groups"></div>
-            </div>
-            <div id="search_res_pages" hidden>
-                <p>Pages</p>
-                <div id="search_r_pages"></div>
-            </div>
-            <div id="search_res_posts" hidden>
-                <p>Posts</p>
-                <div id="search_r_posts"></div>
-            </div>
-        </div>
         <?php }?>
 
         <div class="image_viewer" id="image_viewer" style="display: none">

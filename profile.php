@@ -3,10 +3,10 @@
 $myProfile = false;
 
 if (isset($_GET['u'])) {
-    $user_id = substr($_GET['u'], 4);
-    
-    if ($uid != $user_id) {
-        if (getUser('id',$user_id,'username') != "error") {
+    $user = $_GET['u'];
+    if ($user != $username) {
+        $user_id = getUser('username',$user,'id');
+        if ($user_id != "error") {
             if (checkFriendship($uid,$user_id) == "ok") {
                 $friends = true;
             } else {

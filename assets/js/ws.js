@@ -6,33 +6,28 @@ ws.onerror = (error) => {
 
 let url = new URL(window.location.href);
 
-// Send a message to the server when the client connects
-$.ajax({
-    url: '../assets/session.php',
-    method: 'POST',
-    success: function(response) {
-        let sessionData = JSON.parse(response);
-        
-        ws.onopen = () => {
+ws.onopen = () => {
+    // Send a message to the server when the client connects
+    $.ajax({
+        url: '../assets/session.php',
+        method: 'POST',
+        success: function(response) {
+            let sessionData = JSON.parse(response);
             let clientInfo = {
                 type: 'client_connected',
                 id: sessionData.user
             };
-
             ws.send(JSON.stringify(clientInfo));
-        };
-    },
-    error: function() {
-        ws.onopen = () => {
+        },
+        error: function() {
             let clientInfo = {
                 type: 'client_connected',
                 id: 'guest'
             };
-
             ws.send(JSON.stringify(clientInfo));
-        };
-    }
-});
+        }
+    });
+};
 
 // Receive messages from the server
 ws.onmessage = (event) => {

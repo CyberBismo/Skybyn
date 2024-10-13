@@ -1358,17 +1358,18 @@
             }
 
             .search_result {
-                position: fixed;
-                top: 175px;
-                width: 33.33%;
+                width: calc(100% - 20px);
                 height: auto;
-                left: 33.33%;
-                right: 33.33%;
-                margin-top: 100px;
+                margin: 0 10px;
                 padding: 10px;
-                background: rgba(var(--dark),.9);
-                border-radius: 20px;
+                background: rgba(0,0,0,.1);
+                border-radius: 10px;
                 box-sizing: border-box;
+            }
+            .search_result h3 {
+                margin: 0;
+                padding: 10px;
+                text-align: center;
             }
             .search_res_user {
                 display: flex;

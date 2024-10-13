@@ -5,7 +5,7 @@ $text = strtoupper($_POST['text']);
 
 if (strpos($text, "@") === 0) {
     // User search
-    $username = substr($text, 1); // 2 is the length of "@"
+    $username = substr($text, 1); // 1 is the length of "@"
     $stmt = $conn->prepare("SELECT * FROM `users` WHERE `username` LIKE UPPER(?)");
     $likeUsername = $username . '%';
     $stmt->bind_param("s", $likeUsername);
@@ -23,26 +23,18 @@ if (strpos($text, "@") === 0) {
                 $avatar = "./assets/images/logo_faded_clean.png";
             }
             
-            $users = [
-                'user' => [
-                    'id' => $userid,
-                    'username' => $username,
-                    'avatar' => $avatar
-                ]
+            $users[] = [
+                'id' => $userid,
+                'username' => $username,
+                'avatar' => $avatar
             ];
         }
 
-        echo json_encode($users);
+        echo json_encode(['user' => $users]);
     } else {
-        $data = [
-            'username' => "No users found",
-            'avatar' => "./assets/images/logo_faded_clean.png"
-        ];
-
-        echo json_encode($data);
+        echo json_encode(['user' => []]);
     }
-} else
-if (strpos($text, "page: ") === 0) {
+} else if (strpos($text, "page: ") === 0) {
     // Page search
     $pageName = substr($text, 6); // 6 is the length of "page: "
     $getPages = $conn->prepare("SELECT * FROM `pages` WHERE `name` LIKE ? OR `id` LIKE ?");
@@ -62,27 +54,18 @@ if (strpos($text, "page: ") === 0) {
                 $icon = "./assets/images/logo_faded_clean.png";
             }
             
-            $pages = [
-                'page' => [
-                    'pid' => $pid,
-                    'name' => $name,
-                    'icon' => $icon
-                ]
+            $pages[] = [
+                'pid' => $pid,
+                'name' => $name,
+                'icon' => $icon
             ];
         }
 
-        echo json_encode($pages);
+        echo json_encode(['page' => $pages]);
     } else {
-        $data = [
-            'pid' => "No pages found",
-            'name' => "No pages found",
-            'icon' => "./assets/images/logo_faded_clean.png"
-        ];
-
-        echo json_encode($data);
+        echo json_encode(['page' => []]);
     }
-} else
-if (strpos($text, "group: ") === 0) {
+} else if (strpos($text, "group: ") === 0) {
     // Group search
     $groupName = substr($text, 6); // 6 is the length of "group: "
     $getGroups = $conn->prepare("SELECT * FROM `groups` WHERE `name` LIKE ? OR `id` LIKE ?");
@@ -102,24 +85,16 @@ if (strpos($text, "group: ") === 0) {
                 $icon = "./assets/images/logo_faded_clean.png";
             }
             
-            $groups = [
-                'group' => [
-                    'gid' => $gid,
-                    'name' => $name,
-                    'icon' => $icon
-                ]
+            $groups[] = [
+                'gid' => $gid,
+                'name' => $name,
+                'icon' => $icon
             ];
         }
 
-        echo json_encode($groups);
+        echo json_encode(['group' => $groups]);
     } else {
-        $data = [
-            'gid' => "No groups found",
-            'name' => "No groups found",
-            'icon' => "./assets/images/logo_faded_clean.png"
-        ];
-
-        echo json_encode($data);
+        echo json_encode(['group' => []]);
     }
 } else {
     // Post search
@@ -147,7 +122,6 @@ if (strpos($text, "group: ") === 0) {
             }
 
             $content = str_replace($text, "<span class='search_res_post_highlight'>$text</span>", $content);
-
             $time = timeAgo($time);
 
             $getLikes = $conn->query("SELECT * FROM `likes` WHERE `pid` = '$pid'");
@@ -168,42 +142,25 @@ if (strpos($text, "group: ") === 0) {
             $getReplies = $conn->query("SELECT * FROM `replies` WHERE `pid` = '$pid'");
             $replies = $getReplies->num_rows;
             
-            $posts = [
-                'post' => [
-                    'pid' => $pid,
-                    'uid' => $uid,
-                    'username' => $username,
-                    'avatar' => $avatar,
-                    'content' => $content,
-                    'time' => $time,
-                    'likes' => $likes,
-                    'comments' => $comments,
-                    'shares' => $shares,
-                    'reposts' => $reposts,
-                    'views' => $views,
-                    'replies' => $replies
-                ]
+            $posts[] = [
+                'pid' => $pid,
+                'uid' => $uid,
+                'username' => $username,
+                'avatar' => $avatar,
+                'content' => $content,
+                'time' => $time,
+                'likes' => $likes,
+                'comments' => $comments,
+                'shares' => $shares,
+                'reposts' => $reposts,
+                'views' => $views,
+                'replies' => $replies
             ];
         }
 
-        echo json_encode($posts);
+        echo json_encode(['post' => $posts]);
     } else {
-        $data = [
-            'pid' => "No posts found",
-            'uid' => "No posts found",
-            'username' => "No posts found",
-            'avatar' => "./assets/images/logo_faded_clean.png",
-            'content' => "No posts found",
-            'time' => "No posts found",
-            'likes' => "No posts found",
-            'comments' => "No posts found",
-            'shares' => "No posts found",
-            'reposts' => "No posts found",
-            'views' => "No posts found",
-            'replies' => "No posts found"
-        ];
-
-        echo json_encode($data);
+        echo json_encode(['post' => []]);
     }
 }
 ?>

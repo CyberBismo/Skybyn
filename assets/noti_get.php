@@ -16,11 +16,11 @@ if ($getNotifications->num_rows > 0) {
 
         if ($noti_type == "friend_request") {
             $noti_title = "New friend request";
-            $noti_text = "$noti_username sent you a friend request";
+            $noti_text = "$noti_username wants to be your friend";
         } else
         if ($noti_type == "friend_accepted") {
             $noti_title = "New friend!";
-            $noti_text = "$noti_username accepted your friend request";
+            $noti_text = "$noti_username is now your friend";
         } else
         if ($noti_type == "comment") {
             $noti_title = "New comment!";
