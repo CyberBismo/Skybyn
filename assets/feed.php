@@ -112,7 +112,7 @@ while ($post = $getPosts->fetch_assoc()) {
         </div>
         <?php }?>
         <div class="post_comments">
-            <div class="post_comment_count"><?=$comments?><i class="fa-solid fa-comments"></i></div>
+            <div class="post_comment_count"><div id="comments_count_<?=$post_id?>"><?=$comments?></div><i class="fa-solid fa-comments"></i></div>
             <div class="post_comment">
                 <div class="post_comment_user">
                     <div class="post_comment_user_avatar">

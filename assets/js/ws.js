@@ -106,6 +106,18 @@ ws.onmessage = (event) => {
                         if (response !== null) {
                             const commentsContainer = document.getElementById('post_comments_' + postId);
                             commentsContainer.insertAdjacentHTML('beforeend', response);
+                            $.ajax({
+                                url: './assets/comments.php',
+                                type: 'POST',
+                                data: {
+                                    post_id: postId
+                                },
+                                success: function (response) {
+                                    document.getElementById('comments_count_'+postId).innerHTML = response;
+                                },
+                                error: function () {
+                                }
+                            });
                         }
                     },
                     error: function () {
