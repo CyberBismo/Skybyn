@@ -28,6 +28,9 @@
                             }).done(function(response) {
                                 if (response != null) {
                                     document.getElementById('login_qr').src = "../qr/temp/" + response + ".png";
+                                    setTimeout(() => {
+                                        getLoginQR();
+                                    }, 60000);
                                 }
                             });
                         }
@@ -166,7 +169,6 @@
                                         delete : code
                                     }
                                 }).done(function(response) {
-                                    console.clear();
                                 });
                             }
                         } else {
