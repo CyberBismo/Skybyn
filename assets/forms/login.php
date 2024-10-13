@@ -77,7 +77,7 @@
                         }
 
                         function setQRSize() {
-                            const qrImage = document.getElementById('qr_login');
+                            const qrImage = document.getElementById('qr_login_img');
                             const qrWidth = qrImage.style.width;
                             qrImage.style.height = qrWidth + 'px';
                         }

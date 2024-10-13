@@ -28,6 +28,10 @@ $msgId = rand(1000, 9999);
             overflow-y: scroll;
             margin-bottom: 20px;
         }
+        select {
+            padding: 10px;
+            margin-right: 10px;
+        }
         #inputMessage {
             width: 80%;
             padding: 10px;
@@ -39,10 +43,24 @@ $msgId = rand(1000, 9999);
 </head>
 <body>
 
-<h1>Broadcast message</h1>
+<h1>Send message</h1>
 <div>Logged in as <?php echo getUser('id',$uid,'username'); ?></div>
 <div id="status">Server is offline</div>
 <div id="messages"></div>
+<select id="type" onchange="document.getElementById('users').hidden = this.value !== 'client'">
+    <option value="broadcast">Broadcast</option>
+    <option value="client">Client</option>
+</select>
+<select id="users" hidden>
+    <?php
+    $getUsers = $conn->query("SELECT * FROM `users`");
+    while ($user = $getUsers->fetch_assoc()) {
+        $userid = $user['id'];
+        $username = $user['username'];
+        echo "<option value='$userid'>$username</option>";
+    }
+    ?>
+</select>
 <input type="text" id="inputMessage" placeholder="Enter your message..." autofocus>
 <button id="sendBtn" disabled>Send</button>
 
@@ -51,6 +69,8 @@ $msgId = rand(1000, 9999);
     const messagesDiv = document.getElementById('messages');
     const inputMessage = document.getElementById('inputMessage');
     const sendBtn = document.getElementById('sendBtn');
+    const typeSelect = document.getElementById('type');
+    const usersSelect = document.getElementById('users');
 
     // Connect to the WebSocket server
     const ws = new WebSocket('wss://dev.skybyn.no:4433');
@@ -71,16 +91,24 @@ $msgId = rand(1000, 9999);
                 const message = data.message;
                 messagesDiv.innerHTML += `<p>${message}</p>`;
             }
+        } else if (type == 'client_response') {
+            const id = data.id;
+            if (id == msgId) {
+                const message = data.message;
+                messagesDiv.innerHTML += `<p>${message}</p>`;
+            }
         }
     };
 
     // Send JSON message to the server
     sendBtn.addEventListener('click', () => {
         const message = inputMessage.value;
+        const type = typeSelect.value;
+        const userId = usersSelect.value;
         const data = {
-            type: 'broadcast',
+            type: type,
             id: msgId,
-            message: message
+            message: message,
         };
         ws.send(JSON.stringify(data));
         inputMessage.value = '';
