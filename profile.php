@@ -100,7 +100,7 @@ $Pavatar_bg = "background: black";
                                 <i class="fa-solid fa-user-xmark"></i> <span>Cancel friend request</span>
                             </button>
                             <?php } else if ($status == "received") {?>
-                            <button onclick="friendship('<?= $user_id ?>','accept')">
+                            <button onclick="friendship('<?=$user_id?>','accept')">
                                 <i class="fa-solid fa-user-check"></i> <span>Accept</span>
                             </button>
                             <button onclick="friendship('<?= $user_id ?>','ignore')">
@@ -327,16 +327,69 @@ $Pavatar_bg = "background: black";
             }
 
             function friendship(friend,action) {
-                const actions = document.getElementById('friend_action');
+                const actions = document.getElementById('friend_actiona');
                 $.ajax({
                     url: 'assets/friendship.php',
                     type: "POST",
                     data: {
-                        friend : friend,
-                        action : action
+                        friend: friend,
+                        action: action
                     }
                 }).done(function(response) {
-                    window.location.reload();
+                    if (response == "Friend request sent.") {
+                        actions.innerHTML = '<button onclick="friendship('+friend+',\'unfriend\')"><i class="fa-solid fa-user-minus"></i> <span>Unfriend</span></button>';
+                    } else
+                    if (response == "Error sending") {
+                        alert("Error sending friend request");
+                    } else
+                    if (response == "Friend request accepted.") {
+                        actions.innerHTML = '<button onclick="friendship('+friend+',\'unfriend\')"><i class="fa-solid fa-user-minus"></i> <span>Unfriend</span></button>';
+                    } else
+                    if (response == "Error accepting") {
+                        alert("Error accepting friend request");
+                    } else
+                    if (response == "Friend request ignored.") {
+                        actions.innerHTML = '<button onclick="friendship('+friend+',\'send\')"><i class="fa-solid fa-user-plus"></i> <span>Send friend request</span></button>';
+                    } else
+                    if (response == "Error ignoring") {
+                        alert("Error ignoring friend request");
+                    } else
+                    if (response == "Friend request canceled.") {
+                        actions.innerHTML = '<button onclick="friendship('+friend+',\'send\')"><i class="fa-solid fa-user-plus"></i> <span>Send friend request</span></button>';
+                    } else
+                    if (response == "Error canceling") {
+                        alert("Error canceling friend request");
+                    } else
+                    if (response == "Unfriended.") {
+                        actions.innerHTML = '<button onclick="friendship('+friend+',\'send\')"><i class="fa-solid fa-user-plus"></i> <span>Send friend request</span></button>';
+                    } else
+                    if (response == "Error unfriending") {
+                        alert("Error unfriending");
+                    } else
+                    if (response == "Blocked.") {
+                        actions.innerHTML = '<button onclick="friendship('+friend+',\'unblock\')"><i class="fa-solid fa-user-slash"></i> <span>Unblock</span></button>';
+                    } else
+                    if (response == "Error blocking") {
+                        alert("Error blocking");
+                    } else
+                    if (response == "Unblocked.") {
+                        actions.innerHTML = '<button onclick="friendship('+friend+',\'block\')"><i class="fa-solid fa-user-slash"></i> <span>Block</span></button>';
+                    } else
+                    if (response == "Error unblocking") {
+                        alert("Error unblocking");
+                    } else
+                    if (response == "Friend request sent.") {
+                        actions.innerHTML = '<button onclick="friendship('+friend+',\'unfriend\')"><i class="fa-solid fa-user-minus"></i> <span>Unfriend</span></button>';
+                    } else
+                    if (response == "Error sending") {
+                        alert("Error sending friend request");
+                    } else
+                    if (response == "Friend request sent.") {
+                        actions.innerHTML = '<button onclick="friendship('+friend+',\'unfriend\')"><i class="fa-solid fa-user-minus"></i> <span>Unfriend</span></button>';
+                    } else
+                    if (response == "Error sending") {
+                        alert("Error sending friend request");
+                    }
                 });
             }
 

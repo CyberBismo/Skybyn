@@ -36,7 +36,8 @@ if ($checkStatus->num_rows == 0) { // IF NO RECORDS
         } else {
             echo "Error accepting";
         }
-    } elseif ($action == "ignore") {
+    } else
+    if ($action == "ignore") {
         if ($status == $statusR) {
             $conn->query("UPDATE `friendship` SET `status`='sent' WHERE `user_id`='$friend' AND `friend_id`='$uid'");
             $conn->query("DELETE FROM `friendship` WHERE `user_id`='$uid' AND `friend_id`='$friend'");
@@ -44,28 +45,32 @@ if ($checkStatus->num_rows == 0) { // IF NO RECORDS
         } else {
             echo "Error ignoring";
         }
-    } elseif ($action == "cancel") {
+    } else
+    if ($action == "cancel") {
         if ($status == $statusS) {
             $conn->query("DELETE FROM `friendship` WHERE (`user_id`='$uid' AND `friend_id`='$friend') OR (`user_id`='$friend' AND `friend_id`='$uid')");
             echo "Friend request canceled.";
         } else {
             echo "Error canceling";
         }
-    } elseif ($action == "unfriend") {
+    } else
+    if ($action == "unfriend") {
         if ($status == $statusA) {
             $conn->query("DELETE FROM `friendship` WHERE (`user_id`='$uid' AND `friend_id`='$friend') OR (`user_id`='$friend' AND `friend_id`='$uid')");
             echo "Unfriended.";
         } else {
             echo "Error unfriending";
         }
-    } elseif ($action == "block") {
+    } else
+    if ($action == "block") {
         if ($status == $statusA) {
             $conn->query("UPDATE `friendship` SET `status`='$statusB' WHERE (`user_id`='$uid' AND `friend_id`='$friend') OR (`user_id`='$friend' AND `friend_id`='$uid')");
             echo "Blocked.";
         } else {
             echo "Error blocking";
         }
-    } elseif ($action == "unblock") {
+    } else
+    if ($action == "unblock") {
         if ($status == $statusB) {
             $conn->query("UPDATE `friendship` SET `status`='$statusUnb' WHERE (`user_id`='$uid' AND `friend_id`='$friend') OR (`user_id`='$friend' AND `friend_id`='$uid')");
             echo "Unblocked.";

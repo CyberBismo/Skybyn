@@ -309,25 +309,25 @@ if ($domain == $devDomain) {
 
         <?php if (isset($_SESSION['user'])) {?>
         <div class="notifications" id="notifications" style="display: none">
-        <div class="notifications-head">
-            <div onclick="readNoti()"><i class="fa-solid fa-envelope-open-text" title="Read all"></i></div>
-            <h4>Notifications</h4>
-            <div onclick="delNoti('all')"><i class="fa-solid fa-trash-can" title="Delete all"></i></div>
-        </div>
-        <div id="noti-list"></div>
+            <div class="notifications-head">
+                <div onclick="readNoti()"><i class="fa-solid fa-envelope-open-text" title="Read all"></i></div>
+                <h4>Notifications</h4>
+                <div onclick="delNoti('all')"><i class="fa-solid fa-trash-can" title="Delete all"></i></div>
+            </div>
+            <div id="noti-list"></div>
         </div>
         <div class="notification-window" id="notification-window" hidden>
-        <div class="noti-win-head">
-            <div class="noti-win-head-user">
-                <img src="../assets/images/logo_faded_clean.png" id="noti_win_avatar">
-                <h4 id="noti_win_username"></h4>
+            <div class="noti-win-head">
+                <div class="noti-win-head-user">
+                    <img src="../assets/images/logo_faded_clean.png" id="noti_win_avatar">
+                    <h4 id="noti_win_username"></h4>
+                </div>
+                <div class="noti-win-head-close" onclick="closeNotiWin()"><i class="fa-solid fa-xmark"></i></div>
             </div>
-            <div class="noti-win-head-close" onclick="closeNotiWin()"><i class="fa-solid fa-xmark"></i></div>
-        </div>
-        <div class="noti-win-body" id="noti_win_text"></div>
-        <div class="noti-win-foot" id="noti_win_foot">
-            <div class="btn" id="noti_win_foot_profile"><i class="fa-solid fa-circle-user" title="View profile"></i></div>
-        </div>
+            <div class="noti-win-body" id="noti_win_text" hidden></div>
+            <div class="noti-win-foot" id="noti_win_foot">
+                <div class="btn" id="noti_win_foot_profile"><i class="fa-solid fa-circle-user" title="View profile"></i></div>
+            </div>
         </div>
 
         <div class="left-panel" id="left-panel">

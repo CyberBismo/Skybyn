@@ -1,11 +1,11 @@
 function showNotifications(event) {
     const notifications = document.getElementById('notifications');
     const notiList = document.getElementById('noti-list');
+    notifications.style.display = "block";
     $.ajax({
         url: 'assets/noti_get.php'
     }).done(function(response) {
         notiList.innerHTML = response;
-        notifications.style.display = "block";
     });
 }
 
@@ -16,6 +16,8 @@ function showNoti(x) {
     let notWin_text = document.getElementById('noti_win_text');
     let notWin_foot = document.getElementById('noti_win_foot');
     let notWin_foot_profile = document.getElementById('noti_win_foot_profile');
+
+    notiWin.removeAttribute("hidden");
 
     $.ajax({
         url: 'assets/noti_window_data.php',
@@ -38,15 +40,13 @@ function showNoti(x) {
             notWin_user.innerHTML = "Skybyn";
         }
         if (noti_profile !== null) {
-            notWin_foot.removeAttribute("hidden");
-            var profileURL = "window.location.href='./profile="+noti_profile+"'";
+            var profileURL = "window.location.href='./profile?u="+noti_profile+"'";
             notWin_foot_profile.setAttribute("onclick",profileURL);
         } else {
-            notWin_foot.setAttribute("hidden","");
+            var profileURL = "window.location.href='./profile?u="+data.notiUserUsername+"'";
+            notWin_foot_profile.setAttribute("onclick",profileURL);
         }
         notWin_text.innerHTML = data.noti_content;
-
-        notiWin.removeAttribute("hidden");
 
         $.ajax({
             url: 'assets/noti_status.php',

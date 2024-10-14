@@ -1718,7 +1718,7 @@
                 max-height: 80%;
                 margin-left: -300px;
                 color: white;
-                background: rgba(var(--lightblue),.3);
+                background: rgba(var(--darker),1);
                 backdrop-filter: blur(5px);
                 box-shadow: 10px 10px 23px -5px rgba(0,0,0,0.6);
                 border-radius: 20px;
