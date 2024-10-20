@@ -49,14 +49,14 @@ while ($post = $getPosts->fetch_assoc()) {
             <div class="post_actions" onclick="showPostActions(<?=$post_id?>)">
                 <i class="fa-solid fa-ellipsis-vertical"></i>
                 <div class="post_action_list" id="pal_<?=$post_id?>" hidden>
-                    <?php if ($post_user == $uid || $rank > 0) {?>
+                    <?php if (isset($_SESSION['user'])) {if ($post_user == $uid || getUser('id',$_SESSION['user'],'rank') > 0) {?>
                     <div class="post_action" onclick="editPost(<?=$post_id?>)">
                         <i class="fa-solid fa-pen-to-square"></i><span>Edit</span>
                     </div>
                     <div class="post_action" onclick="deletePost(<?=$post_id?>)">
                         <i class="fa-solid fa-trash"></i><span>Delete</span>
                     </div>
-                    <?php }?>
+                    <?php }}?>
                 </div>
             </div>
         </div>

@@ -64,8 +64,17 @@ function skybyn($x) {
     $systemData = $conn->query("SELECT * FROM `system_data` WHERE `data`='$x'");
     $SDRow = $systemData->fetch_assoc();
 
+    if (strpos(fullUrl(), ".no")) {
+        $domV = " - NO";
+    } else {
+        $domV = " - EN";
+    }
+
     if ($x == "logo" && isset($_SESSION['user'])) {
         return $avatar;
+    } else
+    if ($x == "title") {
+        return $SDRow['text'] . $domV;
     } else {
         return $SDRow['text'];
     }
@@ -1303,11 +1312,59 @@ if (isset($_SESSION['user'])) {
     $countWallets = $getWallet->num_rows;
 
     if ($countWallets == 0) {
-        $conn->query("INSERT INTO `wallets` (`user`,`wallet`) VALUES ('$uid','0')");
+        $createWallet = $conn->query("INSERT INTO `wallets` (`user`,`wallet`) VALUES ('$uid','0')");
+        $wallet = 0;
+    } else {
+        $myWallet = $getWallet->fetch_assoc();
+        $wallet = $myWallet['wallet'];
     }
-    
-    $myWallet = $getWallet->fetch_assoc();
-    $wallet = $myWallet['wallet'];
+
+    if (isset($_POST['start_chat'])) { // Start chat
+        $fid = $_POST['friend_id'];
+        $checkChat = $conn->query("SELECT * FROM `active_chats` WHERE `user`='$uid' AND `friend`='$fid'");
+        if ($checkChat->num_rows == 0) {
+            $conn->query("INSERT INTO `active_chats` (`user`,`friend`,`open`) VALUES ('$uid','$fid','1')");
+            $friendData = $conn->query("SELECT * FROM `users` WHERE `id`='$fid'");
+            $friendRow = $friendData->fetch_assoc();
+            $friendName = $friendRow['username'];
+            $friendAvatar = $friendRow['avatar'];
+
+            $data = array(
+                "friend_name" => $friendName,
+                "friend_avatar" => $friendAvatar
+            );
+            echo json_encode($data);
+        }
+    }
+    if (isset($_POST['close_chat'])) { // Close chat
+        $fid = $_POST['friend_id'];
+        $checkChat = $conn->query("SELECT * FROM `active_chats` WHERE `user`='$uid' AND `friend`='$fid'");
+        if ($checkChat->num_rows == 1) {
+            $conn->query("DELETE FROM `active_chats` WHERE `user`='$uid' AND `friend`='$fid'");
+        }
+    }
+    if (isset($_POST['load_chat'])) { // Load chat
+        $fid = $_POST['friend_id'];
+        $checkChat = $conn->query("SELECT * FROM `messages` WHERE (`from`='$uid' AND `to`='$fid') OR (`from`='$fid' AND `to`='$uid') ORDER BY `date` ASC");
+        $chatData = array();
+        while ($chatRow = $checkChat->fetch_assoc()) {
+            $chatData[] = $chatRow;
+        }
+        echo json_encode($chatData);
+    }
+    if (isset($_POST['get_chat_user'])) {
+        $fid = $_POST['friend_id'];
+        $userData = $conn->query("SELECT * FROM `users` WHERE `id`='$fid'");
+        $userRow = $userData->fetch_assoc();
+        $friendName = $userRow['username'];
+        $friendAvatar = $userRow['avatar'];
+
+        $data = array(
+            "friend_name" => $friendName,
+            "friend_avatar" => $friendAvatar
+        );
+        echo json_encode($data);
+    }
 } else {
     if (isset($_COOKIE['logged'])) {
         $user = $_COOKIE['logged'];

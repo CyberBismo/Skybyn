@@ -3068,88 +3068,6 @@
 
             /** END OF RIGHT PANEL */
 
-            /** MESSAGES */
-
-            .messsages-head {
-                display: flex;
-                justify-content: space-between;
-                width: 1005;
-                color: white;
-                background: rgba(255,255,255,.2);
-                border-radius: 5px;
-            }
-            .messsages-head h3 {
-                line-height: 40px;
-                margin: 0 10px;
-            }
-            .messsages-head input {
-                width: 50%;
-                height: 40px;
-                padding: 0 10px;
-                color: white;
-                background: none;
-                border: none;
-                outline: none;
-                box-sizing: border-box;
-            }
-            .messsages-head input::placeholder {
-                color: white;
-            }
-            .message-item {
-                display: flex;
-                justify-content: space-between;
-                height: 50px;
-                margin: 10px;
-                color: white;
-                border-radius: 50px;
-                overflow: hidden;
-                transition: background .3s;
-            }
-            .message-item:hover {
-                background: rgba(255,255,255,.1);
-                cursor: pointer;
-            }
-            .message-new {
-                width: calc(100% - 20px);
-                height: 50px;
-                line-height: 50px;
-                margin: 10px;
-                text-align: center;
-                color: white;
-                border: 1px solid rgba(255,255,255,.2);
-                border-radius: 20px;
-                box-sizing: border-box;
-            }
-            .message-avatar {
-                width: 45px;
-                height: 45px;
-                margin: 2.5px 0 0 2.5px;
-                border-radius: 45px;
-                overflow: hidden;
-            }
-            .message-avatar img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
-            .message-info {
-                width: calc(100% - 150px);
-                padding: 10px;
-            }
-            .message-info .message-user {
-                font-size: 16px;
-            }
-            .message-info .message-last {
-                font-size: 12px;
-            }
-            .message-action {
-                width: 50px;
-                text-align: right;
-                line-height: 50px;
-                font-size: 24px;
-                padding: 0 10px;
-            }
-
             /** Chat */
             .chat {
                 width: 100%;
@@ -3307,6 +3225,134 @@
 
             /** END OF MESSAGES */
 
+            /** FLOATING MESSAGES */
+
+            .message-container {
+                position: fixed;
+                bottom: 10px;
+                right: 300px;
+                width: 300px;
+                height: calc(300px + 40px + 40px);
+                background: rgba(0,0,0,.5);
+                backdrop-filter: blur(5px);
+                border-radius: 10px;
+                box-sizing: border-box;
+                overflow: hidden;
+                transition: width .3s, height .3s;
+            }
+            .message-container.minimized {
+                width: 250px;
+                height: 40px;
+                overflow: hidden;
+            }
+            .message-container.minimized .message-header {
+                border-radius: 40px;
+            }
+            .message-container.minimized .message-user {
+                height: 20px;
+            }
+            .message-header {
+                display: flex;
+                justify-content: space-between;
+                padding: 10px;
+                background: rgba(0,0,0,.1);
+                border-radius: 10px 10px 0 0;
+            }
+            .message-header .message-user {
+                display: flex;
+                width: 100%;
+                align-items: center;
+            }
+            .message-header .message-user img {
+                width: 40px;
+                height: 40px;
+                border-radius: 40px;
+                object-fit: cover;
+            }
+            .message-header .message-user span {
+                padding: 0 10px;
+            }
+            .message-header .message-actions {
+                display: flex;
+                gap: 10px;
+            }
+            .message-header .message-min {
+                cursor: pointer;
+            }
+            .message-header .message-close {
+                cursor: pointer;
+            }
+            .message-body {
+                height: 260px;
+                padding: 10px;
+                background: rgba(0,0,0,.2);
+                border-radius: 10px;
+            }
+            .message-body::-webkit-scrollbar {
+                display: none;
+            }
+            .message-body .message {
+                margin-bottom: 10px;
+            }
+            .message-body .message .message-user {
+                display: flex;
+                align-items: center;
+            }
+            .message-body .message.me .message-user {
+                justify-content: right;
+            }
+            .message-body .message .message-user .message-user-avatar {
+                width: 30px;
+                padding: 0 10px;
+            }
+            .message-body .message .message-user .message-user-avatar img {
+                width: 100%;
+            }
+            .message-body .message .message-user .message-user-name {
+                font-size: 12px;
+            }
+            .message-body .message .message-content {
+                display: flex;
+            }
+            .message-body .message.me .message-content {
+                justify-content: right;
+            }
+            .message-body .message .message-content p {
+                margin: 0;
+                padding: 10px;
+                border: 1px solid rgba(255,255,255,.1);
+                border-radius: 5px 10px 10px 10px;
+            }
+            .message-body .message.me .message-content p {
+                border-radius: 10px 5px 10px 10px;
+            }
+            .message-input {
+                display: flex;
+                justify-content: space-between;
+                background: rgba(0,0,0,.1);
+                border-radius: 0 0 10px 10px;
+            }
+            .message-input input {
+                width: calc(100% - 60px);
+                height: 40px;
+                padding: 0 10px;
+                color: white;
+                background: none;
+                border: none;
+                outline: none;
+                box-sizing: border-box;
+            }
+            .message-input button {
+                width: 50px;
+                height: 40px;
+                color: white;
+                background: none;
+                border: none;
+                cursor: pointer;
+            }
+
+            /** END OF FLOATING MESSAGES */
+
             /** PROFILE */
 
             .profile-wallpaper {
@@ -3392,7 +3438,7 @@
             }
             .profile-btns {
                 margin: 20px 0;
-                box-sizing: border-box;
+                text-align: center;
             }
             .profile-btns button {
                 margin: 3px;
@@ -3419,6 +3465,28 @@
             .profile-btns button.red {
                 color: white;
                 background: rgba(255,0,0,.5);
+            }
+            .profile-btns button.green {
+                color: white;
+                background: rgba(0,255,0,.5);
+            }
+            .profile-btns button.blue {
+                color: white;
+                background: rgba(0,0,255,.5);
+            }
+            .profile-btns button.yellow {
+                color: white;
+                background: rgba(255,255,0,.5);
+            }
+            .profile-btns button.orange {
+                color: white;
+                background: rgba(255,165,0,.5);
+            }
+            .profile-btns button.fra_wide {
+                width: calc(100% - 10px);
+            }
+            .profile-btns button.fra_small {
+                width: calc(50% - 10px);
             }
             
             .profile-right {

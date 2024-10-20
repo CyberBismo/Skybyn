@@ -659,6 +659,14 @@
                                 invisible = vi.value;
                             }
 
+                            // Disable all buttons and inputs, and show a loading animation while waiting for registration status.
+                            const reg_packs = document.getElementById('reg_packs');
+                            const reg_form = document.getElementById('log_reg_form');
+                            const reg_info = document.getElementById('reg_info');
+                            const loading = document.getElementById('loading');
+                            reg_packs.style.display = "none";
+                            loading.style.display = "block";
+
                             $.ajax({
                                 url: '../assets/signup.php',
                                 type: "POST",
@@ -681,6 +689,14 @@
                             }).done(function(response) {
                                 if (response.responseCode === "ok") {
                                     window.location.href='../register?complete&user='+response.user+'&token='+response.token;
+                                } else {
+                                    loading.style.display = "none";
+                                    reg_packs.style.display = "block";
+                                    err_msg.style.display = "block";
+                                    err_msg.innerHTML = response.responseMessage;
+                                    setTimeout(() => {
+                                        err_msg.style.display = "none";
+                                    }, 3000);
                                 }
                             }).fail(function(response) {
                                 console.log(response);

@@ -118,6 +118,71 @@ ws.onmessage = (event) => {
                 document.getElementById('comments_count_'+postId).textContent = parseInt(document.getElementById('comments_count_'+postId).textContent) - 1;
             }
         } else
+        if (msgData.type === 'chat') {
+            let chatId = msgData.id;
+            let chatMessage = msgData.message;
+            let chatFrom = msgData.from;
+
+            // Display the message immediately
+            if (document.getElementById('message_container_' + chatId)) {
+                addMessageToChat(chatId, chatMessage, chatFrom);
+            } else {
+                createMessageBox(chatFrom);
+                addMessageToChat(chatId, chatMessage, chatFrom);
+            }
+            function addMessageToChat(chatId, chatMessage, chatFrom) {
+                let messageContainer = document.getElementById('message_container_' + chatId);
+
+                let messageDiv = document.createElement('div');
+                messageDiv.classList.add('message');
+
+                let messageUserDiv = document.createElement('div');
+                messageUserDiv.classList.add('message-user');
+
+                let messageUserAvatarDiv = document.createElement('div');
+                messageUserAvatarDiv.classList.add('message-user-avatar');
+                let avatarImg = document.createElement('img');
+                avatarImg.src = './assets/images/logo_faded_clean.png'; // Placeholder for avatar, will be updated later
+                messageUserAvatarDiv.appendChild(avatarImg);
+
+                let messageUserNameDiv = document.createElement('div');
+                messageUserNameDiv.classList.add('message-user-name');
+                messageUserNameDiv.textContent = '...'; // Placeholder for username, will be updated later
+
+                messageUserDiv.appendChild(messageUserAvatarDiv);
+                messageUserDiv.appendChild(messageUserNameDiv);
+
+                let messageContentDiv = document.createElement('div');
+                messageContentDiv.classList.add('message-content');
+                let messageContentP = document.createElement('p');
+                messageContentP.textContent = chatMessage;
+                messageContentDiv.appendChild(messageContentP);
+
+                messageDiv.appendChild(messageUserDiv);
+                messageDiv.appendChild(messageContentDiv);
+
+                messageContainer.appendChild(messageDiv);
+
+                // AJAX request to get username and avatar
+                $.ajax({
+                    url: './assets/functions.php',
+                    type: 'POST',
+                    data: {
+                        get_chat_user: null,
+                        friend_id: chatFrom
+                    },
+                    success: function(response) {
+                        const res = JSON.parse(response);
+                        const username = res.friend_name;
+                        let avatar = res.friend_avatar;
+
+                        // Update the avatar and username once data is retrieved
+                        avatarImg.src = avatar;
+                        messageUserNameDiv.textContent = username;
+                    }
+                });
+            }
+        } else
         if (msgData.type === 'broadcast') {
             const broadcastMsg = document.createElement('div');
             broadcastMsg.classList.add('broadcast-msg');

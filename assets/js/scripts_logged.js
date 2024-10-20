@@ -75,21 +75,25 @@ function startSearch(x) {
                 if (res.user) {
                     searchResUsers.removeAttribute("hidden");
                     res.user.forEach(user => {
-                        const userDiv = document.createElement('div');
-                        userDiv.classList.add('search_res_user');
-                        userDiv.onclick = () => window.location.href = `./profile?u=${user.username}`;
+                        // Check if the user already exists in the search results
+                        if (!document.querySelector(`.search_res_user[data-username="${user.username}"]`)) {
+                            const userDiv = document.createElement('div');
+                            userDiv.classList.add('search_res_user');
+                            userDiv.setAttribute('data-username', user.username);
+                            userDiv.onclick = () => window.location.href = `./profile?u=${user.username}`;
 
-                        const avatarDiv = document.createElement('div');
-                        avatarDiv.classList.add('search_res_user_avatar');
+                            const avatarDiv = document.createElement('div');
+                            avatarDiv.classList.add('search_res_user_avatar');
 
-                        const avatarImg = document.createElement('img');
-                        avatarImg.src = user.avatar;
+                            const avatarImg = document.createElement('img');
+                            avatarImg.src = user.avatar;
 
-                        avatarDiv.appendChild(avatarImg);
-                        userDiv.appendChild(avatarDiv);
-                        userDiv.appendChild(document.createTextNode(user.username));
+                            avatarDiv.appendChild(avatarImg);
+                            userDiv.appendChild(avatarDiv);
+                            userDiv.appendChild(document.createTextNode(user.username));
 
-                        searchRUsers.appendChild(userDiv);
+                            searchRUsers.appendChild(userDiv);
+                        }
                     });
                 } else
                 if (res.groups) {

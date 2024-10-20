@@ -20,7 +20,7 @@ if ($getNotifications->num_rows > 0) {
         } else
         if ($noti_type == "friend_accepted") {
             $noti_title = "New friend!";
-            $noti_text = "$noti_username is now your friend";
+            $noti_text = "Say hi to $noti_username";
         } else
         if ($noti_type == "comment") {
             $noti_title = "New comment!";
@@ -41,7 +41,7 @@ if ($getNotifications->num_rows > 0) {
                 <i class="fa-solid fa-envelope"></i>
                 <?php }?>
             </div>
-            <div class="noti-content" onclick="expandNoti(this);markRead(x)">
+            <div class="noti-content" onclick="expandNoti(this);markRead(<?=$noti_id?>)">
                 <div class="noti-title"><?=$noti_title?></div>
                 <span><?=$noti_text?></span>
             </div>

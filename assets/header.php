@@ -52,6 +52,7 @@ if ($domain == $devDomain) {
         <script src="assets/js/notifications/notis.js"></script>
         <script src="assets/js/posts/updateFeed.js"></script>
         <script src="assets/js/scripts_logged.js"></script>
+        <script src="assets/js/chat/message.js"></script>
         <?php }?>
         <?php include_once "style.php"?>
     </head>
@@ -502,70 +503,6 @@ if ($domain == $devDomain) {
                     const console = document.getElementById('console');
                     console.innerHTML = "";
                 }
-                function startTimer(count) {
-                    const countdown = document.getElementById('console_countdown');
-                    if (countdown.innerHTML !== "") {
-                        return;
-                    }
-                    countdown.innerHTML = count;
-                    let timer = setInterval(() => {
-                        count--;
-                        countdown.innerHTML = count;
-                        if (count == 0) {
-                            clearInterval(timer);
-                            countdown.innerHTML = "";
-                            clearConsole();
-                        }
-                    }, 1000);
-                }
-                
-                function checkConsole() {
-                    const console = document.getElementById('console');
-                    if (console.innerHTML !== "") {
-                        startTimer(10);
-                    }
-                }
-
-                function readClientInfoLog() {
-                    $.ajax({
-                        url: './assets/logs/clients.json',
-                        type: 'GET',
-                        dataType: 'json',
-                        success: function(data) {
-                            const terminal = document.getElementById('console');
-                            const term_client = document.getElementById('term_clients');
-                            let currentTime = new Date().toISOString()
-                            if (data.length > 0) {
-                                var clients = [];
-                                for (let client of data) {
-                                    for (let key in client) {
-                                        let entry = client[key];
-                                        let clientTime = entry.time;
-                                        currentTime = Math.floor(Date.now() / 1000);
-                                        clientTime = Math.floor(Date.parse(clientTime) / 1000);
-                                        if (currentTime - clientTime < 10) {
-                                            clients.push(entry);
-                                        }
-                                    }
-                                }
-                                if (term_client) {
-                                    term_client.innerHTML = 'Active clients: '+clients.length;
-                                } else {
-                                    terminal.innerHTML += '<p id="term_clients">Active clients: '+clients.length+'</p>';
-                                }
-                            }
-                            setTimeout(() => {
-                                //readClientInfoLog();
-                            }, 1000);
-                        },
-                        error: function(error) {
-                            //console.error('Error:', error);
-                        }
-                    });
-                }
-                //readClientInfoLog();
-
-                //setInterval(checkConsole, 1000);
             </script>
             <?php }?>
 
@@ -622,8 +559,11 @@ if ($domain == $devDomain) {
                                     <div class="friend-name"><?=$friend_username?></div>
                                 </div>
                                 <div class="friend-actions">
-                                    <div class="friend-action" onclick="window.location.href='./profile?u=<?=$f_id?>'">
+                                    <div class="friend-action" onclick="window.location.href='./profile?u=<?=$friend_username?>'">
                                         <i class="fa-solid fa-user"></i>
+                                    </div>
+                                    <div class="friend-action" onclick="startMessaging('<?=$f_id?>')">
+                                        <i class="fa-solid fa-message"></i>
                                     </div>
                                 </div>
                             </div>
@@ -644,6 +584,81 @@ if ($domain == $devDomain) {
                 </div>
             </div>
         </div>
+
+        
+        <!--div class="message-container" id="message_container_<?=$f_id?>">
+            <div class="message-header">
+                <div class="message-user" onclick="maximizeMessageBox('<?=$f_id?>')">
+                    <img src="../assets/images/logo_faded_clean.png" id="msg_user_avatar">
+                    <span id="msg_user_name">Friend</span>
+                </div>
+                <div class="message-actions">
+                    <div class="message-min" onclick="minimizeMessageBox('<?=$f_id?>')"><i class="fa-solid fa-chevron-down" id="msg_min_<?=$f_id?>"></i></div>
+                    <div class="message-close" onclick="closeMessageBox('<?=$f_id?>')"><i class="fa-solid fa-xmark"></i></div>
+                </div>
+            </div>
+            <div class="message-body" id="message_body_<?=$f_id?>">
+
+                <div class="message">
+                    <div class="message-user">
+                        <div class="message-user-avatar"><img src="../assets/images/logo_faded_clean.png"></div>
+                        <div class="message-user-name">Friend</div>
+                    </div>
+                    <div class="message-content"><p>Hello you</p></div>
+                </div>
+                <div class="message me">
+                    <div class="message-user">
+                        <div class="message-user-name">You</div>
+                        <div class="message-user-avatar"><img src="../assets/images/logo_faded_clean.png"></div>
+                    </div>
+                    <div class="message-content"><p>Hello you too</p></div>
+                </div>
+
+            </div>
+            <div class="message-input">
+                <input type="text" id="message_input_<?=$f_id?>" placeholder="Type your message...">
+                <button onclick="sendMessage('<?=$f_id?>','2')"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+        </div-->
+
+        <?php
+        $checkActiveChats = $conn->query("SELECT * FROM `active_chats` WHERE `user`='$uid'");
+        if ($checkActiveChats->num_rows > 0) {
+            while ($chatData = $checkActiveChats->fetch_assoc()) {
+            $friend = $chatData['friend'];
+            $open = $chatData['open'];
+            $getFriendData = $conn->query("SELECT * FROM `users` WHERE `id`='$friend'");
+            $friendData = $getFriendData->fetch_assoc();
+            $f_id = rand(1000,9999).$friend;
+            $friend_username = $friendData['username'];
+            $friend_avatar = "./".$friendData['avatar'];
+            if ($friend_avatar == "./") {
+                $friend_avatar = "./assets/images/logo_faded_clean.png";
+            }
+
+            $u_id = rand(1000,9999).$uid;
+            ?>
+            <div class="message-container" id="message_container_<?=$f_id?>">
+                <div class="message-header">
+                    <div class="message-user" onclick="maximizeMessageBox('<?=$f_id?>')">
+                        <img src="<?=$friend_avatar?>" id="msg_user_avatar">
+                        <span id="msg_user_name"><?=$friend_username?></span>
+                    </div>
+                    <div class="message-actions">
+                        <div class="message-min" onclick="minimizeMessageBox('<?=$f_id?>')"><i class="fa-solid fa-chevron-down" id="msg_min_<?=$f_id?>"></i></div>
+                        <div class="message-close" onclick="closeMessageBox('<?=$f_id?>')"><i class="fa-solid fa-xmark"></i></div>
+                    </div>
+                </div>
+                <div class="message-body" id="message_body_<?=$f_id?>"></div>
+                <div class="message-input">
+                    <input type="text" id="message_input_<?=$f_id?>" placeholder="Type your message...">
+                    <button onclick="sendMessage('<?=$f_id?>','<?=$u_id?>')"><i class="fa-solid fa-paper-plane"></i></button>
+                </div>
+            </div>
+            <?php
+            }
+        }
+        ?>
 
         <?php if (isMobile() == false) {?>
         <div class="left-panel-open" id="lp-open" onclick="showLeftPanel()"><i class="fa-solid fa-chevron-right"></i></div>
