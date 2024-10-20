@@ -586,18 +586,18 @@ if ($domain == $devDomain) {
         </div>
 
         
-        <!--div class="message-container" id="message_container_<?=$f_id?>">
+        <!--div class="message-container" id="message_container_< ?=$f_id?>">
             <div class="message-header">
-                <div class="message-user" onclick="maximizeMessageBox('<?=$f_id?>')">
+                <div class="message-user" onclick="maximizeMessageBox('< ?=$f_id?>')">
                     <img src="../assets/images/logo_faded_clean.png" id="msg_user_avatar">
                     <span id="msg_user_name">Friend</span>
                 </div>
                 <div class="message-actions">
-                    <div class="message-min" onclick="minimizeMessageBox('<?=$f_id?>')"><i class="fa-solid fa-chevron-down" id="msg_min_<?=$f_id?>"></i></div>
-                    <div class="message-close" onclick="closeMessageBox('<?=$f_id?>')"><i class="fa-solid fa-xmark"></i></div>
+                    <div class="message-min" onclick="minimizeMessageBox('< ?=$f_id?>')"><i class="fa-solid fa-chevron-down" id="msg_min_< ?=$f_id?>"></i></div>
+                    <div class="message-close" onclick="closeMessageBox('< ?=$f_id?>')"><i class="fa-solid fa-xmark"></i></div>
                 </div>
             </div>
-            <div class="message-body" id="message_body_<?=$f_id?>">
+            <div class="message-body" id="message_body_< ?=$f_id?>">
 
                 <div class="message">
                     <div class="message-user">
@@ -616,8 +616,8 @@ if ($domain == $devDomain) {
 
             </div>
             <div class="message-input">
-                <input type="text" id="message_input_<?=$f_id?>" placeholder="Type your message...">
-                <button onclick="sendMessage('<?=$f_id?>','2')"><i class="fa-solid fa-paper-plane"></i></button>
+                <input type="text" id="message_input_< ?=$f_id?>" placeholder="Type your message...">
+                <button onclick="sendMessage('< ?=$f_id?>','2')"><i class="fa-solid fa-paper-plane"></i></button>
             </div>
         </div-->
 
