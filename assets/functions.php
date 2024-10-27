@@ -1321,19 +1321,42 @@ if (isset($_SESSION['user'])) {
 
     if (isset($_POST['start_chat'])) { // Start chat
         $fid = $_POST['friend_id'];
-        $checkChat = $conn->query("SELECT * FROM `active_chats` WHERE `user`='$uid' AND `friend`='$fid'");
-        if ($checkChat->num_rows == 0) {
-            $conn->query("INSERT INTO `active_chats` (`user`,`friend`,`open`) VALUES ('$uid','$fid','1')");
-            $friendData = $conn->query("SELECT * FROM `users` WHERE `id`='$fid'");
-            $friendRow = $friendData->fetch_assoc();
-            $friendName = $friendRow['username'];
-            $friendAvatar = $friendRow['avatar'];
+        if (strlen($fid) > 0) {
+            $checkChat = $conn->prepare("SELECT * FROM `active_chats` WHERE `user`=? AND `friend`=?");
+            $checkChat->bind_param("ii", $uid, $fid);
+            $checkChat->execute();
+            $result = $checkChat->get_result();
+            if ($result->num_rows == 0) {
+                $insertChat = $conn->prepare("INSERT INTO `active_chats` (`user`,`friend`,`open`) VALUES (?, ?, '1')");
+                $insertChat->bind_param("ii", $uid, $fid);
+                $insertChat->execute();
 
-            $data = array(
-                "friend_name" => $friendName,
-                "friend_avatar" => $friendAvatar
-            );
-            echo json_encode($data);
+                $friendData = $conn->prepare("SELECT * FROM `users` WHERE `id`=?");
+                $friendData->bind_param("i", $fid);
+                $friendData->execute();
+                $friendRow = $friendData->get_result()->fetch_assoc();
+                $friendName = $friendRow['username'];
+                $friendAvatar = $friendRow['avatar'];
+
+                $data = array(
+                    "friend_name" => $friendName,
+                    "friend_avatar" => $friendAvatar
+                );
+                echo json_encode($data);
+            }
+        }
+    }
+    if (isset($_POST['max_chat'])) { // Minimize chat
+        $fid = $_POST['friend_id'];
+        $action = $_POST['action'];
+        $checkChat = $conn->query("SELECT * FROM `active_chats` WHERE `user`='$uid' AND `friend`='$fid'");
+        if ($checkChat->num_rows == 1) {
+            if ($action == "maximize") {
+                $conn->query("UPDATE `active_chats` SET `open`= 1 WHERE `user`='$uid' AND `friend`='$fid'");
+            } else
+            if ($action == "minimize") {
+                $conn->query("UPDATE `active_chats` SET `open`= 0 WHERE `user`='$uid' AND `friend`='$fid'");
+            }
         }
     }
     if (isset($_POST['close_chat'])) { // Close chat

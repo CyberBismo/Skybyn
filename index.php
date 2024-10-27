@@ -99,7 +99,7 @@ if (isset($_COOKIE['logged'])) {
         <?php if (skybyn('login-form') == "login") {
             if ($signup == false) {?>
         <div class="log-button" id="signup-btn">
-            <span onclick="window.location.href='./register'">Sign up</span>
+            <span onclick="window.location.href='/register'">Sign up</span>
             <span onclick="window.location.href='/forgot'">Forgot password?</span>
         </div>
         <?php } else {?>

@@ -663,9 +663,9 @@
                             const reg_packs = document.getElementById('reg_packs');
                             const reg_form = document.getElementById('log_reg_form');
                             const reg_info = document.getElementById('reg_info');
-                            const loading = document.getElementById('loading');
+                            const welcomeScreen = document.getElementById('welcome-screen');
                             reg_packs.style.display = "none";
-                            loading.style.display = "block";
+                            welcomeScreen.style.display = "block";
 
                             $.ajax({
                                 url: '../assets/signup.php',
@@ -687,10 +687,11 @@
                                     refer: refer
                                 }
                             }).done(function(response) {
+                                response = JSON.parse(response);
                                 if (response.responseCode === "ok") {
                                     window.location.href='../register?complete&user='+response.user+'&token='+response.token;
                                 } else {
-                                    loading.style.display = "none";
+                                    welcomeScreen.style.display = "none";
                                     reg_packs.style.display = "block";
                                     err_msg.style.display = "block";
                                     err_msg.innerHTML = response.responseMessage;

@@ -21,8 +21,12 @@ RewriteRule ^reset$ ?reset [L,QSA]
 
 # Rewrite /forgot to ?forgot
 RewriteRule ^forgot$ ?forgot [L,QSA]
+
 # Rewrite /profile/user to /profile?user
-RewriteRule ^profile/([^/]+)$ profile?user=$1 [QSA,L]
+RewriteRule ^profile$ profile [QSA,L]
+
+# Rewrite /profile/user to /profile?u
+RewriteRule ^profile/([^/]+)$ profile?u=$1 [QSA,L]
 
 # Rewrite /post/id to /post?id
 RewriteRule ^post/([^/]+)$ post?id=$1 [QSA,L]

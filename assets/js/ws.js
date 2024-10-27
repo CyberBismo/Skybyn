@@ -93,17 +93,17 @@ ws.onmessage = (event) => {
                     url: './assets/comments_check.php',
                     type: 'POST',
                     data: {
-                    comment_id: commentId,
-                    post_id: postId
+                        comment_id: commentId,
+                        post_id: postId
                     },
                     success: function (response) {
-                    if (response) {
-                        commentsContainer.insertAdjacentHTML('afterbegin', response);
-                        commentsCountElement.textContent = parseInt(commentsCountElement.textContent) + 1;
-                    }
+                        if (response) {
+                            commentsContainer.insertAdjacentHTML('afterbegin', response);
+                            commentsCountElement.textContent = parseInt(commentsCountElement.textContent) + 1;
+                        }
                     },
                     error: function () {
-                    console.error('Failed to load new comment.');
+                        console.error('Failed to load new comment.');
                     }
                 });
             }
@@ -120,67 +120,39 @@ ws.onmessage = (event) => {
         } else
         if (msgData.type === 'chat') {
             let chatId = msgData.id;
-            let chatMessage = msgData.message;
             let chatFrom = msgData.from;
+            let chatTo = msgData.to;
+            let chatMessage = msgData.message;
+            let chatUsername = msgData.username;
+            let chatAvatar = msgData.avatar;
 
-            // Display the message immediately
-            if (document.getElementById('message_container_' + chatId)) {
-                addMessageToChat(chatId, chatMessage, chatFrom);
-            } else {
-                createMessageBox(chatFrom);
-                addMessageToChat(chatId, chatMessage, chatFrom);
+            if (chatAvatar === null) {
+                chatAvatar = '../assets/images/logo_faded_clean.png';
             }
-            function addMessageToChat(chatId, chatMessage, chatFrom) {
-                let messageContainer = document.getElementById('message_container_' + chatId);
 
-                let messageDiv = document.createElement('div');
-                messageDiv.classList.add('message');
-
-                let messageUserDiv = document.createElement('div');
-                messageUserDiv.classList.add('message-user');
-
-                let messageUserAvatarDiv = document.createElement('div');
-                messageUserAvatarDiv.classList.add('message-user-avatar');
-                let avatarImg = document.createElement('img');
-                avatarImg.src = './assets/images/logo_faded_clean.png'; // Placeholder for avatar, will be updated later
-                messageUserAvatarDiv.appendChild(avatarImg);
-
-                let messageUserNameDiv = document.createElement('div');
-                messageUserNameDiv.classList.add('message-user-name');
-                messageUserNameDiv.textContent = '...'; // Placeholder for username, will be updated later
-
-                messageUserDiv.appendChild(messageUserAvatarDiv);
-                messageUserDiv.appendChild(messageUserNameDiv);
-
-                let messageContentDiv = document.createElement('div');
-                messageContentDiv.classList.add('message-content');
-                let messageContentP = document.createElement('p');
-                messageContentP.textContent = chatMessage;
-                messageContentDiv.appendChild(messageContentP);
-
-                messageDiv.appendChild(messageUserDiv);
-                messageDiv.appendChild(messageContentDiv);
-
-                messageContainer.appendChild(messageDiv);
-
-                // AJAX request to get username and avatar
-                $.ajax({
-                    url: './assets/functions.php',
-                    type: 'POST',
-                    data: {
-                        get_chat_user: null,
-                        friend_id: chatFrom
-                    },
-                    success: function(response) {
-                        const res = JSON.parse(response);
-                        const username = res.friend_name;
-                        let avatar = res.friend_avatar;
-
-                        // Update the avatar and username once data is retrieved
-                        avatarImg.src = avatar;
-                        messageUserNameDiv.textContent = username;
-                    }
-                });
+            if (document.getElementById('user_avatar_'+chatTo)) {
+                // Display the message immediately
+                if (document.getElementById('message_box_' + chatFrom)) {
+                    addMessageToChat(chatId, chatMessage, chatFrom);
+                } else {
+                    createMessageBox(chatTo, chatFrom);
+                    addMessageToChat(chatId, chatMessage, chatFrom);
+                }
+                function addMessageToChat(chatId, chatMessage, chatFrom) {
+                    let msgBody = document.getElementById('message_body_' + chatFrom);
+                    let userMessage = document.createElement('div');
+                    userMessage.classList.add('message');
+                    userMessage.id = 'message_'+chatId;
+                    userMessage.innerHTML = `
+                        <div class="message-user">
+                            <div class="message-user-avatar"><img src="${chatAvatar}"></div>
+                            <div class="message-user-name">${chatUsername}</div>
+                        </div>
+                        <div class="message-content"><p>${chatMessage}</p></div>
+                    `;
+                    msgBody.appendChild(userMessage);
+                    msgBody.scrollTop = msgBody.scrollHeight;
+                }
             }
         } else
         if (msgData.type === 'broadcast') {

@@ -112,16 +112,12 @@ while ($post = $getPosts->fetch_assoc()) {
         </div>
         <?php }?>
         <div class="post_comments">
-            <div class="post_comment_count"><div id="comments_count_<?=$post_id?>"><?=$comments?></div><i class="fa-solid fa-comments"></i></div>
-            <div class="post_comment">
-                <div class="post_comment_user">
-                    <div class="post_comment_user_avatar">
-                        <img src="<?=$avatar?>">
-                    </div>
-                    <span><?php if(isset($username)) {echo $username;}?></span>
+            <div class="post_comment_count"><div id="comments_count_<?=$post_id?>"><?=$comments?></div><i class="fa-solid fa-message"></i></div>
+            <div class="post_comment_new">
+                <div class="post_comment_new_content">
+                    <input type="text" id="pc_<?=$post_id?>" onkeydown="hitEnter(this,<?=$post_id?>)" placeholder="Write a comment <?php if(isset($username)) {echo $username;}?>">
                 </div>
-                <div class="post_comment_content"><input type="text" id="pc_<?=$post_id?>" onkeydown="hitEnter(this,<?=$post_id?>)" placeholder="Write a comment"></div>
-                <div class="post_comment_actions">
+                <div class="post_comment_new_actions">
                     <div class="btn" onclick="sendComment(<?=$post_id?>)"><i class="fa-solid fa-paper-plane"></i></div>
                 </div>
             </div>
@@ -137,24 +133,33 @@ while ($post = $getPosts->fetch_assoc()) {
                         
                         if ($commentAvatar == "") {
                             $commentAvatar = "./assets/images/logo_faded_clean.png";
-                        }?>
-                <div class="post_comment" id="comment_<?=$commentID?>">
+                        }
+
+                        if ($commentUser == $_SESSION['user']) {
+                            $myComment = " me";
+                        } else {
+                            $myComment = "";
+                        }
+                        ?>
+                <div class="post_comment<?=$myComment?>" id="comment_<?=$commentID?>">
                     <div class="post_comment_user">
-                        <div class="post_comment_user_avatar">
-                            <img src="<?=$commentAvatar?>">
+                        <div class="post_comment_user_info">
+                            <div class="post_comment_user_avatar">
+                                <img src="<?=$commentAvatar?>">
+                            </div>
+                            <span><?=$commentUsername?></span>
                         </div>
-                        <span><?=$commentUsername?></span>
+                        <div class="post_comment_user_actions">
+                            <?php if (isset($_SESSION['user'])) {
+                                $rank = getUser("id",$_SESSION['user'],"rank");
+                                if ($rank > 0 || $commentUser == $uid) {?>
+                            <div class="btn" onclick="delComment(<?=$commentID?>)"><i class="fa-solid fa-trash"></i></div>
+                            <?php }} else {?>
+                            <div class="btn"></div>
+                            <?php }?>
+                        </div>
                     </div>
                     <div class="post_comment_content"><?=$commentText?></div>
-                    <div class="post_comment_actions">
-                        <?php if (isset($_SESSION['user'])) {
-                            $rank = getUser("id",$_SESSION['user'],"rank");
-                            if ($rank > 0 || $commentUser == $uid) {?>
-                        <div class="btn" onclick="delComment(<?=$commentID?>)"><i class="fa-solid fa-trash"></i></div>
-                        <?php }} else {?>
-                        <div class="btn"></div>
-                        <?php }?>
-                    </div>
                 </div>
                 <?php }}?>
             </div>

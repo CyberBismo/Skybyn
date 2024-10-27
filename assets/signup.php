@@ -31,42 +31,45 @@ if (isset($_POST['visible'])) {
 }
 
 $cleanEmailCheck = $conn->query("DELETE FROM `email_check` WHERE `email`='$email'");
-if ($cleanEmailCheck) {
-    if ($email_c == "" && $dob != "" && $email != "" && $username != "" && $password != "") {
-        $conn->query("INSERT INTO `users` (`username`,`email`,`birth_date`,`password`,`salt`,`registration_date`,`token`,`ip`) VALUES ('$username','$email','$dob','$pw','$salt','$now','$token','$ip')");
+if ($email_c == "" && $dob != "" && $email != "" && $username != "" && $password != "") {
+    $conn->query("INSERT INTO `users` (`username`,`email`,`birth_date`,`password`,`salt`,`registration_date`,`token`,`ip`) VALUES ('$username','$email','$dob','$pw','$salt','$now','$token','$ip')");
 
-        $id = $conn->insert_id;
+    $id = $conn->insert_id;
 
-        if (!empty($refer)) {
-            $checkRefer = $conn->query("SELECT * FROM `referral_code` WHERE `referral_code`='$refer'");
-            if ($checkRefer->num_rows == 1) {
-                $referralData = $checkRefer->fetch_assoc();
-                $user = $referralData['user'];
-                friendship($id, $user, "send");
-                notify($user,"system", "referral");
-            }
+    if (!empty($refer)) {
+        $checkRefer = $conn->query("SELECT * FROM `referral_code` WHERE `referral_code`='$refer'");
+        if ($checkRefer->num_rows == 1) {
+            $referralData = $checkRefer->fetch_assoc();
+            $user = $referralData['user'];
+            friendship($id, $user, "send");
+            notify($user,"system", "referral");
         }
-
-        if ($pack == "op") {
-            $conn->query("UPDATE `users` SET `private`='0' AND `visible`='1' WHERE `id`='$id'");
-        } else
-        if ($pack == "pp") {
-            $conn->query("UPDATE `users` SET `private`='1' AND `visible`='0' WHERE `id`='$id'");
-        } else {
-            $conn->query("UPDATE `users` SET `private`='$private' AND `visible`='$visible' WHERE `id`='$id'");
-        }
-
-        $data = array(
-            "responseCode" => "ok",
-            "token" => $token,
-            "user" => $id
-        );
-        header('Content-Type: application/json; charset=utf-8');
-        echo json_encode($data);
     }
-}
 
-$conn->close();
+    if ($pack == "op") {
+        $conn->query("UPDATE `users` SET `private`='0' AND `visible`='1' WHERE `id`='$id'");
+    } else
+    if ($pack == "pp") {
+        $conn->query("UPDATE `users` SET `private`='1' AND `visible`='0' WHERE `id`='$id'");
+    } else {
+        $conn->query("UPDATE `users` SET `private`='$private' AND `visible`='$visible' WHERE `id`='$id'");
+    }
+
+    $data = array(
+        "responseCode" => "ok",
+        "token" => $token,
+        "user" => $id
+    );
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode($data);
+} else {
+    $data = array(
+        "responseCode" => "error",
+        "message" => "Please fill in all required fields"
+    );
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode($data);
+}
 
 
 function sendWelcomeEmail($to) {

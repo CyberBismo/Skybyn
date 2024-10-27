@@ -105,7 +105,7 @@ if ($domain == $devDomain) {
                         <?php }?>
                     </ul>
                 </div>
-                <div class="user-avatar">
+                <div class="user-avatar" id="user_avatar_<?=$uid?>">
                     <?php if (isMobile() == true) {?>
                     <img src="./assets/images/logo_faded_clean.png" onclick="window.location.href='./'">
                     <?php } else {?>
@@ -545,7 +545,6 @@ if ($domain == $devDomain) {
                             $getFriendData = $conn->query("SELECT * FROM `users` WHERE `id`='$fid'");
                             $friendData = $getFriendData->fetch_assoc();
 
-                            $f_id = rand(1000,9999).$fid;
                             $friend_username = $friendData['username'];
                             $friend_avatar = "./".$friendData['avatar'];
                             
@@ -562,7 +561,7 @@ if ($domain == $devDomain) {
                                     <div class="friend-action" onclick="window.location.href='./profile?u=<?=$friend_username?>'">
                                         <i class="fa-solid fa-user"></i>
                                     </div>
-                                    <div class="friend-action" onclick="startMessaging('<?=$f_id?>')">
+                                    <div class="friend-action" onclick="startMessaging('<?=$uid?>','<?=$fid?>')">
                                         <i class="fa-solid fa-message"></i>
                                     </div>
                                 </div>
@@ -585,80 +584,92 @@ if ($domain == $devDomain) {
             </div>
         </div>
 
-        
-        <!--div class="message-container" id="message_container_< ?=$f_id?>">
-            <div class="message-header">
-                <div class="message-user" onclick="maximizeMessageBox('< ?=$f_id?>')">
-                    <img src="../assets/images/logo_faded_clean.png" id="msg_user_avatar">
-                    <span id="msg_user_name">Friend</span>
-                </div>
-                <div class="message-actions">
-                    <div class="message-min" onclick="minimizeMessageBox('< ?=$f_id?>')"><i class="fa-solid fa-chevron-down" id="msg_min_< ?=$f_id?>"></i></div>
-                    <div class="message-close" onclick="closeMessageBox('< ?=$f_id?>')"><i class="fa-solid fa-xmark"></i></div>
-                </div>
-            </div>
-            <div class="message-body" id="message_body_< ?=$f_id?>">
-
-                <div class="message">
-                    <div class="message-user">
-                        <div class="message-user-avatar"><img src="../assets/images/logo_faded_clean.png"></div>
-                        <div class="message-user-name">Friend</div>
-                    </div>
-                    <div class="message-content"><p>Hello you</p></div>
-                </div>
-                <div class="message me">
-                    <div class="message-user">
-                        <div class="message-user-name">You</div>
-                        <div class="message-user-avatar"><img src="../assets/images/logo_faded_clean.png"></div>
-                    </div>
-                    <div class="message-content"><p>Hello you too</p></div>
-                </div>
-
-            </div>
-            <div class="message-input">
-                <input type="text" id="message_input_< ?=$f_id?>" placeholder="Type your message...">
-                <button onclick="sendMessage('< ?=$f_id?>','2')"><i class="fa-solid fa-paper-plane"></i></button>
-            </div>
-        </div-->
-
-        <?php
-        $checkActiveChats = $conn->query("SELECT * FROM `active_chats` WHERE `user`='$uid'");
-        if ($checkActiveChats->num_rows > 0) {
-            while ($chatData = $checkActiveChats->fetch_assoc()) {
-            $friend = $chatData['friend'];
-            $open = $chatData['open'];
-            $getFriendData = $conn->query("SELECT * FROM `users` WHERE `id`='$friend'");
-            $friendData = $getFriendData->fetch_assoc();
-            $f_id = rand(1000,9999).$friend;
-            $friend_username = $friendData['username'];
-            $friend_avatar = "./".$friendData['avatar'];
-            if ($friend_avatar == "./") {
-                $friend_avatar = "./assets/images/logo_faded_clean.png";
-            }
-
-            $u_id = rand(1000,9999).$uid;
-            ?>
-            <div class="message-container" id="message_container_<?=$f_id?>">
-                <div class="message-header">
-                    <div class="message-user" onclick="maximizeMessageBox('<?=$f_id?>')">
-                        <img src="<?=$friend_avatar?>" id="msg_user_avatar">
-                        <span id="msg_user_name"><?=$friend_username?></span>
-                    </div>
-                    <div class="message-actions">
-                        <div class="message-min" onclick="minimizeMessageBox('<?=$f_id?>')"><i class="fa-solid fa-chevron-down" id="msg_min_<?=$f_id?>"></i></div>
-                        <div class="message-close" onclick="closeMessageBox('<?=$f_id?>')"><i class="fa-solid fa-xmark"></i></div>
-                    </div>
-                </div>
-                <div class="message-body" id="message_body_<?=$f_id?>"></div>
-                <div class="message-input">
-                    <input type="text" id="message_input_<?=$f_id?>" placeholder="Type your message...">
-                    <button onclick="sendMessage('<?=$f_id?>','<?=$u_id?>')"><i class="fa-solid fa-paper-plane"></i></button>
-                </div>
-            </div>
+        <div class="message-container">
+            <?php if (isset($_SESSION['user'])) { if ($rank > 3) {include_once './assets/design/chat_popup.php';}}?>
             <?php
+            $checkActiveChats = $conn->query("SELECT * FROM `active_chats` WHERE `user`='$uid'");
+            if ($checkActiveChats->num_rows > 0) {
+                while ($chatData = $checkActiveChats->fetch_assoc()) {
+                    $friend = $chatData['friend'];
+                    $open = $chatData['open'];
+                    $getFriendData = $conn->query("SELECT * FROM `users` WHERE `id`='$friend'");
+                    $friendData = $getFriendData->fetch_assoc();
+                    $friend_username = $friendData['username'];
+                    $friend_avatar = "./".$friendData['avatar'];
+                    if ($friend_avatar == "./") {
+                        $friend_avatar = "./assets/images/logo_faded_clean.png";
+                    }
+                    if ($open == "1") {
+                        $open = " maximized";
+                        $icon = "fa-chevron-down";
+                    } else {
+                        $open = "";
+                        $icon = "fa-chevron-up";
+                    }
+                ?>
+                <div class="message-box<?=$open?>" id="message_box_<?=$friend?>">
+                    <div class="message-header">
+                        <div class="message-user" onclick="maximizeMessageBox('<?=$friend?>')">
+                            <img src="<?=$friend_avatar?>" id="msg_user_avatar_<?=$friend?>">
+                            <span id="msg_user_name_<?=$friend?>"><?=$friend_username?></span>
+                        </div>
+                        <div class="message-actions">
+                            <div class="message-min" onclick="maximizeMessageBox('<?=$friend?>')"><i class="fa-solid <?=$icon?>" id="msg_min_<?=$friend?>"></i></div>
+                            <div class="message-close" onclick="closeMessageBox('<?=$friend?>')"><i class="fa-solid fa-xmark"></i></div>
+                        </div>
+                    </div>
+                    <div class="message-body" id="message_body_<?=$friend?>">
+                        <?php
+                        $getMessages = $conn->query("SELECT * FROM `messages` WHERE `from`='$uid' AND `to`='$friend' OR `from`='$friend' AND `to`='$uid' ORDER BY `date` ASC");
+                        if ($getMessages->num_rows > 0) {
+                            while ($msgData = $getMessages->fetch_assoc()) {
+                                $msg = $msgData['content'];
+                                $msg_from = $msgData['from'];
+                                $msg_to = $msgData['to'];
+                                $msg_date = $msgData['date'];
+                                $msg_id = $msgData['id'];
+                                $msg_time = date("H:i", $msg_date);
+                                $msg_date = date("d.m.Y", $msg_date);
+
+                                if ($msg_from == $uid) {
+                                    $msg_class = " me";
+                                } else {
+                                    $msg_class = "";
+                                }
+
+                                if ($msg_from == $uid) {
+                                    $msg_from = "You";
+                                } else {
+                                    $msg_from = $friend_username;
+                                }
+                                ?>
+                                <div class="message<?=$msg_class?>">
+                                    <div class="message-user">
+                                        <?php if ($msg_class == "") {?>
+                                        <div class="message-user-avatar"><img src="<?=$friend_avatar?>"></div>
+                                        <div class="message-user-name"><?=$msg_from?></div>
+                                        <?php } else {?>
+                                        <div class="message-user-name"><?=$msg_from?></div>
+                                        <div class="message-user-avatar"><img src="<?=$avatar?>"></div>
+                                        <?php }?>
+                                    </div>
+                                    <div class="message-content"><p><?=$msg?></p></div>
+                                </div>
+                                <?php
+                            }
+                        }
+                        ?>
+                    </div>
+                    <div class="message-input">
+                        <input type="text" id="message_input_<?=$friend?>" placeholder="Type your message..." onkeyup="if (event.keyCode === 13) {sendMessage('<?=$uid?>', '<?=$friend?>');}">
+                        <button onclick="sendMessage('<?=$uid?>','<?=$friend?>')"><i class="fa-solid fa-paper-plane"></i></button>
+                    </div>
+                </div>
+                <?php
+                }
             }
-        }
-        ?>
+            ?>
+        </div>
 
         <?php if (isMobile() == false) {?>
         <div class="left-panel-open" id="lp-open" onclick="showLeftPanel()"><i class="fa-solid fa-chevron-right"></i></div>
@@ -737,19 +748,23 @@ if ($domain == $devDomain) {
         </script>
         <?php }?>
 
-        <?php if (!isset($_SESSION['user'])) {
-        if (!isset($_COOKIE['welcomeScreen'])) {
-        ?>
         <div id="welcome-screen" onclick="hideWelcome()">
-        <div id="welcome-inner">
-            <img src="assets/images/logo_faded_clean.png" alt="Skybyn Logo" class="cloudZoom">
-            <center>
-                <h3>Welcome to</h3>
-                <h1>Skybyn</h1>
-            </center>
+            <div id="welcome-inner">
+                <img src="assets/images/logo_faded_clean.png" alt="Skybyn Logo" class="cloudZoom">
+                <center>
+                    <h3>Welcome to</h3>
+                    <h1>Skybyn</h1>
+                </center>
+            </div>
+            <p id="welcome-click">Click to continue</p>
         </div>
-        </div>
-        <?php }}?>
+
+        <?php if (isset($_COOKIE['welcomeScreen'])) {?>
+        <script>
+            let welcomeScreen = document.getElementById('welcome-screen');
+            welcomeScreen.style.display = "none";
+        </script>
+        <?php }?>
 
         <script>
         <?php if (skybyn('register') == "1") {
