@@ -64,17 +64,8 @@ function skybyn($x) {
     $systemData = $conn->query("SELECT * FROM `system_data` WHERE `data`='$x'");
     $SDRow = $systemData->fetch_assoc();
 
-    if (strpos(fullUrl(), ".no")) {
-        $domV = " - NO";
-    } else {
-        $domV = " - EN";
-    }
-
     if ($x == "logo" && isset($_SESSION['user'])) {
         return $avatar;
-    } else
-    if ($x == "title") {
-        return $SDRow['text'] . $domV;
     } else {
         return $SDRow['text'];
     }
