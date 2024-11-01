@@ -1,0 +1,19 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    background-color: lightblue;
+}
+
+#clouds {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.cloud {
+    position: absolute;
+    background-color: white;
+    border-radius: 50px;
+    opacity: 0.1; /* Slightly transparent clouds */
+}

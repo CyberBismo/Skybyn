@@ -1,7 +1,8 @@
                 <div class="qr_login">
                     <div class="qr_login_text">
-                        <h2>Scan QR code</h2>
+                        <h2>Sign in</h2>
                         <p>Scan the QR code using the Skybyn app to sign in.</p>
+                        <div class="btn" onclick="tglLogin()"><i class="fa-solid fa-arrow-left"></i> Sign in with email</div>
                     </div>
                     <div class="qr_login_img" id="qr_login_img">
                         <img src="#" alt="" id="login_qr">

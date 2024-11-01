@@ -210,16 +210,16 @@ function isJsonString(value) {
 
 // Reconnect to the server if the connection is closed
 ws.onclose = () => {
-    setTimeout(() => {
-        const newWs = new WebSocket('wss://dev.skybyn.no:4433');
-
-        newWs.onopen = ws.onopen; // Reassign onopen handler
-        newWs.onmessage = ws.onmessage; // Reassign message handler
-        newWs.onclose = ws.onclose; // Reassign close handler
-        newWs.onerror = ws.onerror; // Reassign error handler
-
-        ws = newWs; // Update the reference to the new WebSocket
-    }, 3000);
+    //setTimeout(() => {
+    //    const newWs = new WebSocket('wss://dev.skybyn.no:4433');
+//
+    //    newWs.onopen = ws.onopen; // Reassign onopen handler
+    //    newWs.onmessage = ws.onmessage; // Reassign message handler
+    //    newWs.onclose = ws.onclose; // Reassign close handler
+    //    newWs.onerror = ws.onerror; // Reassign error handler
+//
+    //    ws = newWs; // Update the reference to the new WebSocket
+    //}, 3000);
 };
 
 // Send a message to the server when the client closes the window

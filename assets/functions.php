@@ -1399,6 +1399,18 @@ if (isset($_SESSION['user'])) {
             $_SESSION['gta'] = "login";
         }
     }
+
+    $darkmode = "0";
+}
+
+if ($darkmode) {
+    $darkmode = "checked";
+    $color_text = "white";
+    $color_rgb = "0, 0, 0";
+} else {
+    $darkmode = "";
+    $color_text = "black";
+    $color_rgb = "255, 255, 255";
 }
 
 # Update avatar
