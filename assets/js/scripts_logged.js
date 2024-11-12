@@ -526,6 +526,10 @@ setTimeout(() => {
     const messageBoxes = document.getElementsByClassName('message-box');
     if (messageBoxes.length > 0) {
         for (let i = 0; i < messageBoxes.length; i++) {
+            if (messageBoxes[i].classList.contains('open')) {
+                messageBoxes[i].classList.remove('open');
+                messageBoxes[i].classList.add('maximized');
+            }
             const messageBox = messageBoxes[i].getElementsByClassName('message-body')[0];
             messageBox.scrollTop = messageBox.scrollHeight;
         }
