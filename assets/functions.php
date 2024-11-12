@@ -1165,6 +1165,8 @@ if (isset($_SESSION['user'])) {
         session_destroy();
         createCookie("logged","","0","7"); # 7 = -1
         ?><meta http-equiv="Refresh" content="0; url='./'" /><?php
+    } else {
+        createCookie("logged",$uid,"1","3");
     }
     $UDRow = $UDRes->fetch_assoc();
     $email = $UDRow['email'];
@@ -1202,7 +1204,12 @@ if (isset($_SESSION['user'])) {
     
     $newIP = $_SERVER['REMOTE_ADDR'];
     if ($ip != $newIP) {
-        $conn->query("INSERT INTO `ip_logs` (`user`,`ip`,`date`) VALUES ('$uid','$newIP','$now')");
+        $checkIP = $conn->query("SELECT * FROM `ip_logs` WHERE `user`='$uid' AND `ip`='$newIP'");
+        if ($checkIP->num_rows == 0) {
+            $conn->query("INSERT INTO `ip_logs` (`user`,`ip`,`date`) VALUES ('$uid','$newIP','$now')");
+        } else {
+            $conn->query("UPDATE `ip_logs` SET `date`='$now' WHERE `user`='$uid' AND `ip`='$newIP'");
+        }
     }
 
     if(isset($_SERVER['HTTP_REFERER']) && !empty($_SERVER['HTTP_REFERER'])) {
@@ -1400,17 +1407,11 @@ if (isset($_SESSION['user'])) {
         }
     }
 
-    $darkmode = "0";
-}
-
-if ($darkmode) {
-    $darkmode = "checked";
-    $color_text = "white";
-    $color_rgb = "0, 0, 0";
-} else {
-    $darkmode = "";
-    $color_text = "black";
-    $color_rgb = "255, 255, 255";
+    if (isset($_COOKIE['darkmode'])) {
+        $darkmode = $_COOKIE['darkmode'];
+    } else {
+        $darkmode = false;
+    }
 }
 
 # Update avatar

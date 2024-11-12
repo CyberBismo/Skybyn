@@ -62,7 +62,7 @@ if ($domain == $devDomain) {
         </div>
 
         <div class="dark-mode-toggle" id="dark-mode-toggle" onclick="toggleDarkMode()">
-            <i class="fa-solid fa-moon"></i>
+            <i class="fa-regular"></i>
         </div>
 
         <div class="header" id="header">
@@ -310,9 +310,6 @@ if ($domain == $devDomain) {
         if (isMobile() == false) {?>
         <script>
         checkNoti();
-        setInterval(() => {
-            checkNoti();
-        }, 3000);
         </script>
         <?php }}?>
 
@@ -608,7 +605,7 @@ if ($domain == $devDomain) {
                         $friend_avatar = "./assets/images/logo_faded_clean.png";
                     }
                     if ($open == "1") {
-                        $open = " maximized";
+                        $open = " open";
                         $icon = "fa-chevron-down";
                     } else {
                         $open = "";

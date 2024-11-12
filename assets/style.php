@@ -1,12 +1,8 @@
         <style>
             :root {
-                <?php if ($darkmode) {?>
                 --mode: 0,0,0;
-                --mode-text: black;
-                <?php } else {?>
-                --mode: 255,255,255;
                 --mode-text: white;
-                <?php }?>
+                --mode-placeholder: grey;
             }
 
             html {
@@ -66,7 +62,7 @@
                 color: var(--mode-text);
                 border-radius: 50%;
                 cursor: pointer;
-                z-index: 10;
+                z-index: 20;
             }
 
             *::-webkit-scrollbar {
@@ -117,6 +113,7 @@
                 left: 0;
                 width: 100%;
                 height: 100%;
+                background: linear-gradient(to top, #48c6ef 0%, #6f86d6 100%);
                 transition: all .5s ease-in-out;
                 opacity: 1;
                 z-index: 10;
@@ -241,7 +238,7 @@
                 padding: 0 10px;
                 padding-left: 50px;
                 color: var(--mode-text);
-                background: rgba(0,0,0,.1);
+                background: rgba(var(--mode),.1);
                 border-radius: 10px;
                 border: none;
                 box-sizing: border-box;
@@ -261,7 +258,7 @@
                 padding: 10px;
                 padding-left: 50px;
                 color: var(--mode-text);
-                background: rgba(0,0,0,.1);
+                background: rgba(var(--mode),.1);
                 border-radius: 10px;
                 border: none;
                 box-sizing: border-box;
@@ -293,7 +290,7 @@
                 height: 50px;
                 margin: 10px 0;
                 text-align: center;
-                background: rgba(0,0,0,.2);
+                background: rgba(var(--mode),.2);
                 border-radius: 10px;
                 overflow: hidden;
             }
@@ -334,6 +331,9 @@
                 box-sizing: border-box;
                 outline: none;
                 cursor: pointer;
+            }
+            .form input[type=submit]:hover {
+                background: rgba(255,255,255,.2);
             }
 
             .popup {
@@ -450,7 +450,6 @@
                 position: fixed;
                 top: 0;
                 color: var(--mode-text);
-                backdrop-filter: blur(5px);
                 transition: transform .5s;
                 overflow-y: auto;
                 z-index: 3;
@@ -464,7 +463,6 @@
                 padding: 0 10px;
                 padding-top: 75px;
                 box-sizing: border-box;
-                backdrop-filter: blur(5px);
             }
             <?php } else {?>
             .left-panel,
@@ -685,7 +683,7 @@
             .intro pre {
                 white-space: pre-wrap;
                 padding: 10px;
-                background: rgba(0,0,0,.2);
+                background: rgba(var(--mode),.2);
                 border-radius: 10px;
                 box-sizing: border-box;
             }
@@ -745,7 +743,7 @@
             }
             .center_form .form .login input::placeholder,
             .center_form .form .register input::placeholder {
-                color: var(--mode-text);
+                color: var(--mode-placeholder);
             }
             .center_form .form .register input[type="number"] {
                 -moz-appearance: textfield; /* Firefox */
@@ -787,7 +785,7 @@
                 content: "\2713";
                 text-align: center;
                 line-height: 15px;
-                color: black;
+                color: var(--mode-text);
             }
             label[for=login-remember] {
                 font-size: 12px;
@@ -810,7 +808,7 @@
                 overflow: hidden;
             }
             .center_form .form .login input[type=submit]:hover {
-                background: rgba(var(--mode),.7);
+                background: var(--mode-placeholder) !important;
             }
             .center_form .form .login .show_qr_login {
                 cursor: pointer;
@@ -880,7 +878,7 @@
                 padding: 0 20px;
                 font-size: 18px;
                 background: rgba(255,255,255,.2);
-                border: 1px solid rgba(255,255,255,.5);
+                border: none;
                 overflow: hidden;
             }
             .center_form .form .register input#send_again {
@@ -904,7 +902,7 @@
             .center_form .links span {
                 padding: 10px;
                 font-size: 12px;
-                background: rgba(0,0,0,.2);
+                background: rgba(var(--mode),.2);
                 border-radius: 10px;
             }
             .center_form .links span:hover {
@@ -1054,7 +1052,7 @@
                 width: 300px;
                 padding: 5px;
                 text-align: left;
-                background: rgba(0,0,0,.1);
+                background: rgba(255,255,255,.1);
                 border-radius: 30px;
                 backdrop-filter: blur(5px);
                 transition: width .5s;
@@ -1231,6 +1229,7 @@
             }
             .header .top-left .logo-name {
                 width: auto;
+                color: white;
                 font-size: 12px;
             }
             .header .top-left .logo-name h1 {
@@ -1260,11 +1259,11 @@
                 top: 75px;
                 width: 50%;
                 margin: 0 25%;
-                background: rgba(var(--dark),.2);
+                background: rgba(var(--mode),.6);
                 backdrop-filter: blur(5px);
                 border-radius: 20px;
                 box-sizing: border-box;
-                box-shadow: 0px 5px 10px 0px rgba(0,0,0,.5);
+                box-shadow: 0px 5px 10px 0px rgba(var(--mode),.5);
                 overflow: hidden;
                 z-index: 5;
             }
@@ -1386,7 +1385,7 @@
                 height: auto;
                 margin: 0 10px;
                 padding: 10px;
-                background: rgba(0,0,0,.1);
+                background: rgba(var(--mode),.1);
                 border-radius: 10px;
                 box-sizing: border-box;
             }
@@ -1429,7 +1428,7 @@
                 background: rgba(var(--dark),.8);
                 backdrop-filter: blur(5px);
                 box-sizing: border-box;
-                box-shadow: 0px 5px 10px 0px rgba(0,0,0,.5);
+                box-shadow: 0px 5px 10px 0px rgba(var(--mode),.5);
                 overflow: hidden;
                 z-index: 3;
             }
@@ -1553,7 +1552,7 @@
                 position: relative;
                 width: 100%;
                 padding: 20px;
-                background: rgba(0,0,0,.8);
+                background: rgba(var(--mode),.8);
                 box-sizing: border-box;
             }
             .header .create_post textarea {
@@ -1676,10 +1675,10 @@
                 max-width: 300px;
                 max-height: calc(100% - 300px);
                 color: var(--mode-text);
-                background: rgba(0,0,0,.3);
+                background: rgba(var(--mode),.3);
                 border-radius: 10px 0 10px 10px;
                 backdrop-filter: blur(5px);
-                box-shadow: 10px 10px 23px -5px rgba(0,0,0,0.6);
+                box-shadow: 10px 10px 23px -5px rgba(var(--mode),0.6);
                 z-index: 11;
             }
             .notifications i {
@@ -1704,12 +1703,12 @@
                 justify-content: space-between;
                 margin: 5px;
                 padding: 5px 0;
-                background: rgba(0,0,0,.05);
+                background: rgba(var(--mode),.05);
                 border-radius: 5px;
                 transition: background .5s;
             }
             .noti:hover {
-                background: rgba(0,0,0,.1);
+                background: rgba(var(--mode),.1);
             }
             .noti-status {
                 width: 20px;
@@ -1744,7 +1743,7 @@
                 color: var(--mode-text);
                 background: rgba(var(--mode),1);
                 backdrop-filter: blur(5px);
-                box-shadow: 10px 10px 23px -5px rgba(0,0,0,0.6);
+                box-shadow: 10px 10px 23px -5px rgba(var(--mode),0.6);
                 border-radius: 20px;
                 box-sizing: border-box;
                 overflow: auto;
@@ -1760,7 +1759,7 @@
                 height: 50px;
                 line-height: 50px;
                 text-align: center;
-                background: rgba(0,0,0,.1);
+                background: rgba(var(--mode),.1);
                 border-radius: 0 0 0 20px;
                 box-sizing: border-box;
                 cursor: pointer;
@@ -1808,13 +1807,13 @@
                 padding-right: 40px;
                 color: var(--mode-text);
                 background: none;
-                border: 1px solid rgba(var(--lightblue),.5);
+                border: 1px solid rgba(var(--mode),.5);
                 border-radius: 40px;
                 box-sizing: border-box;
                 outline: none;
             }
             .search input::placeholder {
-                color: var(--mode-text);
+                color: white;
             }
             <?php } else {?>
             .mobile-search {
@@ -1826,7 +1825,7 @@
                 padding: 20px;
                 padding-top: 95px;
                 color: var(--mode-text);
-                background: rgba(var(--dark),.3);
+                background: rgba(var(--mode),.3);
                 box-sizing: border-box;
                 backdrop-filter: blur(5px);
                 border-bottom-left-radius: 20px;
@@ -1836,7 +1835,7 @@
             }
             .search {
                 width: 100%;
-                background: rgba(0,0,0,.3);
+                background: rgba(var(--mode),.3);
                 border-radius: 40px;
                 box-sizing: border-box;
             }
@@ -1852,13 +1851,13 @@
                 padding-left: 40px;
                 box-sizing: border-box;
                 color: var(--mode-text);
-                background: rgba(0,0,0,0);
+                background: rgba(var(--mode),0);
                 border: none;
                 outline: none;
                 transition: display .5s;
             }
             .search input::placeholder {
-                color: lightgray;
+                color: white;
             }
             <?php }?>
             <?php if (isMobile() == false) {?>
@@ -1918,7 +1917,7 @@
                 position: absolute;
                 top: 75px;
                 color: var(--mode-text);
-                box-shadow: 0 2px 2px rgba(0,0,0,.05);
+                box-shadow: 0 2px 2px rgba(var(--mode),.05);
                 backdrop-filter: blur(5px);
                 box-sizing: border-box;
                 z-index: 3;
@@ -1937,7 +1936,7 @@
                 width: 90%;
                 padding: 20px;
                 background: rgba(var(--mode),.9);
-                box-shadow: 0 3px rgba(0,0,0,.2);
+                box-shadow: 0 3px rgba(var(--mode),.2);
                 transform: translateX(100%);
                 transition: transform .5s;
             }
@@ -1957,7 +1956,7 @@
                 cursor: pointer;
             }
             .user-dropdown ul li:hover {
-                background: rgba(0,0,0,.1);
+                background: rgba(var(--mode),.1);
                 border-radius: 10px;
             }
             .user-dropdown ul li i {
@@ -2069,7 +2068,7 @@
             .image_viewer .image_box {
                 width: 70%;
                 height: 100%;
-                background: rgba(0,0,0,.8);
+                background: rgba(var(--mode),.8);
                 backdrop-filter: blur(5px); 
             }
             <?php } else {?>
@@ -2087,7 +2086,7 @@
             .image_viewer .image_box {
                 width: 100%;
                 height: 100%;
-                background: rgba(0,0,0,.8);
+                background: rgba(var(--mode),.8);
                 backdrop-filter: blur(5px);
             }
             <?php }?>
@@ -2158,7 +2157,7 @@
             }
             .post_body {
                 color: var(--mode-text);
-                background: rgba(0,0,0,.7);
+                background: rgba(var(--mode),.7);
                 border-radius: 20px;
                 overflow: hidden;
             }
@@ -2210,7 +2209,7 @@
             }
             .post_action_list {
                 flex-direction: column;
-                background: rgba(0,0,0,.3);
+                background: rgba(var(--mode),.3);
                 border-radius: 10px 3px 10px 10px;
                 overflow: hidden;
             }
@@ -2253,7 +2252,7 @@
                 margin-top: 10px;
                 border-radius: 20px;
                 overflow: auto;
-                background: rgba(0,0,0,.1);
+                background: rgba(var(--mode),.1);
                 overflow: hidden;
                 cursor: pointer;
             }
@@ -2287,7 +2286,7 @@
             .post_full {
                 margin-bottom: 10px;
                 padding-bottom: 30px;
-                border-bottom: 1px solid rgba(0,0,0,.05);
+                border-bottom: 1px solid rgba(var(--mode),.05);
             }
             .post_website {
                 width: calc(100% - 20px);
@@ -2551,7 +2550,7 @@
                 left: 0;
                 width: 100%;
                 height: 100%;
-                background: rgba(0,0,0,.5);
+                background: rgba(var(--mode),.5);
                 z-index: 11;
             }
             .side_menu {
@@ -2602,7 +2601,7 @@
             }
             .menu_item:hover {
                 color: var(--mode-text);
-                background: rgba(0,0,0,.5);
+                background: rgba(var(--mode),.5);
             }
             .menu_item i {
                 width: 20%;
@@ -2620,7 +2619,7 @@
 
             /** Shortcuts */
             .shortcuts {
-                background: rgba(0,0,0,.4);
+                background: rgba(var(--mode),.4);
                 border-radius: 20px;
             }
             .shortcuts h3 {
@@ -2735,7 +2734,7 @@
                 transition: background .5s;
             }
             .shortcut-page:hover {
-                background: rgba(0,0,0,.1);
+                background: rgba(var(--mode),.1);
                 cursor: pointer;
             }
             .page-logo {
@@ -2812,7 +2811,7 @@
                 margin-bottom: 5px;
                 padding: 0 10px;
                 color: var(--mode-text);
-                background: rgba(0,0,0,.1);
+                background: rgba(var(--mode),.1);
                 border: none;
                 border-radius: 10px;
                 outline: none;
@@ -3030,7 +3029,7 @@
             }
             .friend-list h3 {
                 padding: 10px 20px;
-                background: rgba(0,0,0,.41);
+                background: rgba(var(--mode),.41);
                 border-radius: 10px;
             }
             .friend {
@@ -3078,7 +3077,7 @@
                 width: 90%;
                 height: 0;
                 margin: 0 auto;
-                background: rgba(0,0,0,.1);
+                background: rgba(var(--mode),.1);
                 border-bottom-left-radius: 10px;
                 border-bottom-right-radius: 10px;
                 overflow: hidden;
@@ -3094,7 +3093,7 @@
                 text-align: center;
             }
             .friend-action i:hover {
-                background: rgba(0,0,0,.1);
+                background: rgba(var(--mode),.1);
             }
 
             .friend-referral {
@@ -3102,7 +3101,7 @@
                 height: 40px;
                 margin-top: 20px;
                 padding: 10px;
-                background: rgba(0,0,0,.4);
+                background: rgba(var(--mode),.4);
                 border-radius: 10px;
                 box-sizing: border-box;
                 overflow: hidden;
@@ -3118,7 +3117,7 @@
                 padding: 10px;
                 text-transform: uppercase;
                 text-align: center;
-                background: rgba(0,0,0,.4);
+                background: rgba(var(--mode),.4);
                 border-radius: 10px;
             }
             .fr_info {
@@ -3218,7 +3217,7 @@
                 position: absolute;
                 background: rgba(255,255,255,.3);
                 backdrop-filter: blur(5px);
-                box-shadow: 10px 10px 23px -5px rgba(0,0,0,0.6);
+                box-shadow: 10px 10px 23px -5px rgba(var(--mode),0.6);
                 border-radius: 0 10px 10px 10px;
                 overflow: hidden;
             }
@@ -3256,7 +3255,7 @@
             .chat_text {
                 max-width: calc(100% - 60px);
                 padding: 15px;
-                background: rgba(0,0,0,.2);
+                background: rgba(var(--mode),.2);
                 border-radius: 20px;
                 box-sizing: border-box;
             }
@@ -3312,7 +3311,7 @@
             .message-box {
                 width: 300px;
                 height: 40px;
-                background: rgba(0,0,0,.5);
+                background: rgba(var(--mode),.5);
                 backdrop-filter: blur(5px);
                 border-radius: 10px;
                 box-sizing: border-box;
@@ -3332,7 +3331,7 @@
                 display: flex;
                 justify-content: space-between;
                 padding: 10px;
-                background: rgba(0,0,0,.1);
+                background: rgba(var(--mode),.1);
                 border-radius: 40px;
             }
             .message-header .message-user {
@@ -3363,7 +3362,7 @@
             .message-body {
                 height: 280px;
                 padding: 10px;
-                background: rgba(0,0,0,.2);
+                background: rgba(var(--mode),.2);
                 border-radius: 10px;
                 overflow: auto;
             }
@@ -3408,7 +3407,7 @@
             .message-input {
                 display: flex;
                 justify-content: space-between;
-                background: rgba(0,0,0,.1);
+                background: rgba(var(--mode),.1);
                 border-radius: 0 0 10px 10px;
             }
             .message-input input {
@@ -3509,12 +3508,12 @@
             }
             .profile-tabs {
                 padding: 10px;
-                background: rgba(0,0,0,.3);
+                background: rgba(var(--mode),.3);
                 border-radius: 10px;
                 box-sizing: border-box;
             }
             .profile-tabs .settings-cat:hover {
-                background: rgba(0,0,0,.1);
+                background: rgba(var(--mode),.1);
             }
             .profile-btns {
                 margin: 20px 0;
@@ -3578,7 +3577,7 @@
             }
             .profile-right .create_post textarea {
                 padding-right: 40px;
-                border: 1px solid rgba(0,0,0,.2);
+                border: 1px solid rgba(var(--mode),.2);
             }
             .profile-right .create_post i {
                 float: right;
@@ -3670,7 +3669,7 @@
         
             .profile-left hr {
                 height: 1px;
-                background: rgba(0,0,0,.1);
+                background: rgba(var(--mode),.1);
                 border: none;
             }
             .profile-left .avatar img {
@@ -3702,7 +3701,7 @@
                 margin-left: 50%;
                 padding: 20px;
                 transform: translateX(-50%);
-                background: rgba(0,0,0,.7);
+                background: rgba(var(--mode),.7);
                 border-radius: 10px;
                 box-sizing: border-box;
             }
@@ -3761,7 +3760,7 @@
                 transition: background .5s;
             }
             .settings-cat:hover {
-                background: rgba(0,0,0,.1);
+                background: rgba(var(--mode),.1);
                 cursor: pointer;
             }
             .settings-icon {
@@ -3810,7 +3809,7 @@
                 margin-bottom: 5px;
                 padding: 10px;
                 border-radius: 10px;
-                background: rgba(0,0,0,.3);
+                background: rgba(var(--mode),.3);
             }
             .ip-actions {
                 text-align: right;
@@ -3881,7 +3880,7 @@
                 margin-bottom: 5px;
                 padding: 0 10px;
                 color: var(--mode-text);
-                background: rgba(0,0,0,.1);
+                background: rgba(var(--mode),.1);
                 border: none;
                 border-radius: 10px;
                 outline: none;
@@ -3951,7 +3950,7 @@
             .gbox-main {
                 width: calc(100% - 70px);
                 height: 100%;
-                background: rgba(0,0,0,.1);
+                background: rgba(var(--mode),.1);
                 border-radius: 20px 0 0 20px;
             }
             .gbox-main #gbox-chat,
@@ -3970,7 +3969,7 @@
             .gbox-main {
                 width: calc(100% - 10px);
                 margin: 0 5px;
-                background: rgba(0,0,0,.1);
+                background: rgba(var(--mode),.1);
                 border-radius: 10px;
                 box-sizing: border-box;
             }
@@ -4032,7 +4031,7 @@
                 position: absolute;
                 background: rgba(255,255,255,.3);
                 backdrop-filter: blur(5px);
-                box-shadow: 10px 10px 23px -5px rgba(0,0,0,0.6);
+                box-shadow: 10px 10px 23px -5px rgba(var(--mode),0.6);
                 border-radius: 0 10px 10px 10px;
                 overflow: hidden;
             }
@@ -4071,7 +4070,7 @@
             .gchat-text {
                 max-width: calc(100% - 60px);
                 padding: 15px;
-                background: rgba(0,0,0,.2);
+                background: rgba(var(--mode),.2);
                 border-radius: 20px;
                 box-sizing: border-box;
             }
@@ -4241,7 +4240,7 @@
                 box-sizing: border-box;
             }
             .gbox-right-icon:hover {
-                background: rgba(0,0,0,.1);
+                background: rgba(var(--mode),.1);
                 cursor: pointer;
             }
             .gbox-right-icons .gleave {

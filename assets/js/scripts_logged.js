@@ -521,3 +521,13 @@ async function fetchPreviews(urls,id) {
         previewsContainer.appendChild(previewContainer);
     });
 }
+
+setTimeout(() => {
+    const messageBoxes = document.getElementsByClassName('message-box');
+    if (messageBoxes.length > 0) {
+        for (let i = 0; i < messageBoxes.length; i++) {
+            const messageBox = messageBoxes[i].getElementsByClassName('message-body')[0];
+            messageBox.scrollTop = messageBox.scrollHeight;
+        }
+    }
+}, 1000);

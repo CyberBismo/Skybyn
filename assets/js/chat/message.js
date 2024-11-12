@@ -141,16 +141,16 @@ function sendMessage(uid, fid) {
     const messageInput = document.getElementById('message_input_'+fid);
     let message = messageInput.value;
     if (message) {
+        const avatar = document.querySelector('.message-user-avatar img').getAttribute('src');        
         let messageContainer = document.getElementById('message_body_' + fid);
 
         // Display the message immediately with a placeholder avatar
         const userMessage = document.createElement('div');
         userMessage.classList.add('message', 'me');
-        userMessage.id = 'message_'+uid;
         userMessage.innerHTML = `
             <div class="message-user">
                 <div class="message-user-name">You</div>
-                <div class="message-user-avatar"><img src="../assets/images/logo_faded_clean.png" id="message_user_avatar_${uid}"></div>
+                <div class="message-user-avatar"><img src="${avatar}"></div>
             </div>
             <div class="message-content"><p>${message}</p></div>
         `;
@@ -162,9 +162,6 @@ function sendMessage(uid, fid) {
         if (isAtBottom) {
             messageContainer.scrollTop = messageContainer.scrollHeight;
         }
-
-        let username = document.getElementById('msg_user_name_'+fid).textContent;
-        let avatar = document.getElementById('msg_user_avatar_'+fid).src;
 
         $.ajax({
             url: './assets/chat_send.php',
@@ -183,9 +180,7 @@ function sendMessage(uid, fid) {
                     id: id,
                     from: uid,
                     to: fid,
-                    message: message,
-                    username: username,
-                    avatar: avatar
+                    message: message
                 }));
             }
         });

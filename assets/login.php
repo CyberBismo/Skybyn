@@ -159,7 +159,7 @@ if ($checkEmail->num_rows == 1) {
         //    } else {
         //        $_SESSION['user'] = $uid;
         //        if ($remember == "true") {
-        //            createCookie("logged",rand(1000,9999).$uid,"1","6");
+        //            createCookie("logged",$uid,"1","6");
         //        }
         //        $data = array(
         //            "responseCode" => "ok",
@@ -169,15 +169,17 @@ if ($checkEmail->num_rows == 1) {
         //        echo json_encode($data);
         //    }
         //} else {
-            //$checkWallet = $conn->query("SELECT * FROM `wallets` WHERE `user`='$uid'");
-            //if ($countWallet->num_rows == 0) {
-            //    $conn->query("INSERT INTO `wallets` (`user`) VALUES (`$uid`)");
-            //}
-            //
-            //$conn->query("UPDATE `ip_history` SET `date`='$now' WHERE `ip`='$currentIP' AND `user_id`='$uid'");
+            $checkWallet = $conn->query("SELECT * FROM `wallets` WHERE `user`='$uid'");
+            if ($checkWallet->num_rows == 0) {
+                $conn->query("INSERT INTO `wallets` (`user`) VALUES ('$uid')");
+            }
+            
+            $conn->query("UPDATE `ip_logs` SET `date`='$now' WHERE `ip`='$currentIP' AND `user`='$uid'");
 
             if ($remember == "true") {
-                createCookie("logged",rand(1000,9999).$uid,"1","6");
+                createCookie("logged",$uid,"1","6");
+            } else {
+                createCookie("logged",$uid,"1","0");
             }
             $data = array(
                 "responseCode" => "ok",
