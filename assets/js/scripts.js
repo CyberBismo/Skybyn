@@ -91,19 +91,19 @@ function updateBackground() {
 
     if (totalMinutes >= 300 && totalMinutes <= 420) { // Dawn: 5:00 AM - 7:00 AM
         toggleLightMode('keepInterval');
-        gradient = "linear-gradient(to top, #feb47b 0%, #ff7e5f 100%)"; // Warm orange
+        gradient = "linear-gradient(to top, #f4b26a 0%, #003877 100%)"; // Warm orange
     } else if (totalMinutes > 420 && totalMinutes <= 720) { // Morning: 7:01 AM - 12:00 PM
         toggleLightMode('keepInterval');
-        gradient = "linear-gradient(to top, #fbd786 0%, #6dd5ed 100%)"; // Light yellow to light blue
+        gradient = "linear-gradient(to top, #5e9ed5 0%, #00398a 100%)"; // Light yellow to light blue
     } else if (totalMinutes > 720 && totalMinutes <= 1080) { // Afternoon: 12:01 PM - 6:00 PM
-        toggleLightMode('keepInterval');
-        gradient = "linear-gradient(to top, #48c6ef 0%, #6f86d6 100%)"; // Light blue
+        toggleDarkMode('keepInterval');
+        gradient = "linear-gradient(to top, #73b4e8 0%, #2c83cf 100%)"; // Light blue
     } else if (totalMinutes > 1080 && totalMinutes <= 1260) { // Evening: 6:01 PM - 9:00 PM
         toggleDarkMode('keepInterval');
-        gradient = "linear-gradient(to top, #4e4376 0%, #2b5876 100%)"; // Deep sunset purple
+        gradient = "linear-gradient(to top, #c58c6e 0%, #b3bccd 100%)"; // Deep sunset purple
     } else { // Night: 9:01 PM - 4:59 AM
         toggleDarkMode('keepInterval');
-        gradient = "linear-gradient(to top, #243B55 0%, #141E30 100%)"; // Dark blue night
+        gradient = "linear-gradient(to top, #37283b 0%, #031751 100%)"; // Dark blue night
     }
 
     document.body.style.background = gradient;
