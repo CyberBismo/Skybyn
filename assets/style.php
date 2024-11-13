@@ -15,6 +15,7 @@
                 width: 100%;
                 height: 100%;
                 margin: 0 auto;
+                background: linear-gradient(to top, #48c6ef 0%, #6f86d6 100%);
                 transition: background-color 0.3s;
             }
             @media (prefers-color-scheme: light) {

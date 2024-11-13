@@ -4,8 +4,6 @@ document.addEventListener("DOMContentLoaded", function() {
     images.forEach(img => {
         img.setAttribute('loading', 'lazy');
     });
-
-    updateBackground();
     
     const cloudsContainer = document.getElementById('clouds');
 
@@ -61,6 +59,7 @@ document.addEventListener("DOMContentLoaded", function() {
         welcomeScreenElements[i].style.color = 'white';
     }
     
+    updateBackground();
     setInterval(updateBackground, 60000); // Update every minute
 });
 
@@ -89,22 +88,27 @@ function updateBackground() {
     let gradient;
 
     if (totalMinutes >= 300 && totalMinutes <= 420) { // Dawn: 5:00 AM - 7:00 AM
+        toggleLightMode('keepInterval');
         gradient = "linear-gradient(to top, #feb47b 0%, #ff7e5f 100%)"; // Warm orange
     } else if (totalMinutes > 420 && totalMinutes <= 720) { // Morning: 7:01 AM - 12:00 PM
+        toggleLightMode('keepInterval');
         gradient = "linear-gradient(to top, #fbd786 0%, #6dd5ed 100%)"; // Light yellow to light blue
     } else if (totalMinutes > 720 && totalMinutes <= 1080) { // Afternoon: 12:01 PM - 6:00 PM
+        toggleLightMode('keepInterval');
         gradient = "linear-gradient(to top, #48c6ef 0%, #6f86d6 100%)"; // Light blue
     } else if (totalMinutes > 1080 && totalMinutes <= 1260) { // Evening: 6:01 PM - 9:00 PM
+        toggleDarkMode('keepInterval');
         gradient = "linear-gradient(to top, #4e4376 0%, #2b5876 100%)"; // Deep sunset purple
     } else { // Night: 9:01 PM - 4:59 AM
+        toggleDarkMode('keepInterval');
         gradient = "linear-gradient(to top, #243B55 0%, #141E30 100%)"; // Dark blue night
     }
 
-    document.body.style.backgroundColor = gradient;
-    document.getElementById('welcome-screen').style.backgroundColor = gradient;
+    document.body.style.background = gradient;
+    document.getElementById('welcome-screen').style.background = gradient;
 }
 
-function toggleLightMode() {
+function toggleLightMode(x) {
     const body = document.body;
     const darkModeButton = document.getElementById('dark-mode-toggle');
     const darkModeIcon = darkModeButton.querySelector('i');
@@ -114,8 +118,12 @@ function toggleLightMode() {
     const new_comments = document.querySelectorAll('post_comment_new_content');
     const comments = document.querySelectorAll('post_comment_content');
 
-    if (window.updateBackgroundInterval) {
-        clearInterval(window.updateBackgroundInterval); // Stop updating the background gradient
+    if (x !== 'keepInterval') {
+        if (window.updateBackgroundInterval) {
+            clearInterval(window.updateBackgroundInterval); // Stop updating the background gradient
+        }
+    } else {
+        window.updateBackgroundInterval = setInterval(updateBackground, 60000); // Update every minute
     }
 
     darkModeIcon.classList.remove('fa-sun');
