@@ -1,0 +1,1 @@
+<?php include_once "assets/js/device/detect.js"?>

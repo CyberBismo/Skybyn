@@ -8,18 +8,64 @@ function connectWebSocket() {
     let sessionId = localStorage.getItem('sessionId') || generateSessionId();
     localStorage.setItem('sessionId', sessionId);
 
+    // Store device and browser information
+    let device = 'Unknown';
+    if (navigator.userAgent.match(/Android/i)) {
+        device = 'Android';
+    } else if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
+        device = 'iOS';
+    } else if (navigator.userAgent.match(/Windows/i)) {
+        device = 'Windows';
+    } else if (navigator.userAgent.match(/Mac/i)) {
+        device = 'Mac';
+    } else if (navigator.userAgent.match(/Linux/i)) {
+        device = 'Linux';
+    } else if (navigator.userAgent.match(/Ubuntu/i)) {
+        device = 'Ubuntu';
+    } else if (navigator.userAgent.match(/BlackBerry/i)) {
+        device = 'BlackBerry';
+    } else if (navigator.userAgent.match(/Tesla/i)) {
+        device = 'Tesla';
+    }
+
     ws.onopen = () => {
         const url = new URL(window.location.href);
+        
+        let information = '';
+
+        const deviceInfo = {
+            type: 'device_info',
+            device: device,
+            browser: navigator.userAgent
+        };
+
         if (document.cookie.split(';').some((item) => item.trim().startsWith('logged='))) {
             const userId = document.cookie.replace(/(?:(?:^|.*;\s*)logged\s*\=\s*([^;]*).*$)|^.*$/, "$1");
             if (userId.length > 0) {
-                ws.send(JSON.stringify({type: 'connect', sessionId: sessionId, userId: userId, url: url }));
+                information = JSON.stringify({
+                    type: 'connect',
+                    sessionId: sessionId,
+                    userId: userId,
+                    url: url
+                });
             } else {
-                ws.send(JSON.stringify({type: 'connect', sessionId: sessionId, userId: null, url: url }));
+                information = JSON.stringify({
+                    type: 'connect',
+                    sessionId: sessionId,
+                    userId: null,
+                    url: url
+                });
             }
         } else {
-            ws.send(JSON.stringify({type: 'connect', sessionId: sessionId, userId: null, url: url }));
+            information = JSON.stringify({
+                type: 'connect',
+                sessionId: sessionId,
+                userId: null,
+                url: url
+            });
         }
+
+        ws.send(information);
     };
 
     ws.onmessage = (event) => {
