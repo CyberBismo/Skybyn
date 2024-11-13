@@ -82,9 +82,10 @@ setTimeout(() => {
 
 function updateBackground() {
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const currentTimestamp = new Date().toLocaleString("en-US", { timeZone: timezone });    
-    const hours = currentTimestamp.getHours();
-    const minutes = currentTimestamp.getMinutes();
+    const currentTimestamp = new Date().toLocaleString("en-US", { timeZone: timezone });
+    const date = new Date(currentTimestamp);
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
     const totalMinutes = hours * 60 + minutes;
     let gradient;
 
