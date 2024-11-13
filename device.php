@@ -7,6 +7,7 @@
                 margin: 0;
                 padding: 0;
                 display: flex;
+                flex-direction: column;
                 justify-content: center;
                 align-items: center;
                 height: 100vh;
@@ -34,11 +35,7 @@
 
         const device = document.getElementById('device');
 
-        device.innerHTML = JSON.stringify({
-            type: 'device_info',
-            device: navigator.userAgent.includes("Tesla") ? 'Tesla' : 'Non-Tesla',
-            browser: navigator.userAgent
-        });
+        device.innerHTML = navigator.userAgent.includes("Tesla") ? 'Tesla' : 'Non-Tesla';
         </script>
     </body>
 </html>
