@@ -81,9 +81,10 @@ setTimeout(() => {
 }, 1000);
 
 function updateBackground() {
-    const now = new Date();
-    const hours = now.getHours();
-    const minutes = now.getMinutes();
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const currentTimestamp = new Date().toLocaleString("en-US", { timeZone: timezone });    
+    const hours = currentTimestamp.getHours();
+    const minutes = currentTimestamp.getMinutes();
     const totalMinutes = hours * 60 + minutes;
     let gradient;
 
