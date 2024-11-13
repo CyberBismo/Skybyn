@@ -23,19 +23,16 @@
         </style>
     </head>
     <body>
-        <h1>Device Info</h1>
+        <h1>Device Type</h1>
         <div id="device" class="device"></div>
 
         <script>
-        if (navigator.userAgent.includes("Tesla") && navigator.userAgent.includes("Linux")) {
-            console.log("Tesla browser detected");
-        } else {
-            console.log("Non-Tesla browser detected");
-        }
-
-        const device = document.getElementById('device');
-
-        device.innerHTML = navigator.userAgent.includes("Tesla") ? 'Tesla' : 'Non-Tesla';
+        document.getElementById('device').innerHTML = `
+            <p><strong>Device:</strong> ${navigator.userAgent}</p>
+            <p><strong>Platform:</strong> ${navigator.platform}</p>
+            <p><strong>Language:</strong> ${navigator.language}</p>
+            <p><strong>Cookie enabled:</strong> ${navigator.cookieEnabled}</p>
+        `;
         </script>
     </body>
 </html>
