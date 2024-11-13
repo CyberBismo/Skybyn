@@ -89,21 +89,41 @@ function updateBackground() {
     const totalMinutes = hours * 60 + minutes;
     let gradient;
 
+    let sunriseTop = '5e9cf9';
+    let sunriseTopCenter = 'a8c2ff';
+    let sunriseBottomCenter = 'ccd2ff';
+    let sunriseBottom = 'c3bbf9';
+    
+    let dayTop = '1c44c8';
+    let dayTopCenter = '179ae4';
+    let dayBottomCenter = 'cad3fd';
+    let dayBottom = 'abcbe9';
+
+    let sunsetTop = '7068dd';
+    let sunsetTopCenter = 'f89d2a';
+    let sunsetBottomCenter = 'ea6d08';
+    let sunsetBottom = 'bb280a';
+
+    let nightTop = '011245';
+    let nightTopCenter = '021e69';
+    let nightBottomCenter = '132d8b';
+    let nightBottom = '031241';
+
     if (totalMinutes >= 300 && totalMinutes <= 420) { // Dawn: 5:00 AM - 7:00 AM
         toggleLightMode('keepInterval');
-        gradient = "linear-gradient(to top, #f4b26a 0%, #003877 100%)"; // Warm orange
+        gradient = "linear-gradient(to bottom, #" + sunriseTop + " 0%, #" + sunriseTopCenter + " 55%, #" + sunriseBottomCenter + " 75%, #" + sunriseBottom + " 100%)";
     } else if (totalMinutes > 420 && totalMinutes <= 720) { // Morning: 7:01 AM - 12:00 PM
         toggleLightMode('keepInterval');
-        gradient = "linear-gradient(to top, #5e9ed5 0%, #00398a 100%)"; // Light yellow to light blue
+        gradient = "linear-gradient(to bottom, #" + dayTop + " 0%, #" + dayTopCenter + " 55%, #" + dayBottomCenter + " 75%, #" + dayBottom + " 100%)";
     } else if (totalMinutes > 720 && totalMinutes <= 1080) { // Afternoon: 12:01 PM - 6:00 PM
-        toggleDarkMode('keepInterval');
-        gradient = "linear-gradient(to top, #73b4e8 0%, #2c83cf 100%)"; // Light blue
+        toggleLightMode('keepInterval');
+        gradient = "linear-gradient(to bottom, #" + dayTop + " 0%, #" + dayTopCenter + " 55%, #" + dayBottomCenter + " 75%, #" + dayBottom + " 100%)";
     } else if (totalMinutes > 1080 && totalMinutes <= 1260) { // Evening: 6:01 PM - 9:00 PM
         toggleDarkMode('keepInterval');
-        gradient = "linear-gradient(to top, #c58c6e 0%, #b3bccd 100%)"; // Deep sunset purple
+        gradient = "linear-gradient(to bottom, #" + sunsetTop + " 0%, #" + sunsetTopCenter + " 55%, #" + sunsetBottomCenter + " 75%, #" + sunsetBottom + " 100%)";
     } else { // Night: 9:01 PM - 4:59 AM
         toggleDarkMode('keepInterval');
-        gradient = "linear-gradient(to top, #37283b 0%, #031751 100%)"; // Dark blue night
+        gradient = "linear-gradient(to bottom, #" + nightTop + " 0%, #" + nightTopCenter + " 55%, #" + nightBottomCenter + " 75%, #" + nightBottom + " 100%)";
     }
 
     document.body.style.background = gradient;
@@ -119,6 +139,11 @@ function toggleLightMode(x) {
     const search = document.getElementsByClassName('search')[0];
     const new_comments = document.querySelectorAll('post_comment_new_content');
     const comments = document.querySelectorAll('post_comment_content');
+    
+    let dayTop = '1c44c8';
+    let dayTopCenter = '179ae4';
+    let dayBottomCenter = 'cad3fd';
+    let dayBottom = 'abcbe9';
 
     if (x !== 'keepInterval') {
         if (window.updateBackgroundInterval) {
@@ -158,10 +183,10 @@ function toggleLightMode(x) {
     darkModeButton.style.color = 'black';
     darkModeButton.onclick = toggleDarkMode;
     
-    document.body.style.background = 'linear-gradient(to top, #48c6ef 0%, #6f86d6 100%)';
+    document.body.style.background = "linear-gradient(to bottom, #" + dayTop + " 0%, #" + dayTopCenter + " 55%, #" + dayBottomCenter + " 75%, #" + dayBottom + " 100%)";
 
     const welcomeScreen = document.getElementById('welcome-screen');
-    welcomeScreen.style.background = 'linear-gradient(to top, #48c6ef 0%, #6f86d6 100%)';
+    welcomeScreen.style.background = "linear-gradient(to bottom, #" + dayTop + " 0%, #" + dayTopCenter + " 55%, #" + dayBottomCenter + " 75%, #" + dayBottom + " 100%)";
     const welcomeScreenElements = welcomeScreen.getElementsByTagName('*');
     for (let i = 0; i < welcomeScreenElements.length; i++) {
         welcomeScreenElements[i].style.color = 'white';
@@ -188,6 +213,11 @@ function toggleDarkMode() {
     const search = document.getElementsByClassName('search')[0];
     const new_comments = document.querySelectorAll('post_comment_new_content');
     const comments = document.querySelectorAll('post_comment_content');
+
+    let nightTop = '011245';
+    let nightTopCenter = '021e69';
+    let nightBottomCenter = '132d8b';
+    let nightBottom = '031241';
 
     if (window.updateBackgroundInterval) {
         clearInterval(window.updateBackgroundInterval); // Stop updating the background gradient
@@ -217,10 +247,10 @@ function toggleDarkMode() {
     darkModeButton.style.color = 'white';
     darkModeButton.onclick = toggleLightMode;
     
-    document.body.style.background = 'linear-gradient(to top, #243B55 0%, #141E30 100%)';
+    document.body.style.background = "linear-gradient(to bottom, #" + nightTop + " 0%, #" + nightTopCenter + " 55%, #" + nightBottomCenter + " 75%, #" + nightBottom + " 100%)";
 
     const welcomeScreen = document.getElementById('welcome-screen');
-    welcomeScreen.style.background = 'linear-gradient(to top, #243B55 0%, #141E30 100%)';
+    welcomeScreen.style.background = "linear-gradient(to bottom, #" + nightTop + " 0%, #" + nightTopCenter + " 55%, #" + nightBottomCenter + " 75%, #" + nightBottom + " 100%)";
     const welcomeScreenElements = welcomeScreen.getElementsByTagName('*');
     for (let i = 0; i < welcomeScreenElements.length; i++) {
         welcomeScreenElements[i].style.color = 'white';
