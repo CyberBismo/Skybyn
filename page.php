@@ -165,7 +165,7 @@ if (isset($_GET['new'])) {?>
                     }
                 } else {
                     ?>
-                    <div class="pb-intro" onclick="window.location.href='/newpage'">Create a page</div>
+                    <div class="pb-intro">No public pages found at this moment.<br>Come back later.</div>
                     <?php
                 }
                 ?>

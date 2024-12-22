@@ -1,5 +1,5 @@
 function connectWebSocket() {
-    ws = new WebSocket('wss://dev.skybyn.no:4433');
+    ws = new WebSocket('wss://dev.skybyn.com:4433');
 
     ws.onerror = (error) => {
         console.error('Server connection error:', error);
@@ -88,6 +88,70 @@ function connectWebSocket() {
             }, 5000);
         }
 
+        if (data.type === 'new_post') {
+            let postId = data.id;
+            $.ajax({
+                url: './assets/post_load.php',
+                type: 'POST',
+                data: {
+                    post_id: postId
+                },
+                success: function (response) {
+                    if (response !== null) {
+                        const postsContainer = document.getElementById('posts');
+                        postsContainer.insertAdjacentHTML('afterbegin', response);
+                    }
+                }
+            });
+        }
+
+        if (data.type === 'delete_post') {
+            let postId = data.id;
+            if (document.getElementById('post_'+postId)) {
+                let post = document.getElementById('post_'+postId);
+                post.remove();
+            }
+        }
+
+        if (data.type === 'new_comment') {
+            let commentId = data.cid;
+            let postId = data.pid;
+            let postElement = document.getElementById('post_' + postId);
+            let commentsContainer = document.getElementById('post_comments_' + postId);
+            let commentsCountElement = document.getElementById('comments_count_' + postId);
+
+            if (postElement && commentsContainer && commentsCountElement) {
+                $.ajax({
+                    url: './assets/comments_check.php',
+                    type: 'POST',
+                    data: {
+                        comment_id: commentId,
+                        post_id: postId
+                    },
+                    success: function (response) {
+                        if (response) {
+                            commentsContainer.insertAdjacentHTML('afterbegin', response);
+                            commentsCountElement.textContent = parseInt(commentsCountElement.textContent) + 1;
+                        }
+                    },
+                    error: function () {
+                        console.error('Failed to load new comment.');
+                    }
+                });
+            }
+        }
+
+        if (data.type === 'delete_comment') {
+            let commentId = data.id;
+            let postId = data.pid;
+            if (document.getElementById('post_'+postId)) {
+                if (document.getElementById('comment_'+commentId)) {
+                    document.getElementById('comment_'+commentId).remove();
+                }
+                document.getElementById('comments_count_'+postId).textContent = parseInt(document.getElementById('comments_count_'+postId).textContent) - 1;
+            }
+        }
+
         if (data.type === 'chat') {
             const avatar = document.getElementById('msg_user_avatar_' + data.from).src;
             const friend = document.getElementById('msg_user_name_' + data.from).innerHTML;
@@ -107,7 +171,7 @@ function connectWebSocket() {
             const isAtBottom = messageContainer.scrollHeight - messageContainer.scrollTop === messageContainer.clientHeight;
             messageContainer.appendChild(userMessage);
             if (isAtBottom) {
-                messageContainer.scrollTop = messageContainer.scrollHeight;
+                messageContainer.scrollTop = messageContainer.scrollHeight;git
             }
         }
 

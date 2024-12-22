@@ -25,5 +25,5 @@
 
                     <input type="checkbox" id="login-remember"><label for="login-remember">Remember me</label>
                     
-                    <input type="submit" id="login" onclick="login()" value="Sign in">
+                    <button id="login" onclick="login()">Sign in <i class="fa-solid fa-right-to-bracket"></i></button>
                 </div>

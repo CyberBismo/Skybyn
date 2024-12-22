@@ -3,7 +3,7 @@ include "./functions.php";
 
 $post_id = $_POST['post_id'];
 
-$stmt = $conn->prepare("SELECT * FROM `posts` WHERE `id` = ? AND (`user` = ? OR `user` IN (SELECT `friend_id` FROM `friendship` WHERE `user_id` = ? AND `status` = 'friends'))");
+$stmt = $conn->prepare("SELECT * FROM `posts` WHERE `id` = ? AND (`user` = ? OR `user` IN (SELECT `friend_id` FROM `friendship` WHERE `user_id` = ? AND `status` = 'accepted'))");
 $stmt->bind_param('iii', $post_id, $uid, $uid);
 $stmt->execute();
 $checkPost = $stmt->get_result();
@@ -46,14 +46,14 @@ if ($checkPost->num_rows == 1) {
             <div class="post_actions" onclick="showPostActions(<?=$post_id?>)">
                 <i class="fa-solid fa-ellipsis-vertical"></i>
                 <div class="post_action_list" id="pal_<?=$post_id?>" hidden>
-                    <?php if ($post_user == $uid || $rank > 0) {?>
+                    <?php if (isset($_SESSION['user'])) {if ($post_user == $uid || getUser('id',$_SESSION['user'],'rank') > 0) {?>
                     <div class="post_action" onclick="editPost(<?=$post_id?>)">
                         <i class="fa-solid fa-pen-to-square"></i><span>Edit</span>
                     </div>
                     <div class="post_action" onclick="deletePost(<?=$post_id?>)">
                         <i class="fa-solid fa-trash"></i><span>Delete</span>
                     </div>
-                    <?php }?>
+                    <?php }}?>
                 </div>
             </div>
         </div>
@@ -109,16 +109,12 @@ if ($checkPost->num_rows == 1) {
         </div>
         <?php }?>
         <div class="post_comments">
-            <div class="post_comment_count"><div id="comments_count_<?=$post_id?>"><?=$comments?></div><i class="fa-solid fa-comments"></i></div>
-            <div class="post_comment">
-                <div class="post_comment_user">
-                    <div class="post_comment_user_avatar">
-                        <img src="<?=$avatar?>">
-                    </div>
-                    <span><?=$username?></span>
+            <div class="post_comment_count"><div id="comments_count_<?=$post_id?>"><?=$comments?></div><i class="fa-solid fa-message"></i></div>
+            <div class="post_comment_new">
+                <div class="post_comment_new_content">
+                    <input type="text" id="pc_<?=$post_id?>" onkeydown="hitEnter(this,<?=$post_id?>)" placeholder="Write a comment <?php if(isset($username)) {echo $username;}?>">
                 </div>
-                <div class="post_comment_content"><input type="text" id="pc_<?=$post_id?>" onkeydown="hitEnter(this,<?=$post_id?>)" placeholder="Write a comment"></div>
-                <div class="post_comment_actions">
+                <div class="post_comment_new_actions">
                     <div class="btn" onclick="sendComment(<?=$post_id?>)"><i class="fa-solid fa-paper-plane"></i></div>
                 </div>
             </div>
@@ -134,20 +130,33 @@ if ($checkPost->num_rows == 1) {
                         
                         if ($commentAvatar == "") {
                             $commentAvatar = "./assets/images/logo_faded_clean.png";
-                        }?>
-                <div class="post_comment" id="comment_<?=$commentID?>">
+                        }
+
+                        if ($commentUser == $_SESSION['user']) {
+                            $myComment = " me";
+                        } else {
+                            $myComment = "";
+                        }
+                        ?>
+                <div class="post_comment<?=$myComment?>" id="comment_<?=$commentID?>">
                     <div class="post_comment_user">
-                        <div class="post_comment_user_avatar">
-                            <img src="<?=$commentAvatar?>">
+                        <div class="post_comment_user_info">
+                            <div class="post_comment_user_avatar">
+                                <img src="<?=$commentAvatar?>">
+                            </div>
+                            <span><?=$commentUsername?></span>
                         </div>
-                        <span><?=$commentUsername?></span>
+                        <div class="post_comment_user_actions">
+                            <?php if (isset($_SESSION['user'])) {
+                                $rank = getUser("id",$_SESSION['user'],"rank");
+                                if ($rank > 0 || $commentUser == $uid) {?>
+                            <div class="btn" onclick="delComment(<?=$commentID?>)"><i class="fa-solid fa-trash"></i></div>
+                            <?php }} else {?>
+                            <div class="btn"></div>
+                            <?php }?>
+                        </div>
                     </div>
                     <div class="post_comment_content"><?=$commentText?></div>
-                    <div class="post_comment_actions">
-                        <?php if ($rank > 0 || $commentUser == $uid) {?>
-                        <div class="btn" onclick="delComment(<?=$commentID?>)"><i class="fa-solid fa-trash"></i></div>
-                        <?php }?>
-                    </div>
                 </div>
                 <?php }}?>
             </div>

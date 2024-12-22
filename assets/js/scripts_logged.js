@@ -369,6 +369,7 @@ function showPostActions(x) {
         actionList.hidden = true;
     }
 }
+
 let insertedPostIds = [];
 
 function checkRegistrationDuration(registrationTimestamp, unlockDuration) {

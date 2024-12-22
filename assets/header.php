@@ -61,10 +61,6 @@ if ($domain == $devDomain) {
             <div class="cloud"></div>
         </div>
 
-        <div class="dark-mode-toggle" id="dark-mode-toggle" onclick="toggleDarkMode()">
-            <i class="fa-regular"></i>
-        </div>
-
         <div class="header" id="header">
 
             <?php // Logo
@@ -577,7 +573,7 @@ if ($domain == $devDomain) {
                     ?>
                 </div>
                 <div class="friend-referral" id="fr">
-                    <h3 onclick="expandFR()">Refer a friend</h3>
+                    <span onclick="expandFR()">Refer a friend</span>
                     <div class="fr_code" id="frc" <?php if(isset($referral) && $referral == "error") {?>onclick="genRef()"<?php }?>>
                         <?php if(isset($referral)) { if($referral == "error") {?>Generate code<?php } else { echo $referral;}}?>
                     </div>

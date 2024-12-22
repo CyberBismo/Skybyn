@@ -9,25 +9,12 @@
                 height: 100%;
                 font-family: Arial, Helvetica, sans-serif;
                 padding-top: env(safe-area-inset-top);
-                padding-top: env(safe-area-inset-top);
             }
             body {
                 width: 100%;
+                height: 100%;
                 margin: 0 auto;
-                background: linear-gradient(to top, #48c6ef 0%, #6f86d6 100%);
-                transition: background-color 0.3s;
-            }
-            @media (prefers-color-scheme: light) {
-                body {
-                    color: var(--mode-text);
-                    background: linear-gradient(to top, #48c6ef 0%, #6f86d6 100%);
-                }
-            }
-            @media (prefers-color-scheme: dark) {
-                body {
-                    color: var(--mode-text);
-                    background: linear-gradient(to top, #243B55 0%, #141E30 100%);
-                }
+                background: linear-gradient(to top, #243B55 0%, #141E30 100%);
             }
 
             .light-mode {
@@ -46,6 +33,23 @@
                 width: 100%;
                 height: 100%;
                 z-index: -1;
+            }
+
+            @media (prefers-color-scheme: light) {
+                body {
+                    color: var(--mode-text);
+                }
+                #clouds {
+                    /*background: linear-gradient(to top, #48c6ef 0%, #6f86d6 100%);*/
+                }
+            }
+            @media (prefers-color-scheme: dark) {
+                body {
+                    color: var(--mode-text);
+                }
+                #clouds {
+                    /*background: linear-gradient(to top, #243B55 0%, #141E30 100%);*/
+                }
             }
 
             .cloud {
@@ -636,7 +640,7 @@
                 min-width: 300px;
                 max-width: 800px;
                 margin: 0 auto;
-                margin-top: 200px;
+                padding-top: 100px;
             }
             .welcome_information {
                 width: calc(100% - 20px);
@@ -727,6 +731,7 @@
                 background: rgba(var(--mode),.4);
                 border-radius: 20px;
                 box-sizing: border-box;
+                backdrop-filter: blur(5px);
             }
             .center_form .form .login,
             .center_form .form .register {
@@ -798,17 +803,44 @@
                 line-height: 40px;
                 cursor: pointer;
             }
-            .center_form .form .login input[type=submit] {
+
+            .password-strength progress {
+                border-radius: 20px;
+                overflow: hidden;
+            }
+            .password-strength progress {
+                width: 100%;
+            }
+
+            .center_form .form .password-criteria {
+                padding-bottom: 10px;
+                font-size: 12px;
+            }
+            .center_form .form .password-criteria i {
+                float: none;
+                color: #ff4545 !important;
+            }
+            .center_form .form .password-criteria i.ok {
+                color: #6aff45 !important;
+            }
+
+            .center_form .form .login button {
                 float: right;
                 width: auto;
                 margin-left: auto;
-                padding: 0 20px;
+                padding: 10px 20px;
                 font-size: 18px;
                 color: var(--mode-text);
                 background: rgba(var(--mode),.2);
+                border-radius: 10px;
+                border: none;
                 overflow: hidden;
             }
-            .center_form .form .login input[type=submit]:hover {
+            .center_form .form .login button i {
+                line-height: 20px;
+                float: none;
+            }
+            .center_form .form .login button:hover {
                 background: var(--mode-placeholder) !important;
             }
             .center_form .form .login .show_qr_login {
@@ -909,7 +941,11 @@
             .center_form .links span:hover {
                 color: rgba(200,200,200,1);
             }
-
+            
+            .log-button,
+            .reg-button {
+                backdrop-filter: blur(5px);
+            }
             <?php if (isMobile() == false) {?>
             .log-button,
             .reg-button {
@@ -1800,6 +1836,7 @@
                 right: 25px;
                 padding: 10px;
                 cursor: pointer;
+                z-index: 1;
             }
             .search input {
                 display: block;
@@ -1809,6 +1846,7 @@
                 color: var(--mode-text);
                 background: none;
                 border: 1px solid rgba(var(--mode),.5);
+                backdrop-filter: blur(5px);
                 border-radius: 40px;
                 box-sizing: border-box;
                 outline: none;
@@ -1839,6 +1877,7 @@
                 background: rgba(var(--mode),.3);
                 border-radius: 40px;
                 box-sizing: border-box;
+                backdrop-filter: blur(5px);
             }
             .search i {
                 position: absolute;
@@ -2155,6 +2194,7 @@
                 margin: 0 auto;
                 margin-bottom: 2px;
                 padding-bottom: 10px;
+                backdrop-filter: blur(5px);
             }
             .post_body {
                 color: var(--mode-text);
@@ -2710,15 +2750,15 @@
                 text-align: center;
                 padding: 20px 30px;
                 font-size: 24px;
-                color: rgba(100,100,100,1);
-                border: 1px dashed rgba(100,100,100,1);
-                border-radius: 100%;
+                color: var(--mode-text);
+                background: rgba(var(--mode),.1);
+                border-radius: 10px;
                 cursor: pointer;
             }
             .pb-intro:hover,
             .gb-intro:hover {
-                color: rgba(255,255,255,.5);
-                background: rgba(255,255,255,.05);
+                color: var(--mode-text);
+                background: rgba(var(--mode),.3);
             }
 
             /** Pages */
@@ -3031,6 +3071,7 @@
             .friend-list h3 {
                 padding: 10px 20px;
                 background: rgba(var(--mode),.41);
+                backdrop-filter: blur(5px);
                 border-radius: 10px;
             }
             .friend {
@@ -3040,6 +3081,7 @@
                 font-size: 14px;
                 transition: background .5s, height .2s;
                 overflow: hidden;
+                backdrop-filter: blur(5px);
             }
             .friend:hover {
                 height: 90px;
@@ -3103,22 +3145,17 @@
                 margin-top: 20px;
                 padding: 10px;
                 background: rgba(var(--mode),.4);
+                backdrop-filter: blur(5px);
                 border-radius: 10px;
                 box-sizing: border-box;
                 overflow: hidden;
-            }
-            .friend-referral h3 {
-                margin: 0 0 10px 0;
-                padding: 0 10px;
-                background: none;
-                cursor: pointer;
             }
             .fr_code {
                 margin-bottom: 10px;
                 padding: 10px;
                 text-transform: uppercase;
                 text-align: center;
-                background: rgba(var(--mode),.4);
+                background: rgba(var(--mode),.1);
                 border-radius: 10px;
             }
             .fr_info {

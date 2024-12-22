@@ -26,6 +26,7 @@ function sendComment(x) {
 
 function delComment(x) {
     const comment = document.getElementById('comment_'+x);
+    comment.remove();
     $.ajax({
         url: 'assets/comment_delete.php',
         type: "POST",
@@ -35,7 +36,6 @@ function delComment(x) {
     }).done(function(response) {
         const res = JSON.parse(response);
         const postId = res.post_id;
-        comment.remove();
         const data = {
             type: 'delete_comment',
             cid: x,

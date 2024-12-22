@@ -1,18 +1,8 @@
 <?php include '../../assets/conn.php';
 
 if (isset($_GET['update'])) {
-    $games = [
-        "Minecraft",
-        "ROBLOX",
-        "Fortnite",
-        "The Sims 4",
-        "Counter-Strike 2",
-        "League of Legends",
-        "Valorant",
-        "Call of Duty",
-        "Grand Theft Auto V",
-        "Rocket League"
-    ];
+    $games = $_GET['games'];
+    $conn->query("DELETE FROM `discord_games` WHERE `popular` = '1'");
     foreach ($games as $game) {
         if ($conn->query("SELECT * FROM `discord_games` WHERE `title` = '$game'")->num_rows > 0) {
             continue;
@@ -31,7 +21,7 @@ if (isset($_GET['popular'])) {
     }
 
     header('Content-Type: application/json');
-    echo json_encode($games);
+    echo json_encode($games, JSON_PRETTY_PRINT);
     return;
 }
 
@@ -43,7 +33,7 @@ if (isset($_GET['custom'])) {
     }
 
     header('Content-Type: application/json');
-    echo json_encode($games);
+    echo json_encode($games, JSON_PRETTY_PRINT);
     return;
 }
 

@@ -24,7 +24,7 @@
                 </div>
 
                 <div id="set_name" style="display: none">
-                    <p>Now enter your full name</p>
+                    <p>Your full name</p>
                     <div class="split">
                         <div class="split-box">
                             <i class="fa-solid fa-user"></i>
@@ -40,25 +40,26 @@
                 </div>
 
                 <div id="set_email" style="display: none">
-                    <p>Great! Now enter your preferred email address</p>
+                    <p>Your preferred email address</p>
                     <i class="fa-solid fa-at"></i>
                     <input type="email" id="email-check" placeholder="Email">
                     <input type="email" id="register-email" pattern="[a-zA-Z0-9._\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}" placeholder="E-mail address" title="example@example.com" oninput="setCustomValidity('')" oninvalid="setCustomValidity('Please enter a valid e-mail address')" required>
                 </div>
 
                 <div id="set_email_verify" style="display: none">
-                    <p>Okey, let's verify. Enter the code we just sent you</p>
+                    <p>Enter the code we just sent you</p>
                     <i class="fa-solid fa-arrows-rotate" id="email-verify-status"></i>
                     <input type="number" id="email-verify" pattern="[a-zA-Z0-9]" placeholder="Enter code" title="example@example.com" oninput="setCustomValidity('')" oninvalid="setCustomValidity('Please enter a valid e-mail address')" autocomplete="new-password" required>
                 </div>
 
                 <div id="set_username" style="display: none">
-                    <p>Now make a username for yourself</p>
+                    <p>Set your username</p>
                     <i class="fa-solid fa-user"></i>
                     <input type="text" id="username" placeholder="Choose a username" title="" required>
                 </div>
 
                 <div id="set_password" style="display: none">
+                    <p>Set a strong password</p>
                     <i class="fa-solid fa-key"></i>
                     <input type="password" id="register-password" placeholder="Password" autocomplete="new-password" required>
                     <i class="fa-regular fa-eye" onclick="showPassword('register-password')"></i>
@@ -66,6 +67,18 @@
                     <i class="fa-solid fa-key"></i>
                     <input type="password" id="cpassword" placeholder="Confirm password" autocomplete="new-password" required>
                     <i class="fa-regular fa-eye" onclick="showPassword('cpassword')"></i>
+
+                    <div class="password-strength">
+                        <progress id="pw_p" max="100"></progress>
+                    </div>
+
+                    <div class="password-criteria">
+                        <i id="pw_l" class="fa-solid fa-circle-xmark"></i> At least 8 characters.<br>
+                        <i id="pw_a" class="fa-solid fa-circle-xmark"></i> Alphabetic character used.<br>
+                        <i id="pw_n" class="fa-solid fa-circle-xmark"></i> Numeric character used.<br>
+                        <i id="pw_s" class="fa-solid fa-circle-xmark"></i> Special character used.<br>
+                        <i id="pw_m" class="fa-solid fa-circle-xmark"></i> Passwords match.
+                    </div>
                 </div>
 
                 <div class="terms" id="set_terms" style="display: none">
@@ -507,7 +520,7 @@
                                     url: '../assets/check_username.php',
                                     type: "POST",
                                     data: {
-                                        username : username.value
+                                        username: username.value
                                     }
                                 }).done(function(response) {
                                     if (response == "available") {
@@ -521,6 +534,8 @@
                                 function usernameAvailable() {
                                     set_username.style.display = "none";
                                     set_pw.style.display = "block";
+                                    register.style.display = "none";
+                                    step_back.style.display = "block";
                                     // Adding username to table
                                     tr = document.createElement('tr');
                                     tr.id = "reg-t-uname";
@@ -551,7 +566,7 @@
                         } else
                         // Set a password
                         if (set_pw.style.display != "none") {
-                            if (pw.value != "" && pw.value === cpw.value) {
+                            if (pw.value != "" && pw.value === cpw.value && /\d/.test(pw.value) && /[!"#¤%&/()=?`^*_:;><,.\-\\'+¨]/.test(pw.value)) {
                                 set_pw.style.display = "none";
                                 set_terms.style.display = "block";
 
@@ -604,6 +619,123 @@
 
                         //input.addEventListener('keydown', handleKeyPress, { once: true });
                     }
+                    
+                    document.getElementById('register-password').addEventListener('keyup', function(event) {
+                        checkPw();
+                    });
+                    document.getElementById('cpassword').addEventListener('keyup', function(event) {
+                        checkPw();
+                    });
+                    function checkPw() {
+                        const pw = document.getElementById('register-password');
+                        const cpw = document.getElementById('cpassword');
+                        const pwp = document.getElementById('pw_p');
+                        const reg_btn = document.getElementById('register');
+
+                        let pw_length = 0;
+                        let pw_alpha = 0;
+                        let pw_digit = 0;
+                        let pw_special = 0;
+
+                        if (pw.value.length > 0 || cpw.value.length > 0) {
+                            if (pw.value.length > 7) {
+                                document.getElementById('pw_l').classList.remove('fa-circle-xmark');
+                                document.getElementById('pw_l').classList.add('fa-circle-check');
+                                document.getElementById('pw_l').classList.add('ok');
+                                pw_length = 1;
+                            } else {
+                                document.getElementById('pw_l').classList.remove('fa-circle-check');
+                                document.getElementById('pw_l').classList.add('fa-circle-xmark');
+                                document.getElementById('pw_l').classList.remove('ok');
+                                pw_length = 0;
+                            }
+
+                            if (/\d/.test(pw.value)) {
+                                document.getElementById('pw_n').classList.remove('fa-circle-xmark');
+                                document.getElementById('pw_n').classList.add('fa-circle-check');
+                                document.getElementById('pw_n').classList.add('ok');
+                                pw_digit = 1;
+                            } else {
+                                document.getElementById('pw_n').classList.remove('fa-circle-check');
+                                document.getElementById('pw_n').classList.add('fa-circle-xmark');
+                                document.getElementById('pw_n').classList.remove('ok');
+                                pw_digit = 0;
+                            }
+
+                            if (/[!"#¤%&/()=?`^*_:;><,.\-\\'+¨]/.test(pw.value)) {
+                                document.getElementById('pw_s').classList.remove('fa-circle-xmark');
+                                document.getElementById('pw_s').classList.add('fa-circle-check');
+                                document.getElementById('pw_s').classList.add('ok');
+                                pw_special = 1;
+                            } else {
+                                document.getElementById('pw_s').classList.remove('fa-circle-check');
+                                document.getElementById('pw_s').classList.add('fa-circle-xmark');
+                                document.getElementById('pw_s').classList.remove('ok');
+                                pw_special = 0;
+                            }
+
+                            if (/[a-zA-Z]/.test(pw.value)) {
+                                document.getElementById('pw_a').classList.remove('fa-circle-xmark');
+                                document.getElementById('pw_a').classList.add('fa-circle-check');
+                                document.getElementById('pw_a').classList.add('ok');
+                                pw_alpha = 1;
+                            } else {
+                                document.getElementById('pw_a').classList.remove('fa-circle-check');
+                                document.getElementById('pw_a').classList.add('fa-circle-xmark');
+                                document.getElementById('pw_a').classList.remove('ok');
+                                pw_alpha = 0;
+                            }
+
+                            pw_strength = pw_length + pw_digit + pw_special + pw_alpha;
+                            if (pw_strength == 0) {
+                                pwp.value = 0;
+                            }
+                            if (pw_strength == 1) {
+                                pwp.value = 25;
+                            }
+                            if (pw_strength == 2) {
+                                pwp.value = 50;
+                            }
+                            if (pw_strength == 3) {
+                                pwp.value = 75;
+                            }
+                            if (pw_strength == 4) {
+                                pwp.value = 100;
+                                if (pw.value === cpw.value) {
+                                    document.getElementById('pw_m').classList.remove('fa-circle-xmark');
+                                    document.getElementById('pw_m').classList.add('fa-circle-check');
+                                    document.getElementById('pw_m').classList.add('ok');
+                                    reg_btn.style.display = "block";
+                                } else {
+                                    document.getElementById('pw_m').classList.remove('fa-circle-check');
+                                    document.getElementById('pw_m').classList.add('fa-circle-xmark');
+                                    document.getElementById('pw_m').classList.remove('ok');
+                                    reg_btn.style.display = "none";
+                                }
+                            } else {
+                                reg_btn.style.display = "none";
+                            }
+                        } else {
+                            document.getElementById('pw_l').classList.remove('fa-circle-check');
+                            document.getElementById('pw_l').classList.add('fa-circle-xmark');
+                            document.getElementById('pw_a').classList.remove('fa-circle-check');
+                            document.getElementById('pw_a').classList.add('fa-circle-xmark');
+                            document.getElementById('pw_n').classList.remove('fa-circle-check');
+                            document.getElementById('pw_n').classList.add('fa-circle-xmark');
+                            document.getElementById('pw_m').classList.remove('fa-circle-check');
+                            document.getElementById('pw_m').classList.add('fa-circle-xmark');
+                            document.getElementById('pw_s').classList.remove('fa-circle-check');
+                            document.getElementById('pw_s').classList.add('fa-circle-xmark');
+
+                            document.getElementById('pw_l').classList.remove('ok');
+                            document.getElementById('pw_a').classList.remove('ok');
+                            document.getElementById('pw_n').classList.remove('ok');
+                            document.getElementById('pw_m').classList.remove('ok');
+                            document.getElementById('pw_s').classList.remove('ok');
+
+                            reg_btn.style.display = "none";
+                        }
+                    };
 
                     function selectPackage(x) {
                         let set_dob = document.getElementById('set_dob');

@@ -1,4 +1,4 @@
-<?php include_once(__DIR__.'/../../config.php');
+<?php include_once('/../../assets/config.php');
 $id = $_POST['userID'];
 
 $postq = "SELECT *

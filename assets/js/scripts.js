@@ -51,99 +51,36 @@ document.addEventListener("DOMContentLoaded", function() {
 
         moveCloud();
     }
+    
+    let dayTop = '48c6ef';
+    let dayBottom = '6f86d6';
 
     const welcomeScreen = document.getElementById('welcome-screen');
-    welcomeScreen.style.background = 'linear-gradient(to top, #48c6ef 0%, #6f86d6 100%)';
+    welcomeScreen.style.background = "linear-gradient(to top, #" + dayTop + " 0%, #" + dayBottom + " 100%)";
     const welcomeScreenElements = welcomeScreen.getElementsByTagName('*');
     for (let i = 0; i < welcomeScreenElements.length; i++) {
         welcomeScreenElements[i].style.color = 'white';
     }
-    
-    updateBackground();
-    setInterval(updateBackground, 60000); // Update every minute
 });
 
 // Check if device is in dark mode, change the dark mode toggle button accordingly
 setTimeout(() => {
     if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        const darkModeButton = document.getElementById('dark-mode-toggle');
-        const darkModeIcon = darkModeButton.querySelector('i');
-        darkModeIcon.classList.remove('fa-moon');
-        darkModeIcon.classList.add('fa-sun');
-        darkModeButton.onclick = toggleLightMode;
+        toggleDarkMode();
     } else {
-        const darkModeButton = document.getElementById('dark-mode-toggle');
-        const darkModeIcon = darkModeButton.querySelector('i');
-        darkModeIcon.classList.remove('fa-sun');
-        darkModeIcon.classList.add('fa-moon');
-        darkModeButton.onclick = toggleDarkMode;
+        toggleLightMode();
     }
 }, 1000);
 
-function updateBackground() {
-    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const currentTimestamp = new Date().toLocaleString("en-US", { timeZone: timezone });
-    const date = new Date(currentTimestamp);
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const totalMinutes = hours * 60 + minutes;
-    let gradient;
-
-    let sunriseTop = '5e9cf9';
-    let sunriseTopCenter = 'a8c2ff';
-    let sunriseBottomCenter = 'ccd2ff';
-    let sunriseBottom = 'c3bbf9';
-    
-    let dayTop = '1c44c8';
-    let dayTopCenter = '179ae4';
-    let dayBottomCenter = 'cad3fd';
-    let dayBottom = 'abcbe9';
-
-    let sunsetTop = '7068dd';
-    let sunsetTopCenter = 'f89d2a';
-    let sunsetBottomCenter = 'ea6d08';
-    let sunsetBottom = 'bb280a';
-
-    let nightTop = '011245';
-    let nightTopCenter = '021e69';
-    let nightBottomCenter = '132d8b';
-    let nightBottom = '031241';
-
-    if (totalMinutes >= 300 && totalMinutes <= 420) { // Dawn: 5:00 AM - 7:00 AM
-        toggleLightMode('keepInterval');
-        gradient = "linear-gradient(to bottom, #" + sunriseTop + " 0%, #" + sunriseTopCenter + " 55%, #" + sunriseBottomCenter + " 75%, #" + sunriseBottom + " 100%)";
-    } else if (totalMinutes > 420 && totalMinutes <= 720) { // Morning: 7:01 AM - 12:00 PM
-        toggleLightMode('keepInterval');
-        gradient = "linear-gradient(to bottom, #" + dayTop + " 0%, #" + dayTopCenter + " 55%, #" + dayBottomCenter + " 75%, #" + dayBottom + " 100%)";
-    } else if (totalMinutes > 720 && totalMinutes <= 1080) { // Afternoon: 12:01 PM - 6:00 PM
-        toggleLightMode('keepInterval');
-        gradient = "linear-gradient(to bottom, #" + dayTop + " 0%, #" + dayTopCenter + " 55%, #" + dayBottomCenter + " 75%, #" + dayBottom + " 100%)";
-    } else if (totalMinutes > 1080 && totalMinutes <= 1260) { // Evening: 6:01 PM - 9:00 PM
-        toggleDarkMode('keepInterval');
-        gradient = "linear-gradient(to bottom, #" + sunsetTop + " 0%, #" + sunsetTopCenter + " 55%, #" + sunsetBottomCenter + " 75%, #" + sunsetBottom + " 100%)";
-    } else { // Night: 9:01 PM - 4:59 AM
-        toggleDarkMode('keepInterval');
-        gradient = "linear-gradient(to bottom, #" + nightTop + " 0%, #" + nightTopCenter + " 55%, #" + nightBottomCenter + " 75%, #" + nightBottom + " 100%)";
-    }
-
-    document.body.style.background = gradient;
-    document.getElementById('welcome-screen').style.background = gradient;
-}
-
 function toggleLightMode(x) {
-    const body = document.body;
-    const darkModeButton = document.getElementById('dark-mode-toggle');
-    const darkModeIcon = darkModeButton.querySelector('i');
     const allElements = document.querySelectorAll('*');
     const header = document.getElementsByClassName('header')[0];
     const search = document.getElementsByClassName('search')[0];
     const new_comments = document.querySelectorAll('post_comment_new_content');
     const comments = document.querySelectorAll('post_comment_content');
     
-    let dayTop = '1c44c8';
-    let dayTopCenter = '179ae4';
-    let dayBottomCenter = 'cad3fd';
-    let dayBottom = 'abcbe9';
+    let dayTop = '48c6ef';
+    let dayBottom = '6f86d6';
 
     if (x !== 'keepInterval') {
         if (window.updateBackgroundInterval) {
@@ -152,9 +89,6 @@ function toggleLightMode(x) {
     } else {
         window.updateBackgroundInterval = setInterval(updateBackground, 60000); // Update every minute
     }
-
-    darkModeIcon.classList.remove('fa-sun');
-    darkModeIcon.classList.add('fa-moon');
     
     allElements.forEach(element => {
         element.style.color = 'black';
@@ -179,14 +113,11 @@ function toggleLightMode(x) {
             element.style.background = background.replace('255, 255, 255', '0, 0, 0');
         }
     });
-
-    darkModeButton.style.color = 'black';
-    darkModeButton.onclick = toggleDarkMode;
     
-    document.body.style.background = "linear-gradient(to bottom, #" + dayTop + " 0%, #" + dayTopCenter + " 55%, #" + dayBottomCenter + " 75%, #" + dayBottom + " 100%)";
+    document.body.style.background = "linear-gradient(to top, #" + dayTop + " 0%, #" + dayBottom + " 100%)";
 
     const welcomeScreen = document.getElementById('welcome-screen');
-    welcomeScreen.style.background = "linear-gradient(to bottom, #" + dayTop + " 0%, #" + dayTopCenter + " 55%, #" + dayBottomCenter + " 75%, #" + dayBottom + " 100%)";
+    welcomeScreen.style.background = "linear-gradient(to top, #" + dayTop + " 0%, #" + dayBottom + " 100%)";
     const welcomeScreenElements = welcomeScreen.getElementsByTagName('*');
     for (let i = 0; i < welcomeScreenElements.length; i++) {
         welcomeScreenElements[i].style.color = 'white';
@@ -206,25 +137,18 @@ function toggleLightMode(x) {
 }
 function toggleDarkMode() {
     const body = document.body;
-    const darkModeButton = document.getElementById('dark-mode-toggle');
-    const darkModeIcon = darkModeButton.querySelector('i');
     const allElements = document.querySelectorAll('*');
     const header = document.getElementsByClassName('header')[0];
     const search = document.getElementsByClassName('search')[0];
     const new_comments = document.querySelectorAll('post_comment_new_content');
     const comments = document.querySelectorAll('post_comment_content');
 
-    let nightTop = '011245';
-    let nightTopCenter = '021e69';
-    let nightBottomCenter = '132d8b';
-    let nightBottom = '031241';
+    let nightTop = '243B55';
+    let nightBottom = '141E30';
 
     if (window.updateBackgroundInterval) {
         clearInterval(window.updateBackgroundInterval); // Stop updating the background gradient
     }
-    
-    darkModeIcon.classList.remove('fa-moon');
-    darkModeIcon.classList.add('fa-sun');
 
     allElements.forEach(element => {
         element.style.color = 'white';
@@ -243,14 +167,11 @@ function toggleDarkMode() {
     for (let i = 0; i < comments.length; i++) {
         comments[i].background = background.replace('0, 0, 0', '255, 255, 255');
     }
-
-    darkModeButton.style.color = 'white';
-    darkModeButton.onclick = toggleLightMode;
     
-    document.body.style.background = "linear-gradient(to bottom, #" + nightTop + " 0%, #" + nightTopCenter + " 55%, #" + nightBottomCenter + " 75%, #" + nightBottom + " 100%)";
+    document.body.style.background = "linear-gradient(to top, #" + nightTop + " 0%, #" + nightBottom + " 100%)";
 
     const welcomeScreen = document.getElementById('welcome-screen');
-    welcomeScreen.style.background = "linear-gradient(to bottom, #" + nightTop + " 0%, #" + nightTopCenter + " 55%, #" + nightBottomCenter + " 75%, #" + nightBottom + " 100%)";
+    welcomeScreen.style.background = "linear-gradient(to top, #" + nightTop + " 0%, #" + nightBottom + " 100%)";
     const welcomeScreenElements = welcomeScreen.getElementsByTagName('*');
     for (let i = 0; i < welcomeScreenElements.length; i++) {
         welcomeScreenElements[i].style.color = 'white';

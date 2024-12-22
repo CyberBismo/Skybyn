@@ -94,6 +94,7 @@ function editPost(x) {
 
 function deletePost(x) {
     const post = document.getElementById('post_'+ x);
+    post.remove();
     $.ajax({
         url: './assets/functions.php',
         type: "POST",
@@ -108,6 +109,5 @@ function deletePost(x) {
             id: post_id
         };
         ws.send(JSON.stringify(data)); // Send the new post ID to the server
-        post.remove();
     });
 }
