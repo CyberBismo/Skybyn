@@ -20,9 +20,9 @@ if ($checkStatus->num_rows == 0) { // IF NO RECORDS
         $conn->query("INSERT INTO `friendship` (`user_id`, `friend_id`, `status`, `since`) VALUES ('$uid', '$friend', '$statusS', '$now')");
         $conn->query("INSERT INTO `friendship` (`user_id`, `friend_id`, `status`, `since`) VALUES ('$friend', '$uid', '$statusR', '$now')");
         $conn->query("INSERT INTO `notifications` (`to`,`from`,`date`,`type`) VALUES ('$friend','$uid','$now','friend_request')");
-        echo json_encode(["to"=>"$friend","from"=>"$uid","message" => "Friend request sent."]);
+        echo "Friend request sent.";
     } else {
-        echo json_encode(["error" => "Error sending"]);
+        echo "Error sending";
     }
 } else {
     $status = $friendshipStatus['status'];
@@ -32,53 +32,53 @@ if ($checkStatus->num_rows == 0) { // IF NO RECORDS
             $conn->query("UPDATE `friendship` SET `status`='$statusA' WHERE `user_id`='$friend' AND `friend_id`='$uid'");
             $conn->query("UPDATE `friendship` SET `status`='$statusA' WHERE `user_id`='$uid' AND `friend_id`='$friend'");
             $conn->query("INSERT INTO `notifications` (`to`,`from`,`date`,`type`) VALUES ('$friend','$uid','$now','friend_accepted')");
-            echo json_encode(["to"=>"$friend","from"=>"$uid","message" => "Friend request accepted."]);
+            echo "Friend request accepted.";
         } else {
-            echo json_encode(["error" => "Error accepting"]);
+            echo "Error accepting";
         }
     } else
     if ($action == "ignore") {
         if ($status == $statusR) {
             $conn->query("UPDATE `friendship` SET `status`='sent' WHERE `user_id`='$friend' AND `friend_id`='$uid'");
             $conn->query("DELETE FROM `friendship` WHERE `user_id`='$uid' AND `friend_id`='$friend'");
-            echo json_encode(["to"=>"$friend","from"=>"$uid","message" => "Friend request ignored."]);
+            echo "Friend request ignored.";
         } else {
-            echo json_encode(["error" => "Error ignoring"]);
+            echo "Error ignoring";
         }
     } else
     if ($action == "cancel") {
         if ($status == $statusS) {
             $conn->query("DELETE FROM `friendship` WHERE (`user_id`='$uid' AND `friend_id`='$friend') OR (`user_id`='$friend' AND `friend_id`='$uid')");
-            echo json_encode(["to"=>"$friend","from"=>"$uid","message" => "Friend request canceled."]);
+            echo "Friend request canceled.";
         } else {
-            echo json_encode(["error" => "Error canceling"]);
+            echo "Error canceling";
         }
     } else
     if ($action == "unfriend") {
         if ($status == $statusA) {
             $conn->query("DELETE FROM `friendship` WHERE (`user_id`='$uid' AND `friend_id`='$friend') OR (`user_id`='$friend' AND `friend_id`='$uid')");
-            echo json_encode(["to"=>"$friend","from"=>"$uid","message" => "Unfriended."]);
+            echo "Unfriended.";
         } else {
-            echo json_encode(["error" => "Error unfriending"]);
+            echo "Error unfriending";
         }
     } else
     if ($action == "block") {
         if ($status == $statusA) {
             $conn->query("UPDATE `friendship` SET `status`='$statusB' WHERE (`user_id`='$uid' AND `friend_id`='$friend') OR (`user_id`='$friend' AND `friend_id`='$uid')");
-            echo json_encode(["to"=>"$friend","from"=>"$uid","message" => "Blocked."]);
+            echo "Blocked.";
         } else {
-            echo json_encode(["error" => "Error blocking"]);
+            echo "Error blocking";
         }
     } else
     if ($action == "unblock") {
         if ($status == $statusB) {
             $conn->query("UPDATE `friendship` SET `status`='$statusUnb' WHERE (`user_id`='$uid' AND `friend_id`='$friend') OR (`user_id`='$friend' AND `friend_id`='$uid')");
-            echo json_encode(["to"=>"$friend","from"=>"$uid","message" => "Unblocked."]);
+            echo "Unblocked.";
         } else {
-            echo json_encode(["error" => "Error unblocking"]);
+            echo "Error unblocking";
         }
     } else {
-        echo json_encode(["error" => "Invalid action"]);
+        echo "Invalid action.";
     }
 }
 ?>

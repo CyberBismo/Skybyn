@@ -1791,9 +1791,9 @@
                 max-height: 80%;
                 margin-left: -300px;
                 color: var(--mode-text);
-                background: rgba(var(--mode),.5);
+                background: rgba(var(--mode),1);
                 backdrop-filter: blur(5px);
-                box-shadow: 10px 10px 23px -5px rgba(var(--mode),.6);
+                box-shadow: 10px 10px 23px -5px rgba(var(--mode),0.6);
                 border-radius: 20px;
                 box-sizing: border-box;
                 overflow: auto;
