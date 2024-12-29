@@ -196,6 +196,10 @@ function connectWebSocket() {
             }
         }
 
+        if (data.type == 'notification') {
+            checkNoti();
+        }
+
         if (data.type === 'ping') {
             ws.send(JSON.stringify({type: 'pong'}));
         }
