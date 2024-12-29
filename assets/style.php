@@ -1259,15 +1259,28 @@
 
             .header .top-left .logo {
                 display: flex;
-                min-width: 300px;
-                max-width: 33.33%;
                 text-align: left;
                 color: var(--mode-text);
             }
-            .header .top-left .logo-name {
-                width: auto;
-                color: white;
-                font-size: 12px;
+            @media only screen and (min-width: 681px) {
+                .header .top-left .logo {
+                    min-width: 300px;
+                    max-width: 33.33%;
+                }
+                .header .top-left .logo-name {
+                    width: auto;
+                    color: white;
+                    font-size: 12px;
+                }
+            }
+            @media only screen and (max-width: 680px) {
+                .header .top-left .logo {
+                    width: 90px;
+                    overflow: hidden;
+                }
+                .header .top-left .logo-name {
+                    display: none;
+                }
             }
             .header .top-left .logo-name h1 {
                 margin: 10px 0 5px 0;
@@ -1693,13 +1706,13 @@
                 cursor: pointer;
             }
             .notification_alert {
-                position: absolute;
-                width: 0px;
-                height: 0px;
-                margin-left: 30px;
-                margin-top: -7px;
+                position: fixed;
+                bottom: 10px;
+                right: 10px;
+                padding: 20px;
                 font-size: 10px;
-                color: red;
+                transition: opacity 2s;
+                z-index: 999;
             }
             #noti_alert {
                 opacity: 0;
@@ -2563,9 +2576,10 @@
                 display: flex;
                 align-items: center;
             }
-            .logo {
-                width: 100%;
-                height: auto;
+            @media only screen and (min-width: 1240px) {
+                .group-container {
+                    max-width: calc(100% - 600px);
+                }
             }
             .title-description {
                 display: flex;
@@ -2662,6 +2676,7 @@
             .shortcuts {
                 background: rgba(var(--mode),.4);
                 border-radius: 20px;
+                backdrop-filter: blur(5px);
             }
             .shortcuts h3 {
                 display: flex;
@@ -3141,7 +3156,7 @@
 
             .friend-referral {
                 width: 100%;
-                height: 40px;
+                height: 35px;
                 margin-top: 20px;
                 padding: 10px;
                 background: rgba(var(--mode),.4);
@@ -3150,8 +3165,17 @@
                 box-sizing: border-box;
                 overflow: hidden;
             }
+            .friend-referral div {
+                cursor: pointer;
+            }
+            .friend-referral i {
+                float: right;
+            }
+            .friend-referral i:hover {
+                transform: scale(1.1);
+            }
             .fr_code {
-                margin-bottom: 10px;
+                margin: 10px 0;
                 padding: 10px;
                 text-transform: uppercase;
                 text-align: center;
@@ -3164,6 +3188,9 @@
                 font-size: 12px;
                 cursor: pointer;
                 overflow: hidden;
+            }
+            .fr_info i {
+                float: none;
             }
             .fr_info span {
                 float: right;
@@ -3554,10 +3581,22 @@
                 background: rgba(var(--mode),.1);
             }
             .profile-btns {
+                display: flex;
+                width: 100%;
                 margin: 20px 0;
-                text-align: center;
+            }
+            #friend_actions {
+                height: 40px;
+                overflow-y: hidden;
+            }
+            #friend_actions:hover {
+                height: auto;
             }
             .profile-btns button {
+                display: block;
+                min-width: 35px;
+                width: 35px;
+                height: 35px;
                 margin: 3px;
                 padding: 10px;
                 color: var(--mode-text);
@@ -3566,10 +3605,11 @@
                 border: none;
                 border-radius: 10px;
                 box-sizing: border-box;
-                transition: background .3s, transform .3s;
+                transition: all .3s, transform .3s;
+                overflow: hidden;
             }
             .profile-btns button:hover {
-                transform: scale(1.15);
+                width: auto;
                 cursor: pointer;
             }
             .profile-btns button span {
@@ -3599,12 +3639,6 @@
                 color: var(--mode-text);
                 background: rgba(255,165,0,.5);
             }
-            .profile-btns button.fra_wide {
-                width: calc(100% - 10px);
-            }
-            .profile-btns button.fra_small {
-                width: calc(50% - 10px);
-            }
             
             .profile-right {
                 width: 70%;
@@ -3631,7 +3665,7 @@
                 height: 100px;
                 margin-bottom: 10px;
                 padding: 10px;
-                overflow-x: scroll;
+                overflow-y: scroll;
             }
             .profile-left-user {
                 display: flex;

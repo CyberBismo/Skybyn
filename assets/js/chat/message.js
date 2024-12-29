@@ -5,6 +5,7 @@ function createMessageBox(user_id,friend_id) {
     const messageBox = document.createElement('div');
     messageBox.id = 'message_box_' + fid;
     messageBox.classList.add('message-box');
+    messageBox.classList.add('maximized');
     messageBox.innerHTML = `
             <div class="message-header">
                 <div class="message-user" id="message_user_${fid}" onclick="maximizeMessageBox('${fid}')" style="opacity:0">
@@ -12,7 +13,7 @@ function createMessageBox(user_id,friend_id) {
                     <span id="msg_user_name_${fid}"></span>
                 </div>
                 <div class="message-actions">
-                    <div class="message-min" onclick="minimizeMessageBox('${fid}')"><i class="fa-solid fa-chevron-down" id="msg_min_${fid}"></i></div>
+                    <div class="message-min" onclick="maximizeMessageBox('${fid}')"><i class="fa-solid fa-chevron-down" id="msg_min_${fid}"></i></div>
                     <div class="message-close" onclick="closeMessageBox('${fid}')"><i class="fa-solid fa-xmark"></i></div>
                 </div>
             </div>
@@ -21,21 +22,20 @@ function createMessageBox(user_id,friend_id) {
                 <input type="text" id="message_input_${fid}" placeholder="Type your message...">
                 <button onclick="sendMessage('${fid}','${uid}')"><i class="fa-solid fa-paper-plane"></i></button>
             </div>`;
-    document.getElementsByTagName('body')[0].appendChild(messageBox);
+    document.getElementById('msg_con').appendChild(messageBox);
 
     $.ajax({
         url: './assets/functions.php',
         type: 'POST',
         data: {
             start_chat: null,
-            friend_id: String(fid).slice(4)
+            friend_id: fid
         }
-    }).done(function(response) {
-        const res = JSON.parse(response);
+    }).done(function(res) {
         const username = res.friend_name;
         let avatar = res.friend_avatar;
 
-        if (avatar === null) {
+        if (!avatar) {
             avatar = './assets/images/logo_faded_clean.png';
         }
 
@@ -62,10 +62,7 @@ function startMessaging(user_id,friend_id) {
     const uid = user_id;
     const fid = friend_id;
     if (document.getElementById('message_box_'+fid)) {
-        const messageBox = document.getElementById('message_box_'+fid);
-        if (!messageBox.classList.contains('maximized')) {
-            messageBox.classList.add('maximized');
-        }
+        maximizeMessageBox(fid);
     } else {
         createMessageBox(uid,fid);
     }

@@ -1,5 +1,9 @@
 <?php require_once "./functions.php";
 
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST, GET");
+header("Access-Control-Allow-Headers: Content-Type");
+
 $dob = $_POST['dob'];
 $fname = $_POST['fname'];
 $mname = $_POST['mname'];

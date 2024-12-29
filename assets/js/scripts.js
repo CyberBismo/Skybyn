@@ -136,7 +136,6 @@ function toggleLightMode(x) {
     }
 }
 function toggleDarkMode() {
-    const body = document.body;
     const allElements = document.querySelectorAll('*');
     const header = document.getElementsByClassName('header')[0];
     const search = document.getElementsByClassName('search')[0];
@@ -354,7 +353,26 @@ window.addEventListener('load', observeDOMChanges);
 //.then(data => console.log('Success:', data))
 //.catch((error) => console.error('Error:', error));
 
+function skybynAlert(type,text) {
+    if (type == "ok") color = "green";
+    if (type == "err") color = "red";
 
+    // Create the main notification alert div
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'notification_alert';
+    alertDiv.style.background = color;
+    alertDiv.innerHTML = text;
+
+    // Add the element to the body (or another container)
+    document.body.appendChild(alertDiv);
+
+    setTimeout(() => {
+        alertDiv.id = 'noti_alert';
+        setTimeout(() => {
+            alertDiv.remove();
+        }, 2000);
+    }, 5000);
+}
 
 function showPassword(x) {
     const password = document.getElementById(x);
@@ -420,7 +438,8 @@ function login() {
                 normal_login.style.cursor = "auto";
             }
         },
-        error: function() {
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.error("AJAX error:", textStatus, errorThrown);
             nlh.innerHTML = "An error occurred. Please try again.";
             setTimeout(() => {
                 nlh.innerHTML = "Sign in";

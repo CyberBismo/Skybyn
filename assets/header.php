@@ -573,9 +573,17 @@ if ($domain == $devDomain) {
                     ?>
                 </div>
                 <div class="friend-referral" id="fr">
-                    <span onclick="expandFR()">Refer a friend</span>
-                    <div class="fr_code" id="frc" <?php if(isset($referral) && $referral == "error") {?>onclick="genRef()"<?php }?>>
-                        <?php if(isset($referral)) { if($referral == "error") {?>Generate code<?php } else { echo $referral;}}?>
+                    <div onclick="expandFR()">
+                        <span>Refer a friend</span><i class="fa-solid fa-plus"></i>
+                    </div>
+                    <div class="fr_code" id="frc" <?php if(isset($referral) && $referral == "error") {?>onclick="genRef()"<?php } else {?>onclick="ctc()"<?php }?>>
+                        <?php if(isset($referral)) {
+                            if($referral == "error") {
+                                ?>Generate code<?php
+                            } else {
+                                echo trim($referral);
+                            }
+                        }?>
                     </div>
                     <div class="fr_info" onclick="friExpand()">
                         <i class="fa-regular fa-circle-question"></i> What is this? <span id="fri">+</span>
@@ -585,7 +593,7 @@ if ($domain == $devDomain) {
             </div>
         </div>
 
-        <div class="message-container">
+        <div class="message-container" id="msg_con">
             <?php if (isset($_SESSION['user'])) { if (getuser("id",$_SESSION['user'],"rank") > 3) {include_once './assets/design/chat_popup.php';}}?>
             <?php
             $checkActiveChats = $conn->query("SELECT * FROM `active_chats` WHERE `user`='$uid'");

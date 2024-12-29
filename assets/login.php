@@ -1,5 +1,9 @@
 <?php  include_once "./functions.php";
 
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST, GET");
+header("Access-Control-Allow-Headers: Content-Type");
+
 $email = $_POST['email'];
 $password = hash("sha512", $_POST['password']);
 $remember = $_POST['remember'];

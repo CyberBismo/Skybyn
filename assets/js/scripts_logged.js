@@ -383,6 +383,16 @@ function checkRegistrationDuration(registrationTimestamp, unlockDuration) {
     }
 }
 
+function ctc() {
+    let code = document.getElementById('frc');
+    code = code.innerHTML.replace(/\s+/g, '');
+    navigator.clipboard.writeText(code).then(() => {
+        skybynAlert("ok","Referral code copied. Send it to a friend for use during sign up.");
+    }).catch(err => {
+        skybynAlert("err","Failed to copy.");
+    });
+}
+
 function genRef() {
     const code = document.getElementById('frc');
     if (isNaN(code.innerHTML)) {
@@ -415,7 +425,7 @@ checkRef();
 function expandFR() {
     const fr = document.getElementById('fr');
     if (fr.style.height == "auto") {
-        fr.style.height = "40px";
+        fr.style.height = "35px";
     } else {
         fr.style.height = "auto";
     }
@@ -431,6 +441,58 @@ function friExpand() {
         fri.innerHTML = "-";
         frit.style.height = "auto";
     }
+}
+
+function friendAction(friend, action) {
+    const actions = document.getElementById('friend_actions');
+    $.ajax({
+        url: 'assets/friendship.php',
+        type: 'POST',
+        data: { friend, action }
+    }).done(function(response) {
+        const buttons = {
+            send: `
+                <button class="blue" onclick="friendAction('${friend}', 'send')">
+                    <i class="fa-solid fa-user-plus"></i> <span>Send friend request</span>
+                </button>`,
+            cancel: `
+                <button onclick="friendAction('${friend}', 'cancel')">
+                    <i class="fa-solid fa-user-xmark"></i> <span>Cancel friend request</span>
+                </button>`,
+            unfriend: `
+                <button onclick="friendAction('${friend}', 'unfriend')">
+                    <i class="fa-solid fa-user-minus"></i> <span>Unfriend</span>
+                </button>`,
+            block: `
+                <button class="red" onclick="friendAction('${friend}', 'block')">
+                    <i class="fa-solid fa-user-slash"></i> <span>Block</span>
+                </button>`,
+            unblock: `
+                <button class="red" onclick="friendAction('${friend}', 'unblock')">
+                    <i class="fa-solid fa-user-slash"></i> <span>Unblock</span>
+                </button>`,
+            report: `
+                <button class="orange" onclick="friendAction('${friend}', 'report')">
+                    <i class="fa-solid fa-triangle-exclamation"></i> <span>Report</span>
+                </button>`
+        };
+
+        const templates = {
+            "Friend request sent.": buttons.cancel + buttons.block + buttons.report,
+            "Friend request accepted.": buttons.unfriend + buttons.block + buttons.report,
+            "Friend request ignored.": buttons.send + buttons.block + buttons.report,
+            "Friend request canceled.": buttons.send + buttons.block + buttons.report,
+            "Unfriended.": buttons.send + buttons.block + buttons.report,
+            "Blocked.": buttons.unblock + buttons.report,
+            "Unblocked.": buttons.send + buttons.block + buttons.report
+        };
+
+        if (templates[response]) {
+            actions.innerHTML = templates[response];
+        } else {
+            alert(`Error: ${response}`);
+        }
+    });
 }
 
 // Function to extract metadata from a given URL

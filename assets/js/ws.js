@@ -1,3 +1,5 @@
+//const { clearInterval } = require("node:timers");
+
 function connectWebSocket() {
     ws = new WebSocket('wss://dev.skybyn.com:4433');
 
@@ -155,6 +157,7 @@ function connectWebSocket() {
         if (data.type === 'chat') {
             const avatar = document.getElementById('msg_user_avatar_' + data.from).src;
             const friend = document.getElementById('msg_user_name_' + data.from).innerHTML;
+            const messageBox = document.getElementById('message_box_' + data.from);
             const messageContainer = document.getElementById('message_body_' + data.from);
             const userMessage = document.createElement('div');
             userMessage.classList.add('message');
@@ -171,7 +174,25 @@ function connectWebSocket() {
             const isAtBottom = messageContainer.scrollHeight - messageContainer.scrollTop === messageContainer.clientHeight;
             messageContainer.appendChild(userMessage);
             if (isAtBottom) {
-                messageContainer.scrollTop = messageContainer.scrollHeight;git
+                messageContainer.scrollTop = messageContainer.scrollHeight;
+            }
+
+            if (!messageBox.classList.contains('maximized')) {
+                function breathe(x) {
+                    let intervalId; // Variable to store the interval ID
+                
+                    if (x == "start") {
+                        intervalId = setInterval(() => {
+                            messageBox.style.background = "";
+                            setTimeout(() => {
+                                messageBox.style.background = "";
+                            }, 500);
+                        }, 1000);
+                    } else if (x == "stop") {
+                        clearInterval(intervalId);
+                    }
+                }
+                breathe('start');                
             }
         }
 

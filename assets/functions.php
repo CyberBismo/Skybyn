@@ -1191,10 +1191,6 @@ if (isset($_SESSION['user'])) {
 
     $verified = $UDRow['verified'];
 
-    if ($verified == "0") {
-        
-    }
-
     if (isset($_COOKIE['qr'])) {
         $code = $_COOKIE['qr'];
         if (file_exists("qr/temp/$code.png")) {
@@ -1217,29 +1213,6 @@ if (isset($_SESSION['user'])) {
         $previousUrl = $_SERVER['HTTP_REFERER'];
     } else {
         $previousUrl = "";
-    }
-
-    if (isset($_SESSION['gta'])) {
-        if ($_SESSION['gta'] == "login") {
-            ?><meta http-equiv="Refresh" content="0; url='https://skybyn.no/gta/ressurser" /><?php
-        }
-    }
-    
-    if ($habbo == "1") {
-        $habbo_tgl = "checked";
-    } else {
-        $habbo_tgl = "";
-    }
-    if ($fivem == "1") {
-        $fivem_tgl = "checked";
-    } else {
-        $fivem_tgl = "";
-    }
-
-    if ($darkmode == "0") {
-        $color_one = $UDRow['color_one'];
-    } else {
-        $color_one = "";
     }
 
     function referralCode() {
@@ -1270,6 +1243,7 @@ if (isset($_SESSION['user'])) {
             return $code;
         }
     }
+
     $referral = referralCode();
 
     $countryName = language('id',$country,'country_name');
@@ -1317,76 +1291,6 @@ if (isset($_SESSION['user'])) {
         $myWallet = $getWallet->fetch_assoc();
         $wallet = $myWallet['wallet'];
     }
-
-    if (isset($_POST['start_chat'])) { // Start chat
-        $fid = $_POST['friend_id'];
-        if (strlen($fid) > 0) {
-            $checkChat = $conn->prepare("SELECT * FROM `active_chats` WHERE `user`=? AND `friend`=?");
-            $checkChat->bind_param("ii", $uid, $fid);
-            $checkChat->execute();
-            $result = $checkChat->get_result();
-            if ($result->num_rows == 0) {
-                $insertChat = $conn->prepare("INSERT INTO `active_chats` (`user`,`friend`,`open`) VALUES (?, ?, '1')");
-                $insertChat->bind_param("ii", $uid, $fid);
-                $insertChat->execute();
-
-                $friendData = $conn->prepare("SELECT * FROM `users` WHERE `id`=?");
-                $friendData->bind_param("i", $fid);
-                $friendData->execute();
-                $friendRow = $friendData->get_result()->fetch_assoc();
-                $friendName = $friendRow['username'];
-                $friendAvatar = $friendRow['avatar'];
-
-                $data = array(
-                    "friend_name" => $friendName,
-                    "friend_avatar" => $friendAvatar
-                );
-                echo json_encode($data);
-            }
-        }
-    }
-    if (isset($_POST['max_chat'])) { // Minimize chat
-        $fid = $_POST['friend_id'];
-        $action = $_POST['action'];
-        $checkChat = $conn->query("SELECT * FROM `active_chats` WHERE `user`='$uid' AND `friend`='$fid'");
-        if ($checkChat->num_rows == 1) {
-            if ($action == "maximize") {
-                $conn->query("UPDATE `active_chats` SET `open`= 1 WHERE `user`='$uid' AND `friend`='$fid'");
-            } else
-            if ($action == "minimize") {
-                $conn->query("UPDATE `active_chats` SET `open`= 0 WHERE `user`='$uid' AND `friend`='$fid'");
-            }
-        }
-    }
-    if (isset($_POST['close_chat'])) { // Close chat
-        $fid = $_POST['friend_id'];
-        $checkChat = $conn->query("SELECT * FROM `active_chats` WHERE `user`='$uid' AND `friend`='$fid'");
-        if ($checkChat->num_rows == 1) {
-            $conn->query("DELETE FROM `active_chats` WHERE `user`='$uid' AND `friend`='$fid'");
-        }
-    }
-    if (isset($_POST['load_chat'])) { // Load chat
-        $fid = $_POST['friend_id'];
-        $checkChat = $conn->query("SELECT * FROM `messages` WHERE (`from`='$uid' AND `to`='$fid') OR (`from`='$fid' AND `to`='$uid') ORDER BY `date` ASC");
-        $chatData = array();
-        while ($chatRow = $checkChat->fetch_assoc()) {
-            $chatData[] = $chatRow;
-        }
-        echo json_encode($chatData);
-    }
-    if (isset($_POST['get_chat_user'])) {
-        $fid = $_POST['friend_id'];
-        $userData = $conn->query("SELECT * FROM `users` WHERE `id`='$fid'");
-        $userRow = $userData->fetch_assoc();
-        $friendName = $userRow['username'];
-        $friendAvatar = $userRow['avatar'];
-
-        $data = array(
-            "friend_name" => $friendName,
-            "friend_avatar" => $friendAvatar
-        );
-        echo json_encode($data);
-    }
 } else {
     if (isset($_COOKIE['logged'])) {
         $user = $_COOKIE['logged'];
@@ -1401,17 +1305,6 @@ if (isset($_SESSION['user'])) {
             createCookie("logged","","0","7"); # 7 = -1
             ?><meta http-equiv="Refresh" content="0; url='./'" /><?php
         }
-    }
-    if (isset($_GET['ref'])) {
-        if ($_GET['ref'] == "gta_login") {
-            $_SESSION['gta'] = "login";
-        }
-    }
-
-    if (isset($_COOKIE['darkmode'])) {
-        $darkmode = $_COOKIE['darkmode'];
-    } else {
-        $darkmode = false;
     }
 }
 

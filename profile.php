@@ -60,6 +60,13 @@ if ($Pwallpaper == "./") {
 }
 
 $Pavatar_bg = "background: black";
+
+$areFriends = $conn->query("SELECT * FROM `friendship` WHERE `user_id`='$uid' AND `friend_id`='$user_id' AND `status`='accepted'");
+if ($areFriends->num_rows == 1) {
+    $friends = true;
+} else {
+    $friends = false;
+}
 ?>
         <div class="page-container">
             <div class="profile-wallpaper" id="wallpaper">
@@ -82,127 +89,62 @@ $Pavatar_bg = "background: black";
                             <span>@<?=$Pusername?></span>
                         </div>
                     </div>
-                    <div class="profile-btns" id="friend_actions">
-                        <?php if (isset($_SESSION['user'])) {
-                            if ($myProfile == false) {
-                        $checkFriendship = $conn->query("SELECT * FROM `friendship` WHERE `user_id`='$uid' AND `friend_id`='$user_id'");
-                        if ($checkFriendship->num_rows == 1) {
-                            $friendshipData = $checkFriendship->fetch_assoc();
-                            $status = $friendshipData['status'];
-
-                            if ($status == "accepted") {?>
-                            <button onclick="friendAction('<?= $user_id ?>','unfriend')">
-                                <i class="fa-solid fa-user-minus"></i> <span>Unfriend</span>
-                            </button>
-                            <?php } else if ($status == "sent") {?>
-                            <button class="fra_wide" onclick="friendAction('<?= $user_id ?>','cancel')">
-                                <i class="fa-solid fa-user-xmark"></i> <span>Cancel friend request</span>
-                            </button>
-                            <?php } else if ($status == "received") {?>
-                            <button class="green fra_wide" onclick="friendAction('<?=$user_id?>','accept')">
-                                <i class="fa-solid fa-user-check"></i> <span>Accept</span>
-                            </button>
-                            <button class="yellow fra_small" onclick="friendAction('<?= $user_id ?>','ignore')">
-                                <i class="fa-solid fa-user-xmark"></i> <span>Ignore</span>
-                            </button>
-                            <?php } else if ($status == "blocked") {?>
-                            <button class="fra_wide" onclick="friendAction('<?= $user_id ?>','unblock')">
-                                <i class="fa-solid fa-user-slash"></i> <span>Unblock</span>
-                            </button>
-                            <?php }} else {?>
-                            <button class="blue fra_wide" onclick="friendAction('<?= $user_id ?>','send')">
-                                <i class="fa-solid fa-user-plus"></i> <span>Send friend request</span>
-                            </button>
-                            <?php }?>
-                            <button class="red fra_small" onclick="friendAction('<?= $user_id ?>','block')">
-                                <i class="fa-solid fa-user-slash"></i> <span>Block</span>
-                            </button>
-                            <button class="orange fra_small" onclick="friendAction('<?= $user_id ?>','report')">
-                            <i class="fa-solid fa-triangle-exclamation"></i> <span>Report</span>
-                            </button>
-
-                            <script>
-                                function friendAction(friend,action) {
-                                    const actions = document.getElementById('friend_actions');
-                                    $.ajax({
-                                        url: 'assets/friendship.php',
-                                        type: "POST",
-                                        data: {
-                                            friend: friend,
-                                            action: action
-                                        }
-                                    }).done(function(response) {
-                                        if (response == "Friend request sent.") {
-                                            const cancel = '<button class="fra_wide" onclick="friendship('+friend+',\'cancel\')"><i class="fa-solid fa-user-xmark"></i> <span>Cancel friend request</span></button>';
-                                            const block = '<button class="red fra_small" onclick="friendship('+friend+',\'block\')"><i class="fa-solid fa-user-slash"></i> <span>Block</span></button>';
-                                            const report = '<button class="orange fra_small" onclick="friendship('+friend+',\'report\')"><i class="fa-solid fa-triangle-exclamation"></i> <span>Report</span></button>';
-                                            actions.innerHTML = cancel + block + report;
-                                        } else
-                                        if (response == "Error sending") {
-                                            alert("Error sending friend request");
-                                        } else
-                                        if (response == "Friend request accepted.") {
-                                            const unfriend = '<button class="fra_small" onclick="friendship('+friend+',\'unfriend\')"><i class="fa-solid fa-user-minus"></i> <span>Unfriend</span></button>';
-                                            const block = '<button class="fra_small" onclick="friendship('+friend+',\'block\')"><i class="fa-solid fa-user-slash"></i> <span>Block</span></button>';
-                                            const report = '<button class="orange fra_small" onclick="friendship('+friend+',\'report\')"><i class="fa-solid fa-triangle-exclamation"></i> <span>Report</span></button>';
-                                            actions.innerHTML = unfriend + block + report;
-                                        } else
-                                        if (response == "Error accepting") {
-                                            alert("Error accepting friend request");
-                                        } else
-                                        if (response == "Friend request ignored.") {
-                                            const add = '<button class="green fra_wide" onclick="friendship('+friend+',\'send\')"><i class="fa-solid fa-user-plus"></i> <span>Send friend request</span></button>';
-                                            const block = '<button class="red fra_small" onclick="friendship('+friend+',\'block\')"><i class="fa-solid fa-user-slash"></i> <span>Block</span></button>';
-                                            const report = '<button class="orange fra_small" onclick="friendship('+friend+',\'report\')"><i class="fa-solid fa-triangle-exclamation"></i> <span>Report</span></button>';
-                                            actions.innerHTML = add + block + report;
-                                        } else
-                                        if (response == "Error ignoring") {
-                                            alert("Error ignoring friend request");
-                                        } else
-                                        if (response == "Friend request canceled.") {
-                                            const add = '<button class="green fra_wide" onclick="friendship('+friend+',\'send\')"><i class="fa-solid fa-user-plus"></i> <span>Send friend request</span></button>';
-                                            const block = '<button class="red fra_small" onclick="friendship('+friend+',\'block\')"><i class="fa-solid fa-user-slash"></i> <span>Block</span></button>';
-                                            const report = '<button class="orange fra_small" onclick="friendship('+friend+',\'report\')"><i class="fa-solid fa-triangle-exclamation"></i> <span>Report</span></button>';
-                                            actions.innerHTML = add + block + report;
-                                        } else
-                                        if (response == "Error canceling") {
-                                            alert("Error canceling friend request");
-                                        } else
-                                        if (response == "Unfriended.") {
-                                            const add = '<button class="green fra_wide" onclick="friendship('+friend+',\'send\')"><i class="fa-solid fa-user-plus"></i> <span>Send friend request</span></button>';
-                                            const block = '<button class="red fra_small" onclick="friendship('+friend+',\'block\')"><i class="fa-solid fa-user-slash"></i> <span>Block</span></button>';
-                                            const report = '<button class="orange fra_small" onclick="friendship('+friend+',\'report\')"><i class="fa-solid fa-triangle-exclamation"></i> <span>Report</span></button>';
-                                            actions.innerHTML = add + block + report;
-                                        } else
-                                        if (response == "Error unfriending") {
-                                            alert("Error unfriending");
-                                        } else
-                                        if (response == "Blocked.") {
-                                            const unblock = '<button class="red fra_wide" onclick="friendship('+friend+',\'unblock\')"><i class="fa-solid fa-user-slash"></i> <span>Unblock</span></button>';
-                                            const report = '<button class="orange fra_small" onclick="friendship('+friend+',\'report\')"><i class="fa-solid fa-triangle-exclamation"></i> <span>Report</span></button>';
-                                            actions.innerHTML = unblock + report;
-                                        } else
-                                        if (response == "Error blocking") {
-                                            alert("Error blocking");
-                                        } else
-                                        if (response == "Unblocked.") {
-                                            const add = '<button class="green fra_wide" onclick="friendship('+friend+',\'send\')"><i class="fa-solid fa-user-plus"></i> <span>Send friend request</span></button>';
-                                            const block = '<button class="red fra_small" onclick="friendship('+friend+',\'block\')"><i class="fa-solid fa-user-slash"></i> <span>Block</span></button>';
-                                            const report = '<button class="orange fra_small" onclick="friendship('+friend+',\'report\')"><i class="fa-solid fa-triangle-exclamation"></i> <span>Report</span></button>';
-                                            actions.innerHTML = add + block + report;
-                                        } else
-                                        if (response == "Error unblocking") {
-                                            alert("Error unblocking");
-                                        }
-                                    });
-                                }
-                            </script>
-                        <?php }}?>
+                    <div class="profile-btns">
+                        <?php if (isset($_SESSION['user'])): ?>
+                            <?php if (!$myProfile): ?>
+                                <?php if ($friends) {?>
+                                <button onclick="startMessaging('<?= $uid ?>','<?= $user_id ?>')">
+                                    <i class="fa-solid fa-message"></i> <span>Chat</span>
+                                </button>
+                                <?php }?>
+                                <?php 
+                                    $checkFriendship = $conn->query("SELECT * FROM `friendship` WHERE `user_id`='$uid' AND `friend_id`='$user_id'");
+                                    $status = $checkFriendship->num_rows ? $checkFriendship->fetch_assoc()['status'] : null; 
+                                ?>
+                                <div id="friend_actions">
+                                    <?php switch ($status):
+                                        case "accepted": ?>
+                                            <button onclick="friendAction('<?= $user_id ?>', 'unfriend')">
+                                                <i class="fa-solid fa-user-minus"></i> <span>Unfriend</span>
+                                            </button>
+                                            <?php break;
+                                        case "sent": ?>
+                                            <button onclick="friendAction('<?= $user_id ?>', 'cancel')">
+                                                <i class="fa-solid fa-user-xmark"></i> <span>Cancel friend request</span>
+                                            </button>
+                                            <?php break;
+                                        case "received": ?>
+                                            <button class="green" onclick="friendAction('<?= $user_id ?>', 'accept')">
+                                                <i class="fa-solid fa-user-check"></i> <span>Accept</span>
+                                            </button>
+                                            <button class="yellow" onclick="friendAction('<?= $user_id ?>', 'ignore')">
+                                                <i class="fa-solid fa-user-xmark"></i> <span>Ignore</span>
+                                            </button>
+                                            <?php break;
+                                        case "blocked": ?>
+                                            <button onclick="friendAction('<?= $user_id ?>', 'unblock')">
+                                                <i class="fa-solid fa-user-slash"></i> <span>Unblock</span>
+                                            </button>
+                                            <?php break;
+                                        default: ?>
+                                            <button class="blue" onclick="friendAction('<?= $user_id ?>', 'send')">
+                                                <i class="fa-solid fa-user-plus"></i> <span>Send friend request</span>
+                                            </button>
+                                    <?php endswitch; ?>
+                                    <button class="red" onclick="friendAction('<?= $user_id ?>', 'block')">
+                                        <i class="fa-solid fa-user-slash"></i> <span>Block</span>
+                                    </button>
+                                    <button class="orange" onclick="friendAction('<?= $user_id ?>', 'report')">
+                                        <i class="fa-solid fa-triangle-exclamation"></i> <span>Report</span>
+                                    </button>
+                                </div>
+                            <?php endif; ?>
+                        <?php endif; ?>
                     </div>
                     <?php if (isMobile() == false) {?>
                     <hr>
                     <div class="profile-tabs">
-                        <b>Groups</b>
+                        <b><?=$Pusername?>'s Groups</b>
                         <?php $groups = $conn->query("SELECT * FROM `group_members` WHERE `user`='$user_id'");
                         while($groupsData = $groups->fetch_assoc()) {
                             $group_id = $groupsData['id'];
@@ -219,13 +161,6 @@ $Pavatar_bg = "background: black";
                                 <div class="group">
                                     <div class="group-icon"><img src="<?=$group_icon?>"></div>
                                     <div class="group-name"><?=$group_name?></div>
-                                </div>
-                                <?php
-                            } else {
-                                ?>
-                                <div class="group">
-                                    <div class="group-icon"></div>
-                                    <div class="group-name">This group no longer exist</div>
                                 </div>
                                 <?php
                             }
@@ -269,20 +204,17 @@ $Pavatar_bg = "background: black";
                                     </div>
                                     <div class="post_date"><?=$post_created?></div>
                                 </div>
-                                <div class="post_actions">
+                                <div class="post_actions" onclick="showPostActions(<?=$post_id?>)">
                                     <i class="fa-solid fa-ellipsis-vertical"></i>
-                                    <div class="post_action_list" hidden>
-                                        <div class="post_action" onclick="showImage(<?=$post_id?>)">
-                                            <i class="fa-solid fa-magnifying-glass-plus"></i> Show
-                                        </div>
-                                        <?php if ($post_user == $uid || $rank > 0) {?>
+                                    <div class="post_action_list" id="pal_<?=$post_id?>" hidden>
+                                        <?php if (isset($_SESSION['user'])) {if ($post_user == $uid || getUser('id',$_SESSION['user'],'rank') > 0) {?>
                                         <div class="post_action" onclick="editPost(<?=$post_id?>)">
-                                            <i class="fa-solid fa-pen-to-square"></i> Edit
+                                            <i class="fa-solid fa-pen-to-square"></i><span>Edit</span>
                                         </div>
                                         <div class="post_action" onclick="deletePost(<?=$post_id?>)">
-                                            <i class="fa-solid fa-trash"></i> Delete
+                                            <i class="fa-solid fa-trash"></i><span>Delete</span>
                                         </div>
-                                        <?php }?>
+                                        <?php }}?>
                                     </div>
                                 </div>
                             </div>
@@ -292,6 +224,35 @@ $Pavatar_bg = "background: black";
                             <?php if (!empty($post_video)) {?>
                             <div class="post_links">
                                 <?=$post_video?>
+                            </div>
+                            <?php }?>
+                            <?php if (!empty($post_links)) { ?>
+                            <div class="link_preview">
+                                <?php for ($i = 0; $i < count($post_links); $i++) {
+                                    if ($i <= count($post_links)) {
+                                        if (strpos($post_links[$i], "http") === false) {
+                                            $post_links[$i] = "http://".$post_links[$i];
+                                        }
+                                        $urlData = getLinkData($post_links[$i]);
+                                        $urlRestricted = $urlData['restricted'];
+                                        $urlLogo = $urlData['favicon'];
+                                        $urlTitle = $urlData['title'];
+                                        $urlDescription = $urlData['description'];
+
+                                        if ($urlRestricted == 0) {
+                                    ?>
+                                    <div class="post_link_preview">
+                                        <div class="post_link_preview_image">
+                                            <img src="<?=$urlLogo?>" alt="">
+                                        </div>
+                                        <div class="post_link_preview_info">
+                                            <div class="post_link_preview_title"><?=$urlTitle?></div>
+                                            <div class="post_link_preview_description"><?=$urlDescription?></div>
+                                        </div>
+                                    </div>
+                                    <?php }
+                                    }
+                                }?>
                             </div>
                             <?php }?>
                             <?php $getUploads = $conn->query("SELECT * FROM `uploads` WHERE `post`='$post_id'");
@@ -305,25 +266,21 @@ $Pavatar_bg = "background: black";
                                 </div>
                             </div>
                             <div class="post_expand" id="post_expand" onclick="expandPost(<?=$post_id?>)">
-                                Read more
+                                Show more
                             </div>
                             <?php }?>
                             <div class="post_comments">
-                                <div class="post_comment_count"><?=$comments?><i class="fa-solid fa-comments"></i></div>
-                                <div class="post_comment">
-                                    <div class="post_comment_user">
-                                        <div class="post_comment_user_avatar">
-                                            <img src="<?=$avatar?>">
-                                        </div>
-                                        <span><?=$username?></span>
+                                <div class="post_comment_count"><div id="comments_count_<?=$post_id?>"><?=$comments?></div><i class="fa-solid fa-message"></i></div>
+                                <div class="post_comment_new">
+                                    <div class="post_comment_new_content">
+                                        <input type="text" id="pc_<?=$post_id?>" onkeydown="hitEnter(this,<?=$post_id?>)" placeholder="Write a comment <?php if(isset($username)) {echo $username;}?>">
                                     </div>
-                                    <div class="post_comment_content"><input type="text" id="pc_<?=$post_id?>" onkeydown="hitEnter(this,<?=$post_id?>)" placeholder="Write a comment"></div>
-                                    <div class="post_comment_actions">
+                                    <div class="post_comment_new_actions">
                                         <div class="btn" onclick="sendComment(<?=$post_id?>)"><i class="fa-solid fa-paper-plane"></i></div>
                                     </div>
                                 </div>
                                 <div id="post_comments_<?=$post_id?>">
-                                    <?php $getComment = $conn->query("SELECT * FROM `comments` WHERE `post`='$post_id' ORDER BY `date` ASC");
+                                    <?php $getComment = $conn->query("SELECT * FROM `comments` WHERE `post`='$post_id' ORDER BY `date` DESC");
                                     if ($getComment->num_rows > 0) {
                                         while($commentData = $getComment->fetch_assoc()) {
                                             $commentID = $commentData['id'];
@@ -334,20 +291,33 @@ $Pavatar_bg = "background: black";
                                             
                                             if ($commentAvatar == "") {
                                                 $commentAvatar = "./assets/images/logo_faded_clean.png";
-                                            }?>
-                                    <div class="post_comment" id="comment_<?=$commentID?>">
+                                            }
+
+                                            if ($commentUser == $_SESSION['user']) {
+                                                $myComment = " me";
+                                            } else {
+                                                $myComment = "";
+                                            }
+                                            ?>
+                                    <div class="post_comment<?=$myComment?>" id="comment_<?=$commentID?>">
                                         <div class="post_comment_user">
-                                            <div class="post_comment_user_avatar">
-                                                <img src="<?=$commentAvatar?>">
+                                            <div class="post_comment_user_info">
+                                                <div class="post_comment_user_avatar">
+                                                    <img src="<?=$commentAvatar?>">
+                                                </div>
+                                                <span><?=$commentUsername?></span>
                                             </div>
-                                            <span><?=$commentUsername?></span>
+                                            <div class="post_comment_user_actions">
+                                                <?php if (isset($_SESSION['user'])) {
+                                                    $rank = getUser("id",$_SESSION['user'],"rank");
+                                                    if ($rank > 0 || $commentUser == $uid) {?>
+                                                <div class="btn" onclick="delComment(<?=$commentID?>)"><i class="fa-solid fa-trash"></i></div>
+                                                <?php }} else {?>
+                                                <div class="btn"></div>
+                                                <?php }?>
+                                            </div>
                                         </div>
                                         <div class="post_comment_content"><?=$commentText?></div>
-                                        <div class="post_comment_actions">
-                                            <?php if ($rank > 0 || $commentUser == $uid) {?>
-                                            <div class="btn" onclick="delComment(<?=$commentID?>)"><i class="fa-solid fa-trash"></i></div>
-                                            <?php }?>
-                                        </div>
                                     </div>
                                     <?php }}?>
                                 </div>

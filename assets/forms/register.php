@@ -819,7 +819,6 @@
                                     refer: refer
                                 }
                             }).done(function(response) {
-                                response = JSON.parse(response);
                                 if (response.responseCode === "ok") {
                                     window.location.href='../register?complete&user='+response.user+'&token='+response.token;
                                 } else {
