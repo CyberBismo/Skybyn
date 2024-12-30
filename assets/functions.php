@@ -95,31 +95,31 @@ function getIP() {
 
 # Get geo location data from IP
 function geoData($x) {
-    $ip = getIP();
-    // Send request to ipapi.com API
-    $url = "https://api.findip.net/$ip/?token=1a586d6f288e44b4a5a3277a0b70d411";
-    $response = file_get_contents($url);
-    $data = json_decode($response, true);
-    
-    if (isset($x)) {
-        // Split the path by '.' to navigate through the nested arrays
-        $path = explode('.', $x);
-        $tempData = $data;
-        foreach ($path as $key) {
-            // Check if the key exists in the current level
-            if (isset($tempData[$key])) {
-                // Navigate deeper into the array
-                $tempData = $tempData[$key];
-            } else {
-                // Return an error message or null if the path does not exist
-                return "Key not found";
-            }
-        }
-        return $tempData;
-    } else {
-        return $response;
-    }
-    return "";
+    //$ip = getIP();
+    //// Send request to ipapi.com API
+    //$url = "https://api.findip.net/$ip/?token=1a586d6f288e44b4a5a3277a0b70d411";
+    //$response = file_get_contents($url);
+    //$data = json_decode($response, true);
+    //
+    //if (isset($x)) {
+    //    // Split the path by '.' to navigate through the nested arrays
+    //    $path = explode('.', $x);
+    //    $tempData = $data;
+    //    foreach ($path as $key) {
+    //        // Check if the key exists in the current level
+    //        if (isset($tempData[$key])) {
+    //            // Navigate deeper into the array
+    //            $tempData = $tempData[$key];
+    //        } else {
+    //            // Return an error message or null if the path does not exist
+    //            return "Key not found";
+    //        }
+    //    }
+    //    return $tempData;
+    //} else {
+    //    return $response;
+    //}
+    //return "";
     
 // Example of usage
 // echo geoData("city.names.en"); // Outputs: Oslo (Grünerløkka District)
@@ -1290,6 +1290,117 @@ if (isset($_SESSION['user'])) {
     } else {
         $myWallet = $getWallet->fetch_assoc();
         $wallet = $myWallet['wallet'];
+    }
+    
+    // Chatting functionalities - DO NOT CHANGE
+    if (isset($_POST['start_chat'])) { // Start chat
+        $fid = $_POST['friend_id'];
+        if (strlen($fid) > 0) {
+            $checkChat = $conn->prepare("SELECT * FROM `active_chats` WHERE `user`=? AND `friend`=?");
+            $checkChat->bind_param("ii", $uid, $fid);
+            $checkChat->execute();
+            $result = $checkChat->get_result();
+            if ($result->num_rows == 0) {
+                $insertChat = $conn->prepare("INSERT INTO `active_chats` (`user`,`friend`,`open`) VALUES (?, ?, '1')");
+                $insertChat->bind_param("ii", $uid, $fid);
+                $insertChat->execute();
+
+                $friendData = $conn->prepare("SELECT * FROM `users` WHERE `id`=?");
+                $friendData->bind_param("i", $fid);
+                $friendData->execute();
+                $friendRow = $friendData->get_result()->fetch_assoc();
+                $friendName = $friendRow['username'];
+                $friendAvatar = $friendRow['avatar'];
+
+                $data = array(
+                    "friend_name" => $friendName,
+                    "friend_avatar" => $friendAvatar
+                );
+                echo json_encode($data);
+            }
+        }
+    }
+    if (isset($_POST['max_chat'])) { // Minimize chat
+        $fid = $_POST['friend_id'];
+        $action = $_POST['action'];
+        $checkChat = $conn->query("SELECT * FROM `active_chats` WHERE `user`='$uid' AND `friend`='$fid'");
+        if ($checkChat->num_rows == 1) {
+            if ($action == "maximize") {
+                $conn->query("UPDATE `active_chats` SET `open`= 1 WHERE `user`='$uid' AND `friend`='$fid'");
+            } else
+            if ($action == "minimize") {
+                $conn->query("UPDATE `active_chats` SET `open`= 0 WHERE `user`='$uid' AND `friend`='$fid'");
+            }
+        }
+    }
+    if (isset($_POST['close_chat'])) { // Close chat
+        $fid = $_POST['friend_id'];
+        $checkChat = $conn->query("SELECT * FROM `active_chats` WHERE `user`='$uid' AND `friend`='$fid'");
+        if ($checkChat->num_rows == 1) {
+            $conn->query("DELETE FROM `active_chats` WHERE `user`='$uid' AND `friend`='$fid'");
+        }
+    }
+    if (isset($_POST['load_chat'])) { // Load chat
+        $friend = $_POST['friend_id'];
+        $getMessages = $conn->query("SELECT * FROM `messages` WHERE `from`='$uid' AND `to`='$friend' OR `from`='$friend' AND `to`='$uid' ORDER BY `date` ASC");
+        if ($getMessages->num_rows > 0) {
+            while ($msgData = $getMessages->fetch_assoc()) {
+                $msg = $msgData['content'];
+                $msg_from = $msgData['from'];
+                $msg_to = $msgData['to'];
+                $msg_date = $msgData['date'];
+                $msg_id = $msgData['id'];
+                $msg_time = date("H:i", $msg_date);
+                $msg_date = date("d.m.Y", $msg_date);
+#
+                if ($msg_from == $uid) {
+                    $msg_class = " me";
+                } else {
+                    $msg_class = "";
+                }
+
+                $getFriendData = $conn->query("SELECT * FROM `users` WHERE `id`='$friend'");
+                $friendData = $getFriendData->fetch_assoc();
+                $friend_username = $friendData['username'];
+                $friend_avatar = "./".$friendData['avatar'];
+                if ($friend_avatar == "./") {
+                    $friend_avatar = "./assets/images/logo_faded_clean.png";
+                }
+#
+                if ($msg_from == $uid) {
+                    $msg_from = "You";
+                } else {
+                    $msg_from = $friend_username;
+                }
+                ?>
+                <div class="message<?=$msg_class?>">
+                    <div class="message-user">
+                        <?php if ($msg_class == "") {?>
+                        <div class="message-user-avatar"><img src="<?=$friend_avatar?>"></div>
+                        <div class="message-user-name"><?=$msg_from?></div>
+                        <?php } else {?>
+                        <div class="message-user-name"><?=$msg_from?></div>
+                        <div class="message-user-avatar"><img src="<?=$avatar?>"></div>
+                        <?php }?>
+                    </div>
+                    <div class="message-content"><p><?=$msg?></p></div>
+                </div>
+                <?php
+            }
+        }
+    }
+    if (isset($_POST['get_chat_user'])) {
+        $fid = $_POST['friend_id'];
+        $userData = $conn->query("SELECT * FROM `users` WHERE `id`='$fid'");
+        $userRow = $userData->fetch_assoc();
+        $friendName = $userRow['username'];
+        $friendAvatar = $userRow['avatar'];
+
+        $data = array(
+            "friend_name" => $friendName,
+            "friend_avatar" => $friendAvatar
+        );
+        echo json_encode($data);
     }
 } else {
     if (isset($_COOKIE['logged'])) {

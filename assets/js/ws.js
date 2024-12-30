@@ -4,7 +4,7 @@ function connectWebSocket() {
     ws = new WebSocket('wss://dev.skybyn.com:4433');
 
     ws.onerror = (error) => {
-        console.error('Server connection error:', error);
+        
     };
 
     let sessionId = localStorage.getItem('sessionId') || generateSessionId();
@@ -194,6 +194,10 @@ function connectWebSocket() {
                 }
                 breathe('start');                
             }
+        }
+
+        if (data.type == 'notification') {
+            checkNoti();
         }
 
         if (data.type === 'ping') {

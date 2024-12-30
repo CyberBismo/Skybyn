@@ -57,6 +57,7 @@ if ($domain == $devDomain) {
         <?php include_once "style.php"?>
     </head>
     <body>
+        <div class="background"></div>
         <div id="clouds">
             <div class="cloud"></div>
         </div>

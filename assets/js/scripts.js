@@ -63,15 +63,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
-// Check if device is in dark mode, change the dark mode toggle button accordingly
-setTimeout(() => {
-    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        toggleDarkMode();
-    } else {
-        toggleLightMode();
-    }
-}, 1000);
-
 function toggleLightMode(x) {
     const allElements = document.querySelectorAll('*');
     const header = document.getElementsByClassName('header')[0];

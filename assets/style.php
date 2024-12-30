@@ -6,15 +6,13 @@
             }
 
             html {
-                height: 100%;
                 font-family: Arial, Helvetica, sans-serif;
                 padding-top: env(safe-area-inset-top);
             }
             body {
-                width: 100%;
-                height: 100%;
                 margin: 0 auto;
-                background: linear-gradient(to top, #243B55 0%, #141E30 100%);
+                padding: 0;
+                background: black;
             }
 
             .light-mode {
@@ -24,6 +22,16 @@
             .dark-mode {
                 color: white;
                 background: linear-gradient(to top, #243B55 0%, #141E30 100%);
+            }
+
+            .background {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(to top, #243B55 0%, #141E30 100%);
+                z-index: -1;
             }
 
             #clouds {

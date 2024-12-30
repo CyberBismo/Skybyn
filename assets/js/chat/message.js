@@ -31,7 +31,8 @@ function createMessageBox(user_id,friend_id) {
             start_chat: null,
             friend_id: fid
         }
-    }).done(function(res) {
+    }).done(function(result) {
+        let res = JSON.parse(result);
         const username = res.friend_name;
         let avatar = res.friend_avatar;
 
@@ -52,10 +53,13 @@ function createMessageBox(user_id,friend_id) {
         type: 'POST',
         data: {
             load_chat: null,
-            friend_id: String(fid).slice(4)
+            friend_id: fid
         }
-    }).done(function() {
-    });
+    }).done(function(result) {
+        document.getElementById('message_body_'+fid).innerHTML = result;
+        const messageContainer = document.getElementById('message_body_'+fid);
+        messageContainer.scrollTop = messageContainer.scrollHeight;
+    });    
 }
 
 function startMessaging(user_id,friend_id) {
@@ -102,7 +106,7 @@ function maximizeMessageBox(fid) {
 }
 
 function closeMessageBox(friend_id) {
-    const fid = String(friend_id).slice(4);
+    const fid = friend_id;
     let messageBox = document.getElementById('message_box_'+friend_id);
 
     // Dissaapear animation = slide down
