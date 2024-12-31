@@ -71,15 +71,27 @@ if ($domain == $devDomain) {
             </div>
         </div>
         <script>
-            function updateTimer() {
+            async function updateTimer() {
+                async function getTimeZoneByIP() {
+                    try {
+                        const response = await fetch('https://ipwhois.app/json/');
+                        const data = await response.json();
+                        return data.timezone; // Returns the timezone as a string, e.g., "America/New_York"
+                    } catch (error) {
+                        console.error('Error fetching timezone:', error);
+                        return null;
+                    }
+                }
                 let hny_title = document.getElementById('hny_title');
                 let hny_timer = document.getElementById('hny_timer');
                 let hny_year = document.getElementById('hny_year');
                 let hny_msg = document.getElementById('hny_message');
 
-                const now = new Date();
-                const newYear = new Date(now.getFullYear() + 1, 0, 1, 24, 0, 0); // [MONTHS] [WEEKS] [DAYS] [HOURS] [MINUTES] [SECONDS]
-                const timeDiff = newYear - now;
+                const timeZone = await getTimeZoneByIP();//Intl.DateTimeFormat().resolvedOptions().timeZone;
+                const now = new Date(new Date().toLocaleString("en-US", { timeZone }));
+                const newYearDate = new Date(now.getFullYear() + 1, 0, 1, 0, 0, 0);
+
+                const timeDiff = newYearDate - now;
 
                 if (timeDiff > 0) {
                     const hours = String(Math.floor((timeDiff / (1000 * 60 * 60)) % 24)).padStart(2, '0');
@@ -88,8 +100,8 @@ if ($domain == $devDomain) {
 
                     hny_timer.innerHTML = `${hours}:${minutes}:${seconds}`;
                 } else {
-                    hny_title.setAttribute("hidden","");
-                    hny_timer.setAttribute("hidden","");
+                    hny_title.setAttribute("hidden", "");
+                    hny_timer.setAttribute("hidden", "");
                     hny_year.removeAttribute("hidden");
                     hny_msg.removeAttribute("hidden");
                     launchFireworks();

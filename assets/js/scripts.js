@@ -63,6 +63,17 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
+async function getTimeZoneByIP() {
+    try {
+        const response = await fetch('https://ipwhois.app/json/');
+        const data = await response.json();
+        return data.timezone; // Returns the timezone as a string, e.g., "America/New_York"
+    } catch (error) {
+        console.error('Error fetching timezone:', error);
+        return null;
+    }
+}
+
 function toggleLightMode(x) {
     const allElements = document.querySelectorAll('*');
     const header = document.getElementsByClassName('header')[0];
