@@ -19,12 +19,12 @@ if ($getNotifications->num_rows > 0) {
             $noti_text = "$noti_username wants to be your friend";
         } else
         if ($noti_type == "friend_accepted") {
-            $noti_title = "New friend!";
-            $noti_text = "Say hi to $noti_username";
+            $noti_title = "Your friend $noti_username is here";
+            $noti_text = "Say hi";
         } else
         if ($noti_type == "comment") {
-            $noti_title = "New comment!";
-            $noti_text = "$noti_username commented:<br><br>$noti_content";
+            $noti_title = "$noti_username commented";
+            $noti_text = "$noti_content";
         } else
         if ($noti_type == "system") {
             $noti_title = "System update";

@@ -10,7 +10,7 @@
                 </div>
                 <div class="normal_login" id="normal_login">
                     <center><p id="login_msg"></p></center>
-                    <?php if (!isMobile()) { ?>
+                    <?php if (!isMobile($userAgent)) { ?>
                         <div class="login_qr" onclick="tglLogin()" id="qr_tgl"><i class="fa-solid fa-qrcode"></i></div>
                     <?php } ?>
                     

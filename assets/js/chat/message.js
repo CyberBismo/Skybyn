@@ -139,7 +139,7 @@ function checkEnter(event, uid, fid) {
 }
 
 function sendMessage(uid, fid) {
-    const messageInput = document.getElementById('message_input_'+fid);
+    let messageInput = document.getElementById('message_input_'+fid);
     let message = messageInput.value;
     if (message) {
         const avatar = document.querySelector('.message-user-avatar img').getAttribute('src');        

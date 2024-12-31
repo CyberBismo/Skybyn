@@ -34,7 +34,7 @@
                 z-index: -1;
             }
 
-            #clouds {
+            .clouds {
                 position: fixed;
                 top: 0;
                 left: 0;
@@ -47,16 +47,16 @@
                 body {
                     color: var(--mode-text);
                 }
-                #clouds {
-                    /*background: linear-gradient(to top, #48c6ef 0%, #6f86d6 100%);*/
+                .clouds {
+                    background: linear-gradient(to top, #48c6ef 0%, #6f86d6 100%);
                 }
             }
             @media (prefers-color-scheme: dark) {
                 body {
                     color: var(--mode-text);
                 }
-                #clouds {
-                    /*background: linear-gradient(to top, #243B55 0%, #141E30 100%);*/
+                .clouds {
+                    background: linear-gradient(to top, #243B55 0%, #141E30 100%);
                 }
             }
 
@@ -358,7 +358,7 @@
                 box-sizing: border-box;
                 z-index: 5;
             }
-            <?php if (isMobile() == false) {?>
+            <?php if (isMobile($userAgent) == false) {?>
             .popup {
                 top: 50%;
                 left: 50%;
@@ -402,7 +402,7 @@
             }
 
             /** Page Container */
-            <?php if (isMobile() == false) {?>
+            <?php if (isMobile($userAgent) == false) {?>
             .page-container {
                 min-width: 300px;
                 max-width: 650px;
@@ -467,7 +467,7 @@
                 overflow-y: auto;
                 z-index: 3;
             }
-            <?php if (isMobile() == false) {?>
+            <?php if (isMobile($userAgent) == false) {?>
             .left-panel,
             .right-panel {
                 width: 25%;
@@ -489,7 +489,7 @@
             
             .left-panel {
                 left: 0;
-                <?php if (isMobile() == true) {?>
+                <?php if (isMobile($userAgent) == true) {?>
                 transform: translateX(-100%);
                 <?php }?>
             }
@@ -518,7 +518,7 @@
             
             .right-panel {
                 right: 0;
-                <?php if (isMobile() == true) {?>
+                <?php if (isMobile($userAgent) == true) {?>
                 transform: translateX(100%);
                 <?php }?>
             }
@@ -609,7 +609,7 @@
 
             /** Start page */
             <?php if (!isset($_SESSION['user'])) {
-                if (isMobile() == false) {?>
+                if (isMobile($userAgent) == false) {?>
             .start {
                 position: relative;
                 display: flex;
@@ -717,7 +717,7 @@
                 opacity: 0;
             }
 
-            <?php if (isMobile() == false) {?>
+            <?php if (isMobile($userAgent) == false) {?>
             .center_form {
                 min-width: 40%;
                 color: var(--mode-text);
@@ -954,7 +954,7 @@
             .reg-button {
                 backdrop-filter: blur(5px);
             }
-            <?php if (isMobile() == false) {?>
+            <?php if (isMobile($userAgent) == false) {?>
             .log-button,
             .reg-button {
                 display: flex;
@@ -1008,7 +1008,7 @@
                 transform: scale(1.1);
             }
 
-            <?php if (isMobile() == false) {
+            <?php if (isMobile($userAgent) == false) {
                 if (skybyn('login-form') == "login") {?>
             #register-form {
                 overflow: hidden;
@@ -1207,7 +1207,7 @@
                 transition: all .3s;
                 z-index: 10;
             }
-            <?php if (isMobile() == true) { if (isset($_SESSION['user'])) {?>
+            <?php if (isMobile($userAgent) == true) { if (isset($_SESSION['user'])) {?>
             .header {
                 position: fixed;
                 top: 0;
@@ -1229,7 +1229,7 @@
             }
             <?php }?>
 
-            <?php if (isMobile() == false) { if (isset($_SESSION['user'])) {?>
+            <?php if (isMobile($userAgent) == false) { if (isset($_SESSION['user'])) {?>
             .header .top-left {
                 display: flex;
                 width: 33.33%;
@@ -1296,7 +1296,7 @@
             .header .top-left .logo-name p {
                 margin: 0;
             }
-            <?php if (isMobile() == false) {?>
+            <?php if (isMobile($userAgent) == false) {?>
             .header .new_post_button {
                 width: 33.33%;
                 height: 45px;
@@ -1459,6 +1459,7 @@
                 line-height: 50px;
                 border-radius: 10px;
                 box-sizing: border-box;
+                cursor: pointer;
             }
             .search_res_user:hover {
                 background: rgba(255,255,255,.2);
@@ -1675,7 +1676,7 @@
                 justify-content: space-evenly;
                 color: var(--mode-text);
             }
-            <?php if (isMobile() == false) {?>
+            <?php if (isMobile($userAgent) == false) {?>
             .header .top {
                 min-width: 300px;
                 max-width: 33%;
@@ -1686,7 +1687,7 @@
                 width: 100%;
             }
             <?php }?>
-            <?php if (isMobile() == false) {?>
+            <?php if (isMobile($userAgent) == false) {?>
             .header .top .top-nav {
                 width: 75px;
                 height: 75px;
@@ -1714,13 +1715,11 @@
                 cursor: pointer;
             }
             .notification_alert {
-                position: fixed;
-                bottom: 10px;
-                right: 10px;
-                padding: 20px;
+                position: absolute;
+                margin-left: 30px;
+                margin-top: -5px;
                 font-size: 10px;
-                transition: opacity 2s;
-                z-index: 999;
+                color: orange;
             }
             #noti_alert {
                 opacity: 0;
@@ -1781,6 +1780,10 @@
             .noti-title {
                 padding-bottom: 5px;
                 font-weight: bold;
+                font-size: 14px;
+            }
+            .noti-content span {
+                font-size: 12px;
             }
             .noti-actions {
                 width: 50px;
@@ -1847,7 +1850,7 @@
                 cursor: pointer;
             }
 
-            <?php if (isMobile() == false) {?>
+            <?php if (isMobile($userAgent) == false) {?>
             .search {
                 height: 50px;
                 padding: 10px;
@@ -1921,7 +1924,7 @@
                 color: white;
             }
             <?php }?>
-            <?php if (isMobile() == false) {?>
+            <?php if (isMobile($userAgent) == false) {?>
             .header .top .user-avatar {
                 height: 50px;
                 margin: 8px 20px;
@@ -1947,7 +1950,7 @@
             .header .top .user-nav {
                 height: 75px;
             }
-            <?php if (isMobile() == false) {?>
+            <?php if (isMobile($userAgent) == false) {?>
             .header .top .user-nav {
                 margin: 0 20px;
             }
@@ -1983,7 +1986,7 @@
                 box-sizing: border-box;
                 z-index: 3;
             }
-            <?php if (isMobile() == false) {?>
+            <?php if (isMobile($userAgent) == false) {?>
             .user-dropdown {
                 display: none;
                 right: 40px;
@@ -2011,7 +2014,7 @@
                 display: flex;
                 justify-content: space-between;
             }
-            <?php if (isMobile() == false) {?>
+            <?php if (isMobile($userAgent) == false) {?>
             .user-dropdown ul li {
                 padding: 10px;
                 cursor: pointer;
@@ -2100,7 +2103,7 @@
                 color: var(--mode-text);
             }
 
-            <?php if (isMobile() == false) {?>
+            <?php if (isMobile($userAgent) == false) {?>
             .image_viewer {
                 position: fixed;
                 display: flex;
@@ -2195,7 +2198,7 @@
             }
 
             /** POST */
-            <?php if (isMobile() == false) {?>
+            <?php if (isMobile($userAgent) == false) {?>
             .posts {
                 width: 100%;
                 max-width: 650px;
@@ -2458,7 +2461,7 @@
                 outline: none;
                 box-sizing: border-box;
             }
-            <?php if (isMobile() == false) {?>
+            <?php if (isMobile($userAgent) == false) {?>
             .post_comment_new_user span {
                 width: 200px;
                 line-height: 30px;
@@ -2531,7 +2534,7 @@
                 height: 100%;
                 object-fit: cover;
             }
-            <?php if (isMobile() == false) {?>
+            <?php if (isMobile($userAgent) == false) {?>
             .post_comment_user_info span {
                 width: 200px;
                 line-height: 30px;
@@ -2822,7 +2825,7 @@
                 overflow: hidden;
             }
 
-            <?php if (isMobile() == false) {?>
+            <?php if (isMobile($userAgent) == false) {?>
             .new-group-create {
                 display: flex;
             }
@@ -3527,7 +3530,7 @@
                 pointer-events: none;
             }
             
-            <?php if (isMobile() == false) {?>
+            <?php if (isMobile($userAgent) == false) {?>
             .profile {
                 display: flex;
                 gap: 10px;
@@ -3601,9 +3604,9 @@
                 height: auto;
             }
             .profile-btns button {
-                display: block;
+                display: flex;
                 min-width: 35px;
-                width: 35px;
+                width: auto;
                 height: 35px;
                 margin: 3px;
                 padding: 10px;
@@ -3620,12 +3623,19 @@
                 width: auto;
                 cursor: pointer;
             }
+            .profile-btns button i {
+                width: 35px;
+                height: 35px;
+                line-height: 35px;
+                margin-top: -10px;
+                margin-left: -10px;
+            }
             .profile-btns button span {
+                display: none;
                 padding-left: 25px;
             }
-            .profile-btns button i {
-                width: 10px;
-                height: 10px;
+            .profile-btns button:hover span {
+                display: block;
             }
             .profile-btns button.red {
                 color: var(--mode-text);
@@ -3771,7 +3781,7 @@
                 color: black;
             }
 
-            <?php if (isMobile() == false) {?>
+            <?php if (isMobile($userAgent) == false) {?>
             .changeAvatar,
             .changeWallpaper {
                 position: fixed;
@@ -3907,7 +3917,7 @@
 
             /** END OF PROFILE */
             /** GROUP */
-            <?php if (isMobile() == false) {?>
+            <?php if (isMobile($userAgent) == false) {?>
             .new-group-create {
                 display: flex;
             }
@@ -3978,7 +3988,7 @@
                 color: var(--mode-text);
             }
 
-            <?php if (isMobile() == false) {?>
+            <?php if (isMobile($userAgent) == false) {?>
             .group-head {
                 display: flex;
                 justify-content: space-between;
@@ -4026,7 +4036,7 @@
                 text-align: left;
                 color: var(--mode-text);
             }
-            <?php if (isMobile() == false) {?>
+            <?php if (isMobile($userAgent) == false) {?>
             .gbox-main {
                 width: calc(100% - 70px);
                 height: 100%;
@@ -4246,7 +4256,7 @@
             .gbox-settings {
                 padding: 10px;
             }
-            <?php if (isMobile() == false) {?>
+            <?php if (isMobile($userAgent) == false) {?>
             .gbox-settings .split {
                 display: flex;
             }
@@ -4365,4 +4375,57 @@
                 border-radius: 20px;
                 z-index: 5;
             }
+        </style>
+
+        <style>
+            .happy_new_year {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 100;
+            }
+            .happy_new_year .firework {
+                position: absolute;
+                width: 5px;
+                height: 5px;
+                border-radius: 50%;
+                background: red;
+            }
+            .happy_new_year .particle {
+                position: absolute;
+                width: 5px;
+                height: 5px;
+                border-radius: 50%;
+            }
+            @keyframes fireworkUp {
+                0% { transform: translateY(100%); opacity: 1; }
+                50% { opacity: 1; }
+                100% { transform: translateY(-50%); opacity: 0; }
+            }
+
+            @keyframes fireworkExplode {
+                0% { transform: scale(0); opacity: 1; }
+                100% { transform: scale(2); opacity: 0; }
+            }
+
+            .happy_new_year_text {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                width: 70%;
+                margin: 0 auto;
+                transform: translateX(-50%) translateY(-50%);
+                text-align: center;
+            }
+            <?php if (isMobile($userAgent) == false) {?>
+            .happy_new_year_text {
+                font-size: 7vh;
+            }
+            <?php } else {?>
+            .happy_new_year_text {
+                font-size: 3vh;
+            }
+            <?php }?>
         </style>

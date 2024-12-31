@@ -43,11 +43,6 @@ $Pavatar = "./".$PUDRow['avatar'];
 $Pwallpaper = "./".$PUDRow['wallpaper'];
 $Pwallpaper_margin = $PUDRow['wallpaper_margin'];
 $Pcountry = $PUDRow['country'];
-$Pip = $PUDRow['ip'];
-$Pdarkmode = $PUDRow['darkmode'];
-$Pminecraft = $PUDRow['minecraft'];
-$Phabbo = $PUDRow['habbo'];
-$Pfivem = $PUDRow['fivem'];
 $Pverified = $PUDRow['verified'];
 $Pprivate = $PUDRow['private'];
 
@@ -90,6 +85,7 @@ if ($areFriends->num_rows == 1) {
                         </div>
                     </div>
                     <div class="profile-btns">
+                        <?php if ($Pprivate == "0" || $rank > 3) {?>
                         <?php if (isset($_SESSION['user'])): ?>
                             <?php if (!$myProfile): ?>
                                 <?php if ($friends) {?>
@@ -140,8 +136,11 @@ if ($areFriends->num_rows == 1) {
                                 </div>
                             <?php endif; ?>
                         <?php endif; ?>
+                        <?php } else {?>
+                        <?php }?>
                     </div>
-                    <?php if (isMobile() == false) {?>
+                    <?php if ($Pprivate == "0" || $rank > 3) {?>
+                    <?php if (isMobile($userAgent) == false) {?>
                     <hr>
                     <div class="profile-tabs">
                         <b><?=$Pusername?>'s Groups</b>
@@ -168,9 +167,10 @@ if ($areFriends->num_rows == 1) {
                         ?>
                     </div>
                     <?php }?>
+                    <?php }?>
                 </div>
                 <div class="profile-right" id="posts">
-                    <?php if ($Pprivate == "0" || $friends == true) {?>
+                    <?php if ($Pprivate == "0" || $friends == true || $rank > 3) {?>
                     <?php $getPosts = mysqli_query($conn, "SELECT * FROM `posts` WHERE `user`='$user_id' ORDER BY `created` DESC LIMIT 5");
                     while($post = mysqli_fetch_assoc($getPosts)) {
                         $post_id = $post['id'];
@@ -325,7 +325,7 @@ if ($areFriends->num_rows == 1) {
                         </div>
                     </div>
                     <?php }} else {?>
-                    <div class="post" id="post_<?=$post_id?>">
+                    <div class="post">
                         <div class="post_body">
                             <div class="post_content">
                                 This profile is private
@@ -414,7 +414,7 @@ if ($areFriends->num_rows == 1) {
                 }
             }
         </script>
-        <?php if (isMobile() == false) {?>
+        <?php if (isMobile($userAgent) == false) {?>
         <script>stickyProfile();</script>
         <?php }?>
         <?php }?>

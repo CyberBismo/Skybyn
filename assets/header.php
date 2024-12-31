@@ -42,7 +42,7 @@ if ($domain == $devDomain) {
         <?php if (!isset($_COOKIE['welcomeScreen'])) {?>
         <script src="assets/js/welcome.js"></script>
         <?php }?>
-        <?php if (isMobile() == true) {?>
+        <?php if (isMobile($userAgent) == true) {?>
         <script src="assets/js/small_screen.js"></script>
         <?php } else {?>
         <script src="assets/js/big_screen.js"></script>
@@ -57,8 +57,126 @@ if ($domain == $devDomain) {
         <?php include_once "style.php"?>
     </head>
     <body>
+        <?php if (skybyn("celebration") == "new_year") {?>
+        <div class="happy_new_year" id="firework">
+            <div class="background"></div>
+            <div class="clouds">
+                <div class="cloud"></div>
+            </div>
+            <div class="happy_new_year_text">
+                <p id="hny_title">New Year In</p>
+                <h1 id="hny_timer">00:00:00</h1>
+                <h1 id="hny_year" hidden>2025</h1>
+                <h1 id="hny_message" hidden>Happy New Year</h1>
+            </div>
+        </div>
+        <script>
+            function updateTimer() {
+                let hny_title = document.getElementById('hny_title');
+                let hny_timer = document.getElementById('hny_timer');
+                let hny_year = document.getElementById('hny_year');
+                let hny_msg = document.getElementById('hny_message');
+
+                const now = new Date();
+                const newYear = new Date(now.getFullYear() + 1, 0, 1, 24, 0, 0); // [MONTHS] [WEEKS] [DAYS] [HOURS] [MINUTES] [SECONDS]
+                const timeDiff = newYear - now;
+
+                if (timeDiff > 0) {
+                    const hours = String(Math.floor((timeDiff / (1000 * 60 * 60)) % 24)).padStart(2, '0');
+                    const minutes = String(Math.floor((timeDiff / (1000 * 60)) % 60)).padStart(2, '0');
+                    const seconds = String(Math.floor((timeDiff / 1000) % 60)).padStart(2, '0');
+
+                    hny_timer.innerHTML = `${hours}:${minutes}:${seconds}`;
+                } else {
+                    hny_title.setAttribute("hidden","");
+                    hny_timer.setAttribute("hidden","");
+                    hny_year.removeAttribute("hidden");
+                    hny_msg.removeAttribute("hidden");
+                    launchFireworks();
+                }
+            }
+
+            setInterval(updateTimer, 1000);
+            updateTimer();
+        </script>
+        <script>
+            const fireworkContainer = document.getElementById('firework');
+            function createFirework() {
+                const firework = document.createElement('div');
+                firework.classList.add('firework');
+                const x = Math.random() * fireworkContainer.offsetWidth;
+                firework.style.left = `${x}px`;
+                firework.style.bottom = '0px';
+                firework.style.backgroundColor = getRandomColor();
+                fireworkContainer.appendChild(firework);
+
+                const targetY = fireworkContainer.offsetHeight / 2;
+
+                const fireworkInterval = setInterval(() => {
+                    const bottom = parseInt(firework.style.bottom, 10);
+                    if (bottom >= targetY) {
+                    clearInterval(fireworkInterval);
+                    createExplosion(x, bottom, firework.style.backgroundColor);
+                    firework.remove();
+                    } else {
+                    firework.style.bottom = `${bottom + 5}px`;
+                    }
+                }, 16);
+            }
+
+            function createExplosion(x, y, color) {
+                for (let i = 0; i < 30; i++) {
+                    const particle = document.createElement('div');
+                    particle.classList.add('particle');
+                    particle.style.left = `${x}px`;
+                    particle.style.top = `${y}px`;
+                    particle.style.backgroundColor = color;
+
+                    const angle = Math.random() * 2 * Math.PI;
+                    const speed = Math.random() * 4 + 2;
+                    const velocityX = Math.cos(angle) * speed;
+                    const velocityY = Math.sin(angle) * speed;
+
+                    fireworkContainer.appendChild(particle);
+
+                    const particleInterval = setInterval(() => {
+                    const currentX = parseFloat(particle.style.left);
+                    const currentY = parseFloat(particle.style.top);
+                    particle.style.left = `${currentX + velocityX}px`;
+                    particle.style.top = `${currentY + velocityY}px`;
+                    particle.style.opacity = parseFloat(particle.style.opacity || 1) - 0.02;
+
+                    if (parseFloat(particle.style.opacity) <= 0) {
+                        clearInterval(particleInterval);
+                        particle.remove();
+                    }
+                    }, 16);
+                }
+            }
+
+            function getRandomColor() {
+                const colors = ['#FF5733', '#33FF57', '#5733FF', '#FFF033', '#FF33A1'];
+                return colors[Math.floor(Math.random() * colors.length)];
+            }
+
+            function launchFireworks() {
+                createFirework();
+                setTimeout(launchFireworks, Math.random() * 1000 + 500);
+            }
+        </script>
+        <?php }?>
+        <?php if (skybyn("celebration") == "xmas") {?>
+        <div class="xmas"></div>
+        <?php }?>
+        <?php if (skybyn("celebration") == "easter") {?>
+        <div class="easter"></div>
+        <?php }?>
+        <?php if (skybyn("celebration") == "halloween") {?>
+        <div class="halloween"></div>
+        <?php }?>
+
         <div class="background"></div>
-        <div id="clouds">
+        <div class="clouds">
             <div class="cloud"></div>
         </div>
 
@@ -66,7 +184,7 @@ if ($domain == $devDomain) {
 
             <?php // Logo
             if (isset($_SESSION['user'])) {
-                if (isMobile() == false) {
+                if (isMobile($userAgent) == false) {
                     include_once("assets/logo.php");
                 }
             } else {
@@ -76,7 +194,7 @@ if ($domain == $devDomain) {
 
             <?php // New post if logged in
             if (isset($_SESSION['user'])) {
-                if (isMobile() == false) {?>
+                if (isMobile($userAgent) == false) {?>
             <div class="new_post_button" id="new_post_btn" onclick="newPost()">Anything new?</div>
             <?php }?>
             <script>// Display new post button only when the user is on the home page
@@ -100,7 +218,7 @@ if ($domain == $devDomain) {
             <div class="top">
                 <div class="top-nav">
                     <ul>
-                        <?php if (isMobile() == true) {?>
+                        <?php if (isMobile($userAgent) == true) {?>
                         <li onclick="showLeftPanel()"><i class="fa-solid fa-star"></i></li>
                         <?php } else {?>
                         <li onclick="showNotifications(event)" id="notification">
@@ -111,13 +229,13 @@ if ($domain == $devDomain) {
                     </ul>
                 </div>
                 <div class="user-avatar" id="user_avatar_<?=$uid?>">
-                    <?php if (isMobile() == true) {?>
+                    <?php if (isMobile($userAgent) == true) {?>
                     <img src="./assets/images/logo_faded_clean.png" onclick="window.location.href='./'">
                     <?php } else {?>
                     <img src="<?=$avatar?>" onclick="window.location.href='./profile'">
                     <?php }?>
                 </div>
-                <?php if (isMobile() == true) {?>
+                <?php if (isMobile($userAgent) == true) {?>
                 <div class="user-nav" onclick="showRightPanel()">
                     <ul>
                         <li><i class="fa-solid fa-user-group"></i></li>
@@ -208,7 +326,7 @@ if ($domain == $devDomain) {
             const um = document.getElementById('usermenu');
             const left = document.getElementById('left-panel');
             const right = document.getElementById('right-panel');
-            <?php if (isMobile() == true) {?>
+            <?php if (isMobile($userAgent) == true) {?>
             if (um.style.transform == "translateX(0px)") {
                 um.style.transform = 'translateX(100%)';
             } else {
@@ -274,7 +392,7 @@ if ($domain == $devDomain) {
 
             if (new_post.style.display == "block") {
                 new_post.style.display = "none";
-                <?php if (isMobile() == true) {?>
+                <?php if (isMobile($userAgent) == true) {?>
                 newPostIcon.classList.add("fa-plus");
                 newPostIcon.classList.remove("fa-xmark");
                 mobile_nav_btn.style.transform = "rotate(0deg)";
@@ -286,7 +404,7 @@ if ($domain == $devDomain) {
                 new_post_input.innerHTML = "";
             } else {
                 new_post.style.display = "block";
-                <?php if (isMobile() == true) {?>
+                <?php if (isMobile($userAgent) == true) {?>
                 newPostIcon.classList.remove("fa-plus");
                 newPostIcon.classList.add("fa-xmark");
                 mobile_nav_btn.style.transform = "rotate(45deg)";
@@ -304,7 +422,7 @@ if ($domain == $devDomain) {
         </script>
 
         <?php if (isset($_SESSION['user'])) {
-        if (isMobile() == false) {?>
+        if (isMobile($userAgent) == false) {?>
         <script>
         checkNoti();
         </script>
@@ -511,7 +629,7 @@ if ($domain == $devDomain) {
         </div>
 
         <div class="right-panel" id="right-panel">
-            <?php if (isMobile() == false) {?>
+            <?php if (isMobile($userAgent) == false) {?>
             <div class="search">
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <input type="text" id="searchInput" onkeyup="startSearch(this)" placeholder="Search...">
@@ -681,12 +799,12 @@ if ($domain == $devDomain) {
             ?>
         </div>
 
-        <?php if (isMobile() == false) {?>
+        <?php if (isMobile($userAgent) == false) {?>
         <div class="left-panel-open" id="lp-open" onclick="showLeftPanel()"><i class="fa-solid fa-chevron-right"></i></div>
         <div class="right-panel-open" id="rp-open" onclick="showRightPanel()"><i class="fa-solid fa-chevron-left"></i></div>
         <?php }?>
 
-        <?php if (isMobile() == true) {?>
+        <?php if (isMobile($userAgent) == true) {?>
         <div class="mobile-search" id="mobile-search">
             <div class="search">
                 <i class="fa-solid fa-magnifying-glass"></i>
@@ -721,7 +839,7 @@ if ($domain == $devDomain) {
         <?php }?>
 
         <div class="image_viewer" id="image_viewer" style="display: none">
-            <div class="image_post" id="image_post" <?php if (isMobile() == true) {?>hidden<?php }?>></div>
+            <div class="image_post" id="image_post" <?php if (isMobile($userAgent) == true) {?>hidden<?php }?>></div>
             <div class="image_box">
                 <div class="image_box_close" onclick="showImage(null)"><i id="newPostIcon" class="fa-solid fa-xmark"></i></div>
                 <div class="image_frame" id="image_frame" onclick="toggleImageSlider()"></div>
@@ -736,7 +854,7 @@ if ($domain == $devDomain) {
             const rp = document.getElementById('right-panel');
             const bn = document.getElementById('bottom-nav');
             
-            <?php if (isMobile() == false) {?>
+            <?php if (isMobile($userAgent) == false) {?>
             header.style.transform = "translateY(0px)";
             if (window.innerWidth < 1240) {
                 lp.style.transform = "translate(-300px)";
@@ -809,7 +927,7 @@ if ($domain == $devDomain) {
                 rb.style.transform = "translateX(33px)";
             }
         }
-        <?php if (isMobile() == false) {?>
+        <?php if (isMobile($userAgent) == false) {?>
         hideSidePanels();
         window.addEventListener('resize', hideSidePanels);
         <?php }?>

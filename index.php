@@ -134,7 +134,7 @@ if (isset($_COOKIE['logged'])) {
 
 <script>
     function showInfo(x) {
-        <?php if (isMobile() == true) {?>
+        <?php if (isMobile($userAgent) == true) {?>
         if (x.style.height == "50%") {
             x.style.height = "75px";
         } else {

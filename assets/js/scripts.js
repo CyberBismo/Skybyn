@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function() {
         img.setAttribute('loading', 'lazy');
     });
     
-    const cloudsContainer = document.getElementById('clouds');
+    const cloudsContainer = document.getElementsByClassName('clouds')[0];
 
     for (let i = 0; i < 25; i++) {
         let cloud = document.createElement('div');

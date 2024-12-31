@@ -246,7 +246,7 @@
                             info_text.style.display = "block";
                             intro.style.display = "block";
                             reg_info.style.display = "none";
-                            <?php if (isMobile() == true) {?>
+                            <?php if (isMobile($userAgent) == true) {?>
                             wel_inf.style.height = "200px";
                             <?php }?>
                         }
@@ -297,7 +297,7 @@
                                 info_text.style.display = "none";
                                 reg_info.style.display = "block";
 
-                                <?php if (isMobile() == true) {?>
+                                <?php if (isMobile($userAgent) == true) {?>
                                 wel_inf.style.height = "auto";
                                 <?php }?>
                                 
