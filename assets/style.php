@@ -12,15 +12,11 @@
             body {
                 margin: 0 auto;
                 padding: 0;
-                background: black;
-            }
-
-            .light-mode {
-                color: black;
+                color: var(--mode-text);
                 background: linear-gradient(to top, #48c6ef 0%, #6f86d6 100%);
             }
-            .dark-mode {
-                color: white;
+
+            .darkmode {
                 background: linear-gradient(to top, #243B55 0%, #141E30 100%);
             }
 
@@ -30,7 +26,6 @@
                 left: 0;
                 width: 100%;
                 height: 100%;
-                background: linear-gradient(to top, #243B55 0%, #141E30 100%);
                 z-index: -1;
             }
 
@@ -44,17 +39,11 @@
             }
 
             @media (prefers-color-scheme: light) {
-                body {
-                    color: var(--mode-text);
-                }
                 .clouds {
                     background: linear-gradient(to top, #48c6ef 0%, #6f86d6 100%);
                 }
             }
             @media (prefers-color-scheme: dark) {
-                body {
-                    color: var(--mode-text);
-                }
                 .clouds {
                     background: linear-gradient(to top, #243B55 0%, #141E30 100%);
                 }
@@ -63,19 +52,6 @@
             .cloud {
                 position: absolute;
                 opacity: .1;
-            }
-
-            .dark-mode-toggle {
-                position: fixed;
-                bottom: 10px;
-                right: 10px;
-                width: 50px;
-                height: 50px;
-                font-size: 50px;
-                color: var(--mode-text);
-                border-radius: 50%;
-                cursor: pointer;
-                z-index: 20;
             }
 
             *::-webkit-scrollbar {
@@ -483,7 +459,8 @@
                 width: 100%;
                 height: calc(100% - 75px);
                 padding-top: 75px;
-                background: rgba(var(--dark),.1);
+                background: rgba(var(--mode),.5);
+                backdrop-filter: blur(5px);
             }
             <?php }?>
             
@@ -555,18 +532,26 @@
                 left: 50%;
                 width: auto;
                 height: 50px;
+                font-size: 18px;
                 transform: translate(-50%, -20px);
-                font-size: 24px;
                 color: var(--mode-text);
                 background: rgba(var(--mode),.7);
                 border: 1px solid rgba(var(--mode),5);
                 border-radius: 100px;
                 box-sizing: border-box;
                 transition: all .3s;
+                overflow: hidden;
                 z-index: 9;
             }
             .bnav-btn {
-                padding: 20px;
+                width: 50px;
+                height: 100%;
+                line-height: 28px;
+                padding: 10px;
+                box-sizing: border-box;
+            }
+            .bnav-btn:nth-of-type(2) {
+                font-size: 24px;
             }
             .bnav-btn i {
                 transition: all .5s ease-in-out;
@@ -601,6 +586,26 @@
                 color: var(--mode-text);
                 background: rgba(var(--mode),.7);
                 box-shadow: 0 0 2px rgba(var(--mode),.5);
+            }
+
+            /** Friend button */
+            .friends_menu {
+                position: fixed;
+                right: 20px;
+                bottom: 20px;
+                width: 50px;
+                height: 50px;
+                line-height: 45px;
+                text-align: center;
+                font-size: 24px;
+                background: rgba(var(--mode),.5);
+                border-radius: 25px;
+                border: 1px solid rgba(var(--mode-text),1);
+                box-sizing: border-box;
+                z-index: 10;
+            }
+            .friends_menu i {
+                font-size: 20px;
             }
 
             .loading {
@@ -1716,14 +1721,19 @@
             }
             .notification_alert {
                 position: absolute;
-                margin-left: 30px;
-                margin-top: -5px;
                 font-size: 10px;
                 color: orange;
-            }
-            #noti_alert {
                 opacity: 0;
             }
+            .notification_alert.nat {
+                margin-left: 30px;
+                margin-top: -5px;
+            }
+            .notification_alert.nab {
+                margin-left: 18px;
+                margin-top: -7px;
+            }
+            <?php if (isMobile($userAgent) == false) {?>
             .notifications {
                 position: fixed;
                 top: 75px;
@@ -1738,6 +1748,21 @@
                 box-shadow: 10px 10px 23px -5px rgba(var(--mode),0.6);
                 z-index: 11;
             }
+            <?php } else {?>
+            .notifications {
+                position: fixed;
+                top: 75px;
+                left: 10px;
+                width: calc(100% - 20px);
+                height: calc(100% - 165px);
+                color: var(--mode-text);
+                background: rgba(var(--mode),.5);
+                border-radius: 10px;
+                backdrop-filter: blur(5px);
+                box-shadow: 10px 10px 23px -5px rgba(var(--mode),0.6);
+                z-index: 11;
+            }
+            <?php }?>
             .notifications i {
                 cursor: pointer;
             }
@@ -1784,6 +1809,9 @@
             }
             .noti-content span {
                 font-size: 12px;
+            }
+            .noti-content span a {
+                color: rgba(var(--mode-text),1);
             }
             .noti-actions {
                 width: 50px;
@@ -1869,7 +1897,7 @@
                 padding-right: 40px;
                 color: var(--mode-text);
                 background: none;
-                border: 1px solid rgba(var(--mode),.5);
+                border: 1px solid rgba(255,255,255,.5);
                 backdrop-filter: blur(5px);
                 border-radius: 40px;
                 box-sizing: border-box;
@@ -1997,12 +2025,12 @@
             <?php } else {?>
             .user-dropdown {
                 right: 0;
-                width: 90%;
+                width: 100%;
                 padding: 20px;
-                background: rgba(var(--mode),.9);
-                box-shadow: 0 3px rgba(var(--mode),.2);
+                background: rgba(var(--mode),.8);
                 transform: translateX(100%);
                 transition: transform .5s;
+                box-sizing: border-box;
             }
             <?php }?>
             .user-dropdown ul {
@@ -2031,6 +2059,9 @@
                 color: gold;
             }
             <?php } else {?>
+            .user-dropdown ul {
+                backdrop-filter: blur(5px);
+            }
             .user-dropdown ul li {
                 padding: 15px;
                 font-size: 18px;
@@ -2426,7 +2457,7 @@
             .post_comments {
                 width: 100%;
                 padding: 0 10px;
-                padding-left: 50px;
+                padding-left: 10px;
                 box-sizing: border-box;
             }
             .post_body i {
@@ -2482,7 +2513,7 @@
                 display: none;
             }
             .post_comment_new_content {
-                width: calc(100% - 100px);
+                width: calc(100% - 30px);
                 line-height: 30px;
                 padding: 0 10px;
                 background: rgba(255,255,255,.1);
@@ -2534,10 +2565,12 @@
                 height: 100%;
                 object-fit: cover;
             }
+            .post_comment_user_info span {
+                line-height: 30px;
+            }
             <?php if (isMobile($userAgent) == false) {?>
             .post_comment_user_info span {
-                width: 200px;
-                line-height: 30px;
+                width: auto;
             }
             .post_comment_user_actions {
                 float: right;
@@ -2561,10 +2594,10 @@
             }
             <?php } else {?>
             .post_comment_user span {
-                display: none;
+                max-width: 200px;
             }
             .post_comment_content {
-                width: calc(100% - 100px);
+                width: 100%;
                 line-height: 30px;
                 padding: 0 10px;
                 background: rgba(255,255,255,.1);
@@ -3374,7 +3407,7 @@
             /** END OF MESSAGES */
 
             /** FLOATING MESSAGES */
-
+            <?php if (isMobile($userAgent) == false) {?>
             .message-container {
                 position: fixed;
                 display: flex;
@@ -3383,6 +3416,9 @@
                 width: 100%;
                 margin: 10px;
                 z-index: 10;
+            }
+            .message-box-icon {
+                display: none;
             }
             .message-box {
                 width: 300px;
@@ -3403,6 +3439,74 @@
             .message-box.maximized .message-header {
                 border-radius: 10px 10px 0 0;
             }
+            .message-body {
+                height: 280px;
+                padding: 10px;
+                background: rgba(var(--mode),.2);
+                border-radius: 10px;
+                overflow: auto;
+            }
+            <?php } else {?>
+            .message-container {
+                position: fixed;
+                display: flex;
+                flex-direction: column-reverse;
+                gap: 5px;
+                left: 20px;
+                bottom: 20px;
+                width: 50px;
+                height: 50px;
+                overflow: hidden;
+                z-index: 10;
+            }
+            .message-container .icon {
+                width: 50px;
+                height: 50px;
+                padding: 13px;
+                font-size: 24px;
+                background: rgba(var(--mode),.5);
+                border-radius: 25px;
+                border: 1px solid rgba(var(--mode-text),1);
+                box-sizing: border-box;
+            }
+            .message-box-icon {
+                width: 40px;
+                height: 40px;
+                margin: 0 auto;
+                border-radius: 20px;
+                background: rgba(var(--mode),.5);
+            }
+            .message-box-icon img {
+                width: 40px;
+                height: 40px;
+            }
+            .message-box {
+                position: fixed;
+                bottom: 80px;
+                left: 80px;
+                width: 0;
+                max-width: 300px;
+                height: 0;
+                background: rgba(var(--mode),.8);
+                backdrop-filter: blur(5px);
+                border-radius: 15px;
+                box-sizing: border-box;
+                overflow: hidden;
+                transition: all .3s;
+                overflow: hidden;
+            }
+            .message-box.open {
+                width: calc(100% - 100px);
+                height: calc(100% - 155px);
+            }
+            .message-body {
+                height: calc(100% - 100px);
+                padding: 10px;
+                background: rgba(var(--mode),.2);
+                border-radius: 10px;
+                overflow: auto;
+            }
+            <?php }?>
             .message-header {
                 display: flex;
                 justify-content: space-between;
@@ -3434,13 +3538,6 @@
             }
             .message-header .message-close {
                 cursor: pointer;
-            }
-            .message-body {
-                height: 280px;
-                padding: 10px;
-                background: rgba(var(--mode),.2);
-                border-radius: 10px;
-                overflow: auto;
             }
             .message-body::-webkit-scrollbar {
                 display: none;
@@ -4385,29 +4482,6 @@
                 width: 100%;
                 height: 100%;
                 z-index: 100;
-            }
-            .happy_new_year .firework {
-                position: absolute;
-                width: 5px;
-                height: 5px;
-                border-radius: 50%;
-                background: red;
-            }
-            .happy_new_year .particle {
-                position: absolute;
-                width: 5px;
-                height: 5px;
-                border-radius: 50%;
-            }
-            @keyframes fireworkUp {
-                0% { transform: translateY(100%); opacity: 1; }
-                50% { opacity: 1; }
-                100% { transform: translateY(-50%); opacity: 0; }
-            }
-
-            @keyframes fireworkExplode {
-                0% { transform: scale(0); opacity: 1; }
-                100% { transform: scale(2); opacity: 0; }
             }
 
             .happy_new_year_text {

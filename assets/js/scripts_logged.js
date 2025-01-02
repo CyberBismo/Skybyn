@@ -489,6 +489,10 @@ function friendAction(friend, action) {
 
         if (templates[response]) {
             actions.innerHTML = templates[response];
+            ws.send(JSON.stringify({
+                type: 'notify',
+                to: friend
+            }));
         } else {
             alert(`Error: ${response}`);
         }

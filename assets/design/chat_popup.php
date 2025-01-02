@@ -1,4 +1,7 @@
-<div class="message-box" id="message_box_0">
+        <div class="message-box-icon" onclick="showChat('0')">
+            <img src="../assets/images/logo_faded_clean.png">
+        </div>
+        <div class="message-box" id="message_box_0">
             <div class="message-header">
                 <div class="message-user" id="message_user_0" onclick="maximizeMessageBox('0')">
                     <img src="../assets/images/logo_faded_clean.png" id="msg_user_avatar_0">

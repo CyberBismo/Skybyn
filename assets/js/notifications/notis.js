@@ -1,12 +1,16 @@
-function showNotifications(event) {
+function showNotifications() {
     const notifications = document.getElementById('notifications');
     const notiList = document.getElementById('noti-list');
-    notifications.style.display = "block";
-    $.ajax({
-        url: 'assets/noti_get.php'
-    }).done(function(response) {
-        notiList.innerHTML = response;
-    });
+    if (notifications.style.display == "block") {
+        notifications.style.display = "none";
+    } else {
+        notifications.style.display = "block";
+        $.ajax({
+            url: 'assets/noti_get.php'
+        }).done(function(response) {
+            notiList.innerHTML = response;
+        });
+    }
 }
 
 function showNoti(x) {
@@ -14,7 +18,6 @@ function showNoti(x) {
     let notWin_avatar = document.getElementById('noti_win_avatar');
     let notWin_user = document.getElementById('noti_win_username');
     let notWin_text = document.getElementById('noti_win_text');
-    let notWin_foot = document.getElementById('noti_win_foot');
     let notWin_foot_profile = document.getElementById('noti_win_foot_profile');
 
     notiWin.removeAttribute("hidden");
@@ -121,18 +124,22 @@ function delNoti(x) {
 }
 
 function checkNoti() {
-    var notiAlert = document.getElementById('noti_alert');
+    var notiAlert = document.getElementsByClassName('notification_alert');
     $.ajax({
         url: 'assets/noti_check.php'
     }).done(function(response) {
         if (response == "unread") {
-            notiAlert.style.opacity = '1';
+            for (i = 0; i < notiAlert.length; i++) {
+                notiAlert[i].style.opacity = '1';
+            }
         } else {
-            notiAlert.style.opacity = '0';
+            for (i = 0; i < notiAlert.length; i++) {
+                notiAlert[i].style.opacity = '0';
+            }
         }
     });
 }
-
+checkNoti();
 
 function expandNoti(x) {
     if (x.style.height === "auto") {
@@ -143,13 +150,21 @@ function expandNoti(x) {
 }
 
 function markRead(x) {
+    let noti = document.getElementById('noti_'+x);
+    let mark = noti.querySelectorAll('i');
+
+    for (i = 0; i <= mark.length; i++) {
+        if (mark[i].classList.contains('fa-envelope')) {
+            mark[i].classList.remove('fa-envelope');
+            mark[i].classList.add('fa-envelope-open-text');
+        }
+    }
+
     $.ajax({
         url: 'assets/noti_read.php',
         type: "POST",
         data: {
             noti : x
         }
-    }).done(function(response) {
-        
     });
 }

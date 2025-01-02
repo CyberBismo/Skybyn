@@ -19,7 +19,7 @@ function createMessageBox(user_id,friend_id) {
             </div>
             <div class="message-body" id="message_body_${fid}"></div>
             <div class="message-input">
-                <input type="text" id="message_input_${fid}" placeholder="Type your message...">
+                <input type="text" id="message_input_${fid}" placeholder="Type your message..." onkeyup="if (event.keyCode === 13) {sendMessage('${uid}', '${fid}');}">
                 <button onclick="sendMessage('${fid}','${uid}')"><i class="fa-solid fa-paper-plane"></i></button>
             </div>`;
     document.getElementById('msg_con').appendChild(messageBox);
@@ -69,6 +69,46 @@ function startMessaging(user_id,friend_id) {
         maximizeMessageBox(fid);
     } else {
         createMessageBox(uid,fid);
+    }
+}
+
+function openMessages() {
+    const msgBox = document.getElementById('msg_con');
+    const msgBbls = msgBox.querySelectorAll('.message-box-icon');
+    if (msgBox.style.height == "auto") {
+        msgBox.style.height = "50px";
+        let messageBoxes = document.querySelectorAll('.message-box');
+        messageBoxes.forEach(box => {
+            if (box.classList.contains('open')) {
+                box.classList.remove('open');
+            }
+        });
+    } else {
+        msgBox.style.height = "auto";
+    }
+}
+
+function closeMessages() {
+    const msgBox = document.getElementById('msg_con');
+    msgBox.style.height = "50px";
+    let messageBoxes = document.querySelectorAll('.message-box');
+    messageBoxes.forEach(box => {
+        if (box.classList.contains('open')) {
+            box.classList.remove('open');
+        }
+    });
+}
+
+function showChat(fid) {
+    let messageBoxes = document.querySelectorAll('.message-box');
+    messageBoxes.forEach(box => {
+        if (box.classList.contains('open')) {
+            box.classList.remove('open');
+        }
+    });
+    let messageBox = document.getElementById('message_box_' + fid);
+    if (messageBox) {
+        messageBox.classList.add('open');
     }
 }
 

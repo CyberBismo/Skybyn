@@ -89,7 +89,7 @@ if ($domain == $devDomain) {
 
                 const timeZone = await getTimeZoneByIP();//Intl.DateTimeFormat().resolvedOptions().timeZone;
                 const now = new Date(new Date().toLocaleString("en-US", { timeZone }));
-                const newYearDate = new Date(now.getFullYear() + 1, 0, 1, 0, 0, 0);
+                const newYearDate = new Date(2025, 0, 1, 0, 0, 0);
 
                 const timeDiff = newYearDate - now;
 
@@ -110,71 +110,6 @@ if ($domain == $devDomain) {
 
             setInterval(updateTimer, 1000);
             updateTimer();
-        </script>
-        <script>
-            const fireworkContainer = document.getElementById('firework');
-            function createFirework() {
-                const firework = document.createElement('div');
-                firework.classList.add('firework');
-                const x = Math.random() * fireworkContainer.offsetWidth;
-                firework.style.left = `${x}px`;
-                firework.style.bottom = '0px';
-                firework.style.backgroundColor = getRandomColor();
-                fireworkContainer.appendChild(firework);
-
-                const targetY = fireworkContainer.offsetHeight / 2;
-
-                const fireworkInterval = setInterval(() => {
-                    const bottom = parseInt(firework.style.bottom, 10);
-                    if (bottom >= targetY) {
-                    clearInterval(fireworkInterval);
-                    createExplosion(x, bottom, firework.style.backgroundColor);
-                    firework.remove();
-                    } else {
-                    firework.style.bottom = `${bottom + 5}px`;
-                    }
-                }, 16);
-            }
-
-            function createExplosion(x, y, color) {
-                for (let i = 0; i < 30; i++) {
-                    const particle = document.createElement('div');
-                    particle.classList.add('particle');
-                    particle.style.left = `${x}px`;
-                    particle.style.top = `${y}px`;
-                    particle.style.backgroundColor = color;
-
-                    const angle = Math.random() * 2 * Math.PI;
-                    const speed = Math.random() * 4 + 2;
-                    const velocityX = Math.cos(angle) * speed;
-                    const velocityY = Math.sin(angle) * speed;
-
-                    fireworkContainer.appendChild(particle);
-
-                    const particleInterval = setInterval(() => {
-                    const currentX = parseFloat(particle.style.left);
-                    const currentY = parseFloat(particle.style.top);
-                    particle.style.left = `${currentX + velocityX}px`;
-                    particle.style.top = `${currentY + velocityY}px`;
-                    particle.style.opacity = parseFloat(particle.style.opacity || 1) - 0.02;
-
-                    if (parseFloat(particle.style.opacity) <= 0) {
-                        clearInterval(particleInterval);
-                        particle.remove();
-                    }
-                    }, 16);
-                }
-            }
-
-            function getRandomColor() {
-                const colors = ['#FF5733', '#33FF57', '#5733FF', '#FFF033', '#FF33A1'];
-                return colors[Math.floor(Math.random() * colors.length)];
-            }
-
-            function launchFireworks() {
-                createFirework();
-                setTimeout(launchFireworks, Math.random() * 1000 + 500);
-            }
         </script>
         <?php }?>
         <?php if (skybyn("celebration") == "xmas") {?>
@@ -231,10 +166,10 @@ if ($domain == $devDomain) {
                 <div class="top-nav">
                     <ul>
                         <?php if (isMobile($userAgent) == true) {?>
-                        <li onclick="showLeftPanel()"><i class="fa-solid fa-star"></i></li>
+                        <li onclick="showSearch()"><i class="fa-solid fa-magnifying-glass"></i></li>
                         <?php } else {?>
                         <li onclick="showNotifications(event)" id="notification">
-                            <div class="notification_alert" id="noti_alert"><i class="fa-solid fa-circle-exclamation"></i></div>
+                            <div class="notification_alert nat"><i class="fa-solid fa-circle-exclamation"></i></div>
                             <i class="fa-solid fa-bell"></i>
                         </li>
                         <?php }?>
@@ -247,19 +182,11 @@ if ($domain == $devDomain) {
                     <img src="<?=$avatar?>" onclick="window.location.href='./profile'">
                     <?php }?>
                 </div>
-                <?php if (isMobile($userAgent) == true) {?>
-                <div class="user-nav" onclick="showRightPanel()">
-                    <ul>
-                        <li><i class="fa-solid fa-user-group"></i></li>
-                    </ul>
-                </div>
-                <?php } else {?>
                 <div class="user-nav" onclick="showUserMenu(event)">
                     <ul>
                         <li><i class="fa-solid fa-bars"></i></li>
                     </ul>
                 </div>
-                <?php }?>
             </div>
 
             <div class="user-dropdown" id="usermenu">
@@ -432,13 +359,6 @@ if ($domain == $devDomain) {
         document.addEventListener('click', hideMenus);
         <?php }?>
         </script>
-
-        <?php if (isset($_SESSION['user'])) {
-        if (isMobile($userAgent) == false) {?>
-        <script>
-        checkNoti();
-        </script>
-        <?php }}?>
 
         <?php if (isset($_SESSION['user'])) {?>
         <div class="notifications" id="notifications" style="display: none">
@@ -725,6 +645,9 @@ if ($domain == $devDomain) {
         </div>
 
         <div class="message-container" id="msg_con">
+            <?php if (isMobile($userAgent)) {?>
+            <div class="icon" onclick="openMessages()"><i class="fa-regular fa-message"></i></div>
+            <?php }?>
             <?php if (isset($_SESSION['user'])) { if (getuser("id",$_SESSION['user'],"rank") > 3) {include_once './assets/design/chat_popup.php';}}?>
             <?php
             $checkActiveChats = $conn->query("SELECT * FROM `active_chats` WHERE `user`='$uid'");
@@ -740,13 +663,16 @@ if ($domain == $devDomain) {
                         $friend_avatar = "./assets/images/logo_faded_clean.png";
                     }
                     if ($open == "1") {
-                        $open = " open";
+                        $open = " maximized";
                         $icon = "fa-chevron-down";
                     } else {
                         $open = "";
                         $icon = "fa-chevron-up";
                     }
                 ?>
+                <div class="message-box-icon" onclick="showChat('<?=$friend?>')">
+                    <img src="<?=$friend_avatar?>">
+                </div>
                 <div class="message-box<?=$open?>" id="message_box_<?=$friend?>">
                     <div class="message-header">
                         <div class="message-user" onclick="maximizeMessageBox('<?=$friend?>')">
@@ -754,8 +680,12 @@ if ($domain == $devDomain) {
                             <span id="msg_user_name_<?=$friend?>"><?=$friend_username?></span>
                         </div>
                         <div class="message-actions">
+                            <?php if (isMobile($userAgent) == false) {?>
                             <div class="message-min" onclick="maximizeMessageBox('<?=$friend?>')"><i class="fa-solid <?=$icon?>" id="msg_min_<?=$friend?>"></i></div>
                             <div class="message-close" onclick="closeMessageBox('<?=$friend?>')"><i class="fa-solid fa-xmark"></i></div>
+                            <?php } else {?>
+                                <div class="message-close" onclick="closeMessages()"><i class="fa-solid fa-xmark"></i></div>
+                            <?php }?>
                         </div>
                     </div>
                     <div class="message-body" id="message_body_<?=$friend?>">
@@ -843,10 +773,15 @@ if ($domain == $devDomain) {
         </div>
 
         <div class="bottom-nav" id="bottom-nav">
-            <div class="bnav-btn" onclick="showSearch()"><i class="fa-solid fa-magnifying-glass"></i></div>
+            <div class="bnav-btn" onclick="showLeftPanel()"><i class="fa-solid fa-bookmark"></i></div>
             <div class="bnav-btn" onclick="newPost()" id="mobile_new_post"><i class="fa-solid fa-plus"></i></div>
-            <div class="bnav-btn" onclick="showUserMenu(event)"><i class="fa-solid fa-bars"></i></div>
+            <div class="bnav-btn" onclick="showNotifications()">
+                <div class="notification_alert nab"><i class="fa-solid fa-circle-exclamation"></i></div>
+                <i class="fa-solid fa-bell"></i>
+            </div>
         </div>
+
+        <div class="friends_menu" onclick="showRightPanel()"><i class="fa-solid fa-user-group"></i></div>
 
         <?php }?>
 

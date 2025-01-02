@@ -15,10 +15,8 @@ if (isset($_COOKIE['user'])) {
     $checkUser = $conn->query("SELECT * FROM `users` WHERE `id`='$uid'");
     if ($checkUser->num_rows == 1) {
         $_SESSION['user'] = $uid;
-        setcookie('user', '', time() - 3600, '/');
-    } else {
-        setcookie('user', '', time() - 3600, '/');
     }
+    setcookie('user', '', time() - 3600, '/');
 }
 
 if (isset($_COOKIE['login_token'])) {
@@ -81,49 +79,65 @@ function showError() {
 
 # Get client IP
 function getIP() {
-    $ip = $_SERVER['REMOTE_ADDR'];
-
-    // Check for additional headers if available
-    if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP)) {
-        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-    } elseif (isset($_SERVER['HTTP_CLIENT_IP']) && filter_var($_SERVER['HTTP_CLIENT_IP'], FILTER_VALIDATE_IP)) {
-        $ip = $_SERVER['HTTP_CLIENT_IP'];
+    // Check for proxy headers first
+    if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        $ip = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0]; // Get the first IP
+        if (filter_var($ip, FILTER_VALIDATE_IP)) {
+            return trim($ip);
+        }
     }
 
-    return $ip;
+    if (!empty($_SERVER['HTTP_CLIENT_IP']) && filter_var($_SERVER['HTTP_CLIENT_IP'], FILTER_VALIDATE_IP)) {
+        return $_SERVER['HTTP_CLIENT_IP'];
+    }
+
+    // Fallback to REMOTE_ADDR
+    return $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
 }
 
-# Get geo location data from IP
-function geoData($x) {
-    //$ip = getIP();
-    //// Send request to ipapi.com API
-    //$url = "https://api.findip.net/$ip/?token=1a586d6f288e44b4a5a3277a0b70d411";
-    //$response = file_get_contents($url);
-    //$data = json_decode($response, true);
-    //
-    //if (isset($x)) {
-    //    // Split the path by '.' to navigate through the nested arrays
-    //    $path = explode('.', $x);
-    //    $tempData = $data;
-    //    foreach ($path as $key) {
-    //        // Check if the key exists in the current level
-    //        if (isset($tempData[$key])) {
-    //            // Navigate deeper into the array
-    //            $tempData = $tempData[$key];
-    //        } else {
-    //            // Return an error message or null if the path does not exist
-    //            return "Key not found";
-    //        }
-    //    }
-    //    return $tempData;
-    //} else {
-    //    return $response;
-    //}
-    //return "";
-    
-// Example of usage
-// echo geoData("city.names.en"); // Outputs: Oslo (Grünerløkka District)
+function geoData($path = null) {
+    $ip = getIP();
+    $apiUrl = "https://ipwhois.app/json/$ip";
+
+    $response = @file_get_contents($apiUrl);
+
+    if ($response === false) {
+        return "Error: Unable to fetch data from API.";
+    }
+
+    $data = json_decode($response, true);
+
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        return "Error: Invalid JSON response.";
+    }
+
+    if (isset($data['success']) && !$data['success']) {
+        return "Error: " . ($data['message'] ?? "Unknown error.");
+    }
+
+    if ($path) {
+        $keys = explode('.', $path);
+        $tempData = $data;
+
+        foreach ($keys as $key) {
+            if (isset($tempData[$key])) {
+                $tempData = $tempData[$key];
+            } else {
+                return "Error: Key '$key' not found.";
+            }
+        }
+
+        return $tempData;
+    }
+
+    // Return full data if no specific path is requested
+    return $data;
 }
+
+// Example of usage
+// echo geoData("city"); // Outputs city name, e.g., "Oslo"
+// echo geoData("region"); // Outputs region name, e.g., "Oslo County"
+
 
 # Create cookie with country information
 if (!isset($_COOKIE['country'])) {

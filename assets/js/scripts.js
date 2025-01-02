@@ -63,6 +63,29 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
+const detectDarkModeToggle = () => {
+    const handleDarkModeChange = (event) => {
+        if (event.matches) {
+            document.getElementsByTagName('body').classList.add('darkmode');
+        } else {
+            document.getElementsByTagName('body').classList.remove('darkmode');
+        }
+    };
+  
+    // Create a MediaQueryList object
+    const darkModeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+  
+    // Listen for changes to the media query
+    darkModeMediaQuery.addEventListener("change", handleDarkModeChange);
+  
+    // Check the initial state
+    if (darkModeMediaQuery.matches) {
+        console.log("Dark mode is currently enabled");
+    } else {
+        console.log("Dark mode is currently disabled");
+    }
+};
+
 async function getTimeZoneByIP() {
     try {
         const response = await fetch('https://ipwhois.app/json/');
@@ -71,123 +94,6 @@ async function getTimeZoneByIP() {
     } catch (error) {
         console.error('Error fetching timezone:', error);
         return null;
-    }
-}
-
-function toggleLightMode(x) {
-    const allElements = document.querySelectorAll('*');
-    const header = document.getElementsByClassName('header')[0];
-    const search = document.getElementsByClassName('search')[0];
-    const new_comments = document.querySelectorAll('post_comment_new_content');
-    const comments = document.querySelectorAll('post_comment_content');
-    
-    let dayTop = '48c6ef';
-    let dayBottom = '6f86d6';
-
-    if (x !== 'keepInterval') {
-        if (window.updateBackgroundInterval) {
-            clearInterval(window.updateBackgroundInterval); // Stop updating the background gradient
-        }
-    } else {
-        window.updateBackgroundInterval = setInterval(updateBackground, 60000); // Update every minute
-    }
-    
-    allElements.forEach(element => {
-        element.style.color = 'black';
-        const background = window.getComputedStyle(element).background;
-        if (background.includes('rgba(0, 0, 0')) {
-            element.style.background = background.replace('0, 0, 0', '255, 255, 255');
-        }
-        if (element.id === 'searchInput') {
-            element.style.border = '1px solid white';
-        }
-    });
-
-    new_comments.forEach(element => {
-        const background = window.getComputedStyle(element).background;
-        if (background.includes('rgba(0, 0, 0')) {
-            element.style.background = background.replace('255, 255, 255', '0, 0, 0');
-        }
-    });
-    comments.forEach(element => {
-        const background = window.getComputedStyle(element).background;
-        if (background.includes('rgba(0, 0, 0')) {
-            element.style.background = background.replace('255, 255, 255', '0, 0, 0');
-        }
-    });
-    
-    document.body.style.background = "linear-gradient(to top, #" + dayTop + " 0%, #" + dayBottom + " 100%)";
-
-    const welcomeScreen = document.getElementById('welcome-screen');
-    welcomeScreen.style.background = "linear-gradient(to top, #" + dayTop + " 0%, #" + dayBottom + " 100%)";
-    const welcomeScreenElements = welcomeScreen.getElementsByTagName('*');
-    for (let i = 0; i < welcomeScreenElements.length; i++) {
-        welcomeScreenElements[i].style.color = 'white';
-    }
-
-    const headerElements = header.getElementsByTagName('*');
-    for (let i = 0; i < headerElements.length; i++) {
-        headerElements[i].style.color = 'white';
-    }
-
-    if (search) {
-        const searchElements = search.getElementsByTagName('*');
-        for (let i = 0; i < searchElements.length; i++) {
-            searchElements[i].style.color = 'white';
-        }
-    }
-}
-function toggleDarkMode() {
-    const allElements = document.querySelectorAll('*');
-    const header = document.getElementsByClassName('header')[0];
-    const search = document.getElementsByClassName('search')[0];
-    const new_comments = document.querySelectorAll('post_comment_new_content');
-    const comments = document.querySelectorAll('post_comment_content');
-
-    let nightTop = '243B55';
-    let nightBottom = '141E30';
-
-    if (window.updateBackgroundInterval) {
-        clearInterval(window.updateBackgroundInterval); // Stop updating the background gradient
-    }
-
-    allElements.forEach(element => {
-        element.style.color = 'white';
-        const background = window.getComputedStyle(element).background;
-        if (background.includes('rgba(255, 255, 255')) {
-            element.style.background = background.replace('255, 255, 255', '0, 0, 0');
-        }
-        if (element.id === 'searchInput') {
-            element.style.border = '1px solid black';
-        }
-    });
-
-    for (let i = 0; i < new_comments.length; i++) {
-        new_comments[i].background = background.replace('0, 0, 0', '255, 255, 255');
-    }
-    for (let i = 0; i < comments.length; i++) {
-        comments[i].background = background.replace('0, 0, 0', '255, 255, 255');
-    }
-    
-    document.body.style.background = "linear-gradient(to top, #" + nightTop + " 0%, #" + nightBottom + " 100%)";
-
-    const welcomeScreen = document.getElementById('welcome-screen');
-    welcomeScreen.style.background = "linear-gradient(to top, #" + nightTop + " 0%, #" + nightBottom + " 100%)";
-    const welcomeScreenElements = welcomeScreen.getElementsByTagName('*');
-    for (let i = 0; i < welcomeScreenElements.length; i++) {
-        welcomeScreenElements[i].style.color = 'white';
-    }
-
-    const headerElements = header.getElementsByTagName('*');
-    for (let i = 0; i < headerElements.length; i++) {
-        headerElements[i].style.color = 'white';
-    }
-
-    if (search) {
-        const searchElements = search.getElementsByTagName('*');
-        for (let i = 0; i < searchElements.length; i++) {
-            searchElements[i].style.color = 'white';
-        }
     }
 }
 

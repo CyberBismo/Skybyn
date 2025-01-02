@@ -15,8 +15,8 @@ if ($getNotifications->num_rows > 0) {
         $noti_username = getUser("id",$noti_from,"username");
 
         if ($noti_type == "friend_request") {
-            $noti_title = "New friend request";
-            $noti_text = "$noti_username wants to be your friend";
+            $noti_title = "$noti_username send you a friend request";
+            $noti_text = "<a href=\"./profile?u=$noti_username\">View their profile</a>";
         } else
         if ($noti_type == "friend_accepted") {
             $noti_title = "Your friend $noti_username is here";
