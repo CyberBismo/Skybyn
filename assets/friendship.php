@@ -78,7 +78,9 @@ if ($checkStatus->num_rows == 0) { // IF NO RECORDS
             echo "Error unblocking";
         }
     } else {
-        echo "Invalid action.";
+        $checkStatus = $conn->query("SELECT * FROM `friendship` WHERE `user_id`='$friend' AND `friend_id`='$uid'");
+        $friendshipStatus = $checkStatus->fetch_assoc();
+        echo $friendshipStatus['status'];
     }
 }
 ?>

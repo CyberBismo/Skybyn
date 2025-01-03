@@ -153,7 +153,7 @@ function markRead(x) {
     let noti = document.getElementById('noti_'+x);
     let mark = noti.querySelectorAll('i');
 
-    for (i = 0; i <= mark.length; i++) {
+    for (i = 0; i < mark.length; i++) {
         if (mark[i].classList.contains('fa-envelope')) {
             mark[i].classList.remove('fa-envelope');
             mark[i].classList.add('fa-envelope-open-text');
@@ -167,4 +167,6 @@ function markRead(x) {
             noti : x
         }
     });
+
+    checkNoti();
 }

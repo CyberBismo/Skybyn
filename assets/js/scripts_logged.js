@@ -445,58 +445,67 @@ function friExpand() {
 
 function friendAction(friend, action) {
     const actions = document.getElementById('friend_actions');
-    $.ajax({
-        url: 'assets/friendship.php',
-        type: 'POST',
-        data: { friend, action }
-    }).done(function(response) {
-        const buttons = {
-            send: `
-                <button class="blue" onclick="friendAction('${friend}', 'send')">
-                    <i class="fa-solid fa-user-plus"></i> <span>Send friend request</span>
-                </button>`,
-            cancel: `
-                <button onclick="friendAction('${friend}', 'cancel')">
-                    <i class="fa-solid fa-user-xmark"></i> <span>Cancel friend request</span>
-                </button>`,
-            unfriend: `
-                <button onclick="friendAction('${friend}', 'unfriend')">
-                    <i class="fa-solid fa-user-minus"></i> <span>Unfriend</span>
-                </button>`,
-            block: `
-                <button class="red" onclick="friendAction('${friend}', 'block')">
-                    <i class="fa-solid fa-user-slash"></i> <span>Block</span>
-                </button>`,
-            unblock: `
-                <button class="red" onclick="friendAction('${friend}', 'unblock')">
-                    <i class="fa-solid fa-user-slash"></i> <span>Unblock</span>
-                </button>`,
-            report: `
-                <button class="orange" onclick="friendAction('${friend}', 'report')">
-                    <i class="fa-solid fa-triangle-exclamation"></i> <span>Report</span>
-                </button>`
-        };
+    const buttons = {
+        send: `
+            <button class="blue" onclick="friendAction('${friend}', 'send')">
+                <i class="fa-solid fa-user-plus"></i> <span>Send friend request</span>
+            </button>`,
+        cancel: `
+            <button onclick="friendAction('${friend}', 'cancel')">
+                <i class="fa-solid fa-user-xmark"></i> <span>Cancel friend request</span>
+            </button>`,
+        unfriend: `
+            <button onclick="friendAction('${friend}', 'unfriend')">
+                <i class="fa-solid fa-user-minus"></i> <span>Unfriend</span>
+            </button>`,
+        block: `
+            <button class="red" onclick="friendAction('${friend}', 'block')">
+                <i class="fa-solid fa-user-slash"></i> <span>Block</span>
+            </button>`,
+        unblock: `
+            <button class="red" onclick="friendAction('${friend}', 'unblock')">
+                <i class="fa-solid fa-user-slash"></i> <span>Unblock</span>
+            </button>`,
+        report: `
+            <button class="orange" onclick="friendAction('${friend}', 'report')">
+                <i class="fa-solid fa-triangle-exclamation"></i> <span>Report</span>
+            </button>`
+    };
 
-        const templates = {
-            "Friend request sent.": buttons.cancel + buttons.block + buttons.report,
-            "Friend request accepted.": buttons.unfriend + buttons.block + buttons.report,
-            "Friend request ignored.": buttons.send + buttons.block + buttons.report,
-            "Friend request canceled.": buttons.send + buttons.block + buttons.report,
-            "Unfriended.": buttons.send + buttons.block + buttons.report,
-            "Blocked.": buttons.unblock + buttons.report,
-            "Unblocked.": buttons.send + buttons.block + buttons.report
-        };
-
-        if (templates[response]) {
-            actions.innerHTML = templates[response];
-            ws.send(JSON.stringify({
-                type: 'notify',
-                to: friend
-            }));
-        } else {
-            alert(`Error: ${response}`);
-        }
-    });
+    const templates = {
+        "Friend request sent.": buttons.cancel + buttons.block + buttons.report,
+        "Friend request accepted.": buttons.unfriend + buttons.block + buttons.report,
+        "Friend request ignored.": buttons.send + buttons.block + buttons.report,
+        "Friend request canceled.": buttons.send + buttons.block + buttons.report,
+        "Unfriended.": buttons.send + buttons.block + buttons.report,
+        "Blocked.": buttons.unblock + buttons.report,
+        "Unblocked.": buttons.send + buttons.block + buttons.report
+    };
+    if (action == "check") {
+        $.ajax({
+            url: 'assets/friendship.php',
+            type: 'POST',
+            data: { friend, action }
+        }).done(function(response) {
+            
+        });
+    } else {
+        $.ajax({
+            url: 'assets/friendship.php',
+            type: 'POST',
+            data: { friend, action }
+        }).done(function(response) {
+            if (templates[response]) {
+                actions.innerHTML = templates[response];
+                ws.send(JSON.stringify({
+                    type: 'notify',
+                    to: friend
+                }));
+            } else {
+                alert(`Error: ${response}`);
+            }
+        });
+    }
 }
 
 // Function to extract metadata from a given URL

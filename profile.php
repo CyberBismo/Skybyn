@@ -1,32 +1,27 @@
 <?php include_once "assets/header.php";
 
 $myProfile = false;
+$friends = false;
+$rank = 0;
 
 if (isset($_GET['u'])) {
-    $user = $_GET['u'];
-    if ($user != $username) {
-        $user_id = getUser('username',$user,'id');
-        if ($user_id != "error") {
+    $user_id = getUser('username',$_GET['u'],'id');
+    if ($user_id != "error") {
+        if (isset($_SESSION['user'])) {
             if (checkFriendship($uid,$user_id) == "ok") {
                 $friends = true;
-            } else {
-                $friends = false;
             }
-        } else {
-            ?><meta http-equiv="Refresh" content="url='../'" /><?php
-            return false;
         }
     } else {
-        ?><meta http-equiv="Refresh" content="0; url='./profile'" /><?php
+        ?><meta http-equiv="Refresh" content="url='../profile'" /><?php
         return false;
     }
 } else {
     if (isset($_SESSION['user'])) {
         $user_id = $uid;
         $myProfile = true;
-        $friends = true;
     } else {
-        ?><meta http-equiv="Refresh" content="0; url='../'" /><?php
+        ?><meta http-equiv="Refresh" content="url='../'" /><?php
         return false;
     }
 }
@@ -45,6 +40,7 @@ $Pwallpaper_margin = $PUDRow['wallpaper_margin'];
 $Pcountry = $PUDRow['country'];
 $Pverified = $PUDRow['verified'];
 $Pprivate = $PUDRow['private'];
+$Prank = $PUDRow['rank'];
 
 if ($Pavatar == "./") {
     $Pavatar = "./assets/images/logo_faded_clean.png";
@@ -55,13 +51,6 @@ if ($Pwallpaper == "./") {
 }
 
 $Pavatar_bg = "background: black";
-
-$areFriends = $conn->query("SELECT * FROM `friendship` WHERE `user_id`='$uid' AND `friend_id`='$user_id' AND `status`='accepted'");
-if ($areFriends->num_rows == 1) {
-    $friends = true;
-} else {
-    $friends = false;
-}
 ?>
         <div class="page-container">
             <div class="profile-wallpaper" id="wallpaper">
