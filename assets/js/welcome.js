@@ -15,7 +15,7 @@ window.addEventListener('DOMContentLoaded', function() {
         welcomeClouds.appendChild(cloud);
 
         let img = document.createElement('img');
-        img.src = 'assets/images/cloud.png';
+        img.src = '../assets/images/cloud.png';
         cloud.appendChild(img);
 
         cloud.style.top = `${Math.random() * (window.innerHeight - 50)}px`;
@@ -66,5 +66,7 @@ function hideWelcome() {
     setTimeout(() => {
         welcomeScreen.remove();
     }, 1000);
-    login_email.focus();
+    if (login_email) {
+        login_email.focus();
+    }
 }

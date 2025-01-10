@@ -1,5 +1,6 @@
 <?php include_once "assets/header.php";
 
+$loggedIn = false;
 $myProfile = false;
 $friends = false;
 $rank = 0;
@@ -19,9 +20,12 @@ if (isset($_GET['u'])) {
 } else {
     if (isset($_SESSION['user'])) {
         $user_id = $uid;
+        $loggedIn = true;
         $myProfile = true;
     } else {
-        ?><meta http-equiv="Refresh" content="url='../'" /><?php
+        ?><script>
+            window.location.href = '../';
+        </script><?php
         return false;
     }
 }
@@ -34,20 +38,20 @@ $Prank = $PUDRow['rank'];
 $Pfirst_name = $PUDRow['first_name'];
 $Pmiddle_name = $PUDRow['middle_name'];
 $Plast_name = $PUDRow['last_name'];
-$Pavatar = "./".$PUDRow['avatar'];
-$Pwallpaper = "./".$PUDRow['wallpaper'];
+$Pavatar = "../".$PUDRow['avatar'];
+$Pwallpaper = "../".$PUDRow['wallpaper'];
 $Pwallpaper_margin = $PUDRow['wallpaper_margin'];
 $Pcountry = $PUDRow['country'];
 $Pverified = $PUDRow['verified'];
 $Pprivate = $PUDRow['private'];
 $Prank = $PUDRow['rank'];
 
-if ($Pavatar == "./") {
-    $Pavatar = "./assets/images/logo_faded_clean.png";
+if ($Pavatar == "../") {
+    $Pavatar = "../assets/images/logo_faded_clean.png";
 }
 
-if ($Pwallpaper == "./") {
-    $Pwallpaper = "./assets/images/blank.png";
+if ($Pwallpaper == "../") {
+    $Pwallpaper = "../assets/images/blank.png";
 }
 
 $Pavatar_bg = "background: black";
@@ -81,14 +85,13 @@ $Pavatar_bg = "background: black";
                                 <button onclick="startMessaging('<?= $uid ?>','<?= $user_id ?>')">
                                     <i class="fa-solid fa-message"></i> <span>Chat</span>
                                 </button>
-                                <?php }?>
                                 <?php 
                                     $checkFriendship = $conn->query("SELECT * FROM `friendship` WHERE `user_id`='$uid' AND `friend_id`='$user_id'");
                                     $status = $checkFriendship->num_rows ? $checkFriendship->fetch_assoc()['status'] : null; 
                                 ?>
                                 <div id="friend_actions">
                                     <?php switch ($status):
-                                        case "accepted": ?>
+                                        case "friends": ?>
                                             <button onclick="friendAction('<?= $user_id ?>', 'unfriend')">
                                                 <i class="fa-solid fa-user-minus"></i> <span>Unfriend</span>
                                             </button>
@@ -123,6 +126,7 @@ $Pavatar_bg = "background: black";
                                         <i class="fa-solid fa-triangle-exclamation"></i> <span>Report</span>
                                     </button>
                                 </div>
+                                <?php }?>
                             <?php endif; ?>
                         <?php endif; ?>
                         <?php } else {?>
@@ -140,10 +144,10 @@ $Pavatar_bg = "background: black";
                             if ($myGroups->num_rows == 1) {
                                 $groupData = $myGroups->fetch_assoc();
                                 $group_name = $groupData['name'];
-                                $group_icon = "./".$groupData['icon'];
+                                $group_icon = "../".$groupData['icon'];
                                 
-                                if ($group_icon == "./") {
-                                    $group_icon = "./assets/images/logo.png";
+                                if ($group_icon == "../") {
+                                    $group_icon = "../assets/images/logo.png";
                                 }
                                 ?>
                                 <div class="group">
@@ -173,9 +177,9 @@ $Pavatar_bg = "background: black";
                         $getPostUser = mysqli_query($conn, "SELECT * FROM `users` WHERE `id`='$post_user'");
                         $postUser = mysqli_fetch_assoc($getPostUser);
                         $post_user_name = $postUser['username'];
-                        $post_user_avatar = "./".$postUser['avatar'];
-                        if ($post_user_avatar == "./") {
-                            $post_user_avatar = "./assets/images/logo_faded_clean.png";
+                        $post_user_avatar = "../".$postUser['avatar'];
+                        if ($post_user_avatar == "../") {
+                            $post_user_avatar = "../assets/images/logo_faded_clean.png";
                         }
                         
                         $post_video = convertVideo($post_content);
@@ -260,6 +264,7 @@ $Pavatar_bg = "background: black";
                             <?php }?>
                             <div class="post_comments">
                                 <div class="post_comment_count"><div id="comments_count_<?=$post_id?>"><?=$comments?></div><i class="fa-solid fa-message"></i></div>
+                                <?php if ($loggedIn) {?>
                                 <div class="post_comment_new">
                                     <div class="post_comment_new_content">
                                         <input type="text" id="pc_<?=$post_id?>" onkeydown="hitEnter(this,<?=$post_id?>)" placeholder="Write a comment <?php if(isset($username)) {echo $username;}?>">
@@ -268,6 +273,7 @@ $Pavatar_bg = "background: black";
                                         <div class="btn" onclick="sendComment(<?=$post_id?>)"><i class="fa-solid fa-paper-plane"></i></div>
                                     </div>
                                 </div>
+                                <?php }?>
                                 <div id="post_comments_<?=$post_id?>">
                                     <?php $getComment = $conn->query("SELECT * FROM `comments` WHERE `post`='$post_id' ORDER BY `date` DESC");
                                     if ($getComment->num_rows > 0) {
@@ -279,10 +285,10 @@ $Pavatar_bg = "background: black";
                                             $commentText = fixEmojis(nl2br(cleanUrls($commentData['content'])), 1);
                                             
                                             if ($commentAvatar == "") {
-                                                $commentAvatar = "./assets/images/logo_faded_clean.png";
+                                                $commentAvatar = "../assets/images/logo_faded_clean.png";
                                             }
 
-                                            if ($commentUser == $_SESSION['user']) {
+                                            if ($commentUser == $user_id) {
                                                 $myComment = " me";
                                             } else {
                                                 $myComment = "";

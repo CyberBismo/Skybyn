@@ -2,7 +2,7 @@
             :root {
                 --mode: 0,0,0;
                 --mode-text: white;
-                --mode-placeholder: grey;
+                --mode-placeholder: lightgrey;
             }
 
             html {
@@ -13,7 +13,6 @@
                 margin: 0 auto;
                 padding: 0;
                 color: var(--mode-text);
-                background: linear-gradient(to top, #48c6ef 0%, #6f86d6 100%);
             }
 
             .darkmode {
@@ -102,7 +101,6 @@
                 left: 0;
                 width: 100%;
                 height: 100%;
-                background: linear-gradient(to top, #48c6ef 0%, #6f86d6 100%);
                 transition: all .5s ease-in-out;
                 opacity: 1;
                 z-index: 10;
@@ -113,7 +111,7 @@
                 bottom: 20px;
                 left: 50%;
                 font-size: 18px;
-                color: grey;
+                color: var(--mode-placeholder);
                 transform: translateX(-50%);
                 transition: all .5s ease-in-out;
                 opacity: 0;
@@ -383,7 +381,7 @@
                 min-width: 300px;
                 max-width: 650px;
                 margin: 0 auto;
-                margin-top: 105px;
+                margin-top: 65px;
                 padding: 10px 0;
             }
             .group-container {
@@ -409,7 +407,7 @@
                 width: 100%;
                 max-width: 800px;
                 margin: 0 auto;
-                padding: 75px 0;
+                padding: 65px 0;
             }
             .group-container {
                 min-width: 300px;
@@ -589,7 +587,7 @@
             }
 
             /** Friend button */
-            .friends_menu {
+            .noti_menu {
                 position: fixed;
                 right: 20px;
                 bottom: 20px;
@@ -604,7 +602,7 @@
                 box-sizing: border-box;
                 z-index: 10;
             }
-            .friends_menu i {
+            .noti_menu i {
                 font-size: 20px;
             }
 
@@ -653,7 +651,6 @@
                 min-width: 300px;
                 max-width: 800px;
                 margin: 0 auto;
-                padding-top: 100px;
             }
             .welcome_information {
                 width: calc(100% - 20px);
@@ -1223,7 +1220,7 @@
             <?php } else {?>
             .header {
                 position: absolute;
-                top: 50px;
+                top: 0;
             }
             <?php }} else {?>
             .header {
@@ -1258,15 +1255,11 @@
             .header .top-left {
                 display: flex;
                 width: 100%;
-                justify-content: center;
-                align-items: center;
             }
             .header .top-left .logo img {
                 width: auto;
-                height: 100px;
+                height: 100%;
                 margin: 0 auto;
-                padding: 10px 20px;
-                box-sizing: border-box;
             }
             <?php }?>
 
@@ -1320,8 +1313,10 @@
             .new_post {
                 position: fixed;
                 top: 75px;
-                width: 50%;
-                margin: 0 25%;
+                left: 50%;
+                width: calc(100% - 20px);
+                max-width: 630px;
+                transform: translateX(-50%);
                 background: rgba(var(--mode),.6);
                 backdrop-filter: blur(5px);
                 border-radius: 20px;
@@ -1333,7 +1328,7 @@
             .new_post .create_post {
                 width: 100%;
                 margin: 0 auto;
-                padding: 20px;
+                padding: 10px;
                 color: black;
                 box-sizing: border-box;
             }
@@ -1813,6 +1808,9 @@
             .noti-content span a {
                 color: rgba(var(--mode-text),1);
             }
+            .noti-content span i {
+                padding: 0 10px;
+            }
             .noti-actions {
                 width: 50px;
                 text-align: center;
@@ -1825,19 +1823,29 @@
             .notification-window {
                 position: fixed;
                 top: 15%;
-                left: 50%;
-                width: 600px;
-                max-height: 80%;
-                margin-left: -300px;
                 color: var(--mode-text);
-                background: rgba(var(--mode),1);
+                background: rgba(var(--mode),.2);
                 backdrop-filter: blur(5px);
                 box-shadow: 10px 10px 23px -5px rgba(var(--mode),0.6);
                 border-radius: 20px;
                 box-sizing: border-box;
                 overflow: auto;
-                z-index: 3;
+                z-index: 15;
             }
+            <?php if (isMobile($userAgent) == false) {?>
+            .notification-window {
+                left: 50%;
+                width: 600px;
+                max-height: 80%;
+                margin-left: -300px;
+            }
+            <?php } else {?>
+            .notification-window {
+                left: 10px;
+                width: calc(100% - 20px);
+                max-height: 75%;
+            }
+            <?php }?>
             .noti-win-head {
                 display: flex;
                 justify-content: space-between;
@@ -2006,31 +2014,33 @@
                 cursor: pointer;
             }
             .user-dropdown {
-                position: absolute;
                 top: 75px;
                 color: var(--mode-text);
                 box-shadow: 0 2px 2px rgba(var(--mode),.05);
-                backdrop-filter: blur(5px);
                 box-sizing: border-box;
-                z-index: 3;
+                backdrop-filter: blur(5px);
             }
             <?php if (isMobile($userAgent) == false) {?>
             .user-dropdown {
+                position: absolute;
                 display: none;
                 right: 40px;
                 padding: 10px;
-                background: rgba(var(--mode),.3);
+                background: rgba(var(--mode),.2);
                 border-radius: 20px 0 20px 20px;
+                z-index: 10;
             }
             <?php } else {?>
             .user-dropdown {
+                position: fixed;
                 right: 0;
-                width: 100%;
-                padding: 20px;
-                background: rgba(var(--mode),.8);
+                padding: 10px;
+                background: rgba(var(--mode),.2);
+                border-radius: 20px 0px 0px 20px;
                 transform: translateX(100%);
                 transition: transform .5s;
                 box-sizing: border-box;
+                z-index: 10;
             }
             <?php }?>
             .user-dropdown ul {
@@ -2059,9 +2069,6 @@
                 color: gold;
             }
             <?php } else {?>
-            .user-dropdown ul {
-                backdrop-filter: blur(5px);
-            }
             .user-dropdown ul li {
                 padding: 15px;
                 font-size: 18px;
@@ -2288,7 +2295,6 @@
             }
             .post_user_name {
                 line-height: 50px;
-                margin-left: 20px;
                 padding: 10px 0;
             }
             .post_date {
@@ -3421,23 +3427,31 @@
                 display: none;
             }
             .message-box {
-                width: 300px;
+                width: 60px;
                 height: 40px;
                 background: rgba(var(--mode),.5);
                 backdrop-filter: blur(5px);
-                border-radius: 10px;
+                border-radius: 50px;
                 box-sizing: border-box;
                 overflow: hidden;
                 transition: all .3s;
                 overflow: hidden;
             }
+            .message-box:hover {
+                width: 300px;
+            }
             .message-box.maximized {
                 position: relative;
                 margin-top: -340px;
+                width: 300px;
                 height: 380px;
+                border-radius: 10px;
             }
             .message-box.maximized .message-header {
                 border-radius: 10px 10px 0 0;
+            }
+            .message-box.maximized > .message-header .message-actions {
+                width: 50px;
             }
             .message-body {
                 height: 280px;
@@ -3468,6 +3482,9 @@
                 border-radius: 25px;
                 border: 1px solid rgba(var(--mode-text),1);
                 box-sizing: border-box;
+            }
+            .message-container .icon:hover .message-container {
+                height: 50px;
             }
             .message-box-icon {
                 width: 40px;
@@ -3516,7 +3533,7 @@
             }
             .message-header .message-user {
                 display: flex;
-                width: 100%;
+                width: 50px;
                 height: 20px;
                 align-items: center;
             }
@@ -3532,6 +3549,14 @@
             .message-header .message-actions {
                 display: flex;
                 gap: 10px;
+                width: 50px;
+                text-align: center;
+                overflow: auto;
+            }
+            .message-header .message-min,
+            .message-header .message-close {
+                width: 20px;
+                padding: 0;
             }
             .message-header .message-min {
                 cursor: pointer;
@@ -3777,15 +3802,15 @@
             .profile-left {
                 display: flex;
                 width: 100%;
-                height: 100px;
+                max-height: 150px;
                 margin-bottom: 10px;
                 padding: 10px;
                 overflow-y: scroll;
+                box-sizing: border-box;
             }
             .profile-left-user {
                 display: flex;
-                width: 50%;
-                margin-right: 20px;
+                width: 100%;
             }
             .profile-left-user .avatar {
                 width: 100px;
@@ -3810,12 +3835,12 @@
                 justify-content: right;
                 width: 50%;
                 height: 100%;
-                margin: 20px 0;
                 box-sizing: border-box;
             }
             .profile-btns button {
-                width: 50px;
-                height: 50px;
+                display: flex;
+                width: 35px;
+                height: 35px;
                 margin: 3px;
                 padding: 10px;
                 color: var(--mode-text);
@@ -3824,33 +3849,48 @@
                 border: none;
                 border-radius: 10px;
                 box-sizing: border-box;
-                transition: background .3s, transform .3s;
+                transition: all .3s, transform .3s;
+                overflow: hidden;
+            }
+            .profile-btns button:hover {
+                cursor: pointer;
+            }
+            .profile-btns button i {
+                width: 35px;
+                height: 35px;
+                line-height: 35px;
+                margin-top: -10px;
             }
             .profile-btns button span {
                 display: none;
+                padding-left: 25px;
+            }
+            .profile-btns button:hover span {
+                display: block;
             }
             .profile-btns button.red {
                 background: rgba(255,0,0,.5);
             }
-
-            .profile-tabs {
-                position: absolute;
-                display: flex;
-                left: 0;
-                top: 190px;
-                padding: 0 20px;
+            
+            .profile-right {
+                width: 100%;
+                padding: 0 10px;
+                color: var(--mode-text);
                 box-sizing: border-box;
             }
-            .profile-tabs .settings-cat {
-                width: 60px;
+            .profile-right .create_post {
                 height: 50px;
             }
-            .settings-cat .settings-icon {
-                padding: 0 10px;
-                text-align: center;
+            .profile-right .create_post textarea {
+                padding-right: 40px;
+                border: 1px solid rgba(var(--mode),.2);
             }
-            .settings-cat .settings-name {
-                display: none;
+            .profile-right .create_post i {
+                float: right;
+                margin-top: -35px;
+            }
+            .profile-right .post {
+                width: 100%;
             }
             <?php }?>
         

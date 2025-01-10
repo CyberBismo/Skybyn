@@ -182,8 +182,6 @@ if ($checkEmail->num_rows == 1) {
 
             if ($remember == "true") {
                 createCookie("logged",$uid,"1","6");
-            } else {
-                createCookie("logged",$uid,"1","0");
             }
             $data = array(
                 "responseCode" => "ok",

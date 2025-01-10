@@ -7,13 +7,13 @@ document.addEventListener("DOMContentLoaded", function() {
     
     const cloudsContainer = document.getElementsByClassName('clouds')[0];
 
-    for (let i = 0; i < 25; i++) {
+    for (let i = 0; i < 10; i++) {
         let cloud = document.createElement('div');
         cloud.className = 'cloud';
         cloudsContainer.appendChild(cloud);
 
         let img = document.createElement('img');
-        img.src = 'assets/images/cloud.png';
+        img.src = '../assets/images/cloud.png';
         cloud.appendChild(img);
 
         cloud.style.top = `${Math.random() * (window.innerHeight - 50)}px`;

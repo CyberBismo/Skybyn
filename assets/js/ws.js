@@ -1,16 +1,40 @@
-//const { clearInterval } = require("node:timers");
+function requestNotificationPermission() {
 
-function connectWebSocket() {
-    ws = new WebSocket('wss://dev.skybyn.com:4433');
+    if ("Notification" in window) {
+        Notification.requestPermission().then(permission => {
+            if (permission === "granted") {
+                browser_perm = JSON.stringify({
+                    type: 'browser_perm',
+                    device: device(),
+                    status: "granted"
+                });
+                ws.send(browser_perm);
+            } else if (permission === "denied") {
+                console.log("Notification permission denied.");
+            } else {
+                console.log("Notification permission dismissed.");
+            }
+        }).catch(error => {
+            console.error("Error requesting notification permission:", error);
+        });
+    } else {
+        console.error("Notifications are not supported by this browser.");
+    }
+}
 
-    ws.onerror = (error) => {
-        
-    };
+// Function to show a notification
+function showNotification(sender, message) {
+    if (Notification.permission === "granted") {
+        new Notification(`New message from ${sender}`, {
+            body: message,
+            icon: "../images/logo_faded_clean.png" // Replace with your notification icon URL
+        });
+    } else {
+        console.warn("Notification permission not granted.");
+    }
+}
 
-    let sessionId = localStorage.getItem('sessionId') || generateSessionId();
-    localStorage.setItem('sessionId', sessionId);
-
-    // Store device and browser information
+function device() {
     let device = 'Unknown';
     if (navigator.userAgent.match(/Android/i)) {
         device = 'Android';
@@ -30,14 +54,26 @@ function connectWebSocket() {
         device = 'Tesla';
     }
 
+    return device;
+}
+
+function connectWebSocket() {
+    ws = new WebSocket('wss://dev.skybyn.com:4433');
+
+    ws.onerror = (error) => {
+        console.error(error);
+    };
+
+    let sessionId = localStorage.getItem('sessionId') || generateSessionId();
+    localStorage.setItem('sessionId', sessionId);
+
     ws.onopen = () => {
         const url = new URL(window.location.href);
         
         let information = '';
 
         const deviceInfo = {
-            type: 'device_info',
-            device: device,
+            device: device(),
             browser: navigator.userAgent
         };
 
@@ -48,14 +84,16 @@ function connectWebSocket() {
                     type: 'connect',
                     sessionId: sessionId,
                     userId: userId,
-                    url: url
+                    url: url,
+                    deviceInfo: deviceInfo
                 });
             } else {
                 information = JSON.stringify({
                     type: 'connect',
                     sessionId: sessionId,
                     userId: null,
-                    url: url
+                    url: url,
+                    deviceInfo: deviceInfo
                 });
             }
         } else {
@@ -63,7 +101,8 @@ function connectWebSocket() {
                 type: 'connect',
                 sessionId: sessionId,
                 userId: null,
-                url: url
+                url: url,
+                deviceInfo: deviceInfo
             });
         }
 
@@ -74,7 +113,9 @@ function connectWebSocket() {
         const data = JSON.parse(event.data);
 
         if (data.type === 'active_clients') {
-            updateActiveClients(data.count);
+            var users = data.userCount;
+            var guests = data.guestCount;
+            updateActiveClients(users,guests);
         }
 
         if (data.type === 'broadcast') {
@@ -155,44 +196,50 @@ function connectWebSocket() {
         }
 
         if (data.type === 'chat') {
-            const avatar = document.getElementById('msg_user_avatar_' + data.from).src;
-            const friend = document.getElementById('msg_user_name_' + data.from).innerHTML;
             const messageBox = document.getElementById('message_box_' + data.from);
-            const messageContainer = document.getElementById('message_body_' + data.from);
-            const userMessage = document.createElement('div');
-            userMessage.classList.add('message');
-            userMessage.id = 'message_' + data.id;
-            userMessage.innerHTML = `
-                <div class="message-user">
-                    <div class="message-user-avatar"><img src="${avatar}"></div>
-                    <div class="message-user-name">${friend}</div>
-                </div>
-                <div class="message-content"><p>${data.message}</p></div>
-            `;
+            if (messageBox) {
+                const messageContainer = document.getElementById('message_body_' + data.from);
+                const avatar = document.getElementById('msg_user_avatar_' + data.from).src;
+                const friend = document.getElementById('msg_user_name_' + data.from).innerHTML;
+                const userMessage = document.createElement('div');
+                userMessage.classList.add('message');
+                userMessage.id = 'message_' + data.id;
+                userMessage.innerHTML = `
+                    <div class="message-user">
+                        <div class="message-user-avatar"><img src="${avatar}"></div>
+                        <div class="message-user-name">${friend}</div>
+                    </div>
+                    <div class="message-content"><p>${data.message}</p></div>
+                `;
 
-            messageContainer.scrollTop = messageContainer.scrollHeight;
-            const isAtBottom = messageContainer.scrollHeight - messageContainer.scrollTop === messageContainer.clientHeight;
-            messageContainer.appendChild(userMessage);
-            if (isAtBottom) {
                 messageContainer.scrollTop = messageContainer.scrollHeight;
-            }
-
-            if (!messageBox.classList.contains('maximized')) {
-                function breathe(x) {
-                    let intervalId; // Variable to store the interval ID
-                
-                    if (x == "start") {
-                        intervalId = setInterval(() => {
-                            messageBox.style.background = "";
-                            setTimeout(() => {
-                                messageBox.style.background = "";
-                            }, 500);
-                        }, 1000);
-                    } else if (x == "stop") {
-                        clearInterval(intervalId);
-                    }
+                const isAtBottom = messageContainer.scrollHeight - messageContainer.scrollTop === messageContainer.clientHeight;
+                messageContainer.appendChild(userMessage);
+                if (isAtBottom) {
+                    messageContainer.scrollTop = messageContainer.scrollHeight;
                 }
-                breathe('start');                
+
+                showNotification(data.from, data.message);
+
+                if (!messageBox.classList.contains('maximized')) {
+                    function breathe(x) {
+                        let intervalId; // Variable to store the interval ID
+                    
+                        if (x == "start") {
+                            intervalId = setInterval(() => {
+                                messageBox.style.background = "";
+                                setTimeout(() => {
+                                    messageBox.style.background = "";
+                                }, 500);
+                            }, 1000);
+                        } else if (x == "stop") {
+                            clearInterval(intervalId);
+                        }
+                    }
+                    breathe('start');
+                }
+            } else {
+                startMessaging(data.to,data.from);
             }
         }
 
@@ -202,6 +249,15 @@ function connectWebSocket() {
 
         if (data.type === 'ping') {
             ws.send(JSON.stringify({type: 'pong'}));
+        }
+
+        if (data.type === 'reload') {
+            window.location.reload();
+        }
+
+        if (data.type === 'kick') {
+            var url = data.url;
+            window.location.href = url;
         }
     };
 
@@ -219,13 +275,13 @@ addEventListener('beforeunload', () => {
 connectWebSocket();
 
 // Function to update active clients in the console element
-function updateActiveClients(count) {
+function updateActiveClients(users,guests) {
     const terminal = document.getElementById('console');
     const termClient = document.getElementById('term_clients');
     if (termClient) {
-        termClient.innerHTML = 'Active clients: ' + count;
+        termClient.innerHTML = 'Active users: ' + users + '<br>Active guests: ' + guests;
     } else if (terminal) {
-        terminal.innerHTML += '<p id="term_clients">Active clients: ' + count + '</p>';
+        terminal.innerHTML += '<p id="term_clients">Active users: ' + users + '<br>Active guests: ' + guests + '</p>';
     }
 }
 

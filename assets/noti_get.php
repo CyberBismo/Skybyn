@@ -16,21 +16,27 @@ if ($getNotifications->num_rows > 0) {
 
         if ($noti_type == "friend_request") {
             $noti_title = "$noti_username send you a friend request";
-            $noti_text = "<a href=\"./profile?u=$noti_username\">View their profile</a>";
+            $noti_text = "<a href=\"./profile?u=$noti_username\"><i class=\"fa-solid fa-circle-user\"></i>View their profile</a>";
+            $noti_action = "";
         } else
         if ($noti_type == "friend_accepted") {
-            $noti_title = "Your friend $noti_username is here";
-            $noti_text = "Say hi";
+            $noti_title = "$noti_username is now your friend";
+            $noti_text = "<a href=\"./profile?u=$noti_username\"><i class=\"fa-solid fa-circle-user\"></i></a><i class=\"fa-solid fa-message\" onclick=\"startMessaging('$uid','$noti_from')\"></i>";
+            $noti_action = "";
         } else
         if ($noti_type == "comment") {
             $noti_title = "$noti_username commented";
             $noti_text = "$noti_content";
+            $noti_action = "";
         } else
         if ($noti_type == "system") {
             $noti_title = "System update";
             $noti_text = $noti_content;
+            $noti_action = "";
         } else {
+            $noti_title = "";
             $noti_text = $noti_content;
+            $noti_action = "";
         }
         ?>
         <div class="noti" id="noti_<?=$noti_id?>">

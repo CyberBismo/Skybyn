@@ -717,15 +717,19 @@ function friendship($uid, $friend, $action) {
 function checkFriendship($uid,$friend) {
     global $conn;
 
-    $checkFriendship = $conn->query("SELECT * FROM `friendship` WHERE `user_id`='$uid' AND `friend_id`='$friend'");
+    $checkFriendship = $conn->query("SELECT * FROM `friendship` WHERE `user_id`='$friend' AND `friend_id`='$uid'");
     if ($checkFriendship->num_rows == 1) {
         $friendshipData = $checkFriendship->fetch_assoc();
         $status = $friendshipData['status'];
 
-        if ($status == "accepted") {
+        if ($status == "friends") {
             return "ok";
         } else {
-            return "";
+            if ($status == "blocked") {
+                return "blocked";
+            } else {
+                return "";
+            }
         }
     } else {
         return "";

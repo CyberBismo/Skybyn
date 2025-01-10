@@ -9,6 +9,7 @@ function showSearch() {
     const search = document.getElementById('searchInput');
     const searchRes = document.getElementById('search_result');
     const usermenu = document.getElementById('usermenu');
+    usermenu.style.transform = 'translateX(100%)';
 
     // Function to hide the search form
     function hideSearchForm() {

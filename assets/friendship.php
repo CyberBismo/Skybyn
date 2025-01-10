@@ -6,12 +6,13 @@ $action = $_POST['action'];
 $checkStatus = $conn->query("SELECT * FROM `friendship` WHERE `user_id`='$uid' AND `friend_id`='$friend'");
 $friendshipStatus = $checkStatus->fetch_assoc();
 
+$statusF = "friends";
 $statusS = "sent";
 $statusR = "received";
 $statusA = "accepted";
 $statusD = "declined";
 $statusI = "ignored";
-$statusB = "block";
+$statusB = "blocked";
 $statusUnf = "unfriend";
 $statusUnb = "unblock";
 
@@ -29,8 +30,8 @@ if ($checkStatus->num_rows == 0) { // IF NO RECORDS
 
     if ($action == "accept") {
         if ($status == $statusR) {
-            $conn->query("UPDATE `friendship` SET `status`='$statusA' WHERE `user_id`='$friend' AND `friend_id`='$uid'");
-            $conn->query("UPDATE `friendship` SET `status`='$statusA' WHERE `user_id`='$uid' AND `friend_id`='$friend'");
+            $conn->query("UPDATE `friendship` SET `status`='friends' WHERE `user_id`='$friend' AND `friend_id`='$uid'");
+            $conn->query("UPDATE `friendship` SET `status`='friends' WHERE `user_id`='$uid' AND `friend_id`='$friend'");
             $conn->query("INSERT INTO `notifications` (`to`,`from`,`date`,`type`) VALUES ('$friend','$uid','$now','friend_accepted')");
             echo "Friend request accepted.";
         } else {
@@ -64,7 +65,7 @@ if ($checkStatus->num_rows == 0) { // IF NO RECORDS
     } else
     if ($action == "block") {
         if ($status == $statusA) {
-            $conn->query("UPDATE `friendship` SET `status`='$statusB' WHERE (`user_id`='$uid' AND `friend_id`='$friend') OR (`user_id`='$friend' AND `friend_id`='$uid')");
+            $conn->query("UPDATE `friendship` SET `status`='blocked' WHERE `user_id`='$uid' AND `friend_id`='$friend'");
             echo "Blocked.";
         } else {
             echo "Error blocking";
@@ -72,7 +73,7 @@ if ($checkStatus->num_rows == 0) { // IF NO RECORDS
     } else
     if ($action == "unblock") {
         if ($status == $statusB) {
-            $conn->query("UPDATE `friendship` SET `status`='$statusUnb' WHERE (`user_id`='$uid' AND `friend_id`='$friend') OR (`user_id`='$friend' AND `friend_id`='$uid')");
+            $conn->query("UPDATE `friendship` SET `status`='friends' WHERE `user_id`='$uid' AND `friend_id`='$friend'");
             echo "Unblocked.";
         } else {
             echo "Error unblocking";

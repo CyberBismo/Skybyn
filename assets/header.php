@@ -28,31 +28,31 @@ if ($domain == $devDomain) {
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black">
-        <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/logo_fav.png">
-        <link rel="icon" type="image/x-icon" href="/assets/images/logo_fav.png">
-        <link href="/fontawe/css/all.css" rel="stylesheet">
+        <link rel="apple-touch-icon" sizes="180x180" href="../../assets/images/logo_fav.png">
+        <link rel="icon" type="image/x-icon" href="../../assets/images/logo_fav.png">
+        <link href="../fontawe/css/all.css" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/lozad@1.0.0/dist/lozad.min.js"></script>
         <script>
             const observer = lozad();
             observer.observe();
         </script>
         <script src = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-        <script src="/assets/js/scripts.js"></script>
-        <script src="/assets/js/ws.js"></script>
+        <script src="../assets/js/scripts.js"></script>
+        <script src="../assets/js/ws.js"></script>
         <?php if (!isset($_COOKIE['welcomeScreen'])) {?>
-        <script src="assets/js/welcome.js"></script>
+        <script src="../assets/js/welcome.js"></script>
         <?php }?>
         <?php if (isMobile($userAgent) == true) {?>
-        <script src="assets/js/small_screen.js"></script>
+        <script src="../assets/js/small_screen.js"></script>
         <?php } else {?>
-        <script src="assets/js/big_screen.js"></script>
+        <script src="../assets/js/big_screen.js"></script>
         <?php }?>
         <?php if (isset($_SESSION['user'])) {?>
-        <script src="assets/js/comments/updateComments.js"></script>
-        <script src="assets/js/notifications/notis.js"></script>
-        <script src="assets/js/posts/updateFeed.js"></script>
-        <script src="assets/js/scripts_logged.js"></script>
-        <script src="assets/js/chat/message.js"></script>
+        <script src="../assets/js/comments/updateComments.js"></script>
+        <script src="../assets/js/notifications/notis.js"></script>
+        <script src="../assets/js/posts/updateFeed.js"></script>
+        <script src="../assets/js/scripts_logged.js"></script>
+        <script src="../assets/js/chat/message.js"></script>
         <?php }?>
         <?php include_once "style.php"?>
     </head>
@@ -130,11 +130,7 @@ if ($domain == $devDomain) {
         <div class="header" id="header">
 
             <?php // Logo
-            if (isset($_SESSION['user'])) {
-                if (isMobile($userAgent) == false) {
-                    include_once("assets/logo.php");
-                }
-            } else {
+            if (isMobile($userAgent) == false) {
                 include_once("assets/logo.php");
             }
             ?>
@@ -161,8 +157,8 @@ if ($domain == $devDomain) {
             </script>
             <?php }?>
 
-            <?php if (isset($_SESSION['user'])) {?>
             <div class="top">
+                <?php if (isset($_SESSION['user'])) {?>
                 <div class="top-nav">
                     <ul>
                         <?php if (isMobile($userAgent) == true) {?>
@@ -175,45 +171,67 @@ if ($domain == $devDomain) {
                         <?php }?>
                     </ul>
                 </div>
+                <?php } else {?>
+                <div class="top-nav">
+                    <ul>
+                        <?php if (isMobile($userAgent) == true) {?>
+                        <li><i class="fa-solid "></i></li>
+                        <?php }?>
+                    </ul>
+                </div>
+                <?php }?>
+                <?php if (isset($_SESSION['user'])) {?>
                 <div class="user-avatar" id="user_avatar_<?=$uid?>">
                     <?php if (isMobile($userAgent) == true) {?>
-                    <img src="./assets/images/logo_faded_clean.png" onclick="window.location.href='./'">
+                    <img src="../assets/images/logo_faded_clean.png" onclick="window.location.href='./'">
                     <?php } else {?>
-                    <img src="<?=$avatar?>" onclick="window.location.href='./profile'">
+                    <img src="<?=$avatar?>" onclick="window.location.href='../profile'">
                     <?php }?>
                 </div>
+                <?php } else {?>
+                <div class="user-avatar">
+                    <?php if (isMobile($userAgent) == true) {?>
+                    <img src="../assets/images/logo_faded_clean.png" onclick="window.location.href='../../'">
+                    <?php }?>
+                </div>
+                <?php }?>
+                <?php if (isset($_SESSION['user'])) {?>
                 <div class="user-nav" onclick="showUserMenu(event)">
                     <ul>
                         <li><i class="fa-solid fa-bars"></i></li>
                     </ul>
                 </div>
+                <?php } else {?>
+                <div class="user-nav">
+                    <ul>
+                        <li><i class="fa-solid "></i></li>
+                    </ul>
+                </div>
+                <?php }?>
             </div>
-
-            <div class="user-dropdown" id="usermenu">
-                <ul>
-                    <li onclick="window.location.href='./'"><i class="fa-solid fa-house"></i>Home</li>
-                    <li onclick="window.location.href='./profile'"><i class="fa-solid fa-user"></i></i>Profile</li>
-                    <?php if (isset($rank)) {
-                    if ($rank > 0) {?>
-                    <li><i class="fa-solid fa-people-group"></i>Groups</li>
-                    <?php }?>
-                    <?php if ($rank > 0) {?>
-                    <li><i class="fa-solid fa-book-open"></i>Pages</li>
-                    <?php }?>
-                    <?php if ($rank > 0) {?>
-                    <li class="pet"><i class="fa-solid fa-paw"></i>My Pets</li>
-                    <?php }?>
-                    <li onclick="window.location.href='./settings'"><i class="fa-solid fa-gears"></i>Settings</li>
-                    <?php if ($rank > 0) {?>
-                    <li class="balance"><i class="fa-solid fa-coins"></i><?=$wallet?></li>
-                    <?php }}?>
-                    <hr>
-                    <li onclick="window.location.href='./logout.php'"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</li>
-                </ul>
-            </div>
-            <?php }?>
-
         </div>
+
+        <?php if (isset($_SESSION['user'])) {?>
+        <div class="user-dropdown" id="usermenu">
+            <ul>
+                <li onclick="window.location.href='./'"><i class="fa-solid fa-house"></i>Home</li>
+                <li onclick="window.location.href='./profile'"><i class="fa-solid fa-user"></i></i>My Profile</li>
+                <?php if (isset($rank)) {?>
+                <?php if ($rank > 0) {?>
+                <li class="pet"><i class="fa-solid fa-paw"></i>My Pet</li>
+                <?php }?>
+                <?php if ($rank > 0) {?>
+                <li class="car"><i class="fa-solid fa-car"></i>My Car</li>
+                <?php }?>
+                <li onclick="window.location.href='./settings'"><i class="fa-solid fa-gears"></i>Settings</li>
+                <?php if ($rank > 0) {?>
+                <li class="balance"><i class="fa-solid fa-coins"></i><?=$wallet?></li>
+                <?php }}?>
+                <hr>
+                <li onclick="window.location.href='./logout.php'"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</li>
+            </ul>
+        </div>
+        <?php }?>
 
         <?php if (isset($_SESSION['user'])) {?>
         <div class="new_post" id="new_post" hidden>
@@ -225,7 +243,6 @@ if ($domain == $devDomain) {
                         <div><?=$username?></div>
                         <?php }?>
                     </div>
-                    <i class="fa-solid fa-paper-plane share" id="create_post_btn" onclick="createPost()"></i>
                 </div>
                 <textarea type="text" placeholder="What's on your mind?" id="new_post_input" oninput="adjustTextareaHeight()" onkeydown="checkEnter()" onkeyup="convertEmoji(this.value)"></textarea>
                 <div class="new_post_files" id="new_post_files"></div>
@@ -242,6 +259,7 @@ if ($domain == $devDomain) {
                         <input type="file" id="image_to_share" accept="image/*;capture=camera" multiple hidden onchange="updateFileNameLabel()">
                         <label for="image_to_share"><i class="fa-solid fa-image"></i><span id="image_to_share_text">No image selected</span></label>
                     </span>
+                    <i class="fa-solid fa-paper-plane share" id="create_post_btn" onclick="createPost()"></i>
                 </div>
             </div>
         </div>
@@ -265,6 +283,7 @@ if ($domain == $devDomain) {
             const um = document.getElementById('usermenu');
             const left = document.getElementById('left-panel');
             const right = document.getElementById('right-panel');
+            const mSearch = document.getElementById('mobile-search');
             <?php if (isMobile($userAgent) == true) {?>
             if (um.style.transform == "translateX(0px)") {
                 um.style.transform = 'translateX(100%)';
@@ -272,6 +291,7 @@ if ($domain == $devDomain) {
                 um.style.transform = 'translateX(0px)';
                 left.style.transform = 'translateX(-100%)';
                 right.style.transform = 'translateX(100%)';
+                mSearch.style.transform = 'translateY(-155px)';
             }
             <?php } else {?>
             if (event) {
@@ -409,7 +429,7 @@ if ($domain == $devDomain) {
 
             <?php if (isset($rank) && $rank > 3) {?>
             <div class="shortcuts gaming">
-                <h3><i class="fa-solid fa-gamepad"></i><div>Gaming</div><i></i></h3>
+                <h3><i class="fa-solid fa-gamepad"></i><div>Games</div><i></i></h3>
                 <div id="my-games">
                     <?php
                     $getGames = $conn->query("SELECT * FROM `game_store`");
@@ -544,7 +564,7 @@ if ($domain == $devDomain) {
 
             <?php if (isset($rank) && $rank > 3) {?>
             <div class="shortcuts terminal">
-                <h3><i class="fa-solid fa-terminal"></i><div>Terminal</div><i class="fa-solid fa-delete-left" onclick="clearConsole()"></i></h3>
+                <h3><i class="fa-solid fa-terminal"></i><div>Admin Terminal</div><i class="fa-solid fa-delete-left" onclick="clearConsole()"></i></h3>
                 <span id="console_countdown"></span>
                 <div id="console">
                     <?php if (isset($_COOKIE['logged'])) echo '<p id="term_rem">Remember ON</p>'; else echo '<p id="term_rem">Remember OFF</p>';?>
@@ -589,7 +609,7 @@ if ($domain == $devDomain) {
                 <h3>Friends</h3>
                 <div id="friend-list">
                     <?php
-                    $myFriends = $conn->query("SELECT * FROM `friendship` WHERE `user_id`='$uid' AND `status`='accepted'");
+                    $myFriends = $conn->query("SELECT * FROM `friendship` WHERE `user_id`='$uid' AND `status`='friends'");
                     $countFriends = $myFriends->num_rows;
                     if ($countFriends > 0) {
                         while($friendId = $myFriends->fetch_assoc()) {
@@ -610,7 +630,7 @@ if ($domain == $devDomain) {
                                     <div class="friend-name"><?=$friend_username?></div>
                                 </div>
                                 <div class="friend-actions">
-                                    <div class="friend-action" onclick="window.location.href='./profile?u=<?=$friend_username?>'">
+                                    <div class="friend-action" onclick="window.location.href='../profile/<?=$friend_username?>'">
                                         <i class="fa-solid fa-user"></i>
                                     </div>
                                     <div class="friend-action" onclick="startMessaging('<?=$uid?>','<?=$fid?>')">
@@ -775,13 +795,13 @@ if ($domain == $devDomain) {
         <div class="bottom-nav" id="bottom-nav">
             <div class="bnav-btn" onclick="showLeftPanel()"><i class="fa-solid fa-bookmark"></i></div>
             <div class="bnav-btn" onclick="newPost()" id="mobile_new_post"><i class="fa-solid fa-plus"></i></div>
-            <div class="bnav-btn" onclick="showNotifications()">
-                <div class="notification_alert nab"><i class="fa-solid fa-circle-exclamation"></i></div>
-                <i class="fa-solid fa-bell"></i>
-            </div>
+            <div class="bnav-btn" onclick="showRightPanel()"><i class="fa-solid fa-user-group"></i></div>
         </div>
 
-        <div class="friends_menu" onclick="showRightPanel()"><i class="fa-solid fa-user-group"></i></div>
+        <div class="noti_menu" onclick="showNotifications()">
+            <div class="notification_alert nab"><i class="fa-solid fa-circle-exclamation"></i></div>
+            <i class="fa-solid fa-bell"></i>
+        </div>
 
         <?php }?>
 
@@ -823,10 +843,10 @@ if ($domain == $devDomain) {
         </script>
         <?php }?>
 
-        <div id="welcome-screen" onclick="hideWelcome()">
-            <div id="welcome-clouds"></div>
+        <div id="welcome-screen" onclick="hideWelcome();requestNotificationPermission()">
+            <div class="clouds" id="welcome-clouds"></div>
             <div id="welcome-inner">
-                <img src="assets/images/logo_faded_clean.png" alt="Skybyn Logo" class="cloudZoom">
+                <img src="../assets/images/logo_faded_clean.png" alt="Skybyn Logo" class="cloudZoom">
                 <center>
                     <h3>Welcome to</h3>
                     <h1>Skybyn</h1>
