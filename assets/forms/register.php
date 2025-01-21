@@ -123,7 +123,7 @@
                         const referRes = document.getElementById('refer-user');
                         if (refer.value.length >= 6) {
                             $.ajax({
-                                url: '../assets/check_refer_code.php',
+                                url: '../assets/check/check_refer_code.php',
                                 type: "POST",
                                 data: {
                                     code: refer.value
@@ -365,7 +365,7 @@
                                 // Send an email verification code
                                 if (validateEmail(email.value)) {
                                     $.ajax({
-                                        url: '../assets/check_email.php',
+                                        url: '../assets/check/check_email.php',
                                         type: "POST",
                                         data: {
                                             email: email.value
@@ -401,7 +401,7 @@
                                         td_email_v.innerHTML = "Verifying..";
                                         setTimeout(() => {
                                             $.ajax({
-                                                url: '../assets/check_email.php',
+                                                url: '../assets/check/check_email.php',
                                                 type: "POST",
                                                 data: {
                                                     email: email.value,
@@ -461,7 +461,7 @@
                                         return minutes + "m " + seconds + "s";
                                     }
                                     $.ajax({
-                                        url: '../assets/check_email.php',
+                                        url: '../assets/check/check_email.php',
                                         type: "POST",
                                         data: {
                                             email: email.value,
@@ -487,7 +487,7 @@
                                 if (email_verify.value != "") {
                                     // Checking code for verification
                                     $.ajax({
-                                        url: '../assets/register_email_verify.php',
+                                        url: '../assets/verify/register_email_verify.php',
                                         type: "POST",
                                         data: {
                                             code: email_verify.value
@@ -517,7 +517,7 @@
                             if (username.value != "") {
                                 let available = false;
                                 $.ajax({
-                                    url: '../assets/check_username.php',
+                                    url: '../assets/check/check_username.php',
                                     type: "POST",
                                     data: {
                                         username: username.value

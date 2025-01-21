@@ -2,16 +2,16 @@
 
 $fid = $_POST['friend'];
 
-$getMessages = mysqli_query($conn, "SELECT * FROM `messages` WHERE `user` IN ('$uid','$fid') AND `friend` IN ('$uid','$fid') ORDER BY `date` DESC");
-while ($message = mysqli_fetch_assoc($getMessages)) {
+$getMessages = $conn->query("SELECT * FROM `messages` WHERE `user` IN ('$uid','$fid') AND `friend` IN ('$uid','$fid') ORDER BY `date` DESC");
+while ($message = $getMessages->fetch_assoc()) {
     $message_id = $message['id'];
     $message_user = $message['user'];
     $message_friend = $message['friend'];
     $message_content = $message['content'];
     $message_created = date("Y-m-d H:i:s", $message['date']);
 
-    $getFriendData = mysqli_query($conn, "SELECT * FROM `users` WHERE `id`='$message_user'");
-    $friend = mysqli_fetch_assoc($getFriendData);
+    $getFriendData = $conn->query("SELECT * FROM `users` WHERE `id`='$message_user'");
+    $friend = $getFriendData->fetch_assoc();
     $friend_id = $friend['id'];
     $friend_name = $friend['username'];
     $friend_avatar = $friend['avatar'];

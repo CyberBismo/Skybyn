@@ -3,9 +3,7 @@
 $postIds = $_POST['ids'];
 $postIdsList = implode(',', $postIds);
 
-$sql = "SELECT * FROM `messages` WHERE `id` IN ($postIdsList)";
-$result = $conn->query($sql);
-
+$result = $conn->query("SELECT * FROM `messages` WHERE `id` IN ($postIdsList)");
 $existingPostIds = [];
 while ($row = $result->fetch_assoc()) {
   $existingPostIds[] = $row['id'];

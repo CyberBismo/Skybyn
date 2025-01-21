@@ -6,15 +6,15 @@ $length = strlen("chat_$group"."_");
 $last = substr($last,$length);
 
 $getMessages = $conn->query("SELECT * FROM `group_messages` WHERE `group`='$group' ORDER BY `date` DESC");
-while($message = mysqli_fetch_assoc($getMessages)) {
+while($message = $getMessages->fetch_assoc()) {
     $message_id = $message['id'];
     $message_user = $message['user'];
     $message_content = $message['content'];
     $message_created = date("Y-m-d H:i:s", $message['date']);
     $message_system = $message['system'];
     
-    $getUserData = mysqli_query($conn, "SELECT * FROM `users` WHERE `id`='$message_user'");
-    $gUser = mysqli_fetch_assoc($getUserData);
+    $getUserData = $conn->query("SELECT * FROM `users` WHERE `id`='$message_user'");
+    $gUser = $getUserData->fetch_assoc();
     $guser_id = $gUser['id'];
     $guser_name = $gUser['username'];
     $guser_avatar = $gUser['avatar'];

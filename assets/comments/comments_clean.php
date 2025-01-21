@@ -3,8 +3,7 @@
 $commentIds = $_Comment['ids'];
 $commentIdsList = implode(',', $commentIds);
 
-$sql = "SELECT * FROM `Comments` WHERE `id` IN ($commentIdsList)";
-$result = $conn->query($sql);
+$result = $conn->query("SELECT * FROM `comments` WHERE `id` IN ($commentIdsList)");
 
 $existingCommentIds = [];
 while ($row = $result->fetch_assoc()) {

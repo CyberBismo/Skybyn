@@ -1,12 +1,12 @@
 <div class="friend_list_back" id="friend-list" onclick="hideFriends(event, this)" hidden>
     <div class="friend_list">
         <?php if (isset($_SESSION['user'])) {
-        $getFriends = mysqli_query($conn, "SELECT * FROM `friendship` WHERE `user_id`='$uid' AND `status`='friends'");
-        while($friend = mysqli_fetch_assoc($getFriends)) {
+        $getFriends = $conn->query("SELECT * FROM `friendship` WHERE `user_id`='$uid' AND `status`='friends'");
+        while($friend = $getFriends->fetch_assoc()) {
             $friend_id = $friend['friend_id'];
             
-            $getFriendData = mysqli_query($conn, "SELECT * FROM `users` WHERE `id`='$friend_id'");
-            $friendData = mysqli_fetch_assoc($getFriendData);
+            $getFriendData = $conn->query("SELECT * FROM `users` WHERE `id`='$friend_id'");
+            $friendData = $getFriendData->fetch_assoc();
             $friend_name = $friendData['username'];
             $friend_avatar = $friendData['avatar'];
             ?>
