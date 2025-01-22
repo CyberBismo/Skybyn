@@ -26,3 +26,6 @@ ocr/google-cloud-credentials.json
 /dl
 /api
 /monitor
+/ws
+/ws
+ws/server.js

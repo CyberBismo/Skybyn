@@ -13,7 +13,7 @@
   <button id="hangupCall" disabled>Hang Up</button>
 
   <script>
-    const signalingServer = new WebSocket('wss://dev.skybyn.com:4433');
+    const signalingServer = new WebSocket('wss://dev.skybyn.no:4433');
     let localStream;
     let peerConnection;
 
