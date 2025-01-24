@@ -798,6 +798,16 @@
                 -moz-appearance: textfield; /* Firefox */
             }
 
+            .center_form .form .register input[type="date"]::-webkit-calendar-picker-indicator {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                top: 0;
+                left: 0;
+                opacity: 0;
+                cursor: pointer;
+            }
+
             /* Chrome, Edge, and Safari */
             .center_form .form .register input[type="number"]::-webkit-inner-spin-button,
             .center_form .form .register input[type="number"]::-webkit-outer-spin-button {

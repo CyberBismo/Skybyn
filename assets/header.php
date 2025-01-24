@@ -34,8 +34,8 @@ if (isset($_GET['betaaccess'])) {
     $code = $_GET['betaaccess'];
     $checkCode = $conn->query("SELECT `key` FROM `beta_access` WHERE `key`='$code'");
     if ($checkCode->num_rows == 1) {
-        $beta = true;
         $_SESSION['beta'] = $code;
+        ?><script>window.location.href = "../";</script><?php
     }
 }
 ?>
@@ -152,7 +152,7 @@ if (isset($_GET['betaaccess'])) {
         <?php if ($beta == true) {?>
         <div class="beta_access">
             <span>beta</span>
-            <p>As a beta tester, you are responsible for reporting bugs and issues. Please report any bugs to the developers.</p>
+            <p>As a beta tester, you are obligated for reporting bugs and issues to the developers.</p>
         </div>
         <?php }?>
 

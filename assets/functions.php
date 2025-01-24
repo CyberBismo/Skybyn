@@ -979,8 +979,10 @@ function isMobile($userAgent) {
     ];
 
     foreach ($mobileKeywords as $keyword) {
-        if (stripos($userAgent, $keyword) !== false) {
-            return true;
+        if (is_string($userAgent) && $userAgent !== null) {
+            if (stripos($userAgent, $keyword) !== false) {
+                return true;
+            }
         }
     }
 
