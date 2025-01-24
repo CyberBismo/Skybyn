@@ -134,7 +134,7 @@ function connectWebSocket() {
         if (data.type === 'new_post') {
             let postId = data.id;
             $.ajax({
-                url: './assets/post_load.php',
+                url: './assets/posts/post_load.php',
                 type: 'POST',
                 data: {
                     post_id: postId
@@ -165,7 +165,7 @@ function connectWebSocket() {
 
             if (postElement && commentsContainer && commentsCountElement) {
                 $.ajax({
-                    url: './assets/comments_check.php',
+                    url: './assets/comments/comments_check.php',
                     type: 'POST',
                     data: {
                         comment_id: commentId,
