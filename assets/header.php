@@ -243,8 +243,8 @@ if (isset($_GET['betaaccess'])) {
         <?php if (isset($_SESSION['user'])) {?>
         <div class="user-dropdown" id="usermenu">
             <ul>
-                <li onclick="window.location.href='./'"><i class="fa-solid fa-house"></i>Home</li>
-                <li onclick="window.location.href='./profile'"><i class="fa-solid fa-user"></i></i>My Profile</li>
+                <li onclick="window.location.href='../'"><i class="fa-solid fa-house"></i>Home</li>
+                <li onclick="window.location.href='../profile'"><i class="fa-solid fa-user"></i></i>My Profile</li>
                 <?php if (isset($rank)) {?>
                 <?php if ($rank > 0) {?>
                 <li class="pet"><i class="fa-solid fa-paw"></i>My Pet</li>
@@ -252,12 +252,12 @@ if (isset($_GET['betaaccess'])) {
                 <?php if ($rank > 0) {?>
                 <li class="car"><i class="fa-solid fa-car"></i>My Car</li>
                 <?php }?>
-                <li onclick="window.location.href='./settings'"><i class="fa-solid fa-gears"></i>Settings</li>
+                <li onclick="window.location.href='../settings'"><i class="fa-solid fa-gears"></i>Settings</li>
                 <?php if ($rank > 0) {?>
                 <li class="balance"><i class="fa-solid fa-coins"></i><?=$wallet?></li>
                 <?php }}?>
                 <hr>
-                <li onclick="window.location.href='./logout.php'"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</li>
+                <li onclick="window.location.href='../logout.php'"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</li>
             </ul>
         </div>
         <?php }?>

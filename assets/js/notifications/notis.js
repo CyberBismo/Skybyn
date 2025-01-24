@@ -6,7 +6,7 @@ function showNotifications() {
     } else {
         notifications.style.display = "block";
         $.ajax({
-            url: 'assets/noti/noti_get.php'
+            url: '../assets/noti/noti_get.php'
         }).done(function(response) {
             notiList.innerHTML = response;
         });
@@ -23,7 +23,7 @@ function showNoti(x) {
     notiWin.removeAttribute("hidden");
 
     $.ajax({
-        url: 'assets/noti/noti_window_data.php',
+        url: '../assets/noti/noti_window_data.php',
         type: "POST",
         data: {
             noti : x
@@ -52,7 +52,7 @@ function showNoti(x) {
         notWin_text.innerHTML = data.noti_content;
 
         $.ajax({
-            url: 'assets/noti/noti_status.php',
+            url: '../assets/noti/noti_status.php',
             type: "POST",
             data: {
                 noti : x
@@ -77,7 +77,7 @@ function closeNotiWin() {
 
 function readNoti() {
     $.ajax({
-        url: 'assets/noti/noti_status.php',
+        url: '../assets/noti/noti_status.php',
         type: "POST",
         data: {
             read: 1
@@ -95,7 +95,7 @@ function delNoti(x) {
     const noti = document.getElementsByClassName('noti');
     if (x === "all") {
         $.ajax({
-            url: 'assets/noti/noti_delete.php',
+            url: '../assets/noti/noti_delete.php',
             type: "POST",
             data: {
                 noti: 'all'
@@ -108,7 +108,7 @@ function delNoti(x) {
         });
     } else {
         $.ajax({
-            url: 'assets/noti/noti_delete.php',
+            url: '../assets/noti/noti_delete.php',
             type: "POST",
             data: {
                 noti: x
@@ -126,7 +126,7 @@ function delNoti(x) {
 function checkNoti() {
     var notiAlert = document.getElementsByClassName('notification_alert');
     $.ajax({
-        url: 'assets/noti/noti_check.php'
+        url: '../assets/noti/noti_check.php'
     }).done(function(response) {
         if (response == "unread") {
             for (i = 0; i < notiAlert.length; i++) {
@@ -161,7 +161,7 @@ function markRead(x) {
     }
 
     $.ajax({
-        url: 'assets/noti/noti_read.php',
+        url: '../assets/noti/noti_read.php',
         type: "POST",
         data: {
             noti : x

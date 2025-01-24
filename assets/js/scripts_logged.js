@@ -1,6 +1,6 @@
 // Redirect to post view
 function showPost(x) {
-    window.location.href = "./post?id="+x;
+    window.location.href = "../post/"+x;
 }
 
 // Show search form
@@ -65,7 +65,7 @@ function startSearch(x) {
     if (x.value.length >= 4) {
         searchResult.removeAttribute("hidden");
         $.ajax({
-            url: 'assets/search.php',
+            url: '../assets/search.php',
             type: "POST",
             data: {
                 text: x.value
@@ -291,7 +291,7 @@ function showImage(x) {
         image_viewer.style.display = "none";
     } else {
         $.ajax({
-            url: 'assets/posts/post_full.php',
+            url: '../assets/posts/post_full.php',
             type: "POST",
             data: {
                 post : x
@@ -302,7 +302,7 @@ function showImage(x) {
         });
 
         $.ajax({
-            url: 'assets/posts/post_images.php',
+            url: '../assets/posts/post_images.php',
             type: "POST",
             data: {
                 post : x
@@ -331,7 +331,7 @@ function toggleImageSlider() {
 
 function changeImage(index,x) {
     $.ajax({
-        url: 'assets/posts/post_images.php',
+        url: '../assets/posts/post_images.php',
         type: "POST",
         data: {
             post : x
@@ -398,7 +398,7 @@ function genRef() {
     const code = document.getElementById('frc');
     if (isNaN(code.innerHTML)) {
         $.ajax({
-            url: 'assets/generate_ref_code.php',
+            url: '../assets/generate_ref_code.php',
             type: "POST"
         }).done(function(response) {
             if (response != null) {
@@ -410,7 +410,7 @@ function genRef() {
 function checkRef() {
     let ref = document.getElementById('frc');
     $.ajax({
-        url: 'assets/check/check_refer_code.php',
+        url: '../assets/check/check_refer_code.php',
         type: "POST",
         data: {
             code: ref
@@ -484,7 +484,7 @@ function friendAction(friend, action) {
     };
     if (action == "check") {
         $.ajax({
-            url: 'assets/friendship.php',
+            url: '../assets/friendship.php',
             type: 'POST',
             data: { friend, action }
         }).done(function(response) {
@@ -492,7 +492,7 @@ function friendAction(friend, action) {
         });
     } else {
         $.ajax({
-            url: 'assets/friendship.php',
+            url: '../assets/friendship.php',
             type: 'POST',
             data: { friend, action }
         }).done(function(response) {
