@@ -19,7 +19,7 @@ if (isset($_COOKIE['logged'])) {
 }
 ?>
 
-<div class="start" style="display: none">
+<div class="start">
     <div class="welcome_information" id="welcome_info" onclick="showInfo(this)">
         <div class="info_text" id="info_text">
             <?php include_once "assets/intro.php"?>
@@ -151,7 +151,7 @@ if (isset($_COOKIE['logged'])) {
     <?php }?>
 </div>
 
-<div class="reg-packs" id="reg_packs">
+<div class="reg-packs" id="reg_packs" style="display: none">
     <h3>Select one of following options</h3>
     <div class="reg-packs-box">
         <div class="reg-pack">
