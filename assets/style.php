@@ -1106,6 +1106,7 @@
             #email-check {
                 display: none !important;
             }
+            <?php if (isMobile($userAgent) == false) {?>
             .reg-packs {
                 width: 800px;
                 margin-top: 100px;
@@ -1198,11 +1199,12 @@
                 text-align: center;
             }
 
+            #reg-pack-custom {
+                width: 610px;
+            }
+
             .reg-pack-box-custom {
                 display: flex;
-            }
-            #reg-pack-custom p button {
-                transform: translateY(0px);
             }
             .reg-pack-box:hover {
                 background: none;
@@ -1227,14 +1229,11 @@
             }
             .rpbcb table {
                 width: 100%;
+                margin-top: 30px;
             }
             .rpbcb table tr {
                 width: 100%;
                 text-align: left;
-            }
-            .rpbcb table tr td {
-                padding: 10px;
-                box-sizing: border-box;
             }
             .rpbcb table tr:hover,
             .rpbcb table tr td:hover tr,
@@ -1242,6 +1241,158 @@
             .rpbcb table tr td span:hover tr {
                 background: rgba(255,255,255,.1);
                 cursor: pointer;
+            }
+            <?php } else {?>
+            .reg-packs {
+                width: 100%;
+                margin-top: 75px;
+                text-align: center;
+                color: var(--mode-text);
+            }
+            .reg-packs button {
+                width: auto;
+                height: 50px;
+                margin: 3px;
+                margin: 20px 0;
+                padding: 0 50px;
+                color: var(--mode-text);
+                background: rgba(255,255,255,.1);
+                backdrop-filter: blur(5px);
+                border: none;
+                border-radius: 10px;
+                box-sizing: border-box;
+                transition: background .3s, transform .3s;
+                cursor: pointer;
+            }
+            .reg-packs h3 {
+                text-align: center;
+            }
+            .reg-packs-box {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 5px;
+            }
+            .reg-pack {
+                width: 300px;
+                padding: 5px;
+                text-align: left;
+                background: rgba(255,255,255,.1);
+                border-radius: 30px;
+                backdrop-filter: blur(5px);
+                transition: width .5s;
+            }
+            .reg-pack-box {
+                height: calc(100% - 20px);
+                margin: 10px;
+                padding: 5px;
+                border: 1px solid rgba(255,255,255,.2);
+                border-radius: 20px;
+                box-sizing: border-box;
+                transition: background .2s;
+            }
+            .reg-pack-box button {
+                width: 50%;
+                min-width: 100px;
+                height: 40px;
+                color: var(--mode-text);
+                background: rgba(255,255,255,.1);
+                border: none;
+                border-radius: 10px;
+            }
+            .reg-pack-box button:hover {
+                background: rgba(255,255,255,.2);
+                cursor: pointer;
+            }
+            .reg-pack-box p button {
+                transform: translateY(-50px);
+            }
+            .reg-pack h2 {
+                height: 50px;
+                line-height: 50px;
+                margin: 0;
+                text-align: center;
+            }
+            .reg-pack ul {
+                height: calc(100% - 100px);
+                padding: 0;
+                list-style: none;
+            }
+            .reg-pack li {
+                padding: 10px;
+            }
+            .reg-pack li:before {
+                content: "*";
+                padding-right: 10px;
+            }
+            .reg-pack span {
+                display: block;
+                text-align: center;
+            }
+            .reg-pack p {
+                text-align: center;
+            }
+
+            #reg-pack-custom button {
+                width: auto;
+                min-width: 100px;
+                height: 40px;
+                color: var(--mode-text);
+                background: rgba(255,255,255,.1);
+                border: none;
+                border-radius: 10px;
+            }
+
+            .reg-pack-box:hover {
+                background: none;
+            }
+            .rpbcb {
+                width: 50%;
+                cursor: default;
+            }
+            .rpbcb p {
+                height: 60px;
+                padding: 10px;
+                text-align: center;
+                box-sizing: border-box;
+            }
+            .rpbcb b {
+                line-height: 30px;
+                font-size: 18px;
+            }
+            .rpbcb label{
+                width: 50%;
+                cursor: pointer;
+            }
+            .rpbcb table {
+                width: 100%;
+                margin-top: 100px;
+            }
+            .rpbcb table tr {
+                width: 100%;
+                text-align: left;
+            }
+            .rpbcb table tr:hover,
+            .rpbcb table tr td:hover tr,
+            .rpbcb table tr td input:hover tr,
+            .rpbcb table tr td span:hover tr {
+                background: rgba(255,255,255,.1);
+                cursor: pointer;
+            }
+            <?php }?>
+
+            #reg-pack-custom p button {
+                transform: translateY(0px);
+            }
+            .rpbcb table tr td {
+                padding: 10px;
+                text-align: center;
+                background: rgba(var(--mode),.2);
+                box-sizing: border-box;
+                border-radius: 10px;
+            }
+            .rpbcb table tr td:nth-child(1) {
+                display: none;
             }
             
             /** Header */
@@ -1256,9 +1407,9 @@
             .header {
                 position: fixed;
                 top: 0;
-                background: rgba(var(--dark),.2);
+                background: rgba(var(--mode),.2);
                 backdrop-filter: blur(5px);
-                box-shadow: 0px -20px 10px 30px rgba(var(--dark),.2);
+                box-shadow: 0px -20px 10px 30px rgba(var(--mode),.2);
             }
             <?php } else {?>
             .header {
@@ -1269,8 +1420,6 @@
             .header {
                 position: fixed;
                 top: 0;
-                background: rgba(var(--dark),.2);
-                box-shadow: 0px 20px 10px 30px rgba(var(--dark),.2);
             }
             <?php }?>
 

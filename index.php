@@ -19,7 +19,7 @@ if (isset($_COOKIE['logged'])) {
 }
 ?>
 
-<div class="start">
+<div class="start" style="display: none">
     <div class="welcome_information" id="welcome_info" onclick="showInfo(this)">
         <div class="info_text" id="info_text">
             <?php include_once "assets/intro.php"?>
@@ -96,17 +96,17 @@ if (isset($_COOKIE['logged'])) {
         <?php }}?>
     </div>
 
-<script>
-    function showInfo(x) {
-        <?php if (isMobile($userAgent) == true) {?>
-        if (x.style.height == "50%") {
-            x.style.height = "75px";
-        } else {
-            x.style.height = "50%";
+    <script>
+        function showInfo(x) {
+            <?php if (isMobile($userAgent) == true) {?>
+            if (x.style.height == "50%") {
+                x.style.height = "75px";
+            } else {
+                x.style.height = "50%";
+            }
+            <?php }?>
         }
-        <?php }?>
-    }
-</script>
+    </script>
 
     <div class="popup" id="terms_popup">
         <div class="popup-close" onclick="showTerms()">
@@ -150,8 +150,8 @@ if (isset($_COOKIE['logged'])) {
     </script>
     <?php }?>
 </div>
-<?php if ($currentPage == "register") {?>
-<div class="reg-packs" id="reg_packs" style="display: none">
+
+<div class="reg-packs" id="reg_packs">
     <h3>Select one of following options</h3>
     <div class="reg-packs-box">
         <div class="reg-pack">
@@ -188,12 +188,12 @@ if (isset($_COOKIE['logged'])) {
                             A private profile will only show your picture and display name.
                         </p>
                         <table>
-                            <tr onclick="document.getElementById('ppr').click()">
-                                <td style="text-align: right"><input type="radio" name="private" value="1" id="ppr"></td>
+                            <tr onclick="document.getElementById('ppr').click();customSelect('ppr')" id="tr_ppr">
+                                <td><input type="radio" name="private" value="1" id="ppr"></td>
                                 <td><label for="ppr">Private</label></td>
                             </tr>
-                            <tr onclick="document.getElementById('ppu').click()">
-                                <td style="text-align: right"><input type="radio" name="private" value="0" id="ppu"></td>
+                            <tr onclick="document.getElementById('ppu').click();customSelect('ppu')" id="tr_ppu">
+                                <td><input type="radio" name="private" value="0" id="ppu"></td>
                                 <td><label for="ppu">Public</label></td>
                             </tr>
                         </table>
@@ -204,12 +204,12 @@ if (isset($_COOKIE['logged'])) {
                             As visible you will appear in search results.
                         </p>
                         <table>
-                            <tr onclick="document.getElementById('vv').click()">
-                                <td style="text-align: right"><input type="radio" name="visible" value="1" id="vv"></td>
+                            <tr onclick="document.getElementById('vv').click();customSelect('vv')" id="tr_vv">
+                                <td><input type="radio" name="visible" value="1" id="vv"></td>
                                 <td><label for="vv">Visible</label></td>
                             </tr>
-                            <tr onclick="document.getElementById('vi').click()">
-                                <td style="text-align: right"><input type="radio" name="visible" value="0" id="vi"></td>
+                            <tr onclick="document.getElementById('vi').click();customSelect('vi')" id="tr_vi">
+                                <td><input type="radio" name="visible" value="0" id="vi"></td>
                                 <td><label for="vi">Invisible</label></td>
                             </tr>
                         </table>
@@ -221,6 +221,23 @@ if (isset($_COOKIE['logged'])) {
         </div>
     </div>
     <button onclick="stepBack()">Go back</button>
+
+    <script>
+        function customSelect(x) {
+            if (x == "ppr") {
+                document.getElementById('tr_ppr').style.background = "rgba(var(--mode), .2)";
+                document.getElementById('tr_ppu').style.background = "none";
+            } else if (x == "ppu") {
+                document.getElementById('tr_ppu').style.background = "rgba(var(--mode), .2)";
+                document.getElementById('tr_ppr').style.background = "none";
+            } else if (x == "vv") {
+                document.getElementById('tr_vv').style.background = "rgba(var(--mode), .2)";
+                document.getElementById('tr_vi').style.background = "none";
+            } else if (x == "vi") {
+                document.getElementById('tr_vi').style.background = "rgba(var(--mode), .2)";
+                document.getElementById('tr_vv').style.background = "none";
+            }
+        }
+    </script>
 </div>
-<?php }?>
 <?php }?>

@@ -17,7 +17,7 @@
                 ?>
                 <h2>Sign up</h2>
                 
-                <div id="set_dob">
+                <div id="set_dob" style="display: none">
                     <p>Enter your date of birth to get started</p>
                     <i class="fa-solid fa-calendar-days"></i>
                     <input type="date" id="dob" min="1960-01-01" max="<?=date("Y")-15 ."-".date("m")."-".date("d")?>" title="Enter your date of birth" autofocus>
@@ -144,11 +144,9 @@
                     }
                     
                     function showCustom() {
-                        const rpc = document.getElementById('reg-pack-custom');
                         const text = document.getElementById('custom-text');
                         const set = document.getElementById('custom-set');
                         const btn = document.getElementById('custom-set-btn');
-                        rpc.style.width = "610px";
                         text.style.display = "none";
                         set.style.display = "flex";
                         btn.style.display = "block";
