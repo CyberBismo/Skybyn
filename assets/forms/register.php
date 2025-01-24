@@ -1,4 +1,4 @@
-                <?php if (skybyn('register') == "1") {
+                <?php if (skybyn('register') == "1" || $beta == true) {
                     if (isset($_GET['complete'])) {
                         if (isset($_GET['user']) && !empty($_GET['user'])) {
                             if (isset($_GET['token']) && !empty($_GET['token'])) {

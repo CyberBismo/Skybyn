@@ -1,26 +1,4 @@
-<?php include_once "assets/header.php";
-
-$signup = false;
-$beta = false;
-
-if (isset($_GET['signup'])) {
-	if (skybyn('register') == "1") {
-		$signup = true;
-	} else {
-		$signup = false;
-	}
-}
-
-if (isset($_GET['c'])) {
-    $code = $_GET['c'];
-    $checkCode = $conn->query("SELECT `key` FROM `beta_access` WHERE `key`='$code'");
-    if ($checkCode->num_rows == 1) {
-        $beta = true;
-    }
-}
-
-
-?>
+<?php include_once "assets/header.php";?>
 
 <?php if (isset($_SESSION['user'])) {?>
 <div class="page-container" id="feed">
@@ -107,13 +85,13 @@ if (isset($_COOKIE['logged'])) {
         <?php if (skybyn('register') == "1" || $beta == true) {
             if ($signup == false) {?>
         <div class="reg-button" id="signup-btn">
-            <span onclick="window.location.href='./register'">Sign up</span>
-            <span onclick="window.location.href='/forgot'">Forgot password?</span>
+            <span onclick="window.location.href='../register'">Sign up</span>
+            <span onclick="window.location.href='../forgot'">Forgot password?</span>
         </div>
         <?php } else {?>
         <div class="reg-button" id="signup-btn">
-            <span onclick="window.location.href='./'" id="login-btn">Login here</span>
-            <span onclick="window.location.href='/forgot'">Forgot password?</span>
+            <span onclick="window.location.href='../'" id="login-btn">Login here</span>
+            <span onclick="window.location.href='../forgot'">Forgot password?</span>
         </div>
         <?php }}?>
     </div>

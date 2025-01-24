@@ -154,6 +154,39 @@
             .lazy-load {
                 image-rendering: pixelated; /* or 'crisp-edges' */
             }
+
+            /** Beta message */
+            .beta_access {
+                position: fixed;
+                bottom: 0;
+                right: 10px;
+                padding: 20px;
+                font-size: 16px;
+                text-align: right;
+                box-sizing: border-box;
+                z-index: 10;
+            }
+            .beta_access span {
+                text-transform: uppercase;
+                font-family: monospace;
+                font-weight: bold italic;
+                font-size: 26px;
+            }
+            .beta_access span:hover {
+                cursor: pointer;
+            }
+            .beta_access p {
+                position: relative;
+                float: left;
+                margin: 0;
+                transform: translateY(10px);
+                padding-right: 10px;
+                opacity: 0;
+            }
+            /** Change width of .beta_access p when hover i */
+            .beta_access span:hover + p {
+                opacity: 1;
+            }
             
             /** First time message */
             .first-time {

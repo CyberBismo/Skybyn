@@ -10,7 +10,7 @@ RewriteCond %{REQUEST_FILENAME}.php -f
 RewriteRule ^(.*)$ $1.php [QSA,L]
 
 # Rewrite /register to ?signup
-RewriteRule ^(register|registrer|signup)$ index.php?signup [L,QSA]
+RewriteRule ^(reg|register|registrer|signup)$ index.php?signup [L,QSA]
 
 # Rewrite /verify to ?verify
 RewriteRule ^verify$ index.php?verify [L,QSA]
@@ -40,5 +40,5 @@ RewriteRule ^group/([^/]+)$ index.php?group&id=$1 [QSA,L]
 # Rewrite /page/name to /page?id=name
 RewriteRule ^page/([^/]+)$ index.php?page&id=$1 [QSA,L]
 
-# Rewrite /c=code to /index.php?c=code
-RewriteRule ^c/([^/]+)$ index.php?c=$1 [QSA,L]
+# Rewrite betaaccess/code to ?betaaccess=code
+RewriteRule ^betaaccess/([^/]+)$ index.php?betaaccess=$1 [QSA,L]

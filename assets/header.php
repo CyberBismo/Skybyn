@@ -14,6 +14,30 @@ if ($domain == $devDomain) {
 } else {
     $homepage = "https://skybyn$domend/";
 }
+
+$signup = false;
+$beta = false;
+
+if (isset($_SESSION['beta'])) {
+    $beta = true;
+}
+
+if (isset($_GET['signup'])) {
+	if (skybyn('register') == "1" || $beta == true) {
+		$signup = true;
+	} else {
+		$signup = false;
+	}
+}
+
+if (isset($_GET['betaaccess'])) {
+    $code = $_GET['betaaccess'];
+    $checkCode = $conn->query("SELECT `key` FROM `beta_access` WHERE `key`='$code'");
+    if ($checkCode->num_rows == 1) {
+        $beta = true;
+        $_SESSION['beta'] = $code;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -124,6 +148,13 @@ if ($domain == $devDomain) {
         <div class="clouds">
             <div class="cloud"></div>
         </div>
+
+        <?php if ($beta == true) {?>
+        <div class="beta_access">
+            <span>beta</span>
+            <p>As a beta tester, you are responsible for reporting bugs and issues. Please report any bugs to the developers.</p>
+        </div>
+        <?php }?>
 
         <div class="header" id="header">
 
