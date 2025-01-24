@@ -43,7 +43,7 @@ function createPost() {
         newPost();
         continuePost = false;
         $.ajax({
-            url: './assets/post_new.php',
+            url: '../assets/posts/post_new.php',
             type: 'POST',
             data: formData,
             processData: false,
@@ -78,7 +78,7 @@ function editPost(x) {
     const post = document.getElementById('post_c_'+ x);
     const new_post_input = document.getElementById('new_post_input');
     $.ajax({
-        url: './assets/getPost.php',
+        url: '../assets/posts/getPost.php',
         type: "POST",
         data: {
             id : x
@@ -96,7 +96,7 @@ function deletePost(x) {
     const post = document.getElementById('post_'+ x);
     post.remove();
     $.ajax({
-        url: './assets/functions.php',
+        url: '../assets/functions.php',
         type: "POST",
         data: {
             deletePost : null,
