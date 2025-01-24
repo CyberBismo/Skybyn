@@ -3,7 +3,7 @@ function sendComment(x) {
 
     if (input.value.length > 0) {
         $.ajax({
-            url: 'assets/comment_new.php',
+            url: 'assets/comments/comment_new.php',
             type: "POST",
             data: {
                 post_id : x,
@@ -28,7 +28,7 @@ function delComment(x) {
     const comment = document.getElementById('comment_'+x);
     comment.remove();
     $.ajax({
-        url: 'assets/comment_delete.php',
+        url: 'assets/comments/comment_delete.php',
         type: "POST",
         data: {
             comment_id : x
