@@ -493,6 +493,7 @@
                                             code: email_verify.value
                                         }
                                     }).done(function(response) {
+                                        console.log(response);
                                         if (response === "ok") {
                                             document.getElementById('email-s').innerHTML = email.value;
                                             set_email_verify.style.display = "none";

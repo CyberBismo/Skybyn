@@ -25,7 +25,7 @@
                         const update = document.getElementById('set_username');
                         if (username.value != "") {
                             $.ajax({
-                                url: 'assets/check_username.php',
+                                url: '../assets/check/check_username.php',
                                 type: "POST",
                                 data: {
                                     username : username.value
@@ -49,7 +49,7 @@
                     function setUsername() {
                         let username = document.getElementById('username');
                         $.ajax({
-                            url: 'assets/set_username.php',
+                            url: '../assets/set_username.php',
                             type: "POST",
                             data: {
                                 username : username.value

@@ -800,10 +800,10 @@
 
             .center_form .form .register input[type="date"]::-webkit-calendar-picker-indicator {
                 position: absolute;
-                width: 100%;
-                height: 100%;
-                top: 0;
-                left: 0;
+                width: 90%;
+                height: 35px;
+                margin-top: 1px;
+                margin-left: -40px;
                 opacity: 0;
                 cursor: pointer;
             }

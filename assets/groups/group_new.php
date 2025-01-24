@@ -1,4 +1,4 @@
-<?php include_once "functions.php";
+<?php include_once "../functions.php";
 
 
 $name = $_POST['group_name'];

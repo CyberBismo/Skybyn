@@ -1,5 +1,4 @@
-<?php
-include_once "functions.php";
+<?php include_once "../functions.php";
 
 $last_id = $_POST['last'];
 $post_id = $_POST['post_id'];

@@ -1,4 +1,4 @@
-<?php include "./functions.php";
+<?php include "../functions.php";
 
 $post_id = $_POST['post_id'];
 

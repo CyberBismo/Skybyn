@@ -1,4 +1,4 @@
-<?php require_once "./functions.php";
+<?php require_once "../functions.php";
 
 $id = $_POST['message'];
 

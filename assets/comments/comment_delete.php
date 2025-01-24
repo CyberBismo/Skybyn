@@ -1,4 +1,4 @@
-<?php include "./functions.php";
+<?php include "../functions.php";
 
 $cid = $_POST['comment_id'];
 

@@ -24,7 +24,7 @@
                     function checkCode() {
                         const code = document.getElementById('code');
                         $.ajax({
-                            url: 'assets/verify_email.php',
+                            url: '../assets/verify/verify_email.php',
                             type: "POST",
                             data: {
                                 code : code.value
@@ -48,7 +48,7 @@
                                 const cookieValue = cookie.slice((cookieName + "=").length, cookie.length);
                                 console.log(cookieValue);
                                 $.ajax({
-                                    url: 'assets/resendVerify.php',
+                                    url: '../assets/resendVerify.php',
                                     type: "POST",
                                     data: {
                                         user : cookieValue

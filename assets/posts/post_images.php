@@ -1,4 +1,4 @@
-<?php include "./functions.php";
+<?php include "../functions.php";
 
 $pid = $_POST['post'];
 

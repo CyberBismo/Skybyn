@@ -1,9 +1,4 @@
-<?php include_once "assets/header.php"?>
-<?php
-if (!isset($_SESSION['user'])) {
-    //?><meta http-equiv="Refresh" content="0; url='./'" /><?php
-}
-?>
+<?php include_once "../assets/header.php"?>
         <div class="page-container">
             <div class="page-head">
                 Groups
@@ -26,7 +21,7 @@ if (!isset($_SESSION['user'])) {
                             $g_lock = '<i class="fa-solid fa-lock"></i>';
                         }
                         ?>
-                        <div class="gb-box" onclick="window.location.href='/group?id=<?=$g_id?>'">
+                        <div class="gb-box" onclick="window.location.href='../group/<?=$g_id?>'">
                             <div class="gb-wallpaper"><img src="<?=$g_wallpaper?>"></div>
                             <div class="gb-icon"><img src="<?=$g_icon?>"></div>
                             <div class="gb-info">
@@ -38,7 +33,7 @@ if (!isset($_SESSION['user'])) {
                     }
                 } else {
                     ?>
-                    <div class="gb-intro" onclick="window.location.href='/newgroup'">Create a group</div>
+                    <div class="gb-intro" onclick="window.location.href='../newgroup'">Create a group</div>
                     <?php
                 }
                 ?>

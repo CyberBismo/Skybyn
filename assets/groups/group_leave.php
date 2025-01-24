@@ -1,4 +1,4 @@
-<?php require_once "./functions.php";
+<?php require_once "../functions.php";
 
 $group = $_POST['group'];
 $user = $_POST['user'];

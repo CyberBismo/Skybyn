@@ -41,7 +41,7 @@ if (isset($_GET['code'])) {
                         const inputs = document.getElementById('inputs');
                         const pw = document.getElementById('pw');
                         $.ajax({
-                            url: 'assets/verify/verify_reset_code.php',
+                            url: '../assets/verify/verify_reset_code.php',
                             type: "POST",
                             data: {
                                 code : code.value

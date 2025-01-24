@@ -1,5 +1,4 @@
-<?php 
-include "functions.php";
+<?php include "../functions.php";
 
 // Assuming $conn is your database connection from 'functions.php'
 

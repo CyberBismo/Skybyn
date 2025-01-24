@@ -1,4 +1,4 @@
-<?php include "./functions.php";
+<?php include "../functions.php";
 
 $commentIds = $_Comment['ids'];
 $commentIdsList = implode(',', $commentIds);

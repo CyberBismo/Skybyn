@@ -1,9 +1,4 @@
-<?php include_once "assets/header.php";
-
-if (!isset($_SESSION['user'])) {
-    ?><meta http-equiv="Refresh" content="0; url='./'" /><?php
-    return false;
-}
+<?php include_once "../assets/header.php";
 
 if (isset($_GET['id'])) {
     $groupID = $_GET['id'];
@@ -15,7 +10,7 @@ if (isset($_GET['id'])) {
         $groupDesc = $groupData['description'];
         $groupOwner = $groupData['owner'];
     
-        $groupIcon = $groupData['icon'];
+        $groupIcon = "../".$groupData['icon'];
         $groupWallpaper = $groupData['wallpaper'];
         
         $groupPrivacy = $groupData['privacy'];
@@ -24,8 +19,8 @@ if (isset($_GET['id'])) {
         $groupPW = $groupData['password'];
         $groupPIN = $groupData['pin'];
                     
-        if ($groupIcon == "") {
-            $groupIcon = "./assets/images/logo.png";
+        if ($groupIcon == "../") {
+            $groupIcon = "../assets/images/logo.png";
         }
 
         $folder = "data/groups/";
@@ -384,7 +379,7 @@ if (isset($_GET['new'])) {?>
             <?php }?>
         </div>
 
-        <?php if (isMobile() == false) {?>
+        <?php if (isMobile($userAgent) == false) {?>
         <script>
             function setChatboxHeight() {
                 const gbox = document.getElementById('gbox');

@@ -990,7 +990,7 @@ function isMobile($userAgent) {
 }
 
 // Usage
-$userAgent = $_SERVER['HTTP_USER_AGENT'];
+$userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
 
 $msg = null;
 

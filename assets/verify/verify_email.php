@@ -1,4 +1,4 @@
-<?php include "functions.php";
+<?php include "../functions.php";
 $token = $_POST['code'];
 
 $checkCode = $conn->query("SELECT * FROM `users` WHERE `token`='$token'");

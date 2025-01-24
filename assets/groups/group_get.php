@@ -1,4 +1,4 @@
-<?php require_once "./functions.php";
+<?php require_once "../functions.php";
 
 $group = $_POST['group'];
 $last = $_POST['last'];
@@ -17,13 +17,13 @@ while($message = $getMessages->fetch_assoc()) {
     $gUser = $getUserData->fetch_assoc();
     $guser_id = $gUser['id'];
     $guser_name = $gUser['username'];
-    $guser_avatar = $gUser['avatar'];
+    $guser_avatar = "../".$gUser['avatar'];
 
     $msgID = "chat_".$group."_".$message_id;
 
     if ($message_id > $last) {
-        if ($guser_avatar == "") {
-            $guser_avatar = "./assets/images/logo_faded_clean.png";
+        if ($guser_avatar == "../") {
+            $guser_avatar = "../assets/images/logo_faded_clean.png";
         }
 
         if ($message_id > $last) {

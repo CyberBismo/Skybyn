@@ -1,5 +1,4 @@
-<?php
-include "./functions.php";
+<?php include "../functions.php";
 
 $created = $_POST['created'];
 $getPosts = $conn->query("SELECT p.*
@@ -26,9 +25,9 @@ while ($post = $getPosts->fetch_assoc()) {
     $getPostUser = $conn->query("SELECT * FROM `users` WHERE `id`='$post_user'");
     $postUser = $getPostUser->fetch_assoc();
     $post_user_name = $postUser['username'];
-    $post_user_avatar = "./".$postUser['avatar'];
-    if ($post_user_avatar == "./") {
-        $post_user_avatar = "./assets/images/logo_faded_clean.png";
+    $post_user_avatar = "../".$postUser['avatar'];
+    if ($post_user_avatar == "../") {
+        $post_user_avatar = "../assets/images/logo_faded_clean.png";
     }
 
     $post_video = convertVideo($post_content);
@@ -40,7 +39,7 @@ while ($post = $getPosts->fetch_assoc()) {
         <div class="post_header">
             <div class="post_details">
                 <div class="post_user">
-                    <div class="post_user_image" onclick="window.location.href='./profile?u=<?=$post_user_name?>'">
+                    <div class="post_user_image" onclick="window.location.href='../profile?u=<?=$post_user_name?>'">
                         <img src="<?=$post_user_avatar?>">
                     </div>
                     <div class="post_user_name"><?=$post_user_name?></div>
@@ -108,7 +107,7 @@ while ($post = $getPosts->fetch_assoc()) {
                         $commentText = fixEmojis(nl2br(cleanUrls($commentData['content'])), 1);
                         
                         if ($commentAvatar == "") {
-                            $commentAvatar = "./assets/images/logo_faded_clean.png";
+                            $commentAvatar = "../assets/images/logo_faded_clean.png";
                         }?>
                 <div class="post_comment" id="comment_<?=$commentID?>">
                     <div class="post_comment_user">

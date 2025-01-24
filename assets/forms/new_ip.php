@@ -33,7 +33,7 @@
                         const code = document.getElementById('code');
                         if (code.value != "") {
                             $.ajax({
-                                url: 'assets/check_code_new_ip.php',
+                                url: '../assets/check/check_code_new_ip.php',
                                 type: "POST",
                                 data: {
                                     code : code.value,

@@ -1,4 +1,4 @@
-<?php include "./functions.php";
+<?php include "../functions.php";
 
 $pid = $_POST['post'];
 
@@ -15,11 +15,11 @@ $post_user = $post['user'];
 $post_content = $post['content'];
 $post_created = date("d M. y H:i:s", $post['created']);
 $post_user_name = $post['username'];
-$post_user_avatar = "./" . $post['avatar'];
+$post_user_avatar = "../".$post['avatar'];
 $comment_count = $post['comment_count'];
 
-if ($post_user_avatar == "./") {
-    $post_user_avatar = "./assets/images/logo_faded_clean.png";
+if ($post_user_avatar == "../") {
+    $post_user_avatar = "../assets/images/logo_faded_clean.png";
 }
 
 $post_video = convertVideo($post_content);
@@ -28,8 +28,8 @@ $post_content_res = fixEmojis(cleanUrls(nl2br($post_content)), 1);
 ?>
 
 <?php if (isset($_SESSION['user'])) {?>
-<script src="assets/js/posts/updateFeed.js"></script>
-<script src="assets/js/comments/updateComments.js"></script>
+<script src="../assets/js/posts/updateFeed.js"></script>
+<script src="../assets/js/comments/updateComments.js"></script>
 <?php }?>
 
 <div class="post" id="post_<?=$post_id?>">
@@ -37,7 +37,7 @@ $post_content_res = fixEmojis(cleanUrls(nl2br($post_content)), 1);
         <div class="post_header">
             <div class="post_details">
                 <div class="post_user">
-                    <div class="post_user_image" onclick="window.location.href='./profile?u=<?=$post_user_name?>'">
+                    <div class="post_user_image" onclick="window.location.href='../profile?u=<?=$post_user_name?>'">
                         <img src="<?=$post_user_avatar?>">
                     </div>
                     <div class="post_user_name"><?=$post_user_name?></div>

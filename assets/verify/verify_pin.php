@@ -1,4 +1,4 @@
-<?php include "functions.php";
+<?php include "../functions.php";
 $email = $_POST['email'];
 $pin = hash("sha512", $_POST['pin']);
 

@@ -1,4 +1,4 @@
-<?php include "./functions.php";
+<?php include "../functions.php";
 
 $comment_id = $_POST['comment_id'];
 $post_id = $_POST['post_id'];
@@ -9,11 +9,11 @@ if ($getComment->num_rows == 1) {
     $commentID = $commentData['id'];
     $commentUser = $commentData['user'];
     $commentUsername = getUser("id",$commentData['user'],"username");
-    $commentAvatar = getUser("id",$commentData['user'],"avatar");
+    $commentAvatar = "../".getUser("id",$commentData['user'],"avatar");
     $commentText = $commentData['content'];
     
-    if ($commentAvatar == "") {
-        $commentAvatar = "./assets/images/logo_faded_clean.png";
+    if ($commentAvatar == "../") {
+        $commentAvatar = "../assets/images/logo_faded_clean.png";
     }
 
     if ($commentData['user'] == $_SESSION['user']) {

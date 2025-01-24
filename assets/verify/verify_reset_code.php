@@ -1,4 +1,4 @@
-<?php include "./functions.php";
+<?php include "../functions.php";
 $reset = $_POST['code'];
 
 $checkCode = $conn->query("SELECT * FROM `reset_codes` WHERE `code`='$reset'");

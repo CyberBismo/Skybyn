@@ -1,9 +1,7 @@
 <?php include "../functions.php";
-echo "verified";
-return false;
 
 $email = $_POST['email'];
-$code = rand();
+$code = rand(10000, 99999); // Generate random 5-digit code
 if (isset($_POST['resend'])) {
     $resend = $_POST['resend'];
 } else {

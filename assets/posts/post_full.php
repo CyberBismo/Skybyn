@@ -1,4 +1,4 @@
-<?php include "./functions.php";
+<?php include "../functions.php";
 
 $pid = $_POST['post'];
 
@@ -114,11 +114,11 @@ $post_content_res = fixEmojis(cleanUrls(nl2br($post_content)), 1);
             while($commentData = $getComment->fetch_assoc()) {
                 $commentID = $commentData['id'];
                 $commentUsername = getUser("id",$commentData['user'],"username");
-                $commentAvatar = getUser("id",$commentData['user'],"avatar");
+                $commentAvatar = "../".getUser("id",$commentData['user'],"avatar");
                 $commentText = fixEmojis(nl2br(cleanUrls($commentData['content'])), 1);
                 
-                if ($commentAvatar == "") {
-                    $commentAvatar = "./assets/images/logo_faded_clean.png";
+                if ($commentAvatar == "../") {
+                    $commentAvatar = "../assets/images/logo_faded_clean.png";
                 }?>
         <div class="post_comment" id="comment_<?=$commentID?>">
             <div class="post_comment_user">
