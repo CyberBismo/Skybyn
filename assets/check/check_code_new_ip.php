@@ -1,4 +1,4 @@
-<?php include_once "./functions.php";
+<?php include_once "../functions.php";
 
 if (isset($_POST['code'])) {
     $code = $_POST['code'];

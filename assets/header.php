@@ -10,10 +10,8 @@ if ($extension == 'com') {
 
 $devDomain = 'dev.skybyn.no';
 if ($domain == $devDomain) {
-    $dev_access = true;
     $homepage = "https://dev.skybyn$domend/";
 } else {
-    $dev_access = false;
     $homepage = "https://skybyn$domend/";
 }
 ?>

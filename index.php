@@ -1,13 +1,22 @@
 <?php include_once "assets/header.php";
 
+$signup = false;
+$beta = false;
+
 if (isset($_GET['signup'])) {
 	if (skybyn('register') == "1") {
 		$signup = true;
 	} else {
 		$signup = false;
 	}
-} else {
-	$signup = false;
+}
+
+if (isset($_GET['c'])) {
+    $code = $_GET['c'];
+    $checkCode = $conn->query("SELECT `key` FROM `beta_access` WHERE `key`='$code'");
+    if ($checkCode->num_rows == 1) {
+        $beta = true;
+    }
 }
 
 
@@ -87,7 +96,6 @@ if (isset($_COOKIE['logged'])) {
     </div>
     <?php } else {?>
     <div class="center_form" id="log_reg_form">
-        <?php if (isset($dev_access) && $dev_access == true) {?>
         <div class="form">
             <div class="login" id="login-form" <?php if ($signup == true) {?>hidden<?php }?>>
                 <?php include("assets/forms/login.php");?>
@@ -96,29 +104,7 @@ if (isset($_COOKIE['logged'])) {
                 <?php include("assets/forms/register.php");?>
             </div>
         </div>
-        <?php if (skybyn('login-form') == "login") {
-            if ($signup == false) {?>
-        <div class="log-button" id="signup-btn">
-            <span onclick="window.location.href='/register'">Sign up</span>
-            <span onclick="window.location.href='/forgot'">Forgot password?</span>
-        </div>
-        <?php } else {?>
-        <div class="log-button" id="signup-btn">
-            <span onclick="window.location.href='./'" id="login-btn">Login here</span>
-            <span onclick="window.location.href='/forgot'">Forgot password?</span>
-        </div>
-        <?php }}?>
-
-        <?php } else {?>
-        <div class="form">
-            <div class="login" id="login-form" <?php if ($signup == true) {?>hidden<?php }?>>
-                <?php include("assets/forms/login.php");?>
-            </div>
-            <div class="register" id="register-form" <?php if ($signup == false) {?>hidden<?php }?>>
-                <?php include("assets/forms/register.php");?>
-            </div>
-        </div>
-        <?php if (skybyn('register') == "1") {
+        <?php if (skybyn('register') == "1" || $beta == true) {
             if ($signup == false) {?>
         <div class="reg-button" id="signup-btn">
             <span onclick="window.location.href='./register'">Sign up</span>
@@ -129,7 +115,7 @@ if (isset($_COOKIE['logged'])) {
             <span onclick="window.location.href='./'" id="login-btn">Login here</span>
             <span onclick="window.location.href='/forgot'">Forgot password?</span>
         </div>
-        <?php }}}?>
+        <?php }}?>
     </div>
 
 <script>

@@ -291,7 +291,7 @@ function showImage(x) {
         image_viewer.style.display = "none";
     } else {
         $.ajax({
-            url: 'assets/post_full.php',
+            url: 'assets/posts/post_full.php',
             type: "POST",
             data: {
                 post : x
@@ -302,7 +302,7 @@ function showImage(x) {
         });
 
         $.ajax({
-            url: 'assets/post_images.php',
+            url: 'assets/posts/post_images.php',
             type: "POST",
             data: {
                 post : x
@@ -331,7 +331,7 @@ function toggleImageSlider() {
 
 function changeImage(index,x) {
     $.ajax({
-        url: 'assets/post_images.php',
+        url: 'assets/posts/post_images.php',
         type: "POST",
         data: {
             post : x
@@ -410,7 +410,7 @@ function genRef() {
 function checkRef() {
     let ref = document.getElementById('frc');
     $.ajax({
-        url: 'assets/check_refer_code.php',
+        url: 'assets/check/check_refer_code.php',
         type: "POST",
         data: {
             code: ref

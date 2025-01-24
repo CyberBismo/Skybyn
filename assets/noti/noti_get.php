@@ -1,4 +1,4 @@
-<?php include_once "./functions.php";
+<?php include_once "../functions.php";
 
 $getNotifications = $conn->query("SELECT * FROM `notifications` WHERE `to`='$uid' ORDER BY `date` DESC");
 if ($getNotifications->num_rows > 0) {

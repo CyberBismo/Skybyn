@@ -83,13 +83,13 @@ wss.on('connection', (ws) => {
                 clientMap.set(userId, { ws, ip: cleanedIp, sessionID: clientID });
                 console.log(`${time}\n${logType} \nIP: ${cleanedIp}\nUrl: ${url}\nDevice: ${device}\n`);
                 updateActiveClients();
-            }
+            } else
 
             if (data.type === 'disconnect') {
                 let clientID = data.sessionId;
                 clientMap.delete(clientID); // Remove the client from the map on disconnect
                 updateActiveClients();
-            }
+            } else
 
             if (data.type === 'new_post') {
                 let postId = data.id;
@@ -103,7 +103,7 @@ wss.on('connection', (ws) => {
                         client.ws.send(broadcastMessage);
                     }
                 });
-            }
+            } else
 
             if (data.type === 'delete_post') {
                 let postId = data.id;
@@ -116,7 +116,7 @@ wss.on('connection', (ws) => {
                         client.ws.send(broadcastMessage);
                     }
                 });
-            }
+            } else
 
             if (data.type === 'new_comment') {
                 let commentId = data.cid;
@@ -131,7 +131,7 @@ wss.on('connection', (ws) => {
                         client.ws.send(broadcastMessage);
                     }
                 });
-            }
+            } else
 
             if (data.type === 'delete_comment') {
                 let commentId = data.cid;
@@ -146,13 +146,13 @@ wss.on('connection', (ws) => {
                         client.ws.send(broadcastMessage);
                     }
                 });
-            }
+            } else
 
             if (data.type === 'subscribe') {
                 console.log('New push subscription received.');
                 subscriptions.push(data.subscription);
                 ws.send(JSON.stringify({ status: 'subscribed' }));
-            }
+            } else
 
             if (data.type === 'chat') {
                 const { id, from, to, message: messageText } = data;
@@ -190,7 +190,7 @@ wss.on('connection', (ws) => {
                 if (!sent) {
                     console.log(`Client ${to} is not connected.`);
                 }
-            }
+            } else
 
             if (data.type === 'new_notification') {
                 const payload = JSON.stringify({
@@ -207,7 +207,7 @@ wss.on('connection', (ws) => {
                         }
                     });
                 });
-            }
+            } else
 
             if (data.type === 'pong') {
                 clientMap.forEach((client, userId) => {
@@ -215,12 +215,41 @@ wss.on('connection', (ws) => {
                         clientMap.set(userId, { ws, ip: cleanedIp, userId });
                     }
                 });
-            }
+            } else
 
-            else {
-                if (!Buffer.isBuffer(message)) {
-                    console.log(message);
-                }
+            // Video call signaling
+            if (data.type === 'offer') {
+                console.log('Received offer from client\n');
+                // Forward the offer to everyone except the sender
+                clientMap.forEach((client) => {
+                    if (client.ws !== ws && client.ws.readyState === WebSocket.OPEN) {
+                        client.ws.send(JSON.stringify({ type: 'offer', offer: data.offer }));
+                    }
+                });
+            } else
+            
+            if (data.type === 'answer') {
+                console.log('Received answer from client\n');
+                // Forward the answer to everyone except the sender
+                clientMap.forEach((client) => {
+                    if (client.ws !== ws && client.ws.readyState === WebSocket.OPEN) {
+                        client.ws.send(JSON.stringify({ type: 'answer', answer: data.answer }));
+                    }
+                });
+            } else
+            
+            if (data.type === 'candidate') {
+                // Forward ICE candidates to everyone except the sender
+                clientMap.forEach((client) => {
+                    if (client.ws !== ws && client.ws.readyState === WebSocket.OPEN) {
+                        client.ws.send(JSON.stringify({ type: 'candidate', candidate: data.candidate }));
+                    }
+                });
+            } else
+            // End of video call signaling
+
+            {
+                console.log('Unknown message type:', data.type);
             }
         }
     });
@@ -232,7 +261,7 @@ wss.on('connection', (ws) => {
             console.log(`Client disconnected: ${clientID}\n`);
             updateActiveClients();
         } else {
-            console.log('Disconnected WebSocket was not found in the clientMap.');
+            console.log('Disconnected WebSocket was not found in the clientMap.\n');
         }
     });
 
@@ -257,7 +286,7 @@ function pingPong() {
     });
 }
 
-setInterval(pingPong, 5000);
+//setInterval(pingPong, 5000);
 
 // Function to broadcast messages to all connected WebSocket clients
 function broadcastToAll(message) {

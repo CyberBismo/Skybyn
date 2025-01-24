@@ -39,3 +39,6 @@ RewriteRule ^group/([^/]+)$ index.php?group&id=$1 [QSA,L]
 
 # Rewrite /page/name to /page?id=name
 RewriteRule ^page/([^/]+)$ index.php?page&id=$1 [QSA,L]
+
+# Rewrite /c=code to /index.php?c=code
+RewriteRule ^c/([^/]+)$ index.php?c=$1 [QSA,L]

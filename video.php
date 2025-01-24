@@ -1,168 +1,123 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WebRTC Peer-to-Peer</title>
+  <title>WebSocket Video Call</title>
+  <script src="assets/js/ws.js"></script>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+    }
+    video {
+      width: 100%;
+      max-width: 300px;
+      max-height: 200px;
+      border: 1px solid black;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+    @media (min-width: 600px) {
+      body {
+        flex-direction: row;
+      }
+      video {
+        max-width: 450px;
+      }
+      button {
+        font-size: 18px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1>WebRTC Peer-to-Peer Audio/Video</h1>
-  <video id="localVideo" autoplay muted playsinline></video>
-  <video id="remoteVideo" autoplay playsinline></video>
-  <button id="startCall">Start Call</button>
-  <button id="hangupCall" disabled>Hang Up</button>
+  <video id="localVideo" autoplay muted></video>
+  <video id="remoteVideo" autoplay></video>
+  <button onclick="startCall()">Call</button>
 
   <script>
-    const signalingServer = new WebSocket('wss://dev.skybyn.no:4433');
     let localStream;
     let peerConnection;
-
-    // STUN Server Configuration
-    const configuration = {
-      iceServers: [
-        { urls: 'stun:stun.l.google.com:19302' } // Public STUN server
-      ]
-    };
-
-    // Elements
     const localVideo = document.getElementById('localVideo');
     const remoteVideo = document.getElementById('remoteVideo');
-    const startCallButton = document.getElementById('startCall');
-    const hangupCallButton = document.getElementById('hangupCall');
 
-    // Get Media (Audio/Video)
-    async function getMedia() {
-      try {
-        localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-        localVideo.srcObject = localStream;
-        console.log("Local media stream initialized.");
-      } catch (error) {
-        console.error("Error accessing media devices:", error);
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.type === 'offer') {
+        handleOffer(data.offer);
+      } else if (data.type === 'answer') {
+        handleAnswer(data.answer);
+      } else if (data.type === 'candidate') {
+        handleCandidate(data.candidate);
       }
-    }
+    };
 
-    // Create Peer Connection
-    function createPeerConnection() {
-      peerConnection = new RTCPeerConnection(configuration);
+    const config = {
+      iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+    };
 
-      // Add Local Stream to Peer Connection
+    navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+      .then(stream => {
+        localVideo.srcObject = stream;
+        localStream = stream;
+      });
+
+    function handleOffer(offer) {
+      peerConnection = new RTCPeerConnection(config);
       localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
-
-      // Handle Remote Stream
-      peerConnection.ontrack = (event) => {
-        remoteVideo.srcObject = event.streams[0];
-        console.log("Remote stream received.");
-      };
-
-      // Handle ICE Candidates
-      peerConnection.onicecandidate = (event) => {
-        if (event.candidate) {
-          signalingServer.send(JSON.stringify({ type: 'ice-candidate', candidate: event.candidate }));
-          console.log("ICE candidate sent:", event.candidate);
+      peerConnection.onicecandidate = (e) => {
+        if (e.candidate) {
+          ws.send(JSON.stringify({ type: 'candidate', candidate: e.candidate }));
         }
       };
-
-      console.log("Peer connection created.");
+      peerConnection.ontrack = (e) => {
+        remoteVideo.srcObject = e.streams[0];
+      };
+      peerConnection.setRemoteDescription(offer);
+      peerConnection.createAnswer().then(answer => {
+        peerConnection.setLocalDescription(answer);
+        ws.send(JSON.stringify({ type: 'answer', answer }));
+      });
     }
 
-    // Start Call
-    async function startCall() {
-      try {
-        if (!localStream) {
-          console.error("Local media stream is not initialized.");
-          alert("Please allow camera and microphone access.");
-          return;
-        }
-
-        createPeerConnection();
-
-        // Create WebRTC offer
-        console.log("Creating WebRTC offer...");
-        const offer = await peerConnection.createOffer();
-        await peerConnection.setLocalDescription(offer);
-        console.log("WebRTC offer created and set as local description.");
-
-        // Send the offer to the signaling server
-        if (signalingServer.readyState === WebSocket.OPEN) {
-          signalingServer.send(JSON.stringify({ type: 'offer', offer }));
-          console.log("Offer sent to signaling server:", offer);
-        } else {
-          console.error("Signaling server is not connected.");
-        }
-
-        // Disable start call button and enable hangup button
-        startCallButton.disabled = true;
-        hangupCallButton.disabled = false;
-      } catch (error) {
-        console.error("Error starting call:", error);
-      }
+    function handleAnswer(answer) {
+      peerConnection.setRemoteDescription(answer);
     }
 
-    // Hang Up Call
-    function hangupCall() {
-      if (peerConnection) {
-        peerConnection.close();
-        peerConnection = null;
-        console.log("Call ended.");
-      }
-      signalingServer.send(JSON.stringify({ type: 'hangup' }));
-      startCallButton.disabled = false;
-      hangupCallButton.disabled = true;
+    function handleCandidate(candidate) {
+      peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
     }
 
-    // Handle Messages from Signaling Server
-    signalingServer.onmessage = async (message) => {
-      try {
-        const data = JSON.parse(message.data);
-
-        if (data.type === 'offer') {
-          console.log("Received offer from signaling server.");
-          createPeerConnection();
-          await peerConnection.setRemoteDescription(new RTCSessionDescription(data.offer));
-
-          const answer = await peerConnection.createAnswer();
-          await peerConnection.setLocalDescription(answer);
-
-          if (signalingServer.readyState === WebSocket.OPEN) {
-            signalingServer.send(JSON.stringify({ type: 'answer', answer }));
-            console.log("Answer sent to signaling server:", answer);
-          }
-        } else if (data.type === 'answer') {
-          console.log("Received answer from signaling server.");
-          await peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
-        } else if (data.type === 'ice-candidate') {
-          console.log("Received ICE candidate from signaling server.");
-          await peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate));
-        } else if (data.type === 'hangup') {
-          console.log("Received hangup signal.");
-          hangupCall();
+    function startCall() {
+      peerConnection = new RTCPeerConnection(config);
+      localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
+      peerConnection.onicecandidate = (e) => {
+        if (e.candidate) {
+          ws.send(JSON.stringify({ type: 'candidate', candidate: e.candidate }));
         }
-      } catch (error) {
-        console.error("Error handling signaling message:", error);
-      }
-    };
-
-    // WebSocket Open Event Listener
-    signalingServer.onopen = () => {
-      console.log("Connected to signaling server.");
-    };
-
-    // WebSocket Error Handling
-    signalingServer.onerror = (error) => {
-      console.error("WebSocket error:", error);
-    };
-
-    // WebSocket Close Event Listener
-    signalingServer.onclose = () => {
-      console.warn("Signaling server connection closed.");
-    };
-
-    // Event Listeners
-    startCallButton.addEventListener('click', startCall);
-    hangupCallButton.addEventListener('click', hangupCall);
-
-    // Initialize
-    getMedia();
+      };
+      peerConnection.ontrack = (e) => {
+        remoteVideo.srcObject = e.streams[0];
+      };
+      peerConnection.createOffer().then(offer => {
+        peerConnection.setLocalDescription(offer);
+        ws.send(JSON.stringify({ type: 'offer', offer }));
+      });
+    }
   </script>
 </body>
 </html>

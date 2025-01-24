@@ -1,4 +1,4 @@
-<?php include "functions.php";
+<?php include "../functions.php";
 
 if (isset($_SESSION['user'])) {
     $uid = $_SESSION['user'];
