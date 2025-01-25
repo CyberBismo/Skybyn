@@ -3,8 +3,7 @@
                     <img src="../assets/images/logo_faded_clean.png">
                     <?php if (isMobile($userAgent) == false) {?>
                     <div class="logo-name">
-                        <h1><?=skybyn("name")?></h1>
-                        <p><?=skybyn("slogan")?></p>
+                        <p><?=skybyn("name");?></p>
                     </div>
                     <?php }?>
                 </div>

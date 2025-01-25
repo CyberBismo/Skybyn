@@ -16,11 +16,6 @@ if ($domain == $devDomain) {
 }
 
 $signup = false;
-$beta = false;
-
-if (isset($_SESSION['beta'])) {
-    $beta = true;
-}
 
 if (isset($_GET['signup'])) {
 	if (skybyn('register') == "1" || $beta == true) {
@@ -28,15 +23,6 @@ if (isset($_GET['signup'])) {
 	} else {
 		$signup = false;
 	}
-}
-
-if (isset($_GET['betaaccess'])) {
-    $code = $_GET['betaaccess'];
-    $checkCode = $conn->query("SELECT `key` FROM `beta_access` WHERE `key`='$code'");
-    if ($checkCode->num_rows == 1) {
-        $_SESSION['beta'] = $code;
-        ?><script>window.location.href = "../";</script><?php
-    }
 }
 ?>
 <!DOCTYPE html>
@@ -148,13 +134,6 @@ if (isset($_GET['betaaccess'])) {
         <div class="clouds">
             <div class="cloud"></div>
         </div>
-
-        <?php if ($beta == true) {?>
-        <div class="beta_access">
-            <span>beta</span>
-            <p>As a beta tester, you are obligated for reporting bugs and issues to the developers.</p>
-        </div>
-        <?php }?>
 
         <div class="header" id="header">
 
@@ -433,6 +412,22 @@ if (isset($_GET['betaaccess'])) {
         </div>
 
         <div class="left-panel" id="left-panel">
+
+            <?php if (isset($beta) || $rank > 3) {?>
+            <div class="shortcuts beta-feedback">
+                <h3><i class="fa-solid fa-bug"></i><div>BETA Feedback</div><i onclick="feedbackInfo()" class="fa-regular fa-circle-question"></i></h3>
+                <div id="beta-feedback">
+                    <div class="sortcut beta-feedback">
+                        <div class="beta-feedback-body">
+                            <textarea id="beta-feedback-text" placeholder="Write what you find here and click the paper plane to submit."></textarea>
+                        </div>
+                        <div class="beta-feedback-footer">
+                            <div onclick="sendFeedback()"><i class="fa-solid fa-paper-plane"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php }?>
 
             <?php if (isset($rank) && $rank > 3) {?>
             <div class="shortcuts music">

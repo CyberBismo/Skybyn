@@ -32,6 +32,28 @@ if (isset($_COOKIE['login_token'])) {
     }
 }
 
+$beta = false;
+if (isset($_COOKIE['beta'])) {
+    $betaKey = $_COOKIE['beta'];
+    $checkBeta = $conn->query("SELECT * FROM `beta_access` WHERE `key`='$betaKey'");
+    if ($checkBeta->num_rows == 1) {
+        $betaData = $checkBeta->fetch_assoc();
+        $uid = $betaData['user_id'];
+        $beta = $betaKey;
+    } else {
+        setcookie('beta', '', time() - 3600, '/');
+    }
+}
+
+if (isset($_GET['betaaccess'])) {
+    $code = $_GET['betaaccess'];
+    $checkCode = $conn->query("SELECT `key` FROM `beta_access` WHERE `key`='$code'");
+    if ($checkCode->num_rows == 1) {
+        createCookie('beta', $code, 1, 5); // 1 week
+        ?><script>window.location.href = "../";</script><?php
+    }
+}
+
 # Get full url
 function fullUrl() {
     $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';

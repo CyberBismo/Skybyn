@@ -51,6 +51,7 @@
             .cloud {
                 position: absolute;
                 opacity: .1;
+                pointer-events: none;
             }
 
             *::-webkit-scrollbar {
@@ -156,36 +157,67 @@
             }
 
             /** Beta message */
-            .beta_access {
-                position: fixed;
-                bottom: 0;
-                right: 10px;
-                padding: 20px;
-                font-size: 16px;
-                text-align: right;
+            .beta-feedback {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                background: var(--dark);
+                border-radius: 10px;
+            }
+            .beta-feedback-body {
+                display: flex;
+                flex-direction: column;
+                padding: 10px;
+            }
+            .beta-feedback-body textarea {
+                width: 100%;
+                height: 50px;
+                background: var(--dark);
+                color: var(--light);
+                border: none;
+                border-radius: 10px;
+                padding: 0 10px;
+                resize: none;
                 box-sizing: border-box;
-                z-index: 10;
+                outline: none;
             }
-            .beta_access span {
-                text-transform: uppercase;
-                font-family: monospace;
-                font-weight: bold italic;
-                font-size: 26px;
+            .beta-feedback-footer {
+                display: flex;
+                justify-content: flex-end;
+                padding: 10px;
             }
-            .beta_access span:hover {
-                cursor: pointer;
+
+            .feedback-admin {
+                width: 100%;
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 20px;
             }
-            .beta_access p {
-                position: relative;
-                float: left;
-                margin: 0;
-                transform: translateY(10px);
-                padding-right: 10px;
-                opacity: 0;
+            .feedback {
+                width: 100%;
+                background: #fff;
+                border-radius: 5px;
+                margin: 10px 0;
+                padding: 10px;
+                box-shadow: 0 0 5px rgba(0,0,0,0.1);
             }
-            /** Change width of .beta_access p when hover i */
-            .beta_access span:hover + p {
-                opacity: 1;
+            .feedback-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .feedback-user {
+                display: flex;
+                align-items: center;
+            }
+            .feedback-user img {
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                margin-right: 10px;
+            }
+            .feedback-content {
+                margin-top: 10px;
             }
             
             /** First time message */
@@ -1480,11 +1512,13 @@
                     display: none;
                 }
             }
-            .header .top-left .logo-name h1 {
-                margin: 10px 0 5px 0;
-            }
             .header .top-left .logo-name p {
-                margin: 0;
+                margin: 20px 0 5px 0;
+                font-size: 24px;
+                font-weight: bold;
+            }
+            .header .top-left .logo-name p span {
+                font-size: 12px;
             }
             <?php if (isMobile($userAgent) == false) {?>
             .header .new_post_button {
@@ -2925,7 +2959,12 @@
                 justify-content: space-between;
                 margin: 5px 10px;
                 padding: 10px;
+                font-size: 18px;
                 border-radius: 10px;
+            }
+            .shortcuts i.beta {
+                padding-top: 3px;
+                font-size: 12px;
             }
             .shortcuts i {
                 width: 25px;

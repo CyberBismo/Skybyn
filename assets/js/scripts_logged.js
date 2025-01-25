@@ -171,6 +171,24 @@ function startSearch(x) {
     }
 }
 
+function feedbackInfo() {
+    alert("This is a BETA feature.\n\nPlease report any bugs or issues you find.\nYour ID and current timestamp will be stored with what you submit.\n\nThank you for your help and feedback!");
+}
+function sendFeedback() {
+    const feedback = document.getElementById('beta-feedback-text').value;
+    if (feedback.length > 0) {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "../assets/feedback.php", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                document.getElementById('beta-feedback-text').value = "";
+                alert("Feedback sent!");
+            }
+        }
+        xhr.send("feedback="+feedback);
+    }
+}
 
 function updateFileNameLabel() {
     const fileInput = document.getElementById('image_to_share');

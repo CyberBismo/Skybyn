@@ -39,6 +39,10 @@ if ($email_c == "" && $dob != "" && $email != "" && $username != "" && $password
     $conn->query("INSERT INTO `users` (`username`,`email`,`birth_date`,`password`,`salt`,`registration_date`,`token`,`ip`) VALUES ('$username','$email','$dob','$pw','$salt','$now','$token','$ip')");
 
     $id = $conn->insert_id;
+    
+    if (isset($beta) && !empty($beta)) {
+        $updateBetaAccess = $conn->query("UPDATE `beta_access` SET `user_id`='$id' WHERE `key`='$beta'");
+    }
 
     if (!empty($refer)) {
         $checkRefer = $conn->query("SELECT * FROM `referral_code` WHERE `referral_code`='$refer'");
