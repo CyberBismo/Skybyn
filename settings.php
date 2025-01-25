@@ -1,6 +1,6 @@
 <?php include_once "assets/header.php";
 if (!isset($_SESSION['user'])) {
-    ?><meta http-equiv="Refresh" content="0; url='./'" /><?php
+    ?><script>window.location.href = "../";</script><?php
 }
 
 if (isset($_GET['security'])) {
@@ -162,11 +162,10 @@ if (isset($_GET['ip_history'])) {
                     <div id="tab-ip_history" <?=$ip_history?>>
                         <h3>IP History</h3>
                         <?php
-                        $getIPhistory = $conn->query("SELECT * FROM `ip_history` WHERE `user_id`='$uid' ORDER BY `date` DESC");
+                        $getIPhistory = $conn->query("SELECT * FROM `ip_logs` WHERE `user`='$uid' ORDER BY `date` DESC");
                         while($ipData = $getIPhistory->fetch_assoc()) {
                             $ip_date = $ipData['date'];
                             $ip_address = $ipData['ip'];
-                            $ip_trusted = $ipData['trusted'];
                             $ip_code = $ipData['code'];
                             ?>
                             <div class="ip-log">
@@ -174,16 +173,6 @@ if (isset($_GET['ip_history'])) {
                                     <h3><?=$ip_address?></h3>
                                     <?=date("D d .M Y - h:i:s", $ip_date)?>
                                 </div>
-                                <?php if ($rank > 0) {?>
-                                <div class="ip-actions">
-                                    <?php if ($ip_trusted == "1") {?>
-                                    <button class="ip-action" onclick="ipHistory('untrust','<?=$ip_address?>')" onmouseover="this.innerHTML='Untrust'" onmouseleave="this.innerHTML='Trusted'">Trusted</button>
-                                    <?php } else {?>
-                                    <button class="ip-action" onclick="ipHistory('trust','<?=$ip_address?>')">Trust</button>
-                                    <?php }?>
-                                    <button class="ip-action" onclick="ipHistory('remove','<?=$ip_address?>')">Remove</button>
-                                </div>
-                                <?php }?>
                             </div>
                             <?php
                         }
