@@ -174,20 +174,45 @@ function startSearch(x) {
 function feedbackInfo() {
     alert("This is a BETA feature.\n\nPlease report any bugs or issues you find.\nYour ID and current timestamp will be stored with what you submit.\n\nThank you for your help and feedback!");
 }
+document.querySelectorAll('#unsolved').forEach(item => {
+    item.addEventListener('mouseover', event => {
+        item.classList.remove('fa-regular', 'fa-circle');
+        item.classList.add('fa-solid', 'fa-circle-check');
+    });
+    item.addEventListener('mouseout', event => {
+        item.classList.remove('fa-solid', 'fa-circle-check');
+        item.classList.add('fa-regular', 'fa-circle');
+    });
+});
 function sendFeedback() {
     const feedback = document.getElementById('beta-feedback-text').value;
+    const currentPage = window.location.href;
     if (feedback.length > 0) {
-        const xhr = new XMLHttpRequest();
-        xhr.open("POST", "../assets/feedback.php", true);
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState == 4 && xhr.status == 200) {
+        $.ajax({
+            url: '../assets/feedback.php',
+            type: 'POST',
+            data: {
+                feedback: feedback,
+                page: currentPage
+            },
+            success: function(response) {
                 document.getElementById('beta-feedback-text').value = "";
                 alert("Feedback sent!");
             }
-        }
-        xhr.send("feedback="+feedback);
+        });
     }
+}
+function deleteFeedback(x) {
+    $.ajax({
+        url: '../assets/feedback.php',
+        type: 'POST',
+        data: {
+            delete: x
+        },
+        success: function(response) {
+            document.getElementById('feedback_'+x).remove();
+        }
+    });
 }
 
 function updateFileNameLabel() {

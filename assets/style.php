@@ -195,7 +195,7 @@
             }
             .feedback {
                 width: 100%;
-                background: #fff;
+                background: rgba(var(--mode),.2);
                 border-radius: 5px;
                 margin: 10px 0;
                 padding: 10px;
@@ -218,6 +218,42 @@
             }
             .feedback-content {
                 margin-top: 10px;
+            }
+            .feedback-page {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 10px;
+            }
+            .feedback-page button {
+                padding: 5px 10px;
+                border: none;
+                border-radius: 5px;
+                background: rgba(var(--mode),.1);
+                color: var(--mode-text);
+                cursor: pointer;
+            }
+            .feedback-page button:hover {
+                background: rgba(var(--mode),.3);
+            }
+            .feedback-actions {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 10px;
+            }
+            .feedback-action {
+                padding: 5px;
+                cursor: pointer;
+            }
+            .feedback-actions i.fa-circle-check,
+            .feedback-actions i.fa-circle {
+                font-size: 24px;
+            }
+            .feedback-actions i.fa-circle-check {
+                color: #4CAF50;
+            }
+            .feedback-actions i.fa-trash {
+                color: #ff4545;
             }
             
             /** First time message */
