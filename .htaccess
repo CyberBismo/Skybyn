@@ -23,7 +23,7 @@ RewriteRule ^reset$ index.php?reset [L,QSA]
 RewriteRule ^forgot$ index.php?forgot [L,QSA]
 
 # Rewrite /profile/username to /profile.php?u=username
-RewriteRule ^profile/([^/]+)$ profile.php?u=$1 [QSA,L,NC]
+RewriteRule ^profile/([A-Za-z0-9-]+)/?$ profile.php?u=$1 [NC,L]
 
 # Rewrite /profile to /profile.php
 RewriteRule ^profile$ profile.php [QSA,L]
