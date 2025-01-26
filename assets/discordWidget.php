@@ -1,8 +1,8 @@
-<?php
+<?php include("../assets/functions.php");
 $serverId = '1094880679814246470';  // Replace with your server ID
 $token = skybyn("discord_token");    // Replace with your bot token
 
-$url = "https://discord.com/api/guilds/$serverId/widget.json";
+$url = "https://discordapp.com/api/guilds/$serverId/widget.json";
 
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_HTTPHEADER, array(

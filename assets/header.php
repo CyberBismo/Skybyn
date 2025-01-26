@@ -431,7 +431,7 @@ if (isset($_GET['signup'])) {
 
             <?php if (isset($rank) && $rank > 3) {?>
             <div class="shortcuts discord">
-                <h3><i class="fa-brands fa-discord"></i><div>Discord Server</div><i class="fa-solid fa-arrow-up-right-from-square" onclick="window.location.href='./music?upload'" title="Add to music"></i></h3>
+                <h3><i class="fa-brands fa-discord"></i><div>Discord Server</div><i class="fa-solid fa-arrow-up-right-from-square" onclick="window.open('https:/\/discord.gg/wBhPvEvn87','_blank')" title="Go to server"></i></h3>
                 <div id="discordWidget"></div>
             </div>
             <script>
