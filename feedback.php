@@ -59,11 +59,11 @@ if (isset($rank) && $rank > 5) {
 
                                 <?php if ($feedback_solved == 1) {?>
                                 <div class="feedback-action" onclick="solveFeedback(<?=$feedback_id;?>)">
-                                    Solved <i class="fa-solid fa-circle-check"></i>
+                                    Solved <i id="solved_<?=$feedback_id;?>" class="fa-solid fa-circle-check"></i>
                                 </div>
                                 <?php } else {?>
                                 <div class="feedback-action" onclick="solveFeedback(<?=$feedback_id;?>)">
-                                    <i id="unsolved" class="fa-regular fa-circle"></i>
+                                    <i id="unsolved_<?=$feedback_id;?>" class="fa-regular fa-circle"></i>
                                 </div>
                                 <?php }?>
                             </div>

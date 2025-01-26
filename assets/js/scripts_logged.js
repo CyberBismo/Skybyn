@@ -202,8 +202,8 @@ function solveFeedback(x) {
             solve: x
         },
         success: function(response) {
-            document.getElementById('feedback_'+x).classList.add('fa-circle-check');
-            document.getElementById('feedback_'+x).classList.remove('fa-circle');
+            document.getElementById('unsolved_'+x).classList.add('fa-circle-check');
+            document.getElementById('solved_'+x).classList.remove('fa-circle');
         }
     });
 }
