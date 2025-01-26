@@ -1,5 +1,5 @@
 <?php
-include_once "./functions.php";
+include_once "../functions.php";
 
 $text = strtoupper($_POST['text']);
 
@@ -17,10 +17,10 @@ if (strpos($text, "@") === 0) {
         while ($user = $getUsers->fetch_assoc()) {
             $userid = $user['id'];
             $username = $user['username'];
-            $avatar = "./" . $user['avatar'];
+            $avatar = "../" . $user['avatar'];
 
-            if ($avatar == "./") {
-                $avatar = "./assets/images/logo_faded_clean.png";
+            if ($avatar == "../") {
+                $avatar = "../assets/images/logo_faded_clean.png";
             }
             
             $users[] = [
@@ -48,10 +48,10 @@ if (strpos($text, "@") === 0) {
         while ($page = $getPages->fetch_assoc()) {
             $pid = $page['id'];
             $name = $page['name'];
-            $icon = "./" . $page['icon'];
+            $icon = "../" . $page['icon'];
 
-            if ($icon == "./") {
-                $icon = "./assets/images/logo_faded_clean.png";
+            if ($icon == "../") {
+                $icon = "../assets/images/logo_faded_clean.png";
             }
             
             $pages[] = [
@@ -79,10 +79,10 @@ if (strpos($text, "@") === 0) {
         while ($group = $getGroups->fetch_assoc()) {
             $gid = $group['id'];
             $name = $group['name'];
-            $icon = "./" . $group['icon'];
+            $icon = "../" . $group['icon'];
 
-            if ($icon == "./") {
-                $icon = "./assets/images/logo_faded_clean.png";
+            if ($icon == "../") {
+                $icon = "../assets/images/logo_faded_clean.png";
             }
             
             $groups[] = [
@@ -115,10 +115,10 @@ if (strpos($text, "@") === 0) {
             $getUser = $conn->query("SELECT * FROM `users` WHERE `id` = '$uid'");
             $user = $getUser->fetch_assoc();
             $username = $user['username'];
-            $avatar = "./" . $user['avatar'];
+            $avatar = "../" . $user['avatar'];
 
-            if ($avatar == "./") {
-                $avatar = "./assets/images/logo_faded_clean.png";
+            if ($avatar == "../") {
+                $avatar = "../assets/images/logo_faded_clean.png";
             }
 
             $content = str_replace($text, "<span class='search_res_post_highlight'>$text</span>", $content);
