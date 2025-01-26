@@ -654,7 +654,7 @@ if (isset($_GET['signup'])) {
                                     <div class="friend-name"><?=$friend_username?></div>
                                 </div>
                                 <div class="friend-actions">
-                                    <div class="friend-action" onclick="window.location.href='../profile?u=<?=$friend_username?>'">
+                                    <div class="friend-action" onclick="window.location.href='../profile?user=<?=$friend_username?>'">
                                         <i class="fa-solid fa-user"></i>
                                     </div>
                                     <div class="friend-action" onclick="startMessaging('<?=$uid?>','<?=$fid?>')">

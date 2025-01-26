@@ -5,8 +5,8 @@ $myProfile = false;
 $friends = false;
 $rank = 0;
 
-if (isset($_GET['u'])) {
-    $user_id = getUser('username',$_GET['u'],'id');
+if (isset($_GET['user'])) {
+    $user_id = getUser('username',$_GET['user'],'id');
     if ($user_id != "error") {
         if (isset($_SESSION['user'])) {
             if (checkFriendship($uid,$user_id) == "ok") {
