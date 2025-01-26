@@ -23,5 +23,24 @@ if (isset($_POST['feedback'])) {
         } else {
             $json = array("status" => "error", "message" => "Feedback not found");
         }
+    } else {
+        if (isset($_POST['solve'])) {
+            $id = $_POST['solve'];
+            $checkFeedback = $conn->query("SELECT * FROM `feedback` WHERE `id`='$id'");
+            if ($checkFeedback->num_rows == 1) {
+                $feedbackData = $checkFeedback->fetch_assoc();
+                $feedbackUser = $feedbackData['user'];
+                if ($rank > 5) {
+                    $conn->query("UPDATE `feedback` SET `solved`='1' WHERE `id`='$id'");
+                    $json = array("status" => "success");
+                } else {
+                    $json = array("status" => "error", "message" => "You are not allowed to mark this feedback as solved");
+                }
+            } else {
+                $json = array("status" => "error", "message" => "Feedback not found");
+            }
+        } else {
+            $json = array("status" => "error", "message" => "Invalid request");
+        }
     }
 }
