@@ -10,8 +10,8 @@ if (isset($_COOKIE['qr_login'])) {
     }
 }
 
-if (isset($_COOKIE['user'])) {
-    $uid = $_COOKIE['user'];
+if (isset($_COOKIE['logged'])) {
+    $uid = $_COOKIE['logged'];
     $checkUser = $conn->query("SELECT * FROM `users` WHERE `id`='$uid'");
     if ($checkUser->num_rows == 1) {
         $_SESSION['user'] = $uid;
