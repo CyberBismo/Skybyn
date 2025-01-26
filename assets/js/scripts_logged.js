@@ -194,6 +194,19 @@ function deleteFeedback(x) {
         }
     });
 }
+function solveFeedback(x) {
+    $.ajax({
+        url: '../assets/feedback.php',
+        type: 'POST',
+        data: {
+            solve: x
+        },
+        success: function(response) {
+            document.getElementById('feedback_'+x).classList.add('fa-circle-check');
+            document.getElementById('feedback_'+x).classList.remove('fa-circle');
+        }
+    });
+}
 
 function updateFileNameLabel() {
     const fileInput = document.getElementById('image_to_share');
