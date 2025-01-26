@@ -653,6 +653,9 @@ function getGM($x, $y) {
 function notify($to, $from, $type) {
     global $conn;
     $now = time();
+    if ($from == "system") {
+        $from = "0";
+    }
     $conn->query("INSERT INTO `notifications` (`to`,`from`,`date`,`type`) VALUES ('$to','$from','$now','$type')");
 }
 
@@ -730,6 +733,9 @@ function friendship($uid, $friend, $action) {
             } else {
                 echo "Error unblocking";
             }
+        } elseif ($action == "referral") {
+            $conn->query("INSERT INTO `friendship` (`user_id`, `friend_id`, `status`, `since`) VALUES ('$uid', '$friend', 'friends', '$now')");
+            $conn->query("INSERT INTO `friendship` (`user_id`, `friend_id`, `status`, `since`) VALUES ('$friend', '$uid', 'friends', '$now')");
         } else {
             echo "Invalid action.";
         }

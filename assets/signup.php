@@ -49,8 +49,9 @@ if ($email_c == "" && $dob != "" && $email != "" && $username != "" && $password
         if ($checkRefer->num_rows == 1) {
             $referralData = $checkRefer->fetch_assoc();
             $user = $referralData['user'];
-            friendship($id, $user, "send");
-            notify($user,"system", "referral");
+            friendship($id, $user, "referral");
+            notify($id,"system", "referral");
+            notify($user,"system", "new_friend");
         }
     }
 

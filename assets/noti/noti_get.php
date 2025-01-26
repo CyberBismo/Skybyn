@@ -33,6 +33,16 @@ if ($getNotifications->num_rows > 0) {
             $noti_title = "System update";
             $noti_text = $noti_content;
             $noti_action = "";
+        } else
+        if ($noti_type == "referral") {
+            $noti_title = "$noti_username referred you";
+            $noti_text = $noti_content;
+            $noti_action = "";
+        } else
+        if ($noti_type == "new_friend") {
+            $noti_title = "$noti_username is now your friend";
+            $noti_text = $noti_content;
+            $noti_action = "";
         } else {
             $noti_title = "";
             $noti_text = $noti_content;
