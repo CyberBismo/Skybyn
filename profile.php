@@ -14,7 +14,7 @@ if (isset($_GET['u'])) {
             }
         }
     } else {
-        ?><meta http-equiv="Refresh" content="url='../profile'" /><?php
+        ?><script>window.location.href = '../';</script><?php
         return false;
     }
 } else {
@@ -23,9 +23,7 @@ if (isset($_GET['u'])) {
         $loggedIn = true;
         $myProfile = true;
     } else {
-        ?><script>
-            window.location.href = '../';
-        </script><?php
+        ?><script>window.location.href = '../';</script><?php
         return false;
     }
 }
@@ -163,7 +161,7 @@ $Pavatar_bg = "background: black";
                     <?php }?>
                 </div>
                 <div class="profile-right" id="posts">
-                    <?php if ($Pprivate == "0" || $friends == true || $rank > 3) {?>
+                    <?php if ($myProfile == true || $Pprivate == "0" || $friends == true || $rank > 3) {?>
                     <?php $getPosts = mysqli_query($conn, "SELECT * FROM `posts` WHERE `user`='$user_id' ORDER BY `created` DESC LIMIT 5");
                     while($post = mysqli_fetch_assoc($getPosts)) {
                         $post_id = $post['id'];
