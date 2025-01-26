@@ -3038,6 +3038,17 @@
                 box-sizing: border-box;
             }
 
+            /** Discord widget */
+            .discord-widget {
+                width: 100%;
+            }
+            .discord-widget #discordWidget {
+                width: 100%;
+                text-align: center;
+                border: none;
+                overflow: hidden;
+            }
+
             /** Group list */
             .groups {
                 width: 100%;
