@@ -166,7 +166,6 @@ if (isset($_GET['ip_history'])) {
                         while($ipData = $getIPhistory->fetch_assoc()) {
                             $ip_date = $ipData['date'];
                             $ip_address = $ipData['ip'];
-                            $ip_code = $ipData['code'];
                             ?>
                             <div class="ip-log">
                                 <div class="ip-address">
