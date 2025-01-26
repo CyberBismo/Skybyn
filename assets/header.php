@@ -414,7 +414,7 @@ if (isset($_GET['signup'])) {
         <div class="left-panel" id="left-panel">
 
             <?php if (isset($beta) || $rank > 3) {?>
-            <div class="shortcuts beta-feedback">
+            <div class="shortcuts beta-feedback" id="beta-feedback">
                 <h3><i onclick="window.open('../feedback', '_blank')" class="fa-solid fa-bug"></i><div>BETA Feedback</div><i onclick="feedbackInfo()" class="fa-regular fa-circle-question"></i></h3>
                 <div id="beta-feedback">
                     <div class="sortcut beta-feedback">

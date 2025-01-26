@@ -4,10 +4,10 @@ if (!isset($_SESSION['user'])) {
     ?><script>window.location.href = "../";</script><?php
 }
 
-$admin = false;
+$fba = false;
 
 if (isset($rank) && $rank > 5) {
-    $admin = true;
+    $fba = true;
 }
 ?>
         <div class="page-container">
@@ -51,7 +51,7 @@ if (isset($rank) && $rank > 5) {
                                 </div>
                             </div>
                             <div class="feedback-actions">
-                                <?php if ($admin == true) {?>
+                                <?php if ($fba == true) {?>
                                 <div class="feedback-action" onclick="deleteFeedback(<?=$feedback_id;?>)">
                                     <i class="fa-solid fa-trash"></i> Delete
                                 </div>
@@ -72,5 +72,36 @@ if (isset($rank) && $rank > 5) {
                 </div>
             </div>
         </div>
+        
+        <?php if ($fba == true) {?>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                var betaFeedbackDiv = document.getElementById("beta-feedback");
+                if (betaFeedbackDiv) {
+                    var shortcutsDiv = document.createElement("div");
+                    shortcutsDiv.className = "shortcuts beta-keys";
+                    shortcutsDiv.innerHTML = `
+                        <h3><i class="fa-solid fa-key"></i><div>BETA Keys</div><i></i></h3>
+                        <div id="beta-keys">
+                            <?php
+                            $getBetaKeys = $conn->query("SELECT * FROM `beta_access`");
+                            if ($getBetaKeys->num_rows > 0) {
+                                while($keyData = $getBetaKeys->fetch_assoc()) {
+                                    $key = $keyData['key'];
+                                    ?>
+                                    <div class="sortcut beta-key">
+                                        <p><?=$key?></p>
+                                    </div>
+                                    <?php
+                                }
+                            }
+                            ?>
+                        </div>
+                    `;
+                    betaFeedbackDiv.insertAdjacentElement('afterend', shortcutsDiv);
+                }
+            });
+        </script>
+        <?php }?>
     </body>
 </html>

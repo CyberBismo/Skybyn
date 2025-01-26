@@ -3026,6 +3026,18 @@
                 cursor: pointer;
             }
 
+            /** BETA Keys */
+            #beta-keys {
+                max-height: 100px;
+                padding-bottom: 1px;
+                text-align: center;
+                overflow: auto;
+            }
+            .beta-key {
+                padding: 0 10px;
+                box-sizing: border-box;
+            }
+
             /** Group list */
             .groups {
                 width: 100%;
