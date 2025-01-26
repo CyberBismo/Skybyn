@@ -70,8 +70,8 @@ function startSearch(x) {
             data: {
                 text: x.value
             }
-        }).done(function(response) {
-            const res = JSON.parse(response);
+        }).done(function(result) {
+            const res = JSON.parse(result);
             if (res != "") {
                 if (res.user) {
                     searchResUsers.removeAttribute("hidden");

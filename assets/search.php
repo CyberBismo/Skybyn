@@ -1,5 +1,4 @@
-<?php
-include_once "../functions.php";
+<?php include_once "./functions.php";
 
 $text = strtoupper($_POST['text']);
 
