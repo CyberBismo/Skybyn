@@ -21,10 +21,6 @@ RewriteRule ^reset$ index.php?reset [L,QSA]
 # Rewrite /forgot to ?forgot
 RewriteRule ^forgot$ index.php?forgot [L,QSA]
 
-# Redirect /profile.php?u=username to /profile/username
-RewriteCond %{QUERY_STRING} ^u=([^&]+)$
-RewriteRule ^profile\.php$ /profile/%1? [R=301,L]
-
 # Rewrite /profile/username to /profile.php?u=username
 RewriteRule ^profile/([^/]+)$ profile.php?u=$1 [QSA,L]
 

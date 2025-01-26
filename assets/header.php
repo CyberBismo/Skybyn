@@ -191,7 +191,7 @@ if (isset($_GET['signup'])) {
                 <?php if (isset($_SESSION['user'])) {?>
                 <div class="user-avatar" id="user_avatar_<?=$uid?>">
                     <?php if (isMobile($userAgent) == true) {?>
-                    <img src="../assets/images/logo_faded_clean.png" onclick="window.location.href='./'">
+                    <img src="../assets/images/logo_faded_clean.png" onclick="window.location.href='../'">
                     <?php } else {?>
                     <img src="<?=$avatar?>" onclick="window.location.href='../profile'">
                     <?php }?>
@@ -199,7 +199,7 @@ if (isset($_GET['signup'])) {
                 <?php } else {?>
                 <div class="user-avatar">
                     <?php if (isMobile($userAgent) == true) {?>
-                    <img src="../assets/images/logo_faded_clean.png" onclick="window.location.href='../../'">
+                    <img src="../assets/images/logo_faded_clean.png" onclick="window.location.href='../'">
                     <?php }?>
                 </div>
                 <?php }?>
@@ -223,7 +223,7 @@ if (isset($_GET['signup'])) {
         <div class="user-dropdown" id="usermenu">
             <ul>
                 <li onclick="window.location.href='../'"><i class="fa-solid fa-house"></i>Home</li>
-                <li onclick="window.location.href='../profile'"><i class="fa-solid fa-user"></i></i>My Profile</li>
+                <li onclick="window.location.href='../profile'"><i class="fa-solid fa-user"></i></i>Profile</li>
                 <?php if (isset($rank)) {?>
                 <?php if ($rank > 0) {?>
                 <li class="pet"><i class="fa-solid fa-paw"></i>My Pet</li>
@@ -642,10 +642,10 @@ if (isset($_GET['signup'])) {
                             $friendData = $getFriendData->fetch_assoc();
 
                             $friend_username = $friendData['username'];
-                            $friend_avatar = "./".$friendData['avatar'];
+                            $friend_avatar = "../".$friendData['avatar'];
                             
-                            if ($friend_avatar == "./") {
-                                $friend_avatar = "./assets/images/logo_faded_clean.png";
+                            if ($friend_avatar == "../") {
+                                $friend_avatar = "../assets/images/logo_faded_clean.png";
                             }
                             ?>
                             <div class="friend">
@@ -702,9 +702,9 @@ if (isset($_GET['signup'])) {
                     $getFriendData = $conn->query("SELECT * FROM `users` WHERE `id`='$friend'");
                     $friendData = $getFriendData->fetch_assoc();
                     $friend_username = $friendData['username'];
-                    $friend_avatar = "./".$friendData['avatar'];
-                    if ($friend_avatar == "./") {
-                        $friend_avatar = "./assets/images/logo_faded_clean.png";
+                    $friend_avatar = "../".$friendData['avatar'];
+                    if ($friend_avatar == "../") {
+                        $friend_avatar = "../assets/images/logo_faded_clean.png";
                     }
                     if ($open == "1") {
                         $open = " maximized";

@@ -1221,8 +1221,8 @@ if (isset($_SESSION['user'])) {
     $middle_name = $UDRow['middle_name'];
     $last_name = $UDRow['last_name'];
     $title_name = $UDRow['title'];
-    $avatar = "./".$UDRow['avatar'];
-    $wallpaper = "./".$UDRow['wallpaper'];
+    $avatar = "../".$UDRow['avatar'];
+    $wallpaper = "../".$UDRow['wallpaper'];
     $wallpaper_margin = $UDRow['wallpaper_margin'];
     $country = $UDRow['country'];
     $ip = $UDRow['ip'];
@@ -1292,12 +1292,12 @@ if (isset($_SESSION['user'])) {
     #$CName = strtolower($countryName);
     
 
-    if ($avatar == "./") {
-        $avatar = "./assets/images/logo_faded_clean.png";
+    if ($avatar == "../") {
+        $avatar = "../assets/images/logo_faded_clean.png";
     }
 
-    if ($wallpaper == "./") {
-        $wallpaper = "./assets/images/blank.png";
+    if ($wallpaper == "../") {
+        $wallpaper = "../assets/images/blank.png";
     }
 
     if ($first_name != "") {
@@ -1404,9 +1404,9 @@ if (isset($_SESSION['user'])) {
                 $getFriendData = $conn->query("SELECT * FROM `users` WHERE `id`='$friend'");
                 $friendData = $getFriendData->fetch_assoc();
                 $friend_username = $friendData['username'];
-                $friend_avatar = "./".$friendData['avatar'];
-                if ($friend_avatar == "./") {
-                    $friend_avatar = "./assets/images/logo_faded_clean.png";
+                $friend_avatar = "../".$friendData['avatar'];
+                if ($friend_avatar == "../") {
+                    $friend_avatar = "../assets/images/logo_faded_clean.png";
                 }
 #
                 if ($msg_from == $uid) {
@@ -1463,7 +1463,7 @@ if (isset($_SESSION['user'])) {
 
 # Update avatar
 if (isset($_POST['update_avatar'])) {
-    $target_dir = "uploads/avatars/$uid/";
+    $target_dir = "../uploads/avatars/$uid/";
     $target_file = $target_dir . basename($_FILES["avatar"]["name"]);
     $uploadOk = 1;
     $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
@@ -1527,7 +1527,7 @@ if (isset($_POST['update_avatar'])) {
 
 # Update wallpaper
 if (isset($_POST['update_wallpaper'])) {
-    $target_dir = "uploads/wallpapers/$uid/";
+    $target_dir = "../uploads/wallpapers/$uid/";
     $target_file = $target_dir . basename($_FILES["wallpaper"]["name"]);
     $uploadOk = 1;
     $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
@@ -1554,8 +1554,8 @@ if (isset($_POST['update_wallpaper'])) {
     // Check if file already exists
     if (file_exists($target_file)) {
         $msg = "Sorry, file already exists.";
-    createCookie("msg", $msg, "10", null);
-      $uploadOk = 0;
+        createCookie("msg", $msg, "10", null);
+        $uploadOk = 0;
     }
 
     // Check file size
@@ -1566,8 +1566,7 @@ if (isset($_POST['update_wallpaper'])) {
     }
 
     // Allow certain file formats
-    if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-    && $imageFileType != "gif" ) {
+    if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif" ) {
         $msg = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
         createCookie("msg", $msg, "10", null);
         $uploadOk = 0;
@@ -1579,13 +1578,13 @@ if (isset($_POST['update_wallpaper'])) {
         createCookie("msg", $msg, "10", null);
     // if everything is ok, try to upload file
     } else {
-      if (move_uploaded_file($_FILES["wallpaper"]["tmp_name"], $target_file)) {
-        $q = "UPDATE `users` SET `wallpaper`='$target_file' WHERE `id`='$uid'";
-        mysqli_query($conn, $q);
-      } else {
-        $msg = "Sorry, there was an error uploading your file.";
-        createCookie("msg", $msg, "10", null);
-      }
+        if (move_uploaded_file($_FILES["wallpaper"]["tmp_name"], $target_file)) {
+            $q = "UPDATE `users` SET `wallpaper`='$target_file' WHERE `id`='$uid'";
+            mysqli_query($conn, $q);
+        } else {
+            $msg = "Sorry, there was an error uploading your file.";
+            createCookie("msg", $msg, "10", null);
+        }
     }
 }
 
@@ -1614,7 +1613,7 @@ if (isset($_POST['update_account'])) {
         }
     }
 
-    header("location: ./settings");
+    header("location: ../settings");
 }
 
 if (isset($_POST['update_name'])) {
