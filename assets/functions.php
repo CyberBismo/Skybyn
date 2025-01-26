@@ -10,14 +10,16 @@ if (isset($_COOKIE['qr_login'])) {
     }
 }
 
-if (isset($_COOKIE['logged'])) {
-    $uid = $_COOKIE['logged'];
-    $checkUser = $conn->query("SELECT * FROM `users` WHERE `id`='$uid'");
-    if ($checkUser->num_rows == 1) {
-        $_SESSION['user'] = $uid;
-        ?><script>window.location.href = "../";</script><?php
-    } else {
-        setcookie('user', '', time() - 3600, '/');
+if (!isset($_SESSION['user'])) {
+    if (isset($_COOKIE['logged'])) {
+        $uid = $_COOKIE['logged'];
+        $checkUser = $conn->query("SELECT * FROM `users` WHERE `id`='$uid'");
+        if ($checkUser->num_rows == 1) {
+            $_SESSION['user'] = $uid;
+            ?><script>window.location.href = "../";</script><?php
+        } else {
+            setcookie('user', '', time() - 3600, '/');
+        }
     }
 }
 
