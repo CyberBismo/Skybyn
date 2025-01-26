@@ -430,6 +430,26 @@ if (isset($_GET['signup'])) {
             <?php }?>
 
             <?php if (isset($rank) && $rank > 3) {?>
+            <div class="shortcuts discord">
+                <h3><i class="fa-brands fa-discord"></i><div>Discord Server</div><i class="fa-solid fa-arrow-up-right-from-square" onclick="window.location.href='./music?upload'" title="Add to music"></i></h3>
+                <div id="discordWidget"></div>
+            </div>
+            <script>
+                window.onload = function() {
+                    fetch('../assets/discordWidget.php')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (document.getElementById('discordWidget')) {
+                            const widgetDiv = document.getElementById('discordWidget');
+                            widgetDiv.innerHTML = `<p>Online Members: ${data.members.filter(member => member.status === 'online').length}</p>`;
+                        }
+                    })
+                    .catch(error => console.error('Error fetching data: ', error));
+                };
+            </script>
+            <?php }?>
+
+            <?php if (isset($rank) && $rank > 3) {?>
             <div class="shortcuts music">
                 <h3><i class="fa-solid fa-music"></i><div>Music</div><i class="fa-solid fa-record-vinyl" onclick="window.location.href='./music?upload'" title="Add to music"></i></h3>
                 <div id="my-music">

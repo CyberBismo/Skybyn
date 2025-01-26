@@ -88,11 +88,15 @@ if (isset($rank) && $rank > 5) {
                             if ($getBetaKeys->num_rows > 0) {
                                 while($keyData = $getBetaKeys->fetch_assoc()) {
                                     $key = $keyData['key'];
-                                    ?>
-                                    <div class="sortcut beta-key">
-                                        <p><?=$key?></p>
-                                    </div>
-                                    <?php
+                                    $key_assigned = $keyData['user_id'];
+
+                                    if (empty($key_assigned)) {
+                                        ?>
+                                        <div class="sortcut beta-key">
+                                            <p><?=$key?></p>
+                                        </div>
+                                        <?php
+                                    }
                                 }
                             }
                             ?>
