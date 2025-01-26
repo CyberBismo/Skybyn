@@ -1,7 +1,7 @@
 <?php include_once "../assets/header.php";
 
-if (isset($_GET['id'])) {
-    $groupID = $_GET['id'];
+if (isset($_GET['g'])) {
+    $groupID = $_GET['g'];
     
     $checkGID = $conn->query("SELECT * FROM `groups` WHERE `id`='$groupID'");
     if ($checkGID->num_rows == 1) {

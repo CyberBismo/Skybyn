@@ -81,7 +81,7 @@ function startSearch(x) {
                             const userDiv = document.createElement('div');
                             userDiv.classList.add('search_res_user');
                             userDiv.setAttribute('data-username', user.username);
-                            userDiv.onclick = () => window.location.href = `./profile?u=${user.username}`;
+                            userDiv.onclick = () => window.location.href = `../profile?user=${user.username}`;
 
                             const avatarDiv = document.createElement('div');
                             avatarDiv.classList.add('search_res_user_avatar');
@@ -108,7 +108,7 @@ function startSearch(x) {
                         avatarDiv.classList.add('search_res_group_avatar');
 
                         const avatarImg = document.createElement('img');
-                        avatarImg.src = group.avatar;
+                        avatarImg.src = group.icon;
 
                         avatarDiv.appendChild(avatarImg);
                         groupDiv.appendChild(avatarDiv);
@@ -128,33 +128,13 @@ function startSearch(x) {
                         avatarDiv.classList.add('search_res_page_avatar');
 
                         const avatarImg = document.createElement('img');
-                        avatarImg.src = page.avatar;
+                        avatarImg.src = page.icon;
 
                         avatarDiv.appendChild(avatarImg);
                         pageDiv.appendChild(avatarDiv);
                         pageDiv.appendChild(document.createTextNode(page.name));
 
                         searchRPages.appendChild(pageDiv);
-                    });
-                } else
-                if (res.posts) {
-                    searchResPosts.removeAttribute("hidden");
-                    res.forEach(result => {
-                        const resultDiv = document.createElement('div');
-                        resultDiv.classList.add('search_res_post');
-                        resultDiv.onclick = () => window.location.href = `./post?id=${result.id}`;
-
-                        const iconDiv = document.createElement('div');
-                        iconDiv.classList.add('search_res_post_icon');
-
-                        const iconImg = document.createElement('img');
-                        iconImg.src = result.icon;
-
-                        iconDiv.appendChild(iconImg);
-                        resultDiv.appendChild(iconDiv);
-                        resultDiv.appendChild(document.createTextNode(result.title));
-
-                        searchRPosts.appendChild(resultDiv);
                     });
                 } else {
                     searchResUsers.setAttribute("hidden", "");
