@@ -15,8 +15,10 @@ if (isset($_COOKIE['user'])) {
     $checkUser = $conn->query("SELECT * FROM `users` WHERE `id`='$uid'");
     if ($checkUser->num_rows == 1) {
         $_SESSION['user'] = $uid;
+        ?><script>window.location.href = "../";</script><?php
+    } else {
+        setcookie('user', '', time() - 3600, '/');
     }
-    setcookie('user', '', time() - 3600, '/');
 }
 
 if (isset($_COOKIE['login_token'])) {
