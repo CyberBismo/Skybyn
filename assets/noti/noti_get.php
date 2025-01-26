@@ -35,7 +35,7 @@ if ($getNotifications->num_rows > 0) {
             $noti_action = "";
         } else
         if ($noti_type == "referral") {
-            $noti_title = "$noti_username referred you";
+            $noti_title = "You referred a new user";
             $noti_text = $noti_content;
             $noti_action = "";
         } else
