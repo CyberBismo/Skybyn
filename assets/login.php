@@ -24,7 +24,7 @@ if ($checkEmail->num_rows == 1) {
         $lastIP = $UserRow['ip'];
 
         if ($lastIP != $currentIP) {
-            $checkIPLog = $conn->query("SELECT * FROM `ip_logs` WHERE `user_id`='$uid' AND `ip`='$currentIP'");
+            $checkIPLog = $conn->query("SELECT * FROM `ip_logs` WHERE `user`='$uid' AND `ip`='$currentIP'");
             $checkIPData = $checkIPLog->fetch_assoc();
             $ip_trusted = $checkIPData['trusted'];
             $ip_code = $checkIPData['code'];
