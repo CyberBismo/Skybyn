@@ -255,18 +255,20 @@ if (isset($_GET['signup'])) {
                 <textarea type="text" placeholder="What's on your mind?" id="new_post_input" oninput="adjustTextareaHeight()" onkeydown="checkEnter()" onkeyup="convertEmoji(this.value)"></textarea>
                 <div class="new_post_files" id="new_post_files"></div>
                 <div class="create_post_actions create_post_actions_bottom">
-                    <!--span>
+                    <?php if ($rank > 0) {?>
+                    <span>
                         <i class="fa-solid fa-earth-americas"></i>
                         <select id="new_post_public">
                             <option value="0">Private</option>
                             <option value="1" selected>Friends only</option>
                             <option value="2">Public</option>
                         </select>
-                    </span-->
+                    </span>
                     <span style="word-break: break-all">
                         <input type="file" id="image_to_share" accept="image/*;capture=camera" multiple hidden onchange="updateFileNameLabel()">
                         <label for="image_to_share"><i class="fa-solid fa-image"></i><span id="image_to_share_text">No image selected</span></label>
                     </span>
+                    <?php }?>
                     <i class="fa-solid fa-paper-plane share" id="create_post_btn" onclick="createPost()"></i>
                 </div>
             </div>

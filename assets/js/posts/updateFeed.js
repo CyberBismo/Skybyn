@@ -23,8 +23,10 @@ function createPost() {
     const text = document.getElementById('new_post_input');
     const image = document.getElementById('image_to_share');
     const filesDiv = document.getElementById('new_post_files');
+    const public = document.getElementById('new_post_public');
     
     const formData = new FormData();
+    formData.append('public', public.value);
     formData.append('text', text.value);
     for (let i = 0; i < image.files.length; i++) {
         formData.append('image[]', image.files[i]);
