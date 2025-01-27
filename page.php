@@ -140,8 +140,8 @@ if (isset($_GET['new'])) {?>
                 if ($getPages->num_rows > 0) {
                     while($page = $getPages->fetch_assoc()){
                         $p_id = $page['id'];
-                        $p_name = $page['name'];
-                        $p_desc = $page['description'];
+                        $p_name = html_entity_decode($page['name'], ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                        $p_desc = html_entity_decode($page['description'], ENT_QUOTES | ENT_HTML5, 'UTF-8');
                         $p_icon = $page['icon'];
                         $p_wallpaper = $page['wallpaper'];
                         $p_owner = $page['owner'];

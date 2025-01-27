@@ -128,7 +128,7 @@ while ($post = $getPosts->fetch_assoc()) {
                         $commentUser = $commentData['user'];
                         $commentUsername = getUser("id",$commentData['user'],"username");
                         $commentAvatar = getUser("id",$commentData['user'],"avatar");
-                        $commentText = fixEmojis(nl2br(cleanUrls($commentData['content'])), 1);
+                        $commentText = fixEmojis(nl2br(cleanUrls(html_entity_decode($commentData['content'], ENT_QUOTES | ENT_HTML5, 'UTF-8'))), 1);
                         
                         if ($commentAvatar == "") {
                             $commentAvatar = "../assets/images/logo_faded_clean.png";

@@ -15,7 +15,7 @@ window.addEventListener('scroll', function () {
     const scrollPosition = window.scrollY;
 
     if (documentHeight - (scrollPosition + windowHeight) < 200) {
-        loadMorePosts();
+        //loadMorePosts();
     }
 });
 
@@ -78,7 +78,7 @@ function editPost(x) {
     const post = document.getElementById('post_c_'+ x);
     const new_post_input = document.getElementById('new_post_input');
     $.ajax({
-        url: '../assets/posts/getPost.php',
+        url: '../assets/posts/post_edit.php',
         type: "POST",
         data: {
             id : x

@@ -1,7 +1,7 @@
 <?php include "../functions.php";
 
 $pid = $_POST['post_id'];
-$text = $_POST['comment'];
+$text = htmlentities($_POST['comment'], ENT_QUOTES | ENT_HTML5, 'UTF-8');
 $fixedText = fixEmojis($text, null);
 $escapedText = htmlspecialchars($fixedText);
 $escapedText = addslashes($escapedText);

@@ -166,7 +166,7 @@ $Pavatar_bg = "background: black";
                     while($post = mysqli_fetch_assoc($getPosts)) {
                         $post_id = $post['id'];
                         $post_user = $post['user'];
-                        $post_content = $post['content'];
+                        $post_content = html_entity_decode($post['content'], ENT_QUOTES | ENT_HTML5, 'UTF-8');
                         $post_created = date("d M. y H:i:s", $post['created']);
 
                         $getComments = mysqli_query($conn, "SELECT * FROM `comments` WHERE `post`='$post_id'");
@@ -280,7 +280,7 @@ $Pavatar_bg = "background: black";
                                             $commentUser = $commentData['user'];
                                             $commentUsername = getUser("id",$commentData['user'],"username");
                                             $commentAvatar = getUser("id",$commentData['user'],"avatar");
-                                            $commentText = fixEmojis(nl2br(cleanUrls($commentData['content'])), 1);
+                                            $commentText = fixEmojis(nl2br(cleanUrls(html_entity_decode($commentData['content'], ENT_QUOTES | ENT_HTML5, 'UTF-8'))), 1);
                                             
                                             if ($commentAvatar == "") {
                                                 $commentAvatar = "../assets/images/logo_faded_clean.png";
