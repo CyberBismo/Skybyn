@@ -22,17 +22,16 @@ if ($checkEmail->num_rows == 1) {
         $username = $UserRow['username'];
         $token = $UserRow['token'];
         $lastIP = $UserRow['ip'];
+        
+        if ($token == "0" || $token == "") {
+            $conn->query("UPDATE `users` SET `token`='$new_token' WHERE `id`='$uid'");
+            $token = $new_token;
+        }
 
         //if ($lastIP != $currentIP) {
         //    $checkIPLog = $conn->query("SELECT * FROM `ip_logs` WHERE `user`='$uid' AND `ip`='$currentIP'");
         //    $checkIPData = $checkIPLog->fetch_assoc();
-        //    $ip_trusted = $checkIPData['trusted'];
         //    $ip_code = $checkIPData['code'];
-//
-        //    if ($token == "0" || $token == "") {
-        //        $conn->query("UPDATE `users` SET `token`='$new_token' WHERE `id`='$uid'");
-        //        $token = $new_token;
-        //    }
         //    
         //    if ($checkIPLog->num_rows == 0) {
         //        $conn->query("INSERT INTO `ip_logs` (`user_id`,`date`,`ip`) VALUES ('$uid','$now','$currentIP')");
