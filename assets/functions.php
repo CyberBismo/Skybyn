@@ -11,28 +11,16 @@ if (isset($_COOKIE['qr_login'])) {
 }
 
 if (!isset($_SESSION['user'])) {
-    if (isset($_COOKIE['logged'])) {
-        $uid = $_COOKIE['logged'];
-        $checkUser = $conn->query("SELECT * FROM `users` WHERE `id`='$uid'");
-        if ($checkUser->num_rows == 1) {
+    if (isset($_COOKIE['login_token'])) {
+        $token = $_COOKIE['login_token'];
+        $checkToken = $conn->query("SELECT * FROM `users` WHERE `token`='$token'");
+        if ($checkToken->num_rows == 1) {
+            $tokenData = $checkToken->fetch_assoc();
+            $uid = $tokenData['id'];
             $_SESSION['user'] = $uid;
-            ?><script>window.location.href = "../";</script><?php
         } else {
-            setcookie('user', '', time() - 3600, '/');
+            setcookie('login_token', '', time() - 3600, '/');
         }
-    }
-}
-
-if (isset($_COOKIE['login_token'])) {
-    $token = $_COOKIE['login_token'];
-    $checkToken = $conn->query("SELECT * FROM `users` WHERE `token`='$token'");
-    if ($checkToken->num_rows == 1) {
-        $tokenData = $checkToken->fetch_assoc();
-        $uid = $tokenData['id'];
-        $_SESSION['user'] = $uid;
-        setcookie('login_token', '', time() - 3600, '/');
-    } else {
-        setcookie('login_token', '', time() - 3600, '/');
     }
 }
 

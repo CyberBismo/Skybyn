@@ -181,7 +181,7 @@ if ($checkEmail->num_rows == 1) {
             $conn->query("UPDATE `ip_logs` SET `date`='$now' WHERE `ip`='$currentIP' AND `user`='$uid'");
 
             if ($remember == "true") {
-                createCookie("logged",$uid,"1","6");
+                createCookie("login_token",$uid,"1","6");
             }
             $data = array(
                 "responseCode" => "ok",
