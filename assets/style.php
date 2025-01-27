@@ -3,6 +3,8 @@
                 --mode: 0,0,0;
                 --mode-text: white;
                 --mode-placeholder: lightgrey;
+                --lightmode: linear-gradient(to top, #48c6ef 0%, #6f86d6 100%);
+                --darkmode: linear-gradient(to top, #243B55 0%, #141E30 100%);
             }
 
             html {
@@ -13,10 +15,6 @@
                 margin: 0 auto;
                 padding: 0;
                 color: var(--mode-text);
-            }
-
-            .darkmode {
-                background: linear-gradient(to top, #243B55 0%, #141E30 100%);
             }
 
             .background {
@@ -482,7 +480,7 @@
                 min-width: 300px;
                 max-width: 650px;
                 margin: 0 auto;
-                margin-top: 65px;
+                margin-top: 75px;
                 padding: 10px 0;
             }
             .group-container {
@@ -499,7 +497,7 @@
             @media only screen and (max-width: 1239px) {
                 .group-container {
                     max-width: calc(100% - 100px);
-                    margin-top: 80px;
+                    margin-top: 75px;
                 }
             }
             <?php } else {?>
@@ -508,7 +506,7 @@
                 width: 100%;
                 max-width: 800px;
                 margin: 0 auto;
-                padding: 65px 0;
+                padding: 75px 0;
             }
             .group-container {
                 min-width: 300px;
@@ -1740,13 +1738,24 @@
             }
 
             <?php } else {?>
+
+            @media (prefers-color-scheme: light) {
+                .new_post {
+                    background: linear-gradient(to top, #48c6ef 0%, #6f86d6 100%);
+                }
+            }
+            @media (prefers-color-scheme: dark) {
+                .new_post {
+                    background: linear-gradient(to top, #243B55 0%, #141E30 100%);
+                }
+            }
             .new_post {
                 position: fixed;
-                bottom: 0;
+                top: 0;
                 left: 0;
                 width: 100%;
-                height: calc(100% - 75px);
-                background: rgba(var(--dark),.8);
+                height: 100%;
+                padding-top: 75px;
                 backdrop-filter: blur(5px);
                 box-sizing: border-box;
                 box-shadow: 0px 5px 10px 0px rgba(var(--mode),.5);
@@ -1826,13 +1835,13 @@
                 padding: 0 10px;
                 color: var(--mode-text);
             }
-            .create_post_actions_top span select {
+            .create_post_actions span select {
                 color: var(--mode-text);
                 background: none;
                 outline: none;
                 border: none;
             }
-            .create_post_actions_top span select option {
+            .create_post_actions span select option {
                 color: black;
             }
              .create_post_actions_top span.close {

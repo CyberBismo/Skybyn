@@ -215,11 +215,11 @@ function updateFileNameLabel() {
     filesDiv.innerHTML = ''; // Clear the previous content
 
     if (fileInput.files.length === 0) {
-        fileNameLabel.textContent = 'No image selected';
+        fileNameLabel.textContent = '0';
     } else if (fileInput.files.length === 1) {
         const file = fileInput.files[0];
         if (isFileSupported(file)) {
-            fileNameLabel.textContent = file.name;
+            fileNameLabel.textContent = fileInput.files.length;
             displayImageAsThumbnail(file, filesDiv);
         } else {
             fileNameLabel.textContent = 'Invalid file type';
@@ -236,7 +236,13 @@ function updateFileNameLabel() {
             displayImageAsThumbnail(file, filesDiv);
         }
 
-        fileNameLabel.textContent = allFilesSupported ? fileInput.files.length + ' files selected' : 'Invalid file type';
+        fileNameLabel.textContent = allFilesSupported ? fileInput.files.length : 'Invalid file type';
+    }
+
+    if (fileNameLabel.textContent === 'Invalid file type') {
+        setTimeout(() => {
+            fileNameLabel.textContent = '';
+        }, 3000);
     }
 }
 

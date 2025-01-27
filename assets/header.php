@@ -266,7 +266,7 @@ if (isset($_GET['signup'])) {
                     </span>
                     <span style="word-break: break-all">
                         <input type="file" id="image_to_share" accept="image/*;capture=camera" multiple hidden onchange="updateFileNameLabel()">
-                        <label for="image_to_share"><i class="fa-solid fa-image"></i><span id="image_to_share_text">No image selected</span></label>
+                        <label for="image_to_share"><i class="fa-solid fa-image"></i><span id="image_to_share_text"></span></label>
                     </span>
                     <?php }?>
                     <i class="fa-solid fa-paper-plane share" id="create_post_btn" onclick="createPost()"></i>
@@ -365,7 +365,6 @@ if (isset($_GET['signup'])) {
                 newPostIcon.classList.add("fa-plus");
                 newPostIcon.classList.remove("fa-xmark");
                 mobile_nav_btn.style.transform = "rotate(0deg)";
-                new_post.style.background = "rgba(var(--dark),.2)";
                 header.style.background = "rgba(var(--dark),.2)";
                 <?php } else {?>
                 new_post_btn.innerHTML = "Anything new?";
@@ -377,7 +376,6 @@ if (isset($_GET['signup'])) {
                 newPostIcon.classList.remove("fa-plus");
                 newPostIcon.classList.add("fa-xmark");
                 mobile_nav_btn.style.transform = "rotate(45deg)";
-                new_post.style.background = "rgba(var(--dark),1)";
                 header.style.background = "rgba(var(--dark),1)";
                 <?php } else {?>
                 new_post_btn.innerHTML = "Cancel";
