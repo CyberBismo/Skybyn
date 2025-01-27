@@ -607,7 +607,7 @@ function language($x,$y,$z) {
     $getLangs = $conn->query("SELECT * FROM `countries` $attr");
     $LRow = $getLangs->fetch_assoc();
 
-    #return $LRow[$z];
+    return isset($LRow[$z]) ? $LRow[$z] : '';
 }
 
 # Get user data
@@ -1171,7 +1171,7 @@ if (isset($_POST['forgot'])) {
         mail($to, $subject, $message, $headers);
         $msg = "If the e-mail address you provided is correct, we have sent a link for you to reset your password. Check your spam/inbox/trash.";
         createCookie("msg", $msg, "10", null);
-        ?><meta http-equiv="Refresh" content="0; url='./'" /><?php
+        ?><script>window.location.href = "../";</script><?php
     }
 }
 
@@ -1193,7 +1193,7 @@ if (isset($_POST['reset'])) {
         
         $msg = "Password reset successful!";
         createCookie("msg", $msg, "10", null);
-        ?><meta http-equiv="Refresh" content="0; url='./'" /><?php
+        ?><script>window.location.href = "../";</script><?php
     }
 }
 
@@ -1202,13 +1202,6 @@ if (isset($_SESSION['user'])) {
     $firstTime = false;
     $uid = $_SESSION['user'];
     $UDRes = $conn->query("SELECT * FROM `users` WHERE `id`='$uid'");
-    if ($UDRes->num_rows == 0) {
-        session_destroy();
-        createCookie("logged","","0","7"); # 7 = -1
-        ?><meta http-equiv="Refresh" content="0; url='./'" /><?php
-    } else {
-        createCookie("logged",$uid,"1","3");
-    }
     $UDRow = $UDRes->fetch_assoc();
     $email = $UDRow['email'];
     $username = $UDRow['username'];
@@ -1287,7 +1280,9 @@ if (isset($_SESSION['user'])) {
     $referral = referralCode();
 
     $countryName = language('id',$country,'country_name');
-    #$CName = strtolower($countryName);
+    if ($countryName) {
+        $CName = strtolower($countryName);
+    }
     
 
     if ($avatar == "../") {
@@ -1313,10 +1308,6 @@ if (isset($_SESSION['user'])) {
     }
 
     $logo = $avatar;
-
-    if (empty($username)) {
-        $_SESSION['username'];
-    }
 
     $myOwnedGroups = $conn->query("SELECT * FROM `groups` WHERE `owner`='$uid'");
 
@@ -1441,21 +1432,6 @@ if (isset($_SESSION['user'])) {
             "friend_avatar" => $friendAvatar
         );
         echo json_encode($data);
-    }
-} else {
-    if (isset($_COOKIE['logged'])) {
-        $user = $_COOKIE['logged'];
-        $uid = substr($user, 4);
-        $checkUser = $conn->query("SELECT * FROM `users` WHERE `id`='$uid'");
-        $countUsers = $checkUser->num_rows;
-        if ($countUsers == 1) {
-            $_SESSION['user'] = $uid;
-            ?><meta http-equiv="Refresh" content="0; url='./'" /><?php
-        } else {
-            session_destroy();
-            createCookie("logged","","0","7"); # 7 = -1
-            ?><meta http-equiv="Refresh" content="0; url='./'" /><?php
-        }
     }
 }
 
@@ -1752,7 +1728,7 @@ if (isset($_POST['share'])) {
         createCookie("msg", $msg, "10", null);
         }
     }
-    ?><meta http-equiv="Refresh" content="0; url='./'" /><?php
+    ?><script>window.location.href = "../";</script><?php
 }
 
 # Delete post
