@@ -4,9 +4,11 @@ if (isset($_COOKIE['qr_login'])) {
     $uid = $_COOKIE['qr_login'];
     $checkUser = $conn->query("SELECT * FROM `users` WHERE `id`='$uid'");
     if ($checkUser->num_rows == 1) {
+        $token = $checkUser->fetch_assoc()['token'];
         $_SESSION['user'] = $uid;
         setcookie('qr_login', '', time() - 3600, '/');
         setcookie('qr', '', time() - 3600, '/');
+        createCookie("login_token",$token,"1","6");
     }
 }
 
