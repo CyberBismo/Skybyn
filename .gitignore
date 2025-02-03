@@ -32,3 +32,4 @@ ws/server.js
 /assets/uploads
 /ws
 /ws
+*.pem
