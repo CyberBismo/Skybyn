@@ -4227,7 +4227,8 @@
                 margin-left: 50%;
                 padding: 20px;
                 transform: translateX(-50%);
-                background: rgba(var(--mode),.7);
+                background: rgba(var(--mode),.9);
+                backdrop-filter: blur(5px);
                 border-radius: 10px;
                 box-sizing: border-box;
             }
@@ -4235,13 +4236,14 @@
             .changeAvatar,
             .changeWallpaper {
                 position: fixed;
-                top: 20px;
-                left: 20px;
-                width: calc(100% - 40px);
-                height: 300px;
+                top: 75px;
+                left: 0;
+                width: 100%;
+                height: calc(100% - 165px);
                 margin: 0 auto;
                 padding: 20px;
-                background: white;
+                background: rgba(var(--mode),.9);
+                backdrop-filter: blur(5px);
                 border-radius: 20px;
                 box-sizing: border-box;
             }
@@ -4249,6 +4251,28 @@
             .changeAvatar i,
             .changeWallpaper i {
                 float: right;
+                cursor: pointer;
+            }
+            .changeAvatar label,
+            .changeWallpaper label {
+                width: 100%;
+                height: 40px;
+                padding: 10px;
+                color: var(--mode-text);
+                background: rgba(255,255,255,.1);
+                border: none;
+                border-radius: 10px;
+                cursor: pointer;
+            }
+            .changeAvatar input[type=submit],
+            .changeWallpaper input[type=submit] {
+                float: right;
+                height: 40px;
+                padding: 10px;
+                color: var(--mode-text);
+                background: rgba(255,255,255,.1);
+                border: none;
+                border-radius: 10px;
                 cursor: pointer;
             }
 

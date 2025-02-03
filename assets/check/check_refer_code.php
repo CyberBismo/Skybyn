@@ -9,11 +9,11 @@ if ($refer >= 6) {
         $codeData = $checkCode->fetch_assoc();
         $created = $codeData['created'];
 
-        // Check if created date is equal to or more than 5 minutes ago
+        // Check if created date is more than 5 minutes old
         $fiveMinutesAgo = strtotime('-5 minutes');
         $createdTimestamp = strtotime($created);
 
-        if ($createdTimestamp >= $fiveMinutesAgo) {
+        if ($createdTimestamp <= $fiveMinutesAgo) {
             // Delete the record
             $deleteCode = $conn->query("DELETE FROM `referral_code` WHERE `referral_code`='$refer'");
             if ($deleteCode) {

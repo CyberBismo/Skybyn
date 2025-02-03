@@ -15,7 +15,7 @@ window.addEventListener('scroll', function () {
     const scrollPosition = window.scrollY;
 
     if (documentHeight - (scrollPosition + windowHeight) < 200) {
-        //loadMorePosts();
+        loadMorePosts();
     }
 });
 
@@ -26,7 +26,7 @@ function createPost() {
     const public = document.getElementById('new_post_public');
     
     const formData = new FormData();
-    formData.append('public', public.value);
+    //formData.append('public', public.value);
     formData.append('text', text.value);
     for (let i = 0; i < image.files.length; i++) {
         formData.append('image[]', image.files[i]);
@@ -112,4 +112,22 @@ function deletePost(x) {
         };
         ws.send(JSON.stringify(data)); // Send the new post ID to the server
     });
+}
+
+function loadMorePosts() {
+    const lastPost = document.getElementById('last_post');
+    if (lastPost) {
+        const lastPostId = lastPost.dataset.id;
+        $.ajax({
+            url: '../assets/posts/posts_load.php',
+            type: 'POST',
+            data: {
+                lastPostId: lastPostId
+            },
+            success: function (response) {
+                const posts = document.getElementById('posts');
+                posts.insertAdjacentHTML('beforeend', response);
+            }
+        });
+    }
 }

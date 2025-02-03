@@ -3,8 +3,8 @@
 if (isset($_POST['post_id'])) {
     $post_id = $_POST['post_id'];
 
-    $stmt = $conn->prepare("SELECT * FROM `posts` WHERE `id` = ? AND (`user` = ? OR `user` IN (SELECT `friend_id` FROM `friendship` WHERE `user_id` = ? AND `status` = 'friends'))");
-    $stmt->bind_param('iii', $post_id, $uid, $uid);
+    $stmt = $conn->prepare("SELECT * FROM `posts` WHERE `id` = ?");
+    $stmt->bind_param('i', $post_id);
     $stmt->execute();
     $checkPost = $stmt->get_result();
 

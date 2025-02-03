@@ -1,5 +1,4 @@
 function requestNotificationPermission() {
-
     if ("Notification" in window) {
         Notification.requestPermission().then(permission => {
             if (permission === "granted") {
@@ -11,8 +10,10 @@ function requestNotificationPermission() {
                 ws.send(browser_perm);
             } else if (permission === "denied") {
                 console.log("Notification permission denied.");
+                alert("Please enable notifications to receive chat messages.");
             } else {
                 console.log("Notification permission dismissed.");
+                alert("Please enable notifications to receive chat messages.");
             }
         }).catch(error => {
             console.error("Error requesting notification permission:", error);
@@ -30,7 +31,8 @@ function showNotification(sender, message) {
             icon: "../images/logo_faded_clean.png" // Replace with your notification icon URL
         });
     } else {
-        console.warn("Notification permission not granted.");
+        // Request permission if it's not granted
+        requestNotificationPermission();
     }
 }
 

@@ -1,7 +1,7 @@
 <?php include "../functions.php";
 
 if (!empty($_POST['text'])) {
-    $public = $_POST['public'];
+    //$public = $_POST['public'];
     $text = htmlentities($_POST['text'], ENT_QUOTES | ENT_HTML5, 'UTF-8');
 
     // Prepare the SQL statement to prevent SQL injection and handle special characters

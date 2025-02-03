@@ -405,10 +405,8 @@ function hitEnter(input,x) {
 function showPostActions(x) {
     const actionList = document.getElementById("pal_"+x);
     
-    if (actionList.hidden == true) {
-        actionList.hidden = false;
-    } else {
-        actionList.hidden = true;
+    if (actionList) {
+        actionList.hidden = !actionList.hidden;
     }
 }
 
@@ -449,6 +447,7 @@ function genRef() {
     }
 }
 function checkRef() {
+    console.log("Checking ref code");
     let ref = document.getElementById('frc');
     $.ajax({
         url: '../assets/check/check_refer_code.php',
@@ -457,6 +456,7 @@ function checkRef() {
             code: ref
         }
     }).done(function(response) {
+        console.log(response);
         if (response == "expired") {
             code.innerHTML = "GENERATE CODE";
         }

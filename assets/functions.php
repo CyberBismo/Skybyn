@@ -1161,7 +1161,7 @@ if (isset($_POST['forgot'])) {
                     <img src="https://skybyn.no/assets/images/logo_clean.png" alt="Skybyn logo" class="logo">
                     <h1>You requested a password reset</h1>
                     <p>This code is to reset your password, if you did NOT request this, please ignore this email!</p>
-                    <button onclick="window.location.href=\'https://skybyn.no/reset='.$reset.'\'">Reset now</button>
+                    <button onclick="window.location.href=\'https://skybyn.no/reset?code'.$reset.'\'">Reset now</button>
                     <div class="code-box">
                         <code>'.$reset.'</code>
                     </div>
@@ -1170,7 +1170,7 @@ if (isset($_POST['forgot'])) {
         </html>
         ';
     
-        mail($to, $subject, $message, $headers);
+        //mail($to, $subject, $message, $headers);
         $msg = "If the e-mail address you provided is correct, we have sent a link for you to reset your password. Check your spam/inbox/trash.";
         createCookie("msg", $msg, "10", null);
         ?><script>window.location.href = "../";</script><?php
@@ -1439,128 +1439,139 @@ if (isset($_SESSION['user'])) {
 
 # Update avatar
 if (isset($_POST['update_avatar'])) {
-    $target_dir = "../uploads/avatars/$uid/";
-    $target_file = $target_dir . basename($_FILES["avatar"]["name"]);
+    if (!isset($_FILES["avatar"]) || $_FILES["avatar"]["error"] !== UPLOAD_ERR_OK) {
+        createCookie("msg", "No file was uploaded or an error occurred.", "10", null);
+        exit;
+    }
+
+    // Ensure base path starts at web root
+    $base_path = $_SERVER['DOCUMENT_ROOT'];
+    $target_dir = $base_path . "/uploads/avatars/$uid/";
+    $imageFileType = strtolower(pathinfo($_FILES["avatar"]["name"], PATHINFO_EXTENSION));
+    $web_target_file = "/uploads/avatars/$uid/" . uniqid() . '.' . $imageFileType;
+    $target_file = $base_path . $web_target_file;
     $uploadOk = 1;
-    $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 
-    // Check if image file is a actual image or fake image
-    if(isset($_POST["submit"])) {
-      $check = getimagesize($_FILES["avatar"]["tmp_name"]);
-      if($check !== false) {
-        $msg = "File is an image - " . $check["mime"] . ".";
-        createCookie("msg", $msg, "10", null);
-        $uploadOk = 1;
-      } else {
-        $msg = "File is not an image.";
-        createCookie("msg", $msg, "10", null);
-        $uploadOk = 0;
-      }
+    // Check if image file is actually an image
+    $check = @getimagesize($_FILES["avatar"]["tmp_name"]);
+    if ($check === false) {
+        createCookie("msg", "File is not an image.", "10", null);
+        exit;
     }
 
-    // Check if user folder already exists
-    if (!file_exists($target_dir)) {
-      mkdir($target_dir);
+    // Create directories if they don't exist
+    $directories = [
+        $base_path . "/uploads",
+        $base_path . "/uploads/avatars", 
+        $base_path . "/uploads/avatars/$uid"
+    ];
+
+    foreach ($directories as $dir) {
+        if (!file_exists($dir)) {
+            if (!mkdir($dir, 0755, true)) {
+                createCookie("msg", "Failed to create upload directory.", "10", null);
+                exit;
+            }
+        }
     }
 
-    // Check if file already exists
-    if (file_exists($target_file)) {
-        $msg = "Sorry, file already exists.";
-        createCookie("msg", $msg, "10", null);
-        $uploadOk = 0;
-    }
-
-    // Check file size
-    if ($_FILES["avatar"]["size"] > 4194304) { // 4MB
-        $msg = "Sorry, your file is too large.";
-        createCookie("msg", $msg, "10", null);
-        $uploadOk = 0;
+    // Check file size (4MB)
+    if ($_FILES["avatar"]["size"] > 4194304) {
+        createCookie("msg", "Sorry, your file is too large.", "10", null);
+        exit;
     }
 
     // Allow certain file formats
-    if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-    && $imageFileType != "gif" ) {
-        $msg = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-        createCookie("msg", $msg, "10", null);
-        $uploadOk = 0;
+    $allowed_types = ['jpg', 'jpeg', 'png', 'gif'];
+    if (!in_array($imageFileType, $allowed_types)) {
+        createCookie("msg", "Sorry, only JPG, JPEG, PNG & GIF files are allowed.", "10", null);
+        exit;
     }
 
-    // Check if $uploadOk is set to 0 by an error
-    if ($uploadOk == 0) {
-        $msg = "Sorry, your file was not uploaded.";
-        createCookie("msg", $msg, "10", null);
-    // if everything is ok, try to upload file
+    // Try to upload file using absolute path
+    if (move_uploaded_file($_FILES["avatar"]["tmp_name"], $target_file)) {
+        // Store relative web path in database
+        $stmt = $conn->prepare("UPDATE `users` SET `avatar` = ? WHERE `id` = ?");
+        $stmt->bind_param("si", $web_target_file, $uid);
+        
+        if (!$stmt->execute()) {
+            createCookie("msg", "Failed to update database.", "10", null);
+            unlink($target_file); // Remove uploaded file if db update fails
+            exit;
+        }
+        
+        createCookie("msg", "Avatar updated successfully.", "10", null);
     } else {
-      if (move_uploaded_file($_FILES["avatar"]["tmp_name"], $target_file)) {
-        $q = "UPDATE `users` SET `avatar`='$target_file' WHERE `id`='$uid'";
-        mysqli_query($conn, $q);
-      } else {
-        $msg = "Sorry, there was an error uploading your file.";
-        createCookie("msg", $msg, "10", null);
-      }
+        createCookie("msg", "Sorry, there was an error uploading your file.", "10", null);
     }
 }
 
 # Update wallpaper
 if (isset($_POST['update_wallpaper'])) {
-    $target_dir = "../uploads/wallpapers/$uid/";
-    $target_file = $target_dir . basename($_FILES["wallpaper"]["name"]);
+    if (!isset($_FILES["wallpaper"]) || $_FILES["wallpaper"]["error"] !== UPLOAD_ERR_OK) {
+        createCookie("msg", "No file was uploaded or an error occurred.", "10", null);
+        exit;
+    }
+
+    // Ensure base path starts at web root 
+    $base_path = $_SERVER['DOCUMENT_ROOT'];
+    $target_dir = $base_path . "/uploads/wallpapers/$uid/";
+    $imageFileType = strtolower(pathinfo($_FILES["wallpaper"]["name"], PATHINFO_EXTENSION));
+    $web_target_file = "/uploads/wallpapers/$uid/" . uniqid() . '.' . $imageFileType;
+    $target_file = $base_path . $web_target_file;
     $uploadOk = 1;
-    $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 
-    // Check if image file is a actual image or fake image
-    if(isset($_POST["submit"])) {
-      $check = getimagesize($_FILES["wallpaper"]["tmp_name"]);
-      if($check !== false) {
-        $msg = "File is an image - " . $check["mime"] . ".";
-        createCookie("msg", $msg, "10", null);
-        $uploadOk = 1;
-      } else {
-        $msg = "File is not an image.";
-        createCookie("msg", $msg, "10", null);
-        $uploadOk = 0;
-      }
+    // Check if image file is actually an image
+    $check = @getimagesize($_FILES["wallpaper"]["tmp_name"]);
+    if ($check === false) {
+        createCookie("msg", "File is not an image.", "10", null);
+        exit;
     }
 
-    // Check if user folder already exists
-    if (!file_exists($target_dir)) {
-      mkdir($target_dir);
+    // Create directories if they don't exist
+    $directories = [
+        $base_path . "/uploads",
+        $base_path . "/uploads/wallpapers",
+        $base_path . "/uploads/wallpapers/$uid"
+    ];
+
+    foreach ($directories as $dir) {
+        if (!file_exists($dir)) {
+            if (!mkdir($dir, 0755, true)) {
+                createCookie("msg", "Failed to create upload directory.", "10", null);
+                exit;
+            }
+        }
     }
 
-    // Check if file already exists
-    if (file_exists($target_file)) {
-        $msg = "Sorry, file already exists.";
-        createCookie("msg", $msg, "10", null);
-        $uploadOk = 0;
-    }
-
-    // Check file size
-    if ($_FILES["wallpaper"]["size"] > 20971520) { // 20MB
-        $msg = "Sorry, your file is too large.";
-        createCookie("msg", $msg, "10", null);
-        $uploadOk = 0;
+    // Check file size (20MB)
+    if ($_FILES["wallpaper"]["size"] > 20971520) {
+        createCookie("msg", "Sorry, your file is too large.", "10", null);
+        exit;
     }
 
     // Allow certain file formats
-    if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif" ) {
-        $msg = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-        createCookie("msg", $msg, "10", null);
-        $uploadOk = 0;
+    $allowed_types = ['jpg', 'jpeg', 'png', 'gif'];
+    if (!in_array($imageFileType, $allowed_types)) {
+        createCookie("msg", "Sorry, only JPG, JPEG, PNG & GIF files are allowed.", "10", null);
+        exit;
     }
 
-    // Check if $uploadOk is set to 0 by an error
-    if ($uploadOk == 0) {
-        $msg = "Sorry, your file was not uploaded.";
-        createCookie("msg", $msg, "10", null);
-    // if everything is ok, try to upload file
-    } else {
-        if (move_uploaded_file($_FILES["wallpaper"]["tmp_name"], $target_file)) {
-            $q = "UPDATE `users` SET `wallpaper`='$target_file' WHERE `id`='$uid'";
-            mysqli_query($conn, $q);
-        } else {
-            $msg = "Sorry, there was an error uploading your file.";
-            createCookie("msg", $msg, "10", null);
+    // Try to upload file using absolute path
+    if (move_uploaded_file($_FILES["wallpaper"]["tmp_name"], $target_file)) {
+        // Store relative web path in database
+        $stmt = $conn->prepare("UPDATE `users` SET `wallpaper` = ? WHERE `id` = ?");
+        $stmt->bind_param("si", $web_target_file, $uid);
+        
+        if (!$stmt->execute()) {
+            createCookie("msg", "Failed to update database.", "10", null);
+            unlink($target_file); // Remove uploaded file if db update fails
+            exit;
         }
+        
+        createCookie("msg", "Wallpaper updated successfully.", "10", null);
+    } else {
+        createCookie("msg", "Sorry, there was an error uploading your file.", "10", null);
     }
 }
 

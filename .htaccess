@@ -1,5 +1,4 @@
 RewriteEngine On
-RewriteBase /
 
 # Force HTTPS
 RewriteCond %{HTTPS} off
@@ -20,22 +19,22 @@ RewriteRule ^verify$ index.php?verify [L,QSA]
 RewriteRule ^reset$ index.php?reset [L,QSA]
 
 # Rewrite /forgot to ?forgot
-RewriteRule ^forgot$ index.php?forgot [L,QSA]
+RewriteRule ^(forgot|glemt)$ index.php?forgot [L,QSA]
 
 # Rewrite /profile/username to /profile.php?user=username
 RewriteRule ^profile/([A-Za-z0-9-]+)/?$ profile.php?user=$1 [NC,L]
 
 # Rewrite /profile to /profile.php
-RewriteRule ^profile$ profile.php [QSA,L]
+RewriteRule ^(profile|profil)$ profile.php [QSA,L]
 
 # Rewrite /post/id to /post?id=id
-RewriteRule ^post/([^/]+)$ index.php?post&id=$1 [QSA,L]
+RewriteRule ^(post|innlegg)/([^/]+)$ index.php?post&id=$1 [QSA,L]
 
 # Rewrite /group/name to /group?id=name
-RewriteRule ^group/([^/]+)$ index.php?group&id=$1 [QSA,L]
+RewriteRule ^(group|gruppe)/([^/]+)$ index.php?group&id=$1 [QSA,L]
 
 # Rewrite /page/name to /page?id=name
-RewriteRule ^page/([^/]+)$ index.php?page&id=$1 [QSA,L]
+RewriteRule ^(page|side)/([^/]+)$ index.php?page&id=$1 [QSA,L]
 
 # Rewrite betaaccess/code to ?betaaccess=code
 RewriteRule ^betaaccess/([^/]+)$ index.php?betaaccess=$1 [QSA,L]

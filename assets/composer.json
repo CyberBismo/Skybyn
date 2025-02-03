@@ -1,0 +1,5 @@
+{
+    "require": {
+        "bankid/bankid-php": "^1.0"
+    }
+}

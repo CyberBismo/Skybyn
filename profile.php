@@ -5,6 +5,12 @@ $myProfile = false;
 $friends = false;
 $rank = 0;
 
+if (isset($_SESSION['user'])) {
+    $uid = $_SESSION['user'];
+    $loggedIn = true;
+    $rank = getUser('id',$uid,'rank');
+}
+
 if (isset($_GET['user'])) {
     $user_id = getUser('username',$_GET['user'],'id');
     if ($user_id != "error") {
@@ -14,13 +20,11 @@ if (isset($_GET['user'])) {
             }
         }
     } else {
-        ?><script>window.location.href = '../';</script><?php
         return false;
     }
 } else {
     if (isset($_SESSION['user'])) {
         $user_id = $uid;
-        $loggedIn = true;
         $myProfile = true;
     } else {
         ?><script>window.location.href = '../';</script><?php
@@ -28,32 +32,33 @@ if (isset($_GET['user'])) {
     }
 }
 
-$PUDRes = $conn->query("SELECT * FROM `users` WHERE `id`='$user_id'");
-$PUDRow = $PUDRes->fetch_assoc();
-$Pemail = $PUDRow['email'];
-$Pusername = $PUDRow['username'];
-$Prank = $PUDRow['rank'];
-$Pfirst_name = $PUDRow['first_name'];
-$Pmiddle_name = $PUDRow['middle_name'];
-$Plast_name = $PUDRow['last_name'];
-$Pavatar = "../".$PUDRow['avatar'];
-$Pwallpaper = "../".$PUDRow['wallpaper'];
-$Pwallpaper_margin = $PUDRow['wallpaper_margin'];
-$Pcountry = $PUDRow['country'];
-$Pverified = $PUDRow['verified'];
-$Pprivate = $PUDRow['private'];
-$Prank = $PUDRow['rank'];
+if (isset($user_id)) {
+    $PUDRes = $conn->query("SELECT * FROM `users` WHERE `id`='$user_id'");
+    $PUDRow = $PUDRes->fetch_assoc();
+    $Pemail = $PUDRow['email'];
+    $Pusername = $PUDRow['username'];
+    $Prank = $PUDRow['rank'];
+    $Pfirst_name = $PUDRow['first_name'];
+    $Pmiddle_name = $PUDRow['middle_name'];
+    $Plast_name = $PUDRow['last_name'];
+    $Pavatar = "../".$PUDRow['avatar'];
+    $Pwallpaper = "../".$PUDRow['wallpaper'];
+    $Pwallpaper_margin = $PUDRow['wallpaper_margin'];
+    $Pcountry = $PUDRow['country'];
+    $Pverified = $PUDRow['verified'];
+    $Pprivate = $PUDRow['private'];
+    $Prank = $PUDRow['rank'];
 
-if ($Pavatar == "../") {
-    $Pavatar = "../assets/images/logo_faded_clean.png";
-}
+    if ($Pavatar == "../") {
+        $Pavatar = "../assets/images/logo_faded_clean.png";
+    }
 
-if ($Pwallpaper == "../") {
-    $Pwallpaper = "../assets/images/blank.png";
-}
+    if ($Pwallpaper == "../") {
+        $Pwallpaper = "../assets/images/blank.png";
+    }
 
-$Pavatar_bg = "background: black";
-?>
+    $Pavatar_bg = "background: black";
+    ?>
         <div class="page-container">
             <div class="profile-wallpaper" id="wallpaper">
                 <img src="<?=$Pwallpaper?>">
@@ -409,7 +414,6 @@ $Pavatar_bg = "background: black";
         </script>
         <?php if (isMobile($userAgent) == false) {?>
         <script>stickyProfile();</script>
-        <?php }?>
-        <?php }?>
-    </body>
-</html>
+        <?php }
+    }
+}?>

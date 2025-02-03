@@ -12,9 +12,9 @@ if (isset($_COOKIE['logged'])) {
     $checkUserCookie = $conn->query("SELECT `id` FROM `users` WHERE `id`='$logged_in'");
     if ($checkUserCookie->num_rows == 1) {
         $_SESSION['user'] = $logged_in;
-        ?><meta http-equiv="refresh" content="0; URL='./'" /><?php
+        ?><script>window.location.href = '../';</script><?php
     } else {
-        ?><meta http-equiv="refresh" content="0; URL='./logout'" /><?php
+        ?><script>window.location.href = '../logout';</script><?php
     }
 }
 ?>
@@ -30,35 +30,13 @@ if (isset($_COOKIE['logged'])) {
         </div>
     </div>
     <?php if (isset($_GET['reset'])) {
-        $code = $_GET['reset'];
-        
-        if (!empty($code)) {
-            $checkReset = mysqli_query($conn, "SELECT * FROM `users` WHERE `reset`='$code'");
-            $countReset = mysqli_num_rows($checkReset);
-
-            if ($countReset == 0) {
-                ?><meta http-equiv="refresh" content="0; URL='./'" /><?php
-            } else {
-                $resetData = mysqli_fetch_assoc($checkReset);
-                $tglReset = $resetData['username'];
-                ?>
-                <div class="center_form">
-                    <div class="form">
-                        <?php include("assets/forms/reset.php");?>
-                    </div>
-                </div>
-                <?php
-            }
-        } else {
-            ?>
-            <div class="center_form">
-                <div class="form">
-                    <?php include("assets/forms/resetCode.php");?>
-                </div>
+        $code = $_GET['reset'];?>
+        <div class="center_form">
+            <div class="form">
+                <?php include("assets/forms/reset.php");?>
             </div>
-            <?php
-        }
-    } else
+        </div>
+    <?php } else
     if (isset($_GET['forgot'])) {?>
     <div class="center_form">
         <div class="form">
