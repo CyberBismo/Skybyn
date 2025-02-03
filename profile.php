@@ -339,28 +339,45 @@ if (isset($user_id)) {
         <div class="changeAvatar" hidden>
             <i class="fa-solid fa-xmark" onclick="changeAvatar()"></i>
             <form method="post" enctype="multipart/form-data">
-                <input type="file" name="avatar" id="setavatar" hidden>
-                <h3>Update avatar</h3>
-                <label for="setavatar">Browse</label>
-                <br><br>
-                <input type="submit" name="update_avatar" value="Update">
+                <h3>Change avatar</h3>
+                <img src="<?=$Pavatar?>" id="previewavatar">
+                <div class="changeBtns">
+                    <input type="file" name="avatar" id="setavatar" onchange="preViewAvatar(this)">
+                    <input type="submit" name="update_avatar" value="Update">
+                </div>
             </form>
         </div>
 
         <div class="changeWallpaper" hidden>
             <i class="fa-solid fa-xmark" onclick="changeWallpaper()"></i>
             <form method="post" enctype="multipart/form-data">
-                <input type="file" name="wallpaper" id="setwallpaper" onchange="preViewWallpaper(this)" hidden>
-                <h3>Set new wallpaper</h3>
-                <label for="setwallpaper">Browse</label>
-                <br><br>
-                <input type="submit" name="update_wallpaper" value="Update">
+                <h3>Change wallpaper</h3>
+                <img src="<?=$Pwallpaper?>" id="previewwallpaper">
+                <div class="changeBtns">
+                    <input type="file" name="wallpaper" id="setwallpaper" onchange="preViewWallpaper(this)">
+                    <input type="submit" name="update_wallpaper" value="Update">
+                </div>
             </form>
         </div>
 
         <script>
-            function preViewWallpaper(x) {
-                const wallpaper = document.getElementById('wallpaper');
+            function preViewAvatar(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('previewavatar').src = e.target.result;
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+            function preViewWallpaper(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('previewwallpaper').src = e.target.result;
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
             }
             function stickyProfile() {
                 const avatar = document.getElementById('profile-left');

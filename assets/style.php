@@ -4099,9 +4099,7 @@
             }
             <?php } else {?>
             .profile-left {
-                display: flex;
                 width: 100%;
-                max-height: 150px;
                 margin-bottom: 10px;
                 padding: 10px;
                 overflow-y: scroll;
@@ -4131,17 +4129,19 @@
             }
             .profile-btns {
                 display: flex;
-                justify-content: right;
-                width: 50%;
-                height: 100%;
+                justify-content: space-between;
+                width: 100%;
                 box-sizing: border-box;
             }
+            #friend_actions {
+                width: 100%;
+                margin: 0 3px;
+            }
             .profile-btns button {
-                display: flex;
                 width: 35px;
                 height: 35px;
                 margin: 3px;
-                padding: 10px;
+                padding: 10px 0;
                 color: var(--mode-text);
                 background: rgba(255,255,255,.1);
                 backdrop-filter: blur(5px);
@@ -4247,33 +4247,45 @@
                 border-radius: 20px;
                 box-sizing: border-box;
             }
+            .changeAvatar img {
+                width: 50%;
+                height: 100%;
+            }
+            .changeWallpaper img {
+                width: 100%;
+                height: 100%;
+            }
             <?php }?>
+            .changeAvatar img,
+            .changeWallpaper img {
+                transform: translateX(50%);
+                object-fit: cover;
+                object-position: center;
+            }
             .changeAvatar i,
             .changeWallpaper i {
                 float: right;
                 cursor: pointer;
             }
-            .changeAvatar label,
-            .changeWallpaper label {
-                width: 100%;
+            .changeBtns {
+                display: flex;
+                justify-content: space-between;
+            }
+            .changeBtns input {
                 height: 40px;
                 padding: 10px;
                 color: var(--mode-text);
-                background: rgba(255,255,255,.1);
                 border: none;
                 border-radius: 10px;
+                box-sizing: border-box;
                 cursor: pointer;
             }
-            .changeAvatar input[type=submit],
-            .changeWallpaper input[type=submit] {
-                float: right;
-                height: 40px;
-                padding: 10px;
-                color: var(--mode-text);
+            .changeBtns input[type=file] {
+                width: 100%;
+            }
+            .changeBtns input[type=submit] {
+                width: 100px;
                 background: rgba(255,255,255,.1);
-                border: none;
-                border-radius: 10px;
-                cursor: pointer;
             }
 
             .avatar_select_area {
