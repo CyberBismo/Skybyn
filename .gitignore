@@ -33,3 +33,4 @@ ws/server.js
 /ws
 /ws
 *.pem
+/ws

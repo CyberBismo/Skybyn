@@ -11,9 +11,8 @@ if ($refer >= 6) {
 
         // Check if created date is more than 5 minutes old
         $fiveMinutesAgo = strtotime('-5 minutes');
-        $createdTimestamp = strtotime($created);
 
-        if ($createdTimestamp <= $fiveMinutesAgo) {
+        if ($created <= $fiveMinutesAgo) {
             // Delete the record
             $deleteCode = $conn->query("DELETE FROM `referral_code` WHERE `referral_code`='$refer'");
             if ($deleteCode) {

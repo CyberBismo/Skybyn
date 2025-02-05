@@ -342,7 +342,7 @@ if (isset($user_id)) {
                 <h3>Change avatar</h3>
                 <img src="<?=$Pavatar?>" id="previewavatar">
                 <div class="changeBtns">
-                    <input type="file" name="avatar" id="setavatar" onchange="preViewAvatar(this)">
+                    <input type="file" name="avatar" id="setavatar" accept="image/png, image/jpeg, image/gif" onchange="preViewAvatar(this)">
                     <input type="submit" name="update_avatar" value="Update">
                 </div>
             </form>
@@ -354,7 +354,7 @@ if (isset($user_id)) {
                 <h3>Change wallpaper</h3>
                 <img src="<?=$Pwallpaper?>" id="previewwallpaper">
                 <div class="changeBtns">
-                    <input type="file" name="wallpaper" id="setwallpaper" onchange="preViewWallpaper(this)">
+                    <input type="file" name="wallpaper" id="setwallpaper" accept="image/png, image/jpeg, image/gif" onchange="preViewWallpaper(this)">
                     <input type="submit" name="update_wallpaper" value="Update">
                 </div>
             </form>

@@ -248,15 +248,16 @@ if (isset($_GET['signup'])) {
                     <div class="create_post_user">
                         <img src="<?=$avatar?>">
                         <?php if (isset($username)) {?>
-                        <div><?=$username?></div>
+                        <div class="create_post_username"><?=$username?></div>
                         <?php }?>
                     </div>
                 </div>
                 <textarea type="text" placeholder="What's on your mind?" id="new_post_input" oninput="adjustTextareaHeight()" onkeydown="checkEnter()" onkeyup="convertEmoji(this.value)"></textarea>
                 <div class="new_post_files" id="new_post_files"></div>
+                <input id="edit_post" hidden>
                 <div class="create_post_actions create_post_actions_bottom">
                     <span style="word-break: break-all">
-                        <input type="file" id="image_to_share" accept="image/*;capture=camera" multiple hidden onchange="updateFileNameLabel()">
+                        <input type="file" id="image_to_share" accept="image/png, image/jpeg, image/gif;capture=camera" multiple hidden onchange="updateFileNameLabel()">
                         <label for="image_to_share"><i class="fa-solid fa-image"></i><span id="image_to_share_text"></span></label>
                     </span>
                     <?php if ($rank > 0) {?>

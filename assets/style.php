@@ -4131,6 +4131,7 @@
                 display: flex;
                 justify-content: space-between;
                 width: 100%;
+                padding: 10px 0;
                 box-sizing: border-box;
             }
             #friend_actions {
@@ -4231,6 +4232,18 @@
                 backdrop-filter: blur(5px);
                 border-radius: 10px;
                 box-sizing: border-box;
+            }
+            .changeAvatar img {
+                width: 50%;
+                max-width: 300px;
+                height: 100%;
+                max-height: 300px;
+            }
+            .changeWallpaper img {
+                width: 100%;
+                max-width: 300px;
+                height: 100%;
+                max-height: 300px;
             }
             <?php } else {?>
             .changeAvatar,

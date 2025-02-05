@@ -150,6 +150,25 @@ function connectWebSocket() {
             });
         }
 
+        if (data.type === 'post_edit') {
+            let postId = data.id;
+            if (postId) {
+                $.ajax({
+                    url: '../assets/posts/post_load.php',
+                    type: 'POST',
+                    data: {
+                        post_id: postId
+                    },
+                    success: function (response) {
+                        if (response !== null) {
+                            const post = document.getElementById('post_'+postId);
+                            post.outerHTML = response;
+                        }
+                    }
+                });
+            }
+        }
+
         if (data.type === 'delete_post') {
             let postId = data.id;
             if (document.getElementById('post_'+postId)) {

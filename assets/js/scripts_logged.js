@@ -190,7 +190,7 @@ function deleteFeedback(x) {
             delete: x
         },
         success: function(response) {
-            document.getElementById('feedback_'+x).remove();
+            document.getElementById('feedback-'+x).remove();
         }
     });
 }
@@ -447,7 +447,6 @@ function genRef() {
     }
 }
 function checkRef() {
-    console.log("Checking ref code");
     let ref = document.getElementById('frc');
     $.ajax({
         url: '../assets/check/check_refer_code.php',
@@ -456,7 +455,6 @@ function checkRef() {
             code: ref
         }
     }).done(function(response) {
-        console.log(response);
         if (response == "expired") {
             code.innerHTML = "GENERATE CODE";
         }
