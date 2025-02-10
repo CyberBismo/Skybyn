@@ -24,8 +24,8 @@ function createPost() {
     const image = document.getElementById('image_to_share');
     const filesDiv = document.getElementById('new_post_files');
     const edit_post = document.getElementById('edit_post').value;
-    const create_post_edit = document.getElementById('create_post_edit');
     const submitButton = document.getElementById('create_post_btn'); // Add your submit button ID
+    var create_post_edit = document.getElementById('create_post_edit');
 
     // Prevent multiple submissions
     if (submitButton.disabled) return;
