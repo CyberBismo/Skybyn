@@ -23,12 +23,14 @@ function createPost() {
     const text = document.getElementById('new_post_input');
     const image = document.getElementById('image_to_share');
     const filesDiv = document.getElementById('new_post_files');
-    const public = document.getElementById('new_post_public');
     const edit_post = document.getElementById('edit_post').value;
     const create_post_username = document.getElementsByClassName('create_post_username')[0];
     
+    // Add a flag to prevent multiple submissions
+    if (window.isSubmitting) return;
+    window.isSubmitting = true;
+    
     const formData = new FormData();
-    //formData.append('public', public.value);
     formData.append('text', text.value);
     for (let i = 0; i < image.files.length; i++) {
         formData.append('image[]', image.files[i]);
@@ -39,9 +41,8 @@ function createPost() {
             create_post_username.innerHTML = create_post_username.innerHTML + " - Editing";
             var post = document.getElementById('post_c_'+edit_post);
             newPost();
-            continuePost = false;
             $.ajax({
-                url: '../assets/posts/post_edit.php',
+                url: '../assets/posts/post_update.php',
                 type: 'POST',
                 data: {
                     id: edit_post,
@@ -56,14 +57,16 @@ function createPost() {
                     text.value = "";
                     image.value = "";
                     filesDiv.innerHTML = "";
-                    ws.send(JSON.stringify(data)); // Send the new post ID to the server
-                    continuePost = true;
+                    ws.send(JSON.stringify(data));
+                    window.isSubmitting = false;
+                },
+                error: function() {
+                    window.isSubmitting = false;
                 }
             });
         } else {
             create_post_username.innerHTML = create_post_username.innerHTML.replace(' - Editing', '');
             newPost();
-            continuePost = false;
             $.ajax({
                 url: '../assets/posts/post_new.php',
                 type: 'POST',
@@ -79,8 +82,8 @@ function createPost() {
                         type: 'new_post',
                         id: post_id
                     };
-                    ws.send(JSON.stringify(data)); // Send the new post ID to the server
-                    continuePost = true;
+                    ws.send(JSON.stringify(data));
+                    window.isSubmitting = false;
                 },
                 error: function (response) {
                     if (document.getElementById('console')) {
@@ -92,11 +95,13 @@ function createPost() {
                             console.innerHTML += '<p id="cons_post">'+response.message+'</p>';
                         }
                     }
+                    window.isSubmitting = false;
                 }
             });
         }
     } else {
         text.placeholder = "Please enter a message";
+        window.isSubmitting = false;
     }
 }
 
