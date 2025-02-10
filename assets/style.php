@@ -548,6 +548,7 @@
                 height: 100%;
                 padding: 0 10px;
                 padding-top: 75px;
+                margin-bottom: 60px;
                 box-sizing: border-box;
             }
             <?php } else {?>
