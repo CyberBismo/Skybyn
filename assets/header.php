@@ -250,6 +250,7 @@ if (isset($_GET['signup'])) {
                         <?php if (isset($username)) {?>
                         <div class="create_post_username"><?=$username?></div>
                         <?php }?>
+                        <div id="create_post_edit" hidden> - Editing</div>
                     </div>
                 </div>
                 <textarea type="text" placeholder="What's on your mind?" id="new_post_input" oninput="adjustTextareaHeight()" onkeydown="checkEnter()" onkeyup="convertEmoji(this.value)"></textarea>

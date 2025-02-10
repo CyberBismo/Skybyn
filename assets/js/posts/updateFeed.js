@@ -24,7 +24,7 @@ function createPost() {
     const image = document.getElementById('image_to_share');
     const filesDiv = document.getElementById('new_post_files');
     const edit_post = document.getElementById('edit_post').value;
-    const create_post_username = document.getElementsByClassName('create_post_username')[0];
+    const create_post_edit = document.getElementById('create_post_edit');
     const submitButton = document.getElementById('create_post_btn'); // Add your submit button ID
 
     // Prevent multiple submissions
@@ -39,7 +39,7 @@ function createPost() {
 
     if (text.value.length > 0) {
         if (edit_post !== "") {
-            create_post_username.innerHTML += " - Editing";
+            create_post_edit.removeAttribute("hidden");
             var post = document.getElementById('post_c_' + edit_post);
             newPost();
             $.ajax({
@@ -61,7 +61,9 @@ function createPost() {
                 }
             });
         } else {
-            create_post_username.innerHTML = create_post_username.innerHTML.replace(' - Editing', '');
+            if (!create_post_edit.hasAttribute("hidden")) {
+                create_post_edit.setAttribute("hidden","");
+            }
             newPost();
             $.ajax({
                 url: '../assets/posts/post_new.php',
