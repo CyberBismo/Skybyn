@@ -248,9 +248,8 @@ if (isset($_GET['signup'])) {
                     <div class="create_post_user">
                         <img src="<?=$avatar?>">
                         <?php if (isset($username)) {?>
-                        <div class="create_post_username"><?=$username?></div>
+                        <div class="create_post_username"><?=$username?><div id="create_post_edit" hidden> - Editing</div></div>
                         <?php }?>
-                        <div id="create_post_edit" hidden> - Editing</div>
                     </div>
                 </div>
                 <textarea type="text" placeholder="What's on your mind?" id="new_post_input" oninput="adjustTextareaHeight()" onkeydown="checkEnter()" onkeyup="convertEmoji(this.value)"></textarea>
