@@ -3429,6 +3429,7 @@
             .friend-list {
                 width: 100%;
                 height: 100%;
+                max-height: 500px;
                 padding: 0 10px;
                 color: var(--mode-text);
                 box-sizing: border-box;
