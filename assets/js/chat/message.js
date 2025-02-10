@@ -180,9 +180,9 @@ function checkEnter(event, uid, fid) {
 
 function sendMessage(uid, fid) {
     let messageInput = document.getElementById('message_input_'+fid);
-    let message = messageInput.value;
+    let message = DOMPurify.sanitize(messageInput.value);
     if (message) {
-        const avatar = document.querySelector('.message-user-avatar img').getAttribute('src');        
+        const avatar = document.querySelector('.message-user-avatar img').getAttribute('src');
         let messageContainer = document.getElementById('message_body_' + fid);
 
         // Display the message immediately with a placeholder avatar

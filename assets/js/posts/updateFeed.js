@@ -25,11 +25,12 @@ function createPost() {
     const filesDiv = document.getElementById('new_post_files');
     const edit_post = document.getElementById('edit_post').value;
     const create_post_username = document.getElementsByClassName('create_post_username')[0];
-    
-    // Add a flag to prevent multiple submissions
-    if (window.isSubmitting) return;
-    window.isSubmitting = true;
-    
+    const submitButton = document.getElementById('create_post_btn'); // Add your submit button ID
+
+    // Prevent multiple submissions
+    if (submitButton.disabled) return;
+    submitButton.disabled = true;
+
     const formData = new FormData();
     formData.append('text', text.value);
     for (let i = 0; i < image.files.length; i++) {
@@ -38,30 +39,25 @@ function createPost() {
 
     if (text.value.length > 0) {
         if (edit_post !== "") {
-            create_post_username.innerHTML = create_post_username.innerHTML + " - Editing";
-            var post = document.getElementById('post_c_'+edit_post);
+            create_post_username.innerHTML += " - Editing";
+            var post = document.getElementById('post_c_' + edit_post);
             newPost();
             $.ajax({
                 url: '../assets/posts/post_update.php',
                 type: 'POST',
-                data: {
-                    id: edit_post,
-                    text: text
-                },
+                data: { id: edit_post, text: text },
                 success: function (response) {
-                    const data = {
-                        type: 'post_edit',
-                        id: edit_post.value
-                    };
+                    const data = { type: 'post_edit', id: edit_post.value };
                     post.innerHTML = text.value;
                     text.value = "";
                     image.value = "";
                     filesDiv.innerHTML = "";
                     ws.send(JSON.stringify(data));
-                    window.isSubmitting = false;
                 },
-                error: function() {
-                    window.isSubmitting = false;
+                error: function () {
+                },
+                complete: function () {
+                    submitButton.disabled = false; // Re-enable submit button
                 }
             });
         } else {
@@ -78,30 +74,27 @@ function createPost() {
                     image.value = "";
                     filesDiv.innerHTML = "";
                     post_id = response.post_id;
-                    const data = {
-                        type: 'new_post',
-                        id: post_id
-                    };
+                    const data = { type: 'new_post', id: post_id };
                     ws.send(JSON.stringify(data));
-                    window.isSubmitting = false;
                 },
                 error: function (response) {
                     if (document.getElementById('console')) {
                         const console = document.getElementById('console');
                         if (document.getElementById('cons_post')) {
-                            const cons_post = document.getElementById('cons_post');
-                            cons_post.innerHTML = response.message;
+                            document.getElementById('cons_post').innerHTML = response.message;
                         } else {
-                            console.innerHTML += '<p id="cons_post">'+response.message+'</p>';
+                            console.innerHTML += '<p id="cons_post">' + response.message + '</p>';
                         }
                     }
-                    window.isSubmitting = false;
+                },
+                complete: function () {
+                    submitButton.disabled = false; // Re-enable submit button
                 }
             });
         }
     } else {
         text.placeholder = "Please enter a message";
-        window.isSubmitting = false;
+        submitButton.disabled = false; // Re-enable if input is empty
     }
 }
 
