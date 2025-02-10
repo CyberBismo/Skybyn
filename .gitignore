@@ -34,3 +34,6 @@ ws/server.js
 /ws
 *.pem
 /ws
+ws/cert.pem
+ws/cert.pfx
+ws/key.pem
