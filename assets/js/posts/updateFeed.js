@@ -39,7 +39,9 @@ function createPost() {
 
     if (text.value.length > 0) {
         if (edit_post !== "") {
-            create_post_edit.removeAttribute("hidden");
+            if (create_post_edit.hasAttribute("hidden")) {
+                create_post_edit.removeAttribute("hidden");
+            }
             var post = document.getElementById('post_c_' + edit_post);
             newPost();
             $.ajax({
