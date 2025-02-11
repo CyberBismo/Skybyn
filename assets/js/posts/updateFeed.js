@@ -23,9 +23,7 @@ function createPost() {
     const text = document.getElementById('new_post_input');
     const image = document.getElementById('image_to_share');
     const filesDiv = document.getElementById('new_post_files');
-    const edit_post = document.getElementById('edit_post').value;
     const submitButton = document.getElementById('create_post_btn');
-    const create_post_edit = document.getElementById('create_post_edit');
 
     // Prevent multiple submissions
     if (submitButton.disabled) return;
@@ -39,14 +37,21 @@ function createPost() {
 
     if (text.value.length > 0) {
         if (submitButton.classList.length > 3 && /^\d+$/.test(submitButton.classList[3])) {
-            var post = document.getElementById('post_c_' + edit_post);
+            var post_id = submitButton.classList[3];
+            var post = document.getElementById('post_c_'+post_id);
             newPost();
             $.ajax({
                 url: '../assets/posts/post_update.php',
                 type: 'POST',
-                data: { id: edit_post, text: text },
-                success: function (response) {
-                    const data = { type: 'post_edit', id: edit_post.value };
+                data: {
+                    id: post_id,
+                    text: text
+                },
+                success: function () {
+                    const data = {
+                        type: 'post_edit',
+                        id: post_id
+                    };
                     post.innerHTML = text.value;
                     text.value = "";
                     image.value = "";
