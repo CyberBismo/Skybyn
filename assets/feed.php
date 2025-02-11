@@ -14,7 +14,14 @@ $getPosts = $conn->query("SELECT p.*
 while ($post = $getPosts->fetch_assoc()) {
     $post_id = $post['id'];
     $post_user = $post['user'];
-    $post_content = html_entity_decode(decrypt($post['content']), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+    $post_content = $post['content'];
+    if (isNotEncrypted($post_content)) {
+        $post_content = encrypt($post_content);
+        $conn->query("UPDATE `posts` SET `content`='$post_content' WHERE `id`='$post_id'");
+    }
+
+    $post_content = html_entity_decode(decrypt($post_content), ENT_QUOTES | ENT_HTML5, 'UTF-8');
     $post_created = date("d M. y H:i:s", $post['created']);
 
     $getComments = $conn->query("SELECT * FROM `comments` WHERE `post`='$post_id'");

@@ -61,11 +61,66 @@ function encrypt($text) {
 function decrypt($text) {
     $key = substr(hash('sha512', SECRET_KEY, true), 0, 32);
     $data = base64_decode($text);
+
+    if ($data === false || strlen($data) < 17) {
+        return false; // Invalid base64 or too short to be valid
+    }
+
     $iv = substr($data, 0, 16);
     $encrypted_data = substr($data, 16);
     $decrypted = openssl_decrypt($encrypted_data, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
+
+    if ($decrypted === false || strlen($decrypted) === 0) {
+        return false; // Decryption failed
+    }
+
     $pad_length = ord(substr($decrypted, -1));
+
+    if ($pad_length < 1 || $pad_length > 16) {
+        return false; // Invalid padding
+    }
+
+    $padding = substr($decrypted, -$pad_length);
+
+    if ($padding !== str_repeat(chr($pad_length), $pad_length)) {
+        return false; // Incorrect padding
+    }
+
     return substr($decrypted, 0, -$pad_length);
+}
+
+function isNotEncrypted($string) {
+    if (base64_encode(base64_decode($string, true)) !== $string) {
+        return true; // Not Base64 encoded, so definitely not encrypted
+    }
+
+    $decoded = base64_decode($string);
+    if (strlen($decoded) < 17) {
+        return true; // Too short to contain IV + encrypted data
+    }
+
+    $iv = substr($decoded, 0, 16);
+    $encrypted = substr($decoded, 16);
+    
+    $key = substr(hash('sha512', SECRET_KEY, true), 0, 32);
+    $decrypted = openssl_decrypt($encrypted, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
+
+    if ($decrypted === false) {
+        return true; // Decryption failed, meaning it's not an encrypted string
+    }
+
+    // Validate padding
+    $pad_length = ord($decrypted[-1]);
+    if ($pad_length < 1 || $pad_length > 16) {
+        return true; // Invalid padding
+    }
+
+    $padding = substr($decrypted, -$pad_length);
+    if ($padding !== str_repeat(chr($pad_length), $pad_length)) {
+        return true; // Incorrect padding
+    }
+
+    return false; // It's encrypted
 }
 
 # Get full url
