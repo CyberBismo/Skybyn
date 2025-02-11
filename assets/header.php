@@ -798,11 +798,17 @@ if (isset($_GET['signup'])) {
                         $getMessages = $conn->query("SELECT * FROM `messages` WHERE `from`='$uid' AND `to`='$friend' OR `from`='$friend' AND `to`='$uid' ORDER BY `date` ASC");
                         if ($getMessages->num_rows > 0) {
                             while ($msgData = $getMessages->fetch_assoc()) {
-                                $msg = html_entity_decode($msgData['content'], ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                                $msg_id = $msgData['id'];
+                                $msg_text = $msgData['content'];
+                                if (isNotEncrypted($msg_text)) {
+                                    $msg_text = html_entity_decode(encrypt($msg_text), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                                    $conn->query("UPDATE `messages` SET `content`='$msg_text' WHERE `id`='$msg_id'");
+                                }
+
+                                $msg = html_entity_decode(decrypt($msg_text), ENT_QUOTES | ENT_HTML5, 'UTF-8');
                                 $msg_from = $msgData['from'];
                                 $msg_to = $msgData['to'];
                                 $msg_date = $msgData['date'];
-                                $msg_id = $msgData['id'];
                                 $msg_time = date("H:i", $msg_date);
                                 $msg_date = date("d.m.Y", $msg_date);
 
