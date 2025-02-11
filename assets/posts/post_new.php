@@ -2,7 +2,7 @@
 
 if (!empty($_POST['text'])) {
     //$public = $_POST['public'];
-    $text = encrypt($_POST['text']);
+    $text = htmlentities(encrypt($_POST['text']), ENT_QUOTES | ENT_HTML5, 'UTF-8');
 
     // Prepare the SQL statement to prevent SQL injection and handle special characters
     $stmt = $conn->prepare("INSERT INTO `posts` (`user`, `content`, `created`) VALUES (?, ?, ?)");
