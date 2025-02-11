@@ -1303,6 +1303,43 @@ if (isset($_SESSION['user'])) {
     $habbo = $UDRow['habbo'];
     $fivem = $UDRow['fivem'];
 
+    # If name, email, username or IP is encrypted, encrypt them.
+    if (isNotEncrypted($email)) {
+        $email = encrypt($email);
+        $stmt = $conn->prepare("UPDATE `users` SET `email` = ? WHERE `id` = ?");
+        $stmt->bind_param("si", $email, $uid);$stmt->execute();$stmt->close();
+    }
+    if (isNotEncrypted($username)) {
+        $username = encrypt($username);
+        $stmt = $conn->prepare("UPDATE `users` SET `username` = ? WHERE `id` = ?");
+        $stmt->bind_param("si", $username, $uid);$stmt->execute();$stmt->close();
+    }
+    if (isNotEncrypted($first_name)) {
+        $first_name = encrypt($first_name);
+        $stmt = $conn->prepare("UPDATE `users` SET `first_name` = ? WHERE `id` = ?");
+        $stmt->bind_param("si", $first_name, $uid);$stmt->execute();$stmt->close();
+    }
+    if (isNotEncrypted($middle_name)) {
+        $middle_name = encrypt($middle_name);
+        $stmt = $conn->prepare("UPDATE `users` SET `middle_name` = ? WHERE `id` = ?");
+        $stmt->bind_param("si", $middle_name, $uid);$stmt->execute();$stmt->close();
+    }
+    if (isNotEncrypted($last_name)) {
+        $last_name = encrypt($last_name);
+        $stmt = $conn->prepare("UPDATE `users` SET `last_name` = ? WHERE `id` = ?");
+        $stmt->bind_param("si", $last_name, $uid);$stmt->execute();$stmt->close();
+    }
+    if (isNotEncrypted($title_name)) {
+        $title_name = encrypt($title_name);
+        $stmt = $conn->prepare("UPDATE `users` SET `title` = ? WHERE `id` = ?");
+        $stmt->bind_param("si", $title_name, $uid);$stmt->execute();$stmt->close();
+    }
+    if (isNotEncrypted($ip)) {
+        $ip = encrypt($ip);
+        $stmt = $conn->prepare("UPDATE `users` SET `ip` = ? WHERE `id` = ?");
+        $stmt->bind_param("si", $ip, $uid);$stmt->execute();$stmt->close();
+    }
+
     $verified = $UDRow['verified'];
 
     if (!isset($_COOKIE['login_token'])) {
