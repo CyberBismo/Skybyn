@@ -332,22 +332,16 @@ rl.on('line', (input) => {
     }
 
     // Reload a specific client
-    if (input.startsWith('refresh:')) {
-        const clientMatch = input.match(/refresh:([a-zA-Z0-9]+)/);
+    if (input.startsWith('refresh')) {
+        console.log(`Forcing clients to clear website cache.`);
         
-        if (clientMatch) {
-            console.log(`Forcing clients to clear website cache.`);
-            
-            clientMap.forEach((client) => {
-                if (client.ws.readyState === WebSocket.OPEN) {
-                    client.ws.send(JSON.stringify({
-                        type: 'refresh'
-                    }));
-                }
-            });
-        } else {
-            console.log('Invalid input format. Use "reload:clientId"');
-        }
+        clientMap.forEach((client) => {
+            if (client.ws.readyState === WebSocket.OPEN) {
+                client.ws.send(JSON.stringify({
+                    type: 'refresh'
+                }));
+            }
+        });
     }
 
     // Kick a specific client to a URL
