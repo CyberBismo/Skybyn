@@ -1305,6 +1305,10 @@ if (isset($_SESSION['user'])) {
 
     $verified = $UDRow['verified'];
 
+    if (!isset($_COOKIE['login_token'])) {
+        createCookie("login_token",$token,"10","2");
+    }
+
     if (isset($_COOKIE['qr'])) {
         $code = $_COOKIE['qr'];
         if (file_exists("qr/temp/$code.png")) {
