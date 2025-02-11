@@ -17,4 +17,6 @@ $conn->set_charset('utf8mb4');
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
+
+define('SECRET_KEY', '093cee001dd6a2c41d66382b849f86706aa836824e3da3e0f6feb006c1b23ad8');
 ?>

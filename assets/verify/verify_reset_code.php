@@ -7,6 +7,8 @@ if ($checkCode->num_rows == 1) {
     $five_min = time() - 300;
     if ($code['expiration_date'] > $five_min) {
         echo "ok";
+    } else {
+        $conn->query("DELETE FROM `reset_codes` WHERE `code`='$reset'");
     }
 }
 ?>

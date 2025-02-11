@@ -31,6 +31,7 @@ if (isset($_GET['code'])) {
                     <i class="fa-solid fa-angle-right" id="ra"></i>
                     <input type="text" name="code" pattern="[0-9]*" onkeyup="checkCode(this)" placeholder="Enter it here..">
                     <?php } else {?>
+                    <input name="code" value="<?=$_GET['code']?>" hidden>
                     <div class="form-inputs" id="inputs">
                         <i class="fa-solid fa-key"></i>
                         <input type="password" name="password" id="pw" placeholder="New password" autocomplete="new-password" required onkeyup="checkPassword()">
@@ -59,6 +60,7 @@ if (isset($_GET['code'])) {
                                 code : code.value
                             }
                         }).done(function(response) {
+                            console.log(response);
                             if (response == "ok") {
                                 window.location.href = '../reset?code=' + code.value;
                             }

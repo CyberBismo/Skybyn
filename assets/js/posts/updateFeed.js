@@ -24,8 +24,8 @@ function createPost() {
     const image = document.getElementById('image_to_share');
     const filesDiv = document.getElementById('new_post_files');
     const edit_post = document.getElementById('edit_post').value;
-    const submitButton = document.getElementById('create_post_btn'); // Add your submit button ID
-    var create_post_edit = document.getElementById('create_post_edit');
+    const submitButton = document.getElementById('create_post_btn');
+    const create_post_edit = document.getElementById('create_post_edit');
 
     // Prevent multiple submissions
     if (submitButton.disabled) return;
@@ -38,10 +38,7 @@ function createPost() {
     }
 
     if (text.value.length > 0) {
-        if (edit_post !== "") {
-            if (create_post_edit.hasAttribute("hidden")) {
-                create_post_edit.removeAttribute("hidden");
-            }
+        if (submitButton.classList.length > 3 && /^\d+$/.test(submitButton.classList[3])) {
             var post = document.getElementById('post_c_' + edit_post);
             newPost();
             $.ajax({
@@ -59,13 +56,10 @@ function createPost() {
                 error: function () {
                 },
                 complete: function () {
-                    submitButton.disabled = false; // Re-enable submit button
+                    submitButton.disabled = false;
                 }
             });
         } else {
-            if (!create_post_edit.hasAttribute("hidden")) {
-                create_post_edit.setAttribute("hidden","");
-            }
             newPost();
             $.ajax({
                 url: '../assets/posts/post_new.php',
@@ -92,19 +86,19 @@ function createPost() {
                     }
                 },
                 complete: function () {
-                    submitButton.disabled = false; // Re-enable submit button
+                    submitButton.disabled = false;
                 }
             });
         }
     } else {
         text.placeholder = "Please enter a message";
-        submitButton.disabled = false; // Re-enable if input is empty
+        submitButton.disabled = false;
     }
 }
 
 function editPost(x) {
     const new_post_input = document.getElementById('new_post_input');
-    const edit_post = document.getElementById('edit_post');
+    var edit_post = document.getElementById('create_post_btn');
     $.ajax({
         url: '../assets/posts/post_edit.php',
         type: "POST",
@@ -113,10 +107,10 @@ function editPost(x) {
         }
     }).done(function(response) {
         if (response.status === "success") {
-            edit_post.value = x;
+            edit_post.classList.add(x);
             new_post_input.value = response.content;
             new_post_input.focus();
-            newPost();
+            newPost(x);
         }
     });
 }

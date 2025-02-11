@@ -61,11 +61,11 @@
                 <div id="set_password" style="display: none">
                     <p>Set a strong password</p>
                     <i class="fa-solid fa-key"></i>
-                    <input type="password" id="register-password" placeholder="Password" autocomplete="new-password" required>
+                    <input type="password" id="register-password" placeholder="Password" autocomplete="new-password" onkeyup="checkPw()" required>
                     <i class="fa-regular fa-eye" onclick="showPassword('register-password')"></i>
                     
                     <i class="fa-solid fa-key"></i>
-                    <input type="password" id="cpassword" placeholder="Confirm password" autocomplete="new-password" required>
+                    <input type="password" id="cpassword" placeholder="Confirm password" autocomplete="new-password" onkeyup="checkPw()" required>
                     <i class="fa-regular fa-eye" onclick="showPassword('cpassword')"></i>
 
                     <div class="password-strength">
@@ -619,12 +619,6 @@
                         //input.addEventListener('keydown', handleKeyPress, { once: true });
                     }
                     
-                    document.getElementById('register-password').addEventListener('keyup', function(event) {
-                        checkPw();
-                    });
-                    document.getElementById('cpassword').addEventListener('keyup', function(event) {
-                        checkPw();
-                    });
                     function checkPw() {
                         const pw = document.getElementById('register-password');
                         const cpw = document.getElementById('cpassword');

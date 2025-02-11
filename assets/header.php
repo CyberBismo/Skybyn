@@ -36,13 +36,40 @@ if (isset($_GET['signup'])) {
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black">
-        <link rel="apple-touch-icon" sizes="180x180" href="../../assets/images/logo_fav.png">
-        <link rel="icon" type="image/x-icon" href="../../assets/images/logo_fav.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="../assets/images/logo_fav.png">
+        <link rel="icon" type="image/x-icon" href="../assets/images/logo_fav.png">
         <link href="../fontawe/css/all.css" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/lozad@1.0.0/dist/lozad.min.js"></script>
         <script>
             const observer = lozad();
             observer.observe();
+        </script>
+        <script>
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/assets/js/service-worker.js')
+                    .then(reg => {
+                        console.log('Service Worker registered!', reg);
+
+                        // Listen for updates
+                        reg.addEventListener('updatefound', () => {
+                            const newSW = reg.installing;
+                            newSW.addEventListener('statechange', () => {
+                                if (newSW.state === 'activated') {
+                                    console.log('New Service Worker activated, reloading...');
+                                    window.location.reload(); // Reload when new SW activates
+                                }
+                            });
+                        });
+                    })
+                    .catch(error => console.error('Service Worker registration failed:', error));
+
+                // Function to manually trigger cache clear
+                function updateCache() {
+                    navigator.serviceWorker.ready.then((registration) => {
+                        registration.active.postMessage({ action: 'clear-cache' });
+                    });
+                }
+            }
         </script>
         <script src = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
         <script src="../assets/js/scripts.js"></script>
@@ -248,13 +275,12 @@ if (isset($_GET['signup'])) {
                     <div class="create_post_user">
                         <img src="<?=$avatar?>">
                         <?php if (isset($username)) {?>
-                        <div class="create_post_username"><?=$username?><div id="create_post_edit" hidden> - Editing</div></div>
+                        <div class="create_post_username"><?=$username?><span id="create_post_edit" style="display:none"> - EDIT</span></div>
                         <?php }?>
                     </div>
                 </div>
                 <textarea type="text" placeholder="What's on your mind?" id="new_post_input" oninput="adjustTextareaHeight()" onkeydown="checkEnter()" onkeyup="convertEmoji(this.value)"></textarea>
                 <div class="new_post_files" id="new_post_files"></div>
-                <input id="edit_post" hidden>
                 <div class="create_post_actions create_post_actions_bottom">
                     <span style="word-break: break-all">
                         <input type="file" id="image_to_share" accept="image/png, image/jpeg, image/gif;capture=camera" multiple hidden onchange="updateFileNameLabel()">
@@ -352,13 +378,25 @@ if (isset($_GET['signup'])) {
             }
         }
         <?php }?>
-        function newPost() {
+        function newPost(x) {
             const header = document.getElementById('header');
             const mobile_nav_btn = document.getElementById('mobile_new_post');
             const new_post_btn = document.getElementById('new_post_btn');
             const new_post = document.getElementById('new_post');
             const new_post_input = document.getElementById('new_post_input');
             const newPostIcon = document.getElementById('newPostIcon');
+            const submitButton = document.getElementById('create_post_btn');
+            var create_post_edit = document.getElementById('create_post_edit');
+
+            if (x && x.length > 0) {
+                submitButton.classList.forEach(className => {
+                    if (className !== 'fa-solid' && className !== 'fa-paper-plane' && className !== 'share') {
+                        submitButton.classList.remove(className);
+                    }
+                });
+                submitButton.classList.add(x);
+                create_post_edit.style.display = "";
+            }
 
             if (new_post.style.display == "block") {
                 new_post.style.display = "none";
@@ -370,7 +408,13 @@ if (isset($_GET['signup'])) {
                 <?php } else {?>
                 new_post_btn.innerHTML = "Anything new?";
                 <?php }?>
-                new_post_input.innerHTML = "";
+                new_post_input.value = "";
+                submitButton.classList.forEach(className => {
+                    if (className !== 'fa-solid' && className !== 'fa-paper-plane' && className !== 'share') {
+                        submitButton.classList.remove(className);
+                    }
+                });
+                create_post_edit.style.display = "none";
             } else {
                 new_post.style.display = "block";
                 <?php if (isMobile($userAgent) == true) {?>

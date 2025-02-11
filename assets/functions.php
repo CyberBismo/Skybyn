@@ -48,6 +48,26 @@ if (isset($_GET['betaaccess'])) {
     }
 }
 
+# Encrypt / Decrypt
+function encrypt($text) {
+    $key = substr(hash('sha512', SECRET_KEY, true), 0, 32);
+    $iv = openssl_random_pseudo_bytes(16);
+    $pad_length = 16 - (strlen($text) % 16);
+    $text .= str_repeat(chr($pad_length), $pad_length);
+    $encrypted = openssl_encrypt($text, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
+    return base64_encode($iv . $encrypted);
+}
+
+function decrypt($text) {
+    $key = substr(hash('sha512', SECRET_KEY, true), 0, 32);
+    $data = base64_decode($text);
+    $iv = substr($data, 0, 16);
+    $encrypted_data = substr($data, 16);
+    $decrypted = openssl_decrypt($encrypted_data, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
+    $pad_length = ord(substr($decrypted, -1));
+    return substr($decrypted, 0, -$pad_length);
+}
+
 # Get full url
 function fullUrl() {
     $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
@@ -624,7 +644,11 @@ function getUser($x, $y, $z) {
         return "error";
     } else {
         $data = $user->fetch_assoc();
-        return $data[$z];
+        if ($x == "email") {
+            return decrypt($data[$z]);
+        } else {
+            return $data[$z];
+        }
     }
 }
 

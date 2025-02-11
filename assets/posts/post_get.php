@@ -12,7 +12,7 @@ if (isset($_POST['post_id'])) {
         $post = $checkPost->fetch_assoc();
         $post_id = $post['id'];
         $post_user = $post['user'];
-        $post_content = $post['content'];
+        $post_content = html_entity_decode(decrypt($post['content']), ENT_QUOTES | ENT_HTML5, 'UTF-8');
         $post_created = date("d M. y H:i:s", $post['created']);
 
         $getComments = $conn->query("SELECT * FROM `comments` WHERE `post`='$post_id'");
