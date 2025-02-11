@@ -1293,6 +1293,7 @@ if (isset($_SESSION['user'])) {
     $middle_name = $UDRow['middle_name'];
     $last_name = $UDRow['last_name'];
     $title_name = $UDRow['title'];
+    $token = $UDRow['token'];
     $avatar = "../".$UDRow['avatar'];
     $wallpaper = "../".$UDRow['wallpaper'];
     $wallpaper_margin = $UDRow['wallpaper_margin'];
