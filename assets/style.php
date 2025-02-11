@@ -14,6 +14,7 @@
             body {
                 margin: 0 auto;
                 padding: 0;
+                padding-top: env(safe-area-inset-top);
                 color: var(--mode-text);
             }
 

@@ -11,7 +11,7 @@ if ($getPosts->num_rows == 1) {
     $data = array(
         "status" => "success",
         "id" => $post_id,
-        "content" => $post_content
+        "content" => decrypt($post_content)
     );
 } else {
     $data = array(
