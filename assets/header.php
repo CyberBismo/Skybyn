@@ -33,10 +33,11 @@ if (isset($_GET['signup'])) {
         <title><?=skybyn("title")?></title>
         <meta name="description" content="Skybyn - Social Network">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <meta name="theme-color" content="transparent">
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-        <link rel="apple-touch-icon" sizes="180x180" href="../assets/images/logo_fav.png">
+        <meta name="apple-mobile-web-app-status-bar-style" content="pink">
+        <link rel="apple-touch-icon" sizes="180x180" href="../assets/images/logo.png">
         <link rel="icon" type="image/x-icon" href="../assets/images/logo_fav.png">
         <link href="../fontawe/css/all.css" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/lozad@1.0.0/dist/lozad.min.js"></script>
