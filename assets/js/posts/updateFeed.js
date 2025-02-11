@@ -45,9 +45,10 @@ function createPost() {
                 type: 'POST',
                 data: {
                     id: post_id,
-                    text: text
+                    text: text.value
                 },
-                success: function () {
+                success: function (response) {
+                    console.log(response);
                     const data = {
                         type: 'post_edit',
                         id: post_id
@@ -58,7 +59,8 @@ function createPost() {
                     filesDiv.innerHTML = "";
                     ws.send(JSON.stringify(data));
                 },
-                error: function () {
+                error: function (response) {
+                    console.log(response);
                 },
                 complete: function () {
                     submitButton.disabled = false;

@@ -802,8 +802,11 @@ if (isset($_GET['signup'])) {
                                 $msg_id = $msgData['id'];
                                 $msg_text = $msgData['content'];
                                 if (isNotEncrypted($msg_text)) {
-                                    $msg_text = html_entity_decode(encrypt($msg_text), ENT_QUOTES | ENT_HTML5, 'UTF-8');
-                                    $conn->query("UPDATE `messages` SET `content`='$msg_text' WHERE `id`='$msg_id'");
+                                    $msg_text = encrypt(htmlentities($msg_text, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+                                    $stmt = $conn->prepare("UPDATE `messages` SET `content` = ? WHERE `id` = ?");
+                                    $stmt->bind_param("si", $msg_text, $msg_id);
+                                    $stmt->execute();
+                                    $stmt->close();
                                 }
 
                                 $msg = html_entity_decode(decrypt($msg_text), ENT_QUOTES | ENT_HTML5, 'UTF-8');

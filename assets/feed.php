@@ -138,8 +138,11 @@ while ($post = $getPosts->fetch_assoc()) {
                         $commentText = $commentData['content'];
     
                         if (isNotEncrypted($commentText)) {
-                            $commentText = html_entity_decode(encrypt($commentText), ENT_QUOTES | ENT_HTML5, 'UTF-8');
-                            $conn->query("UPDATE `comments` SET `content`='$commentText' WHERE `id`='$commentID'");
+                            $commentText = encrypt(htmlentities($commentText, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+                            $stmt = $conn->prepare("UPDATE `comments` SET `content` = ? WHERE `id` = ?");
+                            $stmt->bind_param("si", $commentText, $commentID);
+                            $stmt->execute();
+                            $stmt->close();
                         }
                         
                         $commentText = fixEmojis(nl2br(cleanUrls(html_entity_decode(decrypt($commentText), ENT_QUOTES | ENT_HTML5, 'UTF-8'))), 1);

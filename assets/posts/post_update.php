@@ -1,30 +1,35 @@
 <?php include_once "../functions.php";
-
-$pid = $_POST['id'];
-
-$getPosts = $conn->query("SELECT * FROM `posts` WHERE `user` = $uid AND `id` = '$pid'");
-if ($getPosts->num_rows == 1) {
-    $text = htmlentities(encrypt($_POST['text']), ENT_QUOTES | ENT_HTML5, 'UTF-8');
-
-    $updatePost = $conn->query("UPDATE `posts` SET `content`='$text' WHERE `id`='$pid'");
-
-    if ($updatePost) {
-        $data = array(
-            "status" => "success",
-            "id" => $post_id,
-            "content" => decrypt($text)
-        );
-    } else {
-        $data = array(
-            "status" => "error",
-            "message" => "Update failed"
-        );
-    }
-} else {
-    $data = array(
-        "status" => "error",
-        "message" => "Post not found"
-    );
-}
 header("Content-type: application/json");
-echo json_encode($data);
+
+$pid = intval($_POST['id']);
+
+$stmt = $conn->prepare("SELECT * FROM `posts` WHERE `user` = ? AND `id` = ?");
+$stmt->bind_param("si", $uid, $pid);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows === 1) {
+    $clean_text = htmlentities($_POST['text'], ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    $text = encrypt($clean_text);
+
+    $updateStmt = $conn->prepare("UPDATE `posts` SET `content` = ? WHERE `id` = ?");
+    $updateStmt->bind_param("si", $text, $pid);
+    $updateSuccess = $updateStmt->execute();
+
+    if ($updateSuccess) {
+        echo json_encode([
+            "status" => "success",
+            "id" => $pid,
+            "content" => decrypt($text)
+        ]);
+    } else {
+        echo json_encode(["status" => "error", "message" => "Update failed"]);
+    }
+
+    $updateStmt->close();
+} else {
+    echo json_encode(["status" => "error", "message" => "Post not found"]);
+}
+
+$stmt->close();
+$conn->close();

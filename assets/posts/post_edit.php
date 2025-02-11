@@ -1,23 +1,27 @@
 <?php include_once "../functions.php";
+header("Content-type: application/json");
 
-$pid = $_POST['id'];
+$pid = intval($_POST['id']);
 
-$getPosts = $conn->query("SELECT * FROM `posts` WHERE `user` = $uid AND `id` = '$pid'");
-if ($getPosts->num_rows == 1) {
-    $post = $getPosts->fetch_assoc();
+$stmt = $conn->prepare("SELECT id, content FROM `posts` WHERE `user` = ? AND `id` = ?");
+$stmt->bind_param("ii", $uid, $pid);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows === 1) {
+    $post = $result->fetch_assoc();
     $post_id = $post['id'];
-    $post_content = html_entity_decode($post['content'], ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    $post_content = decrypt($post['content']);
+    $post_content = html_entity_decode($post_content, ENT_QUOTES | ENT_HTML5, 'UTF-8');
 
-    $data = array(
+    echo json_encode([
         "status" => "success",
         "id" => $post_id,
-        "content" => decrypt($post_content)
-    );
+        "content" => $post_content
+    ]);
 } else {
-    $data = array(
-        "status" => "error",
-        "message" => "Post not found"
-    );
+    echo json_encode(["status" => "error", "message" => "Post not found"]);
 }
-header("Content-type: application/json");
-echo json_encode($data);
+
+$stmt->close();
+$conn->close();
