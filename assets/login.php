@@ -186,7 +186,10 @@ if ($checkEmail->num_rows == 1) {
 
             if ($remember == "true") {
                 createCookie("login_token",$token,"1","6");
+            } else {
+                createCookie("login_token",$token,"10","2");
             }
+
             $data = array(
                 "responseCode" => "ok",
                 "message" => "Welcome back $username"
