@@ -14,10 +14,10 @@ $getPosts = $conn->query("SELECT p.*
 while ($post = $getPosts->fetch_assoc()) {
     $post_id = $post['id'];
     $post_user = $post['user'];
-
     $post_content = $post['content'];
+
     if (isNotEncrypted($post_content)) {
-        $post_content = encrypt($post_content);
+        $post_content = html_entity_decode(encrypt($post_content), ENT_QUOTES | ENT_HTML5, 'UTF-8');
         $conn->query("UPDATE `posts` SET `content`='$post_content' WHERE `id`='$post_id'");
     }
 
@@ -135,7 +135,14 @@ while ($post = $getPosts->fetch_assoc()) {
                         $commentUser = $commentData['user'];
                         $commentUsername = getUser("id",$commentData['user'],"username");
                         $commentAvatar = getUser("id",$commentData['user'],"avatar");
-                        $commentText = fixEmojis(nl2br(cleanUrls(html_entity_decode(decrypt($commentData['content']), ENT_QUOTES | ENT_HTML5, 'UTF-8'))), 1);
+                        $commentText = $commentData['content'];
+    
+                        if (isNotEncrypted($commentText)) {
+                            $commentText = html_entity_decode(encrypt($commentText), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                            $conn->query("UPDATE `comments` SET `content`='$commentText' WHERE `id`='$commentID'");
+                        }
+                        
+                        $commentText = fixEmojis(nl2br(cleanUrls(html_entity_decode(decrypt($commentText), ENT_QUOTES | ENT_HTML5, 'UTF-8'))), 1);
                         
                         if ($commentAvatar == "") {
                             $commentAvatar = "../assets/images/logo_faded_clean.png";

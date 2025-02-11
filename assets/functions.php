@@ -55,6 +55,11 @@ function encrypt($text) {
     $pad_length = 16 - (strlen($text) % 16);
     $text .= str_repeat(chr($pad_length), $pad_length);
     $encrypted = openssl_encrypt($text, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
+
+    if ($encrypted === false) {
+        die("Encryption failed");
+    }
+
     return base64_encode($iv . $encrypted);
 }
 
@@ -63,27 +68,21 @@ function decrypt($text) {
     $data = base64_decode($text);
 
     if ($data === false || strlen($data) < 17) {
-        return false; // Invalid base64 or too short to be valid
+        die("Base64 decoding failed or data too short");
     }
 
     $iv = substr($data, 0, 16);
     $encrypted_data = substr($data, 16);
     $decrypted = openssl_decrypt($encrypted_data, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
 
-    if ($decrypted === false || strlen($decrypted) === 0) {
-        return false; // Decryption failed
+    if ($decrypted === false) {
+        die("Decryption failed. Possible causes: wrong key, IV mismatch, corrupted data.");
     }
 
     $pad_length = ord(substr($decrypted, -1));
 
     if ($pad_length < 1 || $pad_length > 16) {
-        return false; // Invalid padding
-    }
-
-    $padding = substr($decrypted, -$pad_length);
-
-    if ($padding !== str_repeat(chr($pad_length), $pad_length)) {
-        return false; // Incorrect padding
+        die("Invalid padding detected");
     }
 
     return substr($decrypted, 0, -$pad_length);
