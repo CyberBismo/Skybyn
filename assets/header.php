@@ -48,15 +48,11 @@ if (isset($_GET['signup'])) {
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('/assets/js/service-worker.js')
                     .then(reg => {
-                        console.log('Service Worker registered!', reg);
-
-                        // Listen for updates
                         reg.addEventListener('updatefound', () => {
                             const newSW = reg.installing;
                             newSW.addEventListener('statechange', () => {
                                 if (newSW.state === 'activated') {
-                                    console.log('New Service Worker activated, reloading...');
-                                    window.location.reload(); // Reload when new SW activates
+                                    window.location.reload();
                                 }
                             });
                         });

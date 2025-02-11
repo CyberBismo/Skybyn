@@ -275,6 +275,9 @@ function connectWebSocket() {
         if (data.type === 'reload') {
             window.location.reload();
         }
+        if (data.type === 'refresh') {
+            updateCache();
+        }
 
         if (data.type === 'kick') {
             var url = data.url;

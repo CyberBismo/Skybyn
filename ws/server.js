@@ -316,9 +316,7 @@ rl.on('line', (input) => {
         
         if (clientMatch) {
             const clientId = clientMatch[1];
-
             console.log(`Reloading client (${clientId})`);
-
             const clientSocket = clientMap.get(clientId); // Retrieve client WebSocket object
             
             if (clientSocket) {
@@ -328,6 +326,25 @@ rl.on('line', (input) => {
             } else {
                 console.log(`Client with ID ${clientId} not found.`);
             }
+        } else {
+            console.log('Invalid input format. Use "reload:clientId"');
+        }
+    }
+
+    // Reload a specific client
+    if (input.startsWith('refresh:')) {
+        const clientMatch = input.match(/refresh:([a-zA-Z0-9]+)/);
+        
+        if (clientMatch) {
+            console.log(`Forcing clients to clear website cache.`);
+            
+            clientMap.forEach((client) => {
+                if (client.ws.readyState === WebSocket.OPEN) {
+                    client.ws.send(JSON.stringify({
+                        type: 'refresh'
+                    }));
+                }
+            });
         } else {
             console.log('Invalid input format. Use "reload:clientId"');
         }
