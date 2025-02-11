@@ -39,21 +39,19 @@ function createPost() {
         if (submitButton.classList.length > 3 && /^\d+$/.test(submitButton.classList[3])) {
             var post_id = submitButton.classList[3];
             var post = document.getElementById('post_c_'+post_id);
-            newPost();
             $.ajax({
                 url: '../assets/posts/post_update.php',
                 type: 'POST',
                 data: {
                     id: post_id,
-                    text: text.value
+                    content: text.value
                 },
                 success: function (response) {
-                    console.log(response);
                     const data = {
                         type: 'post_edit',
                         id: post_id
                     };
-                    post.innerHTML = text.value;
+                    post.innerHTML = response.content;
                     text.value = "";
                     image.value = "";
                     filesDiv.innerHTML = "";
@@ -66,6 +64,7 @@ function createPost() {
                     submitButton.disabled = false;
                 }
             });
+            newPost();
         } else {
             newPost();
             $.ajax({
