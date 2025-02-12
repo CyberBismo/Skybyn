@@ -6,7 +6,7 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
     $user = mysqli_real_escape_string($conn, $_POST['user']);
     $pass = mysqli_real_escape_string($conn, $_POST['password']);
 
-    $check = $conn->query("SELECT * FROM `users` WHERE `email`='$user'");
+    $check = $conn->query("SELECT * FROM `users` WHERE `username`='$user'");
     if ($check->num_rows == 1) {
         $row = $check->fetch_assoc();
         $id = $row['id'];

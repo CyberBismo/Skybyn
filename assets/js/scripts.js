@@ -291,8 +291,6 @@ function showPassword(x) {
     }
 }
 function hitEnterLogin(input) {
-    const button = document.getElementById('login');
-
     function handleKeyPress(event) {
         if (event.keyCode === 13) {
             login();
@@ -305,7 +303,7 @@ function hitEnterLogin(input) {
 function login() {
     let normal_login = document.querySelector('.normal_login');
     let nlh = document.getElementById('normal_login_header');
-    let email = document.getElementById('login-email');
+    let username = document.getElementById('login-username');
     let password = document.getElementById('login-password');
     let lmsg = document.getElementById('login_msg');
     let remember = document.getElementById('login-remember');
@@ -317,10 +315,10 @@ function login() {
     }
 
     $.ajax({
-        url: './assets/login.php',
+        url: '../assets/login.php',
         type: "POST",
         data: {
-            email: email.value,
+            username: username.value,
             password: password.value,
             remember: remember
         },
@@ -332,6 +330,7 @@ function login() {
             normal_login.style.cursor = "wait";
         },
         success: function(response) {
+            console.log(response);
             if (response.responseCode === "ok") {
                 nlh.innerHTML = response.message;
                 window.location.href = "./";
@@ -346,16 +345,12 @@ function login() {
                 normal_login.style.cursor = "auto";
             }
         },
-        error: function(jqXHR, textStatus, errorThrown) {
-            console.error("AJAX error:", textStatus, errorThrown);
-            nlh.innerHTML = "An error occurred. Please try again.";
+        error: function(response) {
+            console.error(response);
+            nlh.innerHTML = "Error connecting to server";
             setTimeout(() => {
                 nlh.innerHTML = "Sign in";
             }, 3000);
-            normal_login.style.opacity = "1";
-            normal_login.style.pointerEvents = "auto";
-            normal_login.style.userSelect = "auto";
-            normal_login.style.cursor = "auto";
         },
         complete: function() {
             normal_login.style.opacity = "1";
