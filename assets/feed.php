@@ -78,16 +78,14 @@ while ($post = $getPosts->fetch_assoc()) {
         <div class="link_preview">
             <?php for ($i = 0; $i < count($post_links); $i++) {
                 if ($i <= count($post_links)) {
-                    if (strpos($post_links[$i], "http") === false) {
-                        $post_links[$i] = "http://".$post_links[$i];
+                    if (strpos($post_links[$i], "https") === false) {
+                        $post_links[$i] = "https://".$post_links[$i];
                     }
                     $urlData = getLinkData($post_links[$i]);
                     $urlRestricted = $urlData['restricted'];
                     $urlLogo = $urlData['favicon'];
                     $urlTitle = $urlData['title'];
                     $urlDescription = $urlData['description'];
-
-                    if ($urlRestricted == 0) {
                 ?>
                 <div class="post_link_preview" onclick="window.open('<?=$post_links[$i]?>', '_blank')">
                     <div class="post_link_preview_image">
@@ -99,7 +97,6 @@ while ($post = $getPosts->fetch_assoc()) {
                     </div>
                 </div>
                 <?php }
-                }
             }?>
         </div>
         <?php }?>
