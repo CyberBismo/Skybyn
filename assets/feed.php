@@ -89,7 +89,7 @@ while ($post = $getPosts->fetch_assoc()) {
 
                     if ($urlRestricted == 0) {
                 ?>
-                <div class="post_link_preview">
+                <div class="post_link_preview" onclick="window.open('<?=$post_links[$i]?>', '_blank')">
                     <div class="post_link_preview_image">
                         <img src="<?=$urlLogo?>" alt="">
                     </div>

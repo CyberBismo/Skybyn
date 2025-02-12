@@ -302,7 +302,7 @@ function getLinkData($url) {
             }
         
             // Get favicon (link tag)
-            $favicon = 'https://www.google.com/s2/favicons?sz=128&domain=' . parse_url($url, PHP_URL_HOST);
+            $favicon = 'https://www.google.com/s2/favicons?sz=512&domain=' . parse_url($url, PHP_URL_HOST);
 
             $date = getUser('id', $_SESSION['user'], 'birth_date');
             $dob = new DateTime($date);
