@@ -138,7 +138,7 @@ if ($checkUName->num_rows == 1) {
                             </body>
                         </html>
                         ';
-                    mail($to, $subject, $message, $headers);
+                    #mail($to, $subject, $message, $headers);
                 }
             } else {
                 $conn->query("UPDATE `ip_logs` SET `date`='$now' WHERE `ip`='$currentIP' AND `user`='$uid'");

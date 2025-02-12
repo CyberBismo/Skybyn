@@ -26,7 +26,7 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
             echo json_encode($json);
         }
     } else {
-        $json = array("responseCode"=>"0","message"=>"Unknown email");
+        $json = array("responseCode"=>"0","message"=>"Unknown username");
         echo json_encode($json);
     }
 } else {
