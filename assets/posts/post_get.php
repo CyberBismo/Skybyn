@@ -67,31 +67,39 @@ if (isset($_POST['post_id'])) {
             <?php }?>
             <?php if (!empty($post_links)) { ?>
             <div class="link_preview">
-                <?php for ($i = 0; $i < count($post_links); $i++) {
-                    if ($i <= count($post_links)) {
-                        if (strpos($post_links[$i], "http") === false) {
-                            $post_links[$i] = "http://".$post_links[$i];
-                        }
-                        $urlData = getLinkData($post_links[$i]);
-                        $urlRestricted = $urlData['restricted'];
-                        $urlLogo = $urlData['favicon'];
-                        $urlTitle = $urlData['title'];
-                        $urlDescription = $urlData['description'];
+                <?php
+                foreach ($post_links as $post_link) {
+                    if (strpos($post_link, "https://") === false && strpos($post_link, "http://") === false) {
+                        $post_link = "https://" . $post_link; // Ensure valid URL format
+                    }
 
-                        if ($urlRestricted == 0) {
-                    ?>
-                    <div class="post_link_preview">
-                        <div class="post_link_preview_image">
-                            <img src="<?=$urlLogo?>" alt="">
-                        </div>
+                    $urlData = getLinkData($post_link);
+                    $urlRestricted = $urlData['restricted'];
+                    $urlLogo = !empty($urlData['favicon']) ? $urlData['favicon'] : '../assets/images/logo_faded_clean.png';
+                    $urlTitle = htmlspecialchars($urlData['title'], ENT_QUOTES, 'UTF-8');
+                    $urlDescription = htmlspecialchars($urlData['description'], ENT_QUOTES, 'UTF-8');
+                    $urlImage = !empty($urlData['featured']) ? $urlData['featured'] : ''; // Use featured image if available
+
+                    if ($urlRestricted) {
+                        continue; // Skip restricted links
+                    }
+                ?>
+                    <div class="post_link_preview" onclick="window.open('<?= htmlspecialchars($post_link, ENT_QUOTES, 'UTF-8') ?>', '_blank')">
+                        <?php if (!empty($urlImage)) { ?>
+                            <div class="post_link_preview_image">
+                                <img src="<?= htmlspecialchars($urlImage, ENT_QUOTES, 'UTF-8') ?>" alt="Preview Image">
+                            </div>
+                        <?php } else { ?>
+                            <div class="post_link_preview_icon">
+                                <img src="<?= htmlspecialchars($urlLogo, ENT_QUOTES, 'UTF-8') ?>" alt="Favicon">
+                            </div>
+                        <?php } ?>
                         <div class="post_link_preview_info">
-                            <div class="post_link_preview_title"><?=$urlTitle?></div>
-                            <div class="post_link_preview_description"><?=$urlDescription?></div>
+                            <div class="post_link_preview_title"><?= $urlTitle ?></div>
+                            <div class="post_link_preview_description"><?= $urlDescription ?></div>
                         </div>
                     </div>
-                    <?php }
-                    }
-                }?>
+                <?php } ?>
             </div>
             <?php }?>
             <?php $getUploads = $conn->query("SELECT * FROM `uploads` WHERE `post`='$post_id'");

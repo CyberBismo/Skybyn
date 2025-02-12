@@ -244,197 +244,104 @@ function extractUrls($text) {
     return $urls;
 }
 
-function getLinkData($url) {
+function getLinkPreview($url) {
+    $response = @file_get_contents($url);
+    if (!$response) {
+        return ['error' => 'Unable to fetch content'];
+    }
 
-    $ageRestrictedUrls = array(
-        'pornhub.com',
-        'xvideos.com',
-        'xhamster.com',
-        'redtube.com',
-        'youporn.com',
-        'xnxx.com',
-        'brazzers.com',
-        'chaturbate.com',
-        'livejasmin.com',
-        'myfreecams.com',
-        'camsoda.com',
-        'stripchat.com',
-        'bongacams.com',
-        'cam4.com',
-        'flirt4free.com',
-        'imlive.com',
-        'streamate.com',
-        'manyvids.com',
-        'onlyfans.com',
-        'justfor.fans',
-        'fanpage.com',
-        'fansly.com',
-        'loyalfans.com',
-        'seegore.com',
-        'documentingreality.com',
-    );
+    $doc = new DOMDocument();
+    @$doc->loadHTML($response);
 
-    // Initialize curl
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    $response = curl_exec($ch);
-    curl_close($ch);
+    // Initialize variables
+    $title = $description = $ogImage = $favicon = '';
 
-    if (!empty($response)) {
-        $doc = new DOMDocument();
-        @$doc->loadHTML($response);
+    // Get title from <title> tag or <meta property="og:title">
+    $titleTag = $doc->getElementsByTagName('title')->item(0);
+    $title = $titleTag ? trim($titleTag->nodeValue) : '';
 
-        // Get favicon
-        $favicon = '';
-        try {
-            $ogTags = $doc->getElementsByTagName('meta');
-            if ($ogTags !== false) {
-                foreach ($ogTags as $tag) {
-                    if ($tag instanceof DOMElement && $tag->hasAttribute('property')) {
-                        if ($tag->getAttribute('property') === 'og:image' && $tag->hasAttribute('content')) {
-                            $favicon = $tag->getAttribute('content');
-                            break;
-                        }
-                    }
-                }
+    foreach ($doc->getElementsByTagName('meta') as $meta) {
+        if ($meta instanceof DOMElement) {
+            $prop = $meta->getAttribute('property');
+            $name = $meta->getAttribute('name');
+            $content = $meta->getAttribute('content');
+
+            // Get Open Graph Title if available
+            if ($prop === 'og:title' && empty($title)) {
+                $title = trim($content);
             }
-            if (empty($favicon)) {
-                // Try to get Twitter image if OG image not found
-                if ($ogTags !== false) {
-                    foreach ($ogTags as $tag) {
-                        if ($tag instanceof DOMElement && $tag->hasAttribute('name')) {
-                            if ($tag->getAttribute('name') === 'twitter:image' && $tag->hasAttribute('content')) {
-                                $favicon = $tag->getAttribute('content');
-                                break;
-                            }
-                        }
-                    }
-                }
+
+            // Get Open Graph Description
+            if ($prop === 'og:description' || strtolower($name) === 'description') {
+                $description = trim($content);
             }
-            if (empty($favicon)) {
-                // If still no logo, try to find the first image on the page
-                $images = $doc->getElementsByTagName('img');
-                if ($images !== false && $images->length > 0) {
-                    $firstImage = $images->item(0);
-                    if ($firstImage instanceof DOMElement && $firstImage->hasAttribute('src')) {
-                        $favicon = $firstImage->getAttribute('src');
-                    }
-                }
+
+            // Get Open Graph Image
+            if ($prop === 'og:image' && empty($ogImage)) {
+                $ogImage = $content;
             }
-        } catch (Exception $e) {
-            $favicon = 'https://www.google.com/s2/favicons?sz=512&domain=' . parse_url($url, PHP_URL_HOST);
+
+            // Get Twitter Image if OG Image is missing
+            if ($name === 'twitter:image' && empty($ogImage)) {
+                $ogImage = $content;
+            }
         }
-    
-        // Get title
-        $titleTag = $doc->getElementsByTagName('title')->item(0);
-        $title = $titleTag ? $titleTag->nodeValue : '';
-    
-        // Get description (meta tag)
-        $description = '';
-        $metas = $doc->getElementsByTagName('meta');
-        foreach ($metas as $meta) {
-            if ($meta instanceof DOMElement && strtolower($meta->getAttribute('name')) === 'description') {
-                $description = $meta->getAttribute('content');
+    }
+
+    // Get favicon from <link rel="icon">
+    foreach ($doc->getElementsByTagName('link') as $link) {
+        if ($link instanceof DOMElement) {
+            $rel = strtolower($link->getAttribute('rel'));
+            if (strpos($rel, 'icon') !== false && $link->hasAttribute('href')) {
+                $favicon = $link->getAttribute('href');
                 break;
             }
         }
+    }
 
-        // Get featured image
-        $ogImage = '';
-        try {
-            $ogTags = $doc->getElementsByTagName('meta');
-            if ($ogTags !== false) {
-                foreach ($ogTags as $tag) {
-                    if ($tag instanceof DOMElement && $tag->hasAttribute('property')) {
-                        if ($tag->getAttribute('property') === 'og:image' && $tag->hasAttribute('content')) {
-                            $ogImage = $tag->getAttribute('content');
-                            break;
-                        }
-                    }
-                }
-            }
-            if (empty($ogImage)) {
-                // Try to get Twitter image if OG image not found
-                if ($ogTags !== false) {
-                    foreach ($ogTags as $tag) {
-                        if ($tag instanceof DOMElement && $tag->hasAttribute('name')) {
-                            if ($tag->getAttribute('name') === 'twitter:image' && $tag->hasAttribute('content')) {
-                                $ogImage = $tag->getAttribute('content');
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-            if (empty($ogImage)) {
-                // If still no featured image, try to find the first image on the page
-                $images = $doc->getElementsByTagName('img');
-                if ($images !== false && $images->length > 0) {
-                    $firstImage = $images->item(0);
-                    if ($firstImage instanceof DOMElement && $firstImage->hasAttribute('src')) {
-                        $ogImage = $firstImage->getAttribute('src');
-                    }
-                }
-            }
-        } catch (Exception $e) {
-            $ogImage = '';
+    // If favicon is missing, use Google Favicon API
+    if (empty($favicon)) {
+        $favicon = 'https://www.google.com/s2/favicons?sz=128&domain=' . parse_url($url, PHP_URL_HOST);
+    }
+
+    // If featured image is missing, try to find first <img>
+    if (empty($ogImage)) {
+        $images = $doc->getElementsByTagName('img');
+        if ($images->length > 0) {
+            $ogImage = $images->item(0)->getAttribute('src');
         }
+    }
 
-        if (in_array(parse_url($url, PHP_URL_HOST), $ageRestrictedUrls) || isVideoPlatformUrl($url)) {
-            $date = getUser('id', $_SESSION['user'], 'birth_date');
-            $dob = new DateTime($date);
-            $now = new DateTime();
-            $age = $now->diff($dob)->y;
-            
-            if ($age > 18) {
-                $data = [
-                    'restricted' => false,
-                    'title' => $title,
-                    'description' => $description,
-                    'favicon' => $favicon,
-                    'featured' => $ogImage
-                ];
-            } else {
-                $data = [
-                    'restricted' => true,
-                    'title' => 'Restricted content',
-                    'description' => 'This content is restricted and cannot be displayed.',
-                    'favicon' => '../assets/images/logo_faded_clean.png',
-                    'featured' => $ogImage
-                ];
-            }
-        } else {
-            $doc = new DOMDocument();
-            @$doc->loadHTML($response);
+    return [
+        'title' => $title ?: 'No Title Found',
+        'description' => $description ?: 'No description available',
+        'image' => $ogImage ?: '',
+        'favicon' => $favicon,
+        'url' => $url
+    ];
+}
 
-            // Get title
-            $titleTag = $doc->getElementsByTagName('title')->item(0);
-            $title = $titleTag ? $titleTag->nodeValue : '';
+function getLinkData($url) {
+    $ageRestrictedUrls = [
+        'pornhub.com', 'xvideos.com', 'xhamster.com', 'redtube.com', 'youporn.com',
+        'xnxx.com', 'brazzers.com', 'chaturbate.com', 'livejasmin.com', 'myfreecams.com',
+        'camsoda.com', 'stripchat.com', 'bongacams.com', 'cam4.com', 'flirt4free.com',
+        'imlive.com', 'streamate.com', 'manyvids.com', 'onlyfans.com', 'justfor.fans',
+        'fanpage.com', 'fansly.com', 'loyalfans.com', 'seegore.com', 'documentingreality.com'
+    ];
 
-            // Get description (meta tag)
-            $description = '';
-            $metas = $doc->getElementsByTagName('meta');
-            foreach ($metas as $meta) {
-                if ($meta instanceof DOMElement && strtolower($meta->getAttribute('name')) === 'description') {
-                    $description = $meta->getAttribute('content');
-                    break;
-                }
-            }
+    // Initialize cURL
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // Follow redirects
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10); // Timeout for slow websites
+    $response = curl_exec($ch);
+    curl_close($ch);
 
-            // Get favicon (link tag)
-            $favicon = 'https://www.google.com/s2/favicons?sz=128&domain=' . parse_url($url, PHP_URL_HOST);
-
-            $data = [
-                'restricted' => false,
-                'title' => $title,
-                'description' => $description,
-                'favicon' => $favicon,
-                'featured' => $ogImage
-            ];
-        }
-    } else {
-        $data = [
+    // If response is empty, return a default error message
+    if (empty($response)) {
+        return [
             'restricted' => false,
             'title' => 'Empty content',
             'description' => 'This content is empty',
@@ -443,7 +350,46 @@ function getLinkData($url) {
         ];
     }
 
-    return $data;
+    // Fetch metadata
+    $preview = getLinkPreview($url);
+    $title = $preview['title'] ?? 'No Title';
+    $description = $preview['description'] ?? 'No Description';
+    $favicon = $preview['favicon'] ?? '../assets/images/logo_faded_clean.png';
+    $ogImage = $preview['image'] ?? '';
+
+    // Check if URL is restricted
+    $host = parse_url($url, PHP_URL_HOST);
+    $isRestricted = in_array($host, $ageRestrictedUrls) || isVideoPlatformUrl($url);
+
+    if ($isRestricted) {
+        // Fetch user age from session (ensure session is started)
+        if (isset($_SESSION['user'])) {
+            $date = getUser('id', $_SESSION['user'], 'birth_date');
+            if ($date) {
+                $dob = new DateTime($date);
+                $now = new DateTime();
+                $age = $now->diff($dob)->y;
+
+                if ($age < 18) {
+                    return [
+                        'restricted' => true,
+                        'title' => 'Restricted content',
+                        'description' => 'This content is restricted and cannot be displayed.',
+                        'favicon' => '../assets/images/logo_faded_clean.png',
+                        'featured' => ''
+                    ];
+                }
+            }
+        }
+    }
+
+    return [
+        'restricted' => false,
+        'title' => $title,
+        'description' => $description,
+        'favicon' => $favicon,
+        'featured' => $ogImage
+    ];
 }
 
 function cleanUrls($url) {

@@ -2645,6 +2645,20 @@
                 height: 100%;
                 object-fit: cover;
             }
+            .post_link_preview_icon {
+                width: auto;
+                max-width: 50px;
+                height: auto;
+                max-height: 50px;
+                padding: 0 20px;
+                border-radius: 10px;
+                box-sizing: border-box;
+            }
+            .post_link_preview_icon img {
+                width: auto;
+                height: 100%;
+                object-fit: cover;
+            }
             .post_link_preview_info {
                 padding: 10px;
                 border-radius: 10px;
