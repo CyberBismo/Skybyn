@@ -13,6 +13,14 @@ const server = https.createServer({
 
 require('dotenv').config();
 
+// Start WebSocket server on port 4433
+server.listen(4433, () => {
+    console.warn('+--------------------------+');
+    console.warn('| Secure Web Socket Server |');
+    console.warn('+--------------------------+');
+    console.info("| Listening on port: 4433  |");
+});
+
 const dbConfig = {
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -28,16 +36,16 @@ function handleDisconnect() {
     
     db.connect(err => {
         if (err) {
-            console.error("❌ Database connection failed:", err);
+            console.error("| Database: FAILED         |\nReason:\n", err, "\n\n");
             setTimeout(handleDisconnect, 5000); // Retry connection after 5 seconds
         } else {
-            console.log("✅ Database connected!");
+            console.info("| Database: CONNECTED      |\n");
         }
     });
 
     db.on("error", err => {
         if (err.code === "PROTOCOL_CONNECTION_LOST") {
-            console.error("⚠️ Database connection lost. Reconnecting...");
+            console.error("⚠️ Database connection lost. Reconnecting...\n");
             handleDisconnect();
         } else {
             throw err;
@@ -75,13 +83,7 @@ function getTime() {
 let subscriptions = {};
 
 const wss = new WebSocket.Server({ server });
-
 const clientMap = new Map(); // Map to store clients by their unique identifier
-
-// Start WebSocket server on port 4433
-server.listen(4433, () => {
-    console.log('Server is listening on port 4433\n');
-});
 
 // Handle WebSocket connections
 wss.on('connection', (ws) => {
@@ -116,7 +118,15 @@ wss.on('connection', (ws) => {
                     userId = "g" + guestCount;
                     logType = "Guest " + userId + " connected";
                 } else {
-                    logType = "User " + userId + " connected";
+                    let username = "";
+                    db.query("SELECT username FROM users WHERE id = ?", [userId], (err, results) => {
+                        if (err) {
+                            console.error("Error fetching username:", err);
+                            return;
+                        }
+                        username = results[0]?.username || userId;
+                    });
+                    logType = "User " + username + " connected";
                 }
                 clientMap.set(userId, { ws, ip: cleanedIp, sessionID: clientID });
                 console.log(`${time}\n${logType} \nIP: ${cleanedIp}\nUrl: ${url}\nDevice: ${device}\n`);
@@ -465,6 +475,24 @@ const rl = readline.createInterface({
 });
 
 rl.on('line', (input) => {
+    // List all commands
+    if (input === 'help' || input === '?') {
+        console.log('\nAvailable commands:');
+        console.log('help, ? - Show this help message');
+        console.log('cls, clear - Clear console');
+        console.log('online - List connected users/guests count');
+        console.log('subscribers - Show total push notification subscribers');
+        console.log('list_subscribers - List all push notification subscribers');
+        console.log('broadcast:message, bc:message - Send message to all clients');
+        console.log('msgto:clientId msg:message - Send message to specific client');
+        console.log('push:clientId msg:message - Send push notification to specific user');
+        console.log('push_all:message - Send push notification to all subscribers');
+        console.log('reload:clientId - Force reload specific client');
+        console.log('refresh - Force all clients to clear cache');
+        console.log('kick:clientId url:URL - Redirect client to specified URL');
+        console.log('check:userId - Check if user is connected\n');
+    }
+    
     // Clear the console
     if (input === 'cls' || input === 'clear') {
         console.clear();
@@ -497,7 +525,7 @@ rl.on('line', (input) => {
                 return;
             }
     
-            console.log(`👥 Total Push Subscribers: ${results[0].count}`);
+            console.log(`Total Push Subscribers: ${results[0].count}`);
         });
     }
     
