@@ -11,8 +11,8 @@ const server = https.createServer({
 
 // VAPID keys (replace with your generated keys)
 const vapidKeys = {
-    publicKey: 'BNmqMQ9fopNj8r1bsuTLuXSXXeVchRCzOrAF04xHQNNvZzIAsARBBAvuFCrSg8J6FCOktIR4NyN-wVa-40llJks-g',
-    privateKey: 'GYaC-k_XCwm3TrRwuK1mrV6U4Q9hmoO3RE7G3iSwtvD5DPBU'
+    publicKey: 'BNmqMQ9fopNj8r1bsuTLuXSXXeVchRCzOrAF04xHQNNvZzIAsARBBAvuFCrSg8J6FCOktIR4NyN-wVa-40llJks',
+    privateKey: 'k_XCwm3TrRwuK1mrV6U4Q9hmoO3RE7G3iSwtvD5DPBU'
 };
 
 // Set VAPID details
@@ -148,11 +148,40 @@ wss.on('connection', (ws) => {
                 });
             }
 
-            if (data.type === 'subscribe') {
-                console.log('New push subscription received.');
-                subscriptions.push(data.subscription);
-                ws.send(JSON.stringify({ status: 'subscribed' }));
-            }
+            if (data.type === 'push_subscription') {
+                let userId;
+            
+                // Assign guest ID correctly instead of using sessionId
+                if (data.userId === null) {
+                    // Count existing guests and assign next available guest ID
+                    let guestCount = 0;
+                    wss.clients.forEach(client => {
+                        if (client.readyState === WebSocket.OPEN && !client.userid) {
+                            guestCount++;
+                        }
+                    });
+                    userId = "g" + guestCount; // Assign guest ID
+                } else {
+                    userId = data.userId; // Assign actual userId
+                }
+            
+                if (!data.subscription) {
+                    console.error(`Received push_subscription with undefined subscription from user: ${userId}`);
+                    return;
+                }
+            
+                console.log(`Received push subscription from user: ${userId}`);
+            
+                // Ensure subscriptions is an object
+                if (!subscriptions) {
+                    subscriptions = {};
+                }
+            
+                // Store user-specific subscription using correct userId
+                subscriptions[userId] = data.subscription;
+            
+                ws.send(JSON.stringify({ status: 'push_subscribed', userId }));
+            }               
 
             if (data.type === 'chat') {
                 const { id, from, to, message: messageText } = data;
@@ -297,6 +326,28 @@ function updateActiveClients() {
     });
 }
 
+function sendPushNotification(userId, title, message) {
+    if (!subscriptions[userId]) {
+        console.log(`No push subscription found for user ${userId}.`);
+        return;
+    }
+
+    const payload = JSON.stringify({
+        title: title || 'Notification',
+        body: message || 'You have a new notification!',
+        icon: 'https://skybyn.com/assets/images/logo_faded_clean.png', // Change to your icon
+    });
+
+    webPush.sendNotification(subscriptions[userId], payload).catch((error) => {
+        console.error(`Error sending push notification to ${userId}:`, error);
+        
+        if (error.statusCode === 410) {
+            console.log(`Removing invalid push subscription for user ${userId}`);
+            delete subscriptions[userId]; // Remove invalid subscription
+        }
+    });
+}
+
 
 // Read input from command line and broadcast messages to WebSocket clients
 const rl = readline.createInterface({
@@ -308,6 +359,23 @@ rl.on('line', (input) => {
     // Clear the console
     if (input === 'cls' || input === 'clear') {
         console.clear();
+    }
+
+    // Send push notification to a specific user
+    if (input.startsWith('push:')) {
+        const clientMatch = input.match(/push:([a-zA-Z0-9]+)/);
+        const messageMatch = input.match(/push:[a-zA-Z0-9]+ msg:(.*)/);
+
+        if (clientMatch && messageMatch) {
+            const clientId = clientMatch[1]; // Extract client ID
+            const message = messageMatch[1].trim(); // Extract the message
+
+            console.log(`Sending push notification to ${clientId}: ${message}`);
+            
+            sendPushNotification(clientId, 'New Notification', message);
+        } else {
+            console.log('Invalid input format. Use: push:clientId msg:Your message');
+        }
     }
 
     // Reload a specific client

@@ -41,6 +41,7 @@ function checkPushAccess() {
         requestNotificationPermission();
     }
 }
+checkPushAccess();
 
 function device() {
     let device = 'Unknown';
@@ -117,7 +118,6 @@ function connectWebSocket() {
         if ('serviceWorker' in navigator && 'PushManager' in window) {
             navigator.serviceWorker.register('/assets/js/service-worker.js')
                 .then(reg => {
-                    console.log('Service Worker registered:', reg);
                     return Notification.requestPermission().then(permission => {
                         if (permission !== 'granted') {
                             console.log('Push notifications permission denied');
@@ -125,18 +125,27 @@ function connectWebSocket() {
                         }
                         return reg.pushManager.subscribe({
                             userVisibleOnly: true,
-                            applicationServerKey: 'BNmqMQ9fopNj8r1bsuTLuXSXXeVchRCzOrAF04xHQNNvZzIAsARBBAvuFCrSg8J6FCOktIR4NyN-wVa-40llJks' // Replace with your VAPID key
+                            applicationServerKey: 'BNmqMQ9fopNj8r1bsuTLuXSXXeVchRCzOrAF04xHQNNvZzIAsARBBAvuFCrSg8J6FCOktIR4NyN-wVa-40llJks'
                         });
                     });
                 })
                 .then(subscription => {
                     if (subscription) {
-                        console.log('Push Subscription:', JSON.stringify(subscription));
-                        ws.send(JSON.stringify({ type: 'push_subscription', subscription: subscription }));
+                        let storedUserId = localStorage.getItem('userId'); // Get stored userId
+                        let storedSessionId = localStorage.getItem('sessionId'); // Get stored sessionId
+                        
+                        let payload = {
+                            type: 'push_subscription',
+                            userId: storedUserId ? storedUserId : null, // Use userId if available, otherwise null
+                            sessionId: storedSessionId, // Send session ID too
+                            subscription: subscription
+                        };
+        
+                        ws.send(JSON.stringify(payload));
                     }
                 })
                 .catch(error => console.error('Push registration failed:', error));
-        }        
+        }             
 
         ws.send(information);
     };
