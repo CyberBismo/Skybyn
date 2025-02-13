@@ -36,6 +36,12 @@ function showNotification(sender, message) {
     }
 }
 
+function checkPushAccess() {
+    if (Notification.permission != "granted") {
+        requestNotificationPermission();
+    }
+}
+
 function device() {
     let device = 'Unknown';
     if (navigator.userAgent.match(/Android/i)) {
@@ -119,7 +125,7 @@ function connectWebSocket() {
                         }
                         return reg.pushManager.subscribe({
                             userVisibleOnly: true,
-                            applicationServerKey: 'YOUR_PUBLIC_VAPID_KEY' // Replace with your VAPID key
+                            applicationServerKey: 'BNmqMQ9fopNj8r1bsuTLuXSXXeVchRCzOrAF04xHQNNvZzIAsARBBAvuFCrSg8J6FCOktIR4NyN-wVa-40llJks' // Replace with your VAPID key
                         });
                     });
                 })

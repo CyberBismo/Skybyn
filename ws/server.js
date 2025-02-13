@@ -11,8 +11,8 @@ const server = https.createServer({
 
 // VAPID keys (replace with your generated keys)
 const vapidKeys = {
-    publicKey: 'BCbWKcwVxPpbEKgXDRX8SbdX97TgYiIZLa5dtFeops3xWtwFTwlo4mljlHNE_m4m7epxEkAv0x8Y7NgsBf9lw-g',
-    privateKey: 'GYaC-YT0ftOU5ZLyTTkKQ7UvqhEzOdU5XcolAgUGSq0'
+    publicKey: 'BNmqMQ9fopNj8r1bsuTLuXSXXeVchRCzOrAF04xHQNNvZzIAsARBBAvuFCrSg8J6FCOktIR4NyN-wVa-40llJks-g',
+    privateKey: 'GYaC-k_XCwm3TrRwuK1mrV6U4Q9hmoO3RE7G3iSwtvD5DPBU'
 };
 
 // Set VAPID details

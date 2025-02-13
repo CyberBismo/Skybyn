@@ -61,7 +61,7 @@ if (isset($_GET['signup'])) {
                     .catch(error => console.error('Service Worker registration failed:', error));
 
                 navigator.serviceWorker.ready.then(registration => {
-                    console.log(registration.active.state); // Logs the current state
+                    //console.log(registration.active.state); // Logs the current state
                 });
 
                 // Function to manually trigger cache clear
