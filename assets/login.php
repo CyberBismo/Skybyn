@@ -146,9 +146,9 @@ if ($checkUName->num_rows == 1) {
         }
 
         if ($remember == "true") {
-            createCookie("login_token",$uid,"1","6");
+            createCookie("login_token",$token,"1","6");
         } else {
-            createCookie("login_token",$uid,"10","2");
+            createCookie("login_token",$token,"10","2");
         }
 
         $data = array(
