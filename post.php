@@ -4,7 +4,8 @@ if (!isset($_SESSION['user'])) {
     ?><meta http-equiv="Refresh" content="0; url='./'" /><?php
 }
 
-$post_id = $_GET['p'];
+if (isset($_GET['p'])) {
+    $post_id = $_GET['p'];
 ?>
         <div class="page-container">
             <div class="post-container">
@@ -146,3 +147,4 @@ $post_id = $_GET['p'];
             }
         </script>
     </div>
+<?php }?>
