@@ -68,14 +68,24 @@ self.addEventListener('message', (event) => {
 
 // Push Notifications
 self.addEventListener('push', (event) => {
-    const data = event.data ? event.data.json() : {};
-    
+    console.log('📨 Push event received in Service Worker:', event);
+
+    if (!event.data) {
+        console.warn('⚠️ Push event received, but no data.');
+        return;
+    }
+
+    const data = event.data.json();
+    console.log('📥 Push Data:', data);
+
     const options = {
         body: data.body || 'You have a new notification!',
-        icon: '/assets/icons/notification.png', // Replace with your icon
-        badge: '/assets/icons/badge.png', // Optional
+        icon: '/assets/icons/notification.png',
+        badge: '/assets/icons/badge.png',
         data: { url: data.url || '/' }
     };
+
+    console.log('Showing notification:', data);
 
     event.waitUntil(
         self.registration.showNotification(data.title || 'New Message', options)

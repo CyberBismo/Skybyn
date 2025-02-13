@@ -1,18 +1,56 @@
 const WebSocket = require('ws');
-const webPush = require('web-push');
 const fs = require('fs');
 const https = require('https');
 const readline = require('readline');
+
+const webPush = require('web-push');
+const mysql = require('mysql');
 
 const server = https.createServer({
     cert: fs.readFileSync('ssl/cert.pem'),
     key: fs.readFileSync('ssl/key.pem')
 });
 
+require('dotenv').config();
+
+const dbConfig = {
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    multipleStatements: true
+};
+
+let db;
+
+function handleDisconnect() {
+    db = mysql.createConnection(dbConfig);
+    
+    db.connect(err => {
+        if (err) {
+            console.error("❌ Database connection failed:", err);
+            setTimeout(handleDisconnect, 5000); // Retry connection after 5 seconds
+        } else {
+            console.log("✅ Database connected!");
+        }
+    });
+
+    db.on("error", err => {
+        if (err.code === "PROTOCOL_CONNECTION_LOST") {
+            console.error("⚠️ Database connection lost. Reconnecting...");
+            handleDisconnect();
+        } else {
+            throw err;
+        }
+    });
+}
+
+handleDisconnect();
+
 // VAPID keys (replace with your generated keys)
 const vapidKeys = {
-    publicKey: 'BNmqMQ9fopNj8r1bsuTLuXSXXeVchRCzOrAF04xHQNNvZzIAsARBBAvuFCrSg8J6FCOktIR4NyN-wVa-40llJks',
-    privateKey: 'k_XCwm3TrRwuK1mrV6U4Q9hmoO3RE7G3iSwtvD5DPBU'
+    publicKey: process.env.VAPID_PUBLIC_KEY,
+    privateKey: process.env.VAPID_PRIVATE_KEY
 };
 
 // Set VAPID details
@@ -34,7 +72,7 @@ function getTime() {
 }
 
 // Store client subscriptions
-let subscriptions = [];
+let subscriptions = {};
 
 const wss = new WebSocket.Server({ server });
 
@@ -149,39 +187,20 @@ wss.on('connection', (ws) => {
             }
 
             if (data.type === 'push_subscription') {
-                let userId;
-            
-                // Assign guest ID correctly instead of using sessionId
-                if (data.userId === null) {
-                    // Count existing guests and assign next available guest ID
-                    let guestCount = 0;
-                    wss.clients.forEach(client => {
-                        if (client.readyState === WebSocket.OPEN && !client.userid) {
-                            guestCount++;
-                        }
-                    });
-                    userId = "g" + guestCount; // Assign guest ID
-                } else {
-                    userId = data.userId; // Assign actual userId
-                }
-            
+                let userId = data.userId || `g${wss.clients.size}`;
+                
                 if (!data.subscription) {
-                    console.error(`Received push_subscription with undefined subscription from user: ${userId}`);
+                    console.error(`❌ Subscription is undefined for ${userId}`);
                     return;
                 }
             
-                console.log(`Received push subscription from user: ${userId}`);
-            
-                // Ensure subscriptions is an object
-                if (!subscriptions) {
-                    subscriptions = {};
-                }
-            
-                // Store user-specific subscription using correct userId
-                subscriptions[userId] = data.subscription;
-            
-                ws.send(JSON.stringify({ status: 'push_subscribed', userId }));
-            }               
+                console.log(`✅ Storing push subscription for: ${userId}`);
+                
+                // Save subscription to the database
+                savePushSubscription(userId, data.subscription);
+                
+                ws.send(JSON.stringify({ type: 'push_subscribed', userId }));
+            }                 
 
             if (data.type === 'chat') {
                 const { id, from, to, message: messageText } = data;
@@ -191,14 +210,50 @@ wss.on('connection', (ws) => {
                     icon: 'https://skybyn.com/assets/images/logo_faded_clean.png',
                 });
 
-                subscriptions.forEach((subscription, index) => {
-                    webPush.sendNotification(subscription, payload).catch((error) => {
-                        console.error('Error sending push notification:', error);
-                        if (error.statusCode === 410) {
-                            subscriptions.splice(index, 1);
-                        }
-                    });
-                });
+                async function sendPushNotification(userId, title, message) {
+                    try {
+                        // Fetch subscription from database
+                        const query = "SELECT endpoint, auth, p256dh FROM push_subscriptions WHERE user_id = ?";
+                        db.query(query, [userId], (err, results) => {
+                            if (err) {
+                                console.error(`❌ Error fetching push subscription for ${userId}:`, err);
+                                return;
+                            }
+                
+                            if (results.length === 0) {
+                                console.log(`❌ No push subscription found for user ${userId}`);
+                                return;
+                            }
+                
+                            const subscription = {
+                                endpoint: results[0].endpoint,
+                                keys: {
+                                    auth: results[0].auth,
+                                    p256dh: results[0].p256dh
+                                }
+                            };
+                
+                            const payload = JSON.stringify({
+                                title: title || 'Notification',
+                                body: message || 'You have a new notification!',
+                                icon: 'https://skybyn.com/assets/images/logo_faded_clean.png'
+                            });
+                
+                            webPush.sendNotification(subscription, payload).catch(error => {
+                                console.error(`❌ Error sending push notification to ${userId}:`, error);
+                
+                                if (error.statusCode === 410) { // Subscription expired
+                                    console.log(`🗑️ Removing invalid subscription for ${userId}`);
+                                    db.query("DELETE FROM push_subscriptions WHERE user_id = ?", [userId]);
+                                }
+                            });
+                        });
+                    } catch (error) {
+                        console.error(`❌ Error sending push notification to ${userId}:`, error);
+                    }
+                }
+
+                //sendPushNotification('user123', 'New Message', 'Hello, this is a test notification!');
 
                 const sendMsg = JSON.stringify({
                     type: 'chat',
@@ -302,6 +357,24 @@ function broadcastToAll(message) {
     });
 }
 
+function sendPushToAll(title, message) {
+    const query = "SELECT `user_id` FROM `push_subscriptions`";
+    
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error("Error fetching users:", err);
+            return;
+        }
+
+        results.forEach(row => {
+            sendPushNotification(row.user_id, title, message);
+        });
+    });
+}
+
+// Example Usage:
+// sendPushToAll('System Update', 'We have a new update available!');
+
 // Send message to client
 function sendMessage(clientId, message) {
     const clientSocket = clientMap.get(clientId);
@@ -327,27 +400,63 @@ function updateActiveClients() {
 }
 
 function sendPushNotification(userId, title, message) {
-    if (!subscriptions[userId]) {
-        console.log(`No push subscription found for user ${userId}.`);
-        return;
-    }
-
-    const payload = JSON.stringify({
-        title: title || 'Notification',
-        body: message || 'You have a new notification!',
-        icon: 'https://skybyn.com/assets/images/logo_faded_clean.png', // Change to your icon
-    });
-
-    webPush.sendNotification(subscriptions[userId], payload).catch((error) => {
-        console.error(`Error sending push notification to ${userId}:`, error);
-        
-        if (error.statusCode === 410) {
-            console.log(`Removing invalid push subscription for user ${userId}`);
-            delete subscriptions[userId]; // Remove invalid subscription
+    const query = "SELECT endpoint, auth, p256dh FROM push_subscriptions WHERE user_id = ?";
+    
+    db.query(query, [userId], (err, results) => {
+        if (err) {
+            console.error(`❌ Error fetching push subscription for ${userId}:`, err);
+            return;
         }
+
+        if (results.length === 0) {
+            console.log(`⚠️ No push subscription found for user ${userId}`);
+            return;
+        }
+
+        const subscription = {
+            endpoint: results[0].endpoint,
+            keys: {
+                auth: results[0].auth,
+                p256dh: results[0].p256dh
+            }
+        };
+
+        const payload = JSON.stringify({
+            title: title || 'Notification',
+            body: message || 'You have a new notification!',
+            icon: 'https://skybyn.com/assets/images/logo_faded_clean.png'
+        });
+
+        webPush.sendNotification(subscription, payload).catch(error => {
+            console.error(`❌ Error sending push notification to ${userId}:`, error);
+
+            if (error.statusCode === 410) { // 410 = Subscription expired
+                console.log(`🗑️ Removing invalid subscription for ${userId}`);
+                db.query("DELETE FROM push_subscriptions WHERE user_id = ?", [userId]);
+            }
+        });
     });
 }
 
+function savePushSubscription(userId, subscription) {
+    const query = `
+        INSERT INTO push_subscriptions (user_id, endpoint, auth, p256dh)
+        VALUES (?, ?, ?, ?)
+        ON DUPLICATE KEY UPDATE endpoint=?, auth=?, p256dh=?`;
+    
+    const values = [
+        userId, subscription.endpoint, subscription.keys.auth, subscription.keys.p256dh,
+        subscription.endpoint, subscription.keys.auth, subscription.keys.p256dh
+    ];
+
+    db.query(query, values, (err) => {
+        if (err) {
+            console.error("❌ Error saving subscription:", err);
+        } else {
+            console.log(`✅ Subscription saved for user ${userId}`);
+        }
+    });
+}
 
 // Read input from command line and broadcast messages to WebSocket clients
 const rl = readline.createInterface({
@@ -376,6 +485,57 @@ rl.on('line', (input) => {
         } else {
             console.log('Invalid input format. Use: push:clientId msg:Your message');
         }
+    }
+
+    // Count all subscribers
+    if (input === "subscribers") {
+        const query = "SELECT COUNT(*) AS count FROM push_subscriptions";
+        
+        db.query(query, (err, results) => {
+            if (err) {
+                console.error("❌ Error fetching subscribers:", err);
+                return;
+            }
+    
+            console.log(`👥 Total Push Subscribers: ${results[0].count}`);
+        });
+    }
+    
+    // List all subscribers
+    if (input === "list_subscribers") {
+        const query = "SELECT user_id FROM push_subscriptions";
+        
+        db.query(query, (err, results) => {
+            if (err) {
+                console.error("❌ Error fetching subscriber list:", err);
+                return;
+            }
+    
+            console.log("📜 List of Subscribers:");
+            results.forEach(row => {
+                console.log(`- ${row.user_id}`);
+            });
+        });
+    }
+
+    // Send push notification to all subscribers
+    if (input.startsWith("push_all:")) {
+        const message = input.replace("push_all:", "").trim();
+        
+        const query = "SELECT user_id FROM push_subscriptions";
+        
+        db.query(query, (err, results) => {
+            if (err) {
+                console.error("❌ Error fetching users:", err);
+                return;
+            }
+    
+            results.forEach(row => {
+                sendPushNotification(row.user_id, "Global Notification", message);
+            });
+    
+            console.log("📢 Sent push notification to all subscribers.");
+        });
     }
 
     // Reload a specific client

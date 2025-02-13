@@ -88,6 +88,7 @@ function connectWebSocket() {
 
         if (document.cookie.split(';').some((item) => item.trim().startsWith('login_token='))) {
             const userId = document.cookie.replace(/(?:(?:^|.*;\s*)login_token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+            localStorage.setItem('userId', userId);
             if (userId.length > 0) {
                 information = JSON.stringify({
                     type: 'connect',
@@ -118,33 +119,54 @@ function connectWebSocket() {
         if ('serviceWorker' in navigator && 'PushManager' in window) {
             navigator.serviceWorker.register('/assets/js/service-worker.js')
                 .then(reg => {
-                    return Notification.requestPermission().then(permission => {
-                        if (permission !== 'granted') {
-                            console.log('Push notifications permission denied');
-                            return;
-                        }
+                    //console.log("✅ Service Worker Registered:", reg);
+
+                    return navigator.serviceWorker.ready;
+                })
+                .then(reg => {
+                    //console.log("✅ Service Worker is Ready:", reg);
+
+                    return Notification.requestPermission();
+                })
+                .then(permission => {
+                    if (permission !== 'granted') {
+                        //console.error("❌ Push notifications permission denied");
+                        return;
+                    }
+                    //console.log("✅ Notification permission granted");
+
+                    return navigator.serviceWorker.ready.then(reg => {
                         return reg.pushManager.subscribe({
                             userVisibleOnly: true,
-                            applicationServerKey: 'BNmqMQ9fopNj8r1bsuTLuXSXXeVchRCzOrAF04xHQNNvZzIAsARBBAvuFCrSg8J6FCOktIR4NyN-wVa-40llJks'
+                            applicationServerKey: urlBase64ToUint8Array('BNmqMQ9fopNj8r1bsuTLuXSXXeVchRCzOrAF04xHQNNvZzIAsARBBAvuFCrSg8J6FCOktIR4NyN-wVa-40llJks')
                         });
                     });
                 })
                 .then(subscription => {
                     if (subscription) {
-                        let storedUserId = localStorage.getItem('userId'); // Get stored userId
-                        let storedSessionId = localStorage.getItem('sessionId'); // Get stored sessionId
-                        
+                        //console.log("✅ Push Subscription Successful:", subscription);
+
+                        let storedUserId = localStorage.getItem('userId');
+                        let storedSessionId = localStorage.getItem('sessionId');
+
                         let payload = {
                             type: 'push_subscription',
-                            userId: storedUserId ? storedUserId : null, // Use userId if available, otherwise null
-                            sessionId: storedSessionId, // Send session ID too
+                            userId: storedUserId ? storedUserId : null,
+                            sessionId: storedSessionId,
                             subscription: subscription
                         };
-        
+
                         ws.send(JSON.stringify(payload));
                     }
                 })
-                .catch(error => console.error('Push registration failed:', error));
+                .catch(error => console.error("❌ Push registration failed:", error));
+
+            function urlBase64ToUint8Array(base64String) {
+                const padding = '='.repeat((4 - base64String.length % 4) % 4);
+                const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+                const rawData = atob(base64);
+                return new Uint8Array([...rawData].map(char => char.charCodeAt(0)));
+            }
         }             
 
         ws.send(information);
@@ -157,6 +179,10 @@ function connectWebSocket() {
             var users = data.userCount;
             var guests = data.guestCount;
             updateActiveClients(users,guests);
+        }
+
+        if (data.type === 'push_subscribed') {
+            //alert("Subscribed to push notifications");
         }
 
         if (data.type === 'broadcast') {
@@ -354,4 +380,15 @@ function generateSessionId() {
             v = c === 'x' ? r : (r & 0x3) | 0x8;
         return v.toString(16);
     });
+}
+
+function urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+    for (let i = 0; i < rawData.length; i++) {
+        outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
 }
