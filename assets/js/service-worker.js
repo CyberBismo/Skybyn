@@ -1,4 +1,4 @@
-const CACHE_NAME = 'v1'; // Change this to force update
+const CACHE_NAME = 'v0.1'; // Change this to force update
 const CACHE_FILES = [
     '/', // Homepage
     '/index.php'
@@ -47,7 +47,7 @@ self.addEventListener('fetch', (event) => {
                     return networkResponse;
                 });
             });
-        }).catch(() => caches.match('/index.html')) // Fallback for offline
+        }).catch(() => caches.match('/index.php')) // Fallback for offline
     );
 });
 
@@ -64,4 +64,37 @@ self.addEventListener('message', (event) => {
             });
         });
     }
+});
+
+// Push Notifications
+self.addEventListener('push', (event) => {
+    const data = event.data ? event.data.json() : {};
+    
+    const options = {
+        body: data.body || 'You have a new notification!',
+        icon: '/assets/icons/notification.png', // Replace with your icon
+        badge: '/assets/icons/badge.png', // Optional
+        data: { url: data.url || '/' }
+    };
+
+    event.waitUntil(
+        self.registration.showNotification(data.title || 'New Message', options)
+    );
+});
+
+// Handle Notification Click
+self.addEventListener('notificationclick', (event) => {
+    event.notification.close();
+
+    const notificationURL = event.notification.data.url || '/';
+    event.waitUntil(
+        clients.matchAll({ type: 'window' }).then((clientsArr) => {
+            for (const client of clientsArr) {
+                if (client.url === notificationURL && 'focus' in client) {
+                    return client.focus();
+                }
+            }
+            return clients.openWindow(notificationURL);
+        })
+    );
 });

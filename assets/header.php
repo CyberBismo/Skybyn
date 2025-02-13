@@ -53,12 +53,16 @@ if (isset($_GET['signup'])) {
                             const newSW = reg.installing;
                             newSW.addEventListener('statechange', () => {
                                 if (newSW.state === 'activated') {
-                                    window.location.reload();
+                                    //window.location.reload();
                                 }
                             });
                         });
                     })
                     .catch(error => console.error('Service Worker registration failed:', error));
+
+                navigator.serviceWorker.ready.then(registration => {
+                    console.log(registration.active.state); // Logs the current state
+                });
 
                 // Function to manually trigger cache clear
                 function updateCache() {
@@ -69,22 +73,22 @@ if (isset($_GET['signup'])) {
             }
         </script>
         <script src = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-        <script src="../assets/js/scripts.js"></script>
-        <script src="../assets/js/ws.js"></script>
+        <script src="../assets/js/scripts.js?v=<?=time();?>"></script>
+        <script src="../assets/js/ws.js?v=<?=time();?>"></script>
         <?php if (!isset($_COOKIE['welcomeScreen'])) {?>
         <script src="../assets/js/welcome.js"></script>
         <?php }?>
         <?php if (isMobile($userAgent) == true) {?>
-        <script src="../assets/js/small_screen.js"></script>
+        <script src="../assets/js/small_screen.js?v=<?=time();?>"></script>
         <?php } else {?>
-        <script src="../assets/js/big_screen.js"></script>
+        <script src="../assets/js/big_screen.js?v=<?=time();?>"></script>
         <?php }?>
         <?php if (isset($_SESSION['user'])) {?>
-        <script src="../assets/js/comments/updateComments.js"></script>
-        <script src="../assets/js/notifications/notis.js"></script>
-        <script src="../assets/js/posts/updateFeed.js"></script>
-        <script src="../assets/js/scripts_logged.js"></script>
-        <script src="../assets/js/chat/message.js"></script>
+        <script src="../assets/js/comments/updateComments.js?v=<?=time();?>"></script>
+        <script src="../assets/js/notifications/notis.js?v=<?=time();?>"></script>
+        <script src="../assets/js/posts/updateFeed.js?v=<?=time();?>"></script>
+        <script src="../assets/js/scripts_logged.js?v=<?=time();?>"></script>
+        <script src="../assets/js/chat/message.js?v=<?=time();?>"></script>
         <?php }?>
         <?php include_once "style.php"?>
     </head>

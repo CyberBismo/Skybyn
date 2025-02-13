@@ -108,6 +108,30 @@ function connectWebSocket() {
             });
         }
 
+        if ('serviceWorker' in navigator && 'PushManager' in window) {
+            navigator.serviceWorker.register('/assets/js/service-worker.js')
+                .then(reg => {
+                    console.log('Service Worker registered:', reg);
+                    return Notification.requestPermission().then(permission => {
+                        if (permission !== 'granted') {
+                            console.log('Push notifications permission denied');
+                            return;
+                        }
+                        return reg.pushManager.subscribe({
+                            userVisibleOnly: true,
+                            applicationServerKey: 'YOUR_PUBLIC_VAPID_KEY' // Replace with your VAPID key
+                        });
+                    });
+                })
+                .then(subscription => {
+                    if (subscription) {
+                        console.log('Push Subscription:', JSON.stringify(subscription));
+                        ws.send(JSON.stringify({ type: 'push_subscription', subscription: subscription }));
+                    }
+                })
+                .catch(error => console.error('Push registration failed:', error));
+        }        
+
         ws.send(information);
     };
 
