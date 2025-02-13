@@ -86,8 +86,8 @@ function connectWebSocket() {
             browser: navigator.userAgent
         };
 
-        if (document.cookie.split(';').some((item) => item.trim().startsWith('login_token='))) {
-            const userId = document.cookie.replace(/(?:(?:^|.*;\s*)login_token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+        if (document.cookie.split(';').some((item) => item.trim().startsWith('sui='))) {
+            const userId = document.cookie.replace(/(?:(?:^|.*;\s*)sui\s*\=\s*([^;]*).*$)|^.*$/, "$1");
             localStorage.setItem('userId', userId);
             if (userId.length > 0) {
                 information = JSON.stringify({
