@@ -20,8 +20,7 @@
                     <input type="text" id="login-username" onkeydown="hitEnterLogin(this)" required placeholder="Username" autofocus>
 
                     <i class="fa-solid fa-key"></i>
-                    <input type="password" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{4,}$" id="login-password" onkeydown="hitEnterLogin(this)" placeholder="Password" oninvalid="setCustomValidity('Password must be at least 8 characters long, with at least one lowercase letter, one uppercase letter, and one digit.')" required>
-                    <i class="fa-regular fa-eye" onclick="showPassword('login-password')"></i>
+                    <input type="password" pattern="^(?=.*[a-zà-ÿ])(?=.*[A-ZÀ-Ý])(?=.*\d)[\p{L}\d]{4,}$" id="login-password" onkeydown="hitEnterLogin(this)" placeholder="Password" oninvalid="setCustomValidity('Password must be at least 8 characters long, with at least one lowercase letter, one uppercase letter, and one digit.')" required>                <i class="fa-regular fa-eye" onclick="showPassword('login-password')"></i>
 
                     <input type="checkbox" id="login-remember"><label for="login-remember">Remember me</label>
                     
