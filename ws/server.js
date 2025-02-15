@@ -68,15 +68,41 @@ webPush.setVapidDetails(
     vapidKeys.privateKey
 );
 
+function getUserIdFromToken(token) {
+    return new Promise((resolve) => {
+        db.query("SELECT id FROM users WHERE token = ?", [token], (err, results) => {
+            if (err) {
+                console.error("Error checking token:", err);
+                resolve(null);
+                return;
+            }
+            resolve(results.length > 0 ? results[0].id : null);
+        });
+    });
+}
+
+function getUsernameFromId(userId) {
+    return new Promise((resolve) => {
+        db.query("SELECT username FROM users WHERE id = ?", [userId], (err, results) => {
+            if (err) {
+                console.error("Error fetching username:", err);
+                resolve("");
+                return;
+            }
+            resolve(results.length > 0 ? results[0].username : "");
+        });
+    });
+}
+
 function getTime() {
-    let now = new Date();
-    let time = now.getFullYear() + "." +
-            String(now.getMonth() + 1).padStart(2, '0') + "." +
-            String(now.getDate()).padStart(2, '0') + " - " +
-            String(now.getHours()).padStart(2, '0') + ":" +
-            String(now.getMinutes()).padStart(2, '0') + ":" +
-            String(now.getSeconds()).padStart(2, '0');
-    return time;
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const seconds = now.getSeconds().toString().padStart(2, '0');
+    const day = now.getDate().toString().padStart(2, '0');
+    const month = (now.getMonth() + 1).toString().padStart(2, '0');
+    const year = now.getFullYear();
+    return `[${day}/${month}/${year} ${hours}:${minutes}:${seconds}]`;
 }
 
 // Store client subscriptions
@@ -101,36 +127,61 @@ wss.on('connection', (ws) => {
         if (isJsonString(message)) {
             let data = JSON.parse(message);
 
+            if (data.type === 'get_user_id') {
+                let token = data.token;
+
+                getUserIdFromToken(token).then(userId => {
+                    if (userId) {
+                        ws.send(JSON.stringify({
+                            type: 'user_id',
+                            userId: userId
+                        }));
+                    } else {
+                        ws.send(JSON.stringify({
+                            type: 'user_id',
+                            userId: null
+                        }));
+                    }
+                });
+            }
+
             if (data.type === 'connect') {
                 let clientID = data.sessionId;
-                let userId = data.userId;
+                let token = data.token;
                 let url = data.url;
                 let device = data.deviceInfo['device'];
                 let time = getTime();
 
-                let guestCount = 0; // Start guest ID count at 1
-                wss.clients.forEach(client => {
-                    if (client.readyState === WebSocket.OPEN && !client.userid) {
-                        guestCount++;
+                getUserIdFromToken(token).then(userId => {
+                    let guestCount = 0;
+                    wss.clients.forEach(client => {
+                        if (client.readyState === WebSocket.OPEN && !client.userid) {
+                            guestCount++;
+                        }
+                    });
+                    
+                    if (userId === null) {
+                        let guest = "g" + guestCount;
+                        let logType = "Guest connected: " + guest;
+                        clientMap.set(guest, { ws, ip: cleanedIp, sessionID: clientID });
+                        console.log(`${time}\n${logType}\nIP: ${cleanedIp}\nUrl: ${url}\nDevice: ${device}\n`);
+                        updateActiveClients();
+                    } else {
+                        getUsernameFromId(userId).then(username => {
+                            let logType = "User online: " + username;
+                            clientMap.set(userId, { ws, ip: cleanedIp, sessionID: clientID });
+                            console.log(`${time}\n${logType}\nIP: ${cleanedIp}\nUrl: ${url}\nDevice: ${device}\n`);
+                            updateActiveClients();
+                        });
                     }
                 });
-                if (userId === null) {
-                    userId = "g" + guestCount;
-                    logType = "Guest " + userId + " connected";
-                } else {
-                    let username = "";
-                    db.query("SELECT username FROM users WHERE id = ?", [userId], (err, results) => {
-                        if (err) {
-                            console.error("Error fetching username:", err);
-                            return;
-                        }
-                        username = results[0]?.username || userId;
-                    });
-                    logType = "User " + username + " connected";
-                }
-                clientMap.set(userId, { ws, ip: cleanedIp, sessionID: clientID });
-                console.log(`${time}\n${logType} \nIP: ${cleanedIp}\nUrl: ${url}\nDevice: ${device}\n`);
-                updateActiveClients();
+            }
+
+            if (data.type === 'browser_perm') {
+                let device = data.device;
+                let status = data.status;
+
+                console.log(data);
             }
 
             if (data.type === 'disconnect') {
@@ -197,14 +248,14 @@ wss.on('connection', (ws) => {
             }
 
             if (data.type === 'push_subscription') {
-                let userId = data.userId || `g${wss.clients.size}`;
+                let userId = data.userId;
                 
                 if (!data.subscription) {
                     console.error(`❌ Subscription is undefined for ${userId}`);
                     return;
                 }
             
-                console.log(`✅ Storing push subscription for: ${userId}`);
+                console.log(`Storing push subscription for: ${userId}`);
                 
                 // Save subscription to the database
                 savePushSubscription(userId, data.subscription);
@@ -325,8 +376,6 @@ wss.on('connection', (ws) => {
             clientMap.delete(clientID);
             console.log(`Client disconnected: ${clientID}\n`);
             updateActiveClients();
-        } else {
-            console.log('Disconnected WebSocket was not found in the clientMap.');
         }
     });
 
@@ -353,7 +402,7 @@ function pingPong() {
 
 setInterval(pingPong, 5000);
 
-// Function to broadcast messages to all connected WebSocket clients
+// Broadcast messages to all connected WebSocket clients
 function broadcastToAll(message) {
     let broadcastMessage = JSON.stringify({
         type: 'broadcast',
@@ -449,22 +498,40 @@ function sendPushNotification(userId, title, message) {
 }
 
 function savePushSubscription(userId, subscription) {
-    const query = `
-        INSERT INTO push_subscriptions (user_id, endpoint, auth, p256dh)
-        VALUES (?, ?, ?, ?)
-        ON DUPLICATE KEY UPDATE endpoint=?, auth=?, p256dh=?`;
-    
-    const values = [
-        userId, subscription.endpoint, subscription.keys.auth, subscription.keys.p256dh,
-        subscription.endpoint, subscription.keys.auth, subscription.keys.p256dh
-    ];
+    if (!userId || !subscription || !subscription.endpoint || !subscription.keys.auth || !subscription.keys.p256dh) {
+        console.error("❌ Invalid subscription data");
+        return;
+    }
 
-    db.query(query, values, (err) => {
+    // Validate if the user exists in the database before saving subscription
+    db.query("SELECT id FROM users WHERE id = ?", [userId], (err, results) => {
         if (err) {
-            console.error("❌ Error saving subscription:", err);
-        } else {
-            console.log(`✅ Subscription saved for user ${userId}`);
+            console.error("❌ Error checking user ID:", err);
+            return;
         }
+
+        if (results.length === 0) {
+            console.error(`❌ User ID ${userId} does not exist in database. Subscription not saved.`);
+            return;
+        }
+
+        const query = `
+            INSERT INTO push_subscriptions (user_id, endpoint, auth, p256dh)
+            VALUES (?, ?, ?, ?)
+            ON DUPLICATE KEY UPDATE endpoint=?, auth=?, p256dh=?`;
+        
+        const values = [
+            userId, subscription.endpoint, subscription.keys.auth, subscription.keys.p256dh,
+            subscription.endpoint, subscription.keys.auth, subscription.keys.p256dh
+        ];
+
+        db.query(query, values, (err) => {
+            if (err) {
+                console.error("❌ Error saving subscription:", err);
+            } else {
+                console.log(`✅ Subscription saved for user ${userId}`);
+            }
+        });
     });
 }
 
