@@ -1335,7 +1335,6 @@ if (isset($_SESSION['user'])) {
     if (!isset($_COOKIE['login_token'])) {
         createCookie("login_token",$token,"10","2");
     }
-    createCookie("sui",$uid,"1","7");
 
     if (isset($_COOKIE['qr'])) {
         $code = $_COOKIE['qr'];
