@@ -29,10 +29,14 @@ if ($checkUName->num_rows == 1) {
     $uid = $UserRow['id'];
     $salt = $UserRow['salt'];
     $pw = hash("sha512", $salt."_".$password);
-    $qCheckPassword = $conn->query("SELECT * FROM `users` WHERE `id`='$uid' AND `password`='$pw'");
+    $qCheckPassword = $conn->prepare("SELECT * FROM `users` WHERE `id`=? AND `password`=?");
+    $qCheckPassword->bind_param("is", $uid, $pw);
+    $qCheckPassword->execute();
+    $qCheckPassword = $qCheckPassword->get_result();
     if ($qCheckPassword->num_rows == 1) {
         $UserRow = $qCheckPassword->fetch_assoc();
         $username = $UserRow['username'];
+        $email = $UserRow['email'];
         $token = $UserRow['token'];
 
         $checkWallet = $conn->query("SELECT * FROM `wallets` WHERE `user`='$uid'");
@@ -41,12 +45,15 @@ if ($checkUName->num_rows == 1) {
         }
 
         $encryptLastIP = encrypt($currentIP);
-        
         $checkIPLog = $conn->query("SELECT * FROM `ip_logs` WHERE `user`='$uid'");
         while($IPData = $checkIPLog->fetch_assoc()) {
             if ($checkIPLog->num_rows > 0) {
                 $ipID = $IPData['id'];
-                $loggedIP = decrypt($IPData['ip']);
+                $loggedIP = $IPData['ip'];
+
+                if (isNotEncrypted($loggedIP)) {
+                    $loggedIP = encrypt($loggedIP);
+                }
 
                 if ($loggedIP != $currentIP) {
                     $conn->query("INSERT INTO `ip_logs` (`user`,`date`,`ip`) VALUES ('$uid','$now','$encryptLastIP')");
@@ -169,7 +176,7 @@ if ($checkUName->num_rows == 1) {
         echo json_encode($data);
     }
 } else {
-    $msg = "Unknown e-mail address.";
+    $msg = "Unknown username.";
     createCookie("msg", $msg, "10", null);
     $data = array(
         "responseCode" => "error",
