@@ -98,7 +98,7 @@ while ($post = $getPosts->fetch_assoc()) {
                         <div class="post_link_preview_image">
                             <img src="<?= htmlspecialchars($urlImage, ENT_QUOTES, 'UTF-8') ?>" alt="Preview Image">
                         </div>
-                    <?php } else { ?>
+                    <?php } if (!empty($urlLogo)) { ?>
                         <div class="post_link_preview_icon">
                             <img src="<?= htmlspecialchars($urlLogo, ENT_QUOTES, 'UTF-8') ?>" alt="Favicon">
                         </div>

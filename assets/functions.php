@@ -309,6 +309,8 @@ function getLinkPreview($url) {
         $images = $doc->getElementsByTagName('img');
         if ($images->length > 0) {
             $ogImage = $images->item(0)->getAttribute('src');
+        } else {
+            $ogImage = '../assets/images/logo_faded_clean.png';
         }
     }
 
@@ -346,7 +348,7 @@ function getLinkData($url) {
             'title' => 'Empty content',
             'description' => 'This content is empty',
             'favicon' => '../assets/images/logo_faded_clean.png',
-            'featured' => ''
+            'featured' => '../assets/images/logo_faded_clean.png'
         ];
     }
 
@@ -355,7 +357,7 @@ function getLinkData($url) {
     $title = $preview['title'] ?? 'No Title';
     $description = $preview['description'] ?? 'No Description';
     $favicon = $preview['favicon'] ?? '../assets/images/logo_faded_clean.png';
-    $ogImage = $preview['image'] ?? '';
+    $ogImage = $preview['image'] ?? '../assets/images/logo_faded_clean.png';
 
     // Check if URL is restricted
     $host = parse_url($url, PHP_URL_HOST);

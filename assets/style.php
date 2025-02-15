@@ -2632,11 +2632,13 @@
                 cursor: pointer;
             }
             .post_link_preview_image {
+                min-width: 100px;
                 width: auto;
                 max-width: 300px;
+                min-height: 100px;
                 height: auto;
                 max-height: 100px;
-                padding: 0 20px;
+                padding: 0;
                 border-radius: 10px;
                 box-sizing: border-box;
             }
@@ -2646,12 +2648,13 @@
                 object-fit: cover;
             }
             .post_link_preview_icon {
-                width: auto;
-                max-width: 50px;
-                height: auto;
-                max-height: 50px;
-                padding: 0 20px;
-                border-radius: 10px;
+                width: 30px;
+                height: 30px;
+                margin-top: 60px;
+                margin-left: -50px;
+                padding: 0;
+                border-radius: 50px;
+                background: black;
                 box-sizing: border-box;
             }
             .post_link_preview_icon img {
