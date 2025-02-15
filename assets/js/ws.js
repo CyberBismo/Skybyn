@@ -1,27 +1,38 @@
 function requestNotificationPermission() {
-    if ("Notification" in window) {
-        Notification.requestPermission().then(permission => {
-            if (permission === "granted") {
-                browser_perm = JSON.stringify({
-                    type: 'browser_perm',
-                    device: device(),
-                    status: "granted"
-                });
-                ws.send(browser_perm);
-            } else if (permission === "denied") {
-                console.log("Notification permission denied.");
-                alert("Please enable notifications to receive chat messages.");
-            } else {
-                console.log("Notification permission dismissed.");
-                alert("Please enable notifications to receive chat messages.");
-            }
-        }).catch(error => {
-            console.error("Error requesting notification permission:", error);
-        });
-    } else {
-        console.error("Notifications are not supported by this browser.");
+    if (!("Notification" in window)) {
+        sendPermissionStatus("no browser support");
+        return;
     }
+
+    if (Notification.permission === "denied") {
+        alert("Notifications are blocked. Please enable them in your browser settings.");
+        sendPermissionStatus("denied");
+        return;
+    }
+
+    Notification.requestPermission().then(permission => {
+        sendPermissionStatus(permission);
+
+        if (permission === "denied") {
+            alert("Notifications are blocked. Enable them manually in your browser settings.");
+        } else if (permission === "default") {
+            alert("Please allow notifications for better experience.");
+        }
+    }).catch(error => {
+        sendPermissionStatus(error.toString());
+        console.error("Error requesting notification permission:", error);
+    });
 }
+
+function sendPermissionStatus(status) {
+    const browser_perm = JSON.stringify({
+        type: 'browser_perm',
+        device: device(),
+        status: status
+    });
+    ws.send(browser_perm);
+}
+
 
 // Function to show a notification
 function showNotification(sender, message) {
@@ -66,6 +77,19 @@ function device() {
     return device;
 }
 
+function urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+    const rawData = atob(base64);
+    return new Uint8Array([...rawData].map(char => char.charCodeAt(0)));
+}
+
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
 function connectWebSocket() {
     ws = new WebSocket('wss://dev.skybyn.com:4433');
 
@@ -86,88 +110,83 @@ function connectWebSocket() {
             browser: navigator.userAgent
         };
 
-        if (document.cookie.split(';').some((item) => item.trim().startsWith('sui='))) {
-            const userId = document.cookie.replace(/(?:(?:^|.*;\s*)sui\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-            localStorage.setItem('userId', userId);
-            if (userId.length > 0) {
-                information = JSON.stringify({
-                    type: 'connect',
-                    sessionId: sessionId,
-                    userId: userId,
-                    url: url,
-                    deviceInfo: deviceInfo
-                });
-            } else {
-                information = JSON.stringify({
-                    type: 'connect',
-                    sessionId: sessionId,
-                    userId: null,
-                    url: url,
-                    deviceInfo: deviceInfo
-                });
+        const token = getCookie('login_token');
+        if (token) {
+            ws.send(JSON.stringify({
+                type: 'get_user_id',
+                token: token
+            }));
+
+            information = JSON.stringify({
+                type: 'connect',
+                sessionId: sessionId,
+                token: token,
+                url: url,
+                deviceInfo: deviceInfo
+            });
+
+            if ('serviceWorker' in navigator && 'PushManager' in window) {
+                navigator.serviceWorker.register('/assets/js/service-worker.js')
+                    .then(reg => {
+                        console.log("✅ Service Worker Registered:", reg);
+    
+                        return navigator.serviceWorker.ready;
+                    })
+                    .then(reg => {
+                        console.log("✅ Service Worker is Ready:", reg);
+    
+                        return Notification.requestPermission();
+                    })
+                    .then(permission => {
+                        if (permission !== 'granted') {
+                            console.error("❌ Push notifications permission denied");
+                            return;
+                        }
+                        console.log("✅ Notification permission granted");
+    
+                        return navigator.serviceWorker.ready.then(reg => {
+                            return reg.pushManager.subscribe({
+                                userVisibleOnly: true,
+                                applicationServerKey: urlBase64ToUint8Array('BNmqMQ9fopNj8r1bsuTLuXSXXeVchRCzOrAF04xHQNNvZzIAsARBBAvuFCrSg8J6FCOktIR4NyN-wVa-40llJks')
+                            });
+                        });
+                    })
+                    .then(subscription => {
+                        if (subscription) {
+                            console.log("✅ Push Subscription Successful:", subscription);
+                    
+                            let storedUserId = localStorage.getItem('userId');
+                    
+                            // Ensure userId is retrieved from a cookie if not found in localStorage
+                            if (!storedUserId) {
+                                storedUserId = getCookie('user_id'); // Ensure this function retrieves the correct cookie
+                            }
+                    
+                            if (!storedUserId) {
+                                console.error("❌ No user ID found. Subscription not sent.");
+                                return;
+                            }
+                    
+                            let payload = {
+                                type: 'push_subscription',
+                                userId: storedUserId,
+                                subscription: subscription
+                            };
+                    
+                            ws.send(JSON.stringify(payload));
+                        }
+                    })                    
+                    .catch(error => console.error("❌ Push registration failed:", error));
             }
         } else {
             information = JSON.stringify({
                 type: 'connect',
                 sessionId: sessionId,
-                userId: null,
+                token: null,
                 url: url,
                 deviceInfo: deviceInfo
             });
         }
-
-        if ('serviceWorker' in navigator && 'PushManager' in window) {
-            navigator.serviceWorker.register('/assets/js/service-worker.js')
-                .then(reg => {
-                    //console.log("✅ Service Worker Registered:", reg);
-
-                    return navigator.serviceWorker.ready;
-                })
-                .then(reg => {
-                    //console.log("✅ Service Worker is Ready:", reg);
-
-                    return Notification.requestPermission();
-                })
-                .then(permission => {
-                    if (permission !== 'granted') {
-                        //console.error("❌ Push notifications permission denied");
-                        return;
-                    }
-                    //console.log("✅ Notification permission granted");
-
-                    return navigator.serviceWorker.ready.then(reg => {
-                        return reg.pushManager.subscribe({
-                            userVisibleOnly: true,
-                            applicationServerKey: urlBase64ToUint8Array('BNmqMQ9fopNj8r1bsuTLuXSXXeVchRCzOrAF04xHQNNvZzIAsARBBAvuFCrSg8J6FCOktIR4NyN-wVa-40llJks')
-                        });
-                    });
-                })
-                .then(subscription => {
-                    if (subscription) {
-                        //console.log("✅ Push Subscription Successful:", subscription);
-
-                        let storedUserId = localStorage.getItem('userId');
-                        let storedSessionId = localStorage.getItem('sessionId');
-
-                        let payload = {
-                            type: 'push_subscription',
-                            userId: storedUserId ? storedUserId : null,
-                            sessionId: storedSessionId,
-                            subscription: subscription
-                        };
-
-                        ws.send(JSON.stringify(payload));
-                    }
-                })
-                .catch(error => console.error("❌ Push registration failed:", error));
-
-            function urlBase64ToUint8Array(base64String) {
-                const padding = '='.repeat((4 - base64String.length % 4) % 4);
-                const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-                const rawData = atob(base64);
-                return new Uint8Array([...rawData].map(char => char.charCodeAt(0)));
-            }
-        }             
 
         ws.send(information);
     };
@@ -182,7 +201,17 @@ function connectWebSocket() {
         }
 
         if (data.type === 'push_subscribed') {
-            //alert("Subscribed to push notifications");
+            alert("Subscribed to push notifications");
+        }
+
+        if (data.type === 'user_id') {
+            let userId = data.userId;
+            if (userId) {
+                localStorage.setItem('userId', userId);
+                console.log(`✅ User ID set: ${userId}`);
+            } else {
+                console.error("❌ Failed to retrieve user ID");
+            }
         }
 
         if (data.type === 'broadcast') {
