@@ -490,7 +490,8 @@ if (isset($_GET['signup'])) {
                             widgetDiv.innerHTML = `<p>Online Members: ${data.members.filter(member => member.status === 'online').length}</p>`;
                         }
                     })
-                    .catch(error => console.error('Error fetching data: ', error));
+                    .catch(error => ''//console.error('Error fetching data: ', error)
+                    );
                 };
             </script>
             <?php }?>
