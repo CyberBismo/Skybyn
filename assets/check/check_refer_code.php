@@ -4,20 +4,23 @@ include_once "../functions.php";
 $refer = $_POST['code'];
 
 if ($refer >= 6) {
-    $checkCode = $conn->query("SELECT * FROM `referral_code` WHERE `referral_code`='$refer'");
-    if ($checkCode->num_rows > 0) {
-        $codeData = $checkCode->fetch_assoc();
+    $stmt = $conn->prepare("SELECT * FROM `referral_code` WHERE `referral_code` = ?");
+    $stmt->bind_param("s", $refer);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result->num_rows > 0) {
+        $codeData = $result->fetch_assoc();
         $created = $codeData['created'];
-
-        // Check if created date is more than 5 minutes old
-        $fiveMinutesAgo = strtotime('-5 minutes');
-
+        $fiveMinutesAgo = strtotime('- 5 minutes');
+        
         if ($created <= $fiveMinutesAgo) {
-            // Delete the record
-            $deleteCode = $conn->query("DELETE FROM `referral_code` WHERE `referral_code`='$refer'");
-            if ($deleteCode) {
-                echo "expired";
-            }
+            $stmt = $conn->prepare("SELECT * FROM `referral_code` WHERE `user` = ?");
+            $stmt->bind_param("i", $uid);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $codeData = $result->fetch_assoc();
+            return $codeData['referral_code'];
         }
     }
 }
