@@ -745,6 +745,20 @@
                 margin: 0 auto;
                 padding: 0 10px;
             }
+            @media only screen and (max-width: 680px) {
+                .start {
+                    display: block;
+                    width: 90%;
+                    margin: 0 auto;
+                }
+                .start .welcome_information {
+                    width: calc(100% - 20px);
+                }
+                .start .center_form {
+                    width: calc(100% - 20px);
+                    margin-top: 10px;
+                }
+            }
             .welcome_information {
                 width: 60%;
                 color: var(--mode-text);
