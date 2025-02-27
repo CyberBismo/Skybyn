@@ -350,7 +350,7 @@ function getLinkData($url) {
         'imlive.com', 'streamate.com', 'manyvids.com', 'onlyfans.com', 'justfor.fans',
         'fanpage.com', 'fansly.com', 'loyalfans.com', 'seegore.com', 'documentingreality.com'
     ];
-
+    
     // Initialize cURL
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
@@ -410,6 +410,48 @@ function getLinkData($url) {
         'description' => $description,
         'favicon' => $favicon,
         'featured' => $ogImage
+    ];
+}
+
+function getLinkDataAsync($url) {
+    // Generate a unique file path for this URL's data
+    $cacheFile = __DIR__ . '/cache/link_data_' . md5($url) . '.json';
+    
+    // Create cache directory if it doesn't exist
+    if (!file_exists(__DIR__ . '/cache')) {
+        mkdir(__DIR__ . '/cache', 0777, true);
+    }
+
+    // Run the getLinkData function in the background
+    $command = 'php -r ' . escapeshellarg('
+        require_once "' . __DIR__ . '/functions.php";
+        $data = getLinkData("' . $url . '");
+        file_put_contents("' . $cacheFile . '", json_encode($data));
+    ') . ' > /dev/null 2>&1 &';
+    
+    exec($command);
+}
+
+function fetchLinkData($url) {
+    $cacheFile = __DIR__ . '/cache/link_data_' . md5($url) . '.json';
+    
+    if (file_exists($cacheFile)) {
+        $data = json_decode(file_get_contents($cacheFile), true);
+        if ($data) {
+            // Delete cache file after reading to prevent stale data
+            unlink($cacheFile);
+            return $data;
+        }
+    }
+
+    // If data is not available yet, trigger async load and return loading state
+    getLinkDataAsync($url);
+    return [
+        'restricted' => false,
+        'title' => 'Loading...',
+        'description' => 'Loading preview...',
+        'favicon' => '../assets/images/logo_faded_clean.png',
+        'featured' => '../assets/images/logo_faded_clean.png'
     ];
 }
 

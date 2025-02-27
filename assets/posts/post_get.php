@@ -76,34 +76,36 @@ if (isset($_POST['post_id'])) {
             <?php }?>
             <?php if (!empty($post_links)) { ?>
             <div class="link_preview">
-                <?php
-                foreach ($post_links as $post_link) {
+                <?php foreach ($post_links as $post_link) {
                     if (strpos($post_link, "https://") === false && strpos($post_link, "http://") === false) {
-                        $post_link = "https://" . $post_link; // Ensure valid URL format
+                        $post_link = "https://" . $post_link;
                     }
 
-                    $urlData = getLinkData($post_link);
+                    // Fetch cached data or trigger async load
+                    $urlData = fetchLinkData($post_link);
                     $urlRestricted = $urlData['restricted'];
-                    $urlLogo = !empty($urlData['favicon']) ? $urlData['favicon'] : '../assets/images/logo_faded_clean.png';
-                    $urlTitle = htmlspecialchars($urlData['title'], ENT_QUOTES, 'UTF-8');
-                    $urlDescription = htmlspecialchars($urlData['description'], ENT_QUOTES, 'UTF-8');
-                    $urlImage = !empty($urlData['featured']) ? $urlData['featured'] : ''; // Use featured image if available
-
+                    
                     if ($urlRestricted) {
                         continue; // Skip restricted links
                     }
+
+                    $urlLogo = !empty($urlData['favicon']) ? $urlData['favicon'] : '../assets/images/logo_faded_clean.png';
+                    $urlTitle = htmlspecialchars($urlData['title'], ENT_QUOTES, 'UTF-8');
+                    $urlDescription = htmlspecialchars($urlData['description'], ENT_QUOTES, 'UTF-8');
+                    $urlImage = !empty($urlData['featured']) ? $urlData['featured'] : '';
                 ?>
-                    <div class="post_link_preview" onclick="window.open('<?= htmlspecialchars($post_link, ENT_QUOTES, 'UTF-8') ?>', '_blank')">
+                    <div class="post_link_preview" data-url="<?= htmlspecialchars($post_link, ENT_QUOTES, 'UTF-8') ?>" 
+                         id="plp_<?= md5($post_link) ?>_<?=$post_id?>" 
+                         onclick="window.open('<?= htmlspecialchars($post_link, ENT_QUOTES, 'UTF-8') ?>', '_blank')">
                         <?php if (!empty($urlImage)) { ?>
                             <div class="post_link_preview_image">
-                                <img src="<?= htmlspecialchars($urlImage, ENT_QUOTES, 'UTF-8') ?>" alt="Preview Image">
-                            </div>
-                        <?php } if (!empty($urlLogo)) { ?>
-                            <div class="post_link_preview_icon">
-                                <img src="<?= htmlspecialchars($urlLogo, ENT_QUOTES, 'UTF-8') ?>" alt="Favicon">
+                                <img src="<?= htmlspecialchars($urlImage, ENT_QUOTES, 'UTF-8') ?>" alt="Preview">
                             </div>
                         <?php } ?>
                         <div class="post_link_preview_info">
+                            <div class="post_link_preview_icon">
+                                <img src="<?= htmlspecialchars($urlLogo, ENT_QUOTES, 'UTF-8') ?>" alt="Site Icon">
+                            </div>
                             <div class="post_link_preview_title"><?= $urlTitle ?></div>
                             <div class="post_link_preview_description"><?= $urlDescription ?></div>
                         </div>

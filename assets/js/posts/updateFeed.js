@@ -1,3 +1,28 @@
+document.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll(".post_link_preview").forEach(function(element) {
+        let url = element.dataset.url;
+        let linkId = element.id;
+
+        fetch("./assets/posts/fetch_link_data.php?url=" + encodeURIComponent(url))
+            .then(response => response.json())
+            .then(data => {
+                if (data.restricted) {
+                    document.getElementById(linkId).remove(); // Hide restricted links
+                } else {
+                    document.getElementById(linkId).innerHTML = `
+                        ${data.featured ? `<div class="post_link_preview_image"><img src="${data.featured}" alt="Preview Image"></div>` : ""}
+                        ${data.favicon ? `<div class="post_link_preview_icon"><img src="${data.favicon}" alt="Favicon"></div>` : ""}
+                        <div class="post_link_preview_info">
+                            <div class="post_link_preview_title">${data.title}</div>
+                            <div class="post_link_preview_description">${data.description}</div>
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => console.error("Error fetching link preview:", error));
+    });
+});
+
 function isScrolledToBottom() {
     // Get the current scroll position
     var scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;

@@ -86,7 +86,11 @@ if (isset($_POST['post_id'])) {
                         $post_link = "https://" . $post_link; // Ensure valid URL format
                     }
 
-                    $urlData = getLinkData($post_link);
+                    // Start background fetching
+                    getLinkDataAsync($post_link);
+
+                    // Fetch cached data (or loading placeholders)
+                    $urlData = fetchLinkData($post_link);
                     $urlRestricted = $urlData['restricted'];
                     $urlLogo = !empty($urlData['favicon']) ? $urlData['favicon'] : '../assets/images/logo_faded_clean.png';
                     $urlTitle = htmlspecialchars($urlData['title'], ENT_QUOTES, 'UTF-8');
@@ -97,21 +101,7 @@ if (isset($_POST['post_id'])) {
                         continue; // Skip restricted links
                     }
                 ?>
-                    <div class="post_link_preview" onclick="window.open('<?= htmlspecialchars($post_link, ENT_QUOTES, 'UTF-8') ?>', '_blank')">
-                        <?php if (!empty($urlImage)) { ?>
-                            <div class="post_link_preview_image">
-                                <img src="<?= htmlspecialchars($urlImage, ENT_QUOTES, 'UTF-8') ?>" alt="Preview Image">
-                            </div>
-                        <?php } if (!empty($urlLogo)) { ?>
-                            <div class="post_link_preview_icon">
-                                <img src="<?= htmlspecialchars($urlLogo, ENT_QUOTES, 'UTF-8') ?>" alt="Favicon">
-                            </div>
-                        <?php } ?>
-                        <div class="post_link_preview_info">
-                            <div class="post_link_preview_title"><?= $urlTitle ?></div>
-                            <div class="post_link_preview_description"><?= $urlDescription ?></div>
-                        </div>
-                    </div>
+                    <div class="post_link_preview" id="plp_<?=$post_id?>" onclick="window.open('<?= htmlspecialchars($post_link, ENT_QUOTES, 'UTF-8') ?>', '_blank')"></div>
                 <?php } ?>
             </div>
             <?php }?>
