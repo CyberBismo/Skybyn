@@ -39,3 +39,4 @@ ws/cert.pfx
 ws/key.pem
 assets/js/ws.js
 ws/server.js
+ws/server.js

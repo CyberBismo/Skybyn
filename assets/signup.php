@@ -3,22 +3,23 @@
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, GET");
 header("Access-Control-Allow-Headers: Content-Type");
+header('Content-Type: application/json; charset=utf-8');
 
-$dob = $_POST['dob'];
-$fname = encrypt($_POST['fname']);
-$mname = encrypt($_POST['mname']);
-$lname = encrypt($_POST['lname']);
-$email = encrypt($_POST['email']);
-$email_c = $_POST['email_c'];
-$username = $_POST['username'];
-$refer = $_POST['refer'];
-$password = hash("sha512", $_POST['password']);
+$dob = isset($_POST['dob']) ? $_POST['dob'] : '';
+$fname = isset($_POST['fname']) ? encrypt($_POST['fname']) : '';
+$mname = isset($_POST['mname']) ? encrypt($_POST['mname']) : '';
+$lname = isset($_POST['lname']) ? encrypt($_POST['lname']) : '';
+$email = isset($_POST['email']) ? encrypt($_POST['email']) : '';
+$email_c = isset($_POST['email_c']) ? $_POST['email_c'] : '';
+$username = isset($_POST['username']) ? $_POST['username'] : '';
+$refer = isset($_POST['refer']) ? $_POST['refer'] : '';
+$password = isset($_POST['password']) ? hash("sha512", $_POST['password']) : '';
 $salt = hash("sha512", rand());
 $pw = hash("sha512", $salt . "_" . $password);
 $ip = encrypt(getIP());
 $country = geoData("countryName");
 $lang = geoData("countryCode");
-$pack = $_POST['pack'];
+$pack = isset($_POST['pack']) ? $_POST['pack'] : '';
 
 $token = rand();
 
@@ -69,14 +70,12 @@ if ($email_c == "" && $dob != "" && $email != "" && $username != "" && $password
         "token" => $token,
         "user" => $id
     );
-    header('Content-Type: application/json; charset=utf-8');
     echo json_encode($data);
 } else {
     $data = array(
         "responseCode" => "error",
         "message" => "Please fill in all required fields"
     );
-    header('Content-Type: application/json; charset=utf-8');
     echo json_encode($data);
 }
 

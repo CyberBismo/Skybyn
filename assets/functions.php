@@ -1,5 +1,13 @@
 <?php include_once "conn.php";
 
+$domend = $_SERVER['HTTP_HOST'];
+$extension = substr($domend, -3);
+if ($extension == 'com') {
+    $domend = '.no';
+} elseif ($extension == 'no') {
+    $domend = '.com';
+}
+
 if (isset($_COOKIE['qr_login'])) {
     $uid = $_COOKIE['qr_login'];
     $checkUser = $conn->query("SELECT * FROM `users` WHERE `id`='$uid'");
@@ -144,16 +152,27 @@ function page($url) {
 $domain = domain(fullUrl());
 $currentPage = page(fullUrl());
 
+$devDomain = 'dev.skybyn.no';
+if ($domain == $devDomain) {
+    $homepage = "https://dev.skybyn$domend/";
+} else {
+    $homepage = "https://skybyn$domend/";
+}
+
 # Get specified system_data
 function skybyn($x) {
     global $conn;
     global $avatar;
+    global $username;
 
     $systemData = $conn->query("SELECT * FROM `system_data` WHERE `data`='$x'");
     $SDRow = $systemData->fetch_assoc();
 
     if ($x == "logo" && isset($_SESSION['user'])) {
         return $avatar;
+    } else
+    if ($x == "title" && isset($_SESSION['user'])) {
+        return $SDRow['text']." - ".$username;
     } else {
         return $SDRow['text'];
     }
@@ -1334,8 +1353,15 @@ if (isset($_SESSION['user'])) {
 
     $verified = $UDRow['verified'];
 
+    $checkBetaAccess = $conn->query("SELECT `key` FROM `beta_access` WHERE `user_id`='$uid'");
+    $beta = ($checkBetaAccess && $checkBetaAccess->num_rows > 0);
+
     if (!isset($_COOKIE['login_token'])) {
         createCookie("login_token",$token,"10","2");
+    }
+
+    if (!isset($_COOKIE['sui'])) {
+        createCookie("sui",$uid,"1","7");
     }
 
     if (isset($_COOKIE['qr'])) {

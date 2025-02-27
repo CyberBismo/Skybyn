@@ -11,12 +11,12 @@ $result = $stmt->get_result();
 if ($result->num_rows === 1) {
     $post = $result->fetch_assoc();
     $post_id = $post['id'];
-    $text = $post['content'];
+    $text = html_entity_decode(decrypt($post['content']), ENT_QUOTES | ENT_HTML5, 'UTF-8');
 
     echo json_encode([
         "status" => "success",
         "id" => $post_id,
-        "content" => htmlentities(decrypt($text), ENT_QUOTES | ENT_HTML5, 'UTF-8')
+        "content" => $text
     ]);
 } else {
     echo json_encode(["status" => "error", "message" => "Post not found"]);

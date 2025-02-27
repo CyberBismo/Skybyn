@@ -59,6 +59,15 @@ if (isset($_POST['post_id'])) {
             </div>
             <div class="post_content" id="post_c_<?=$post_id?>">
                 <?=$post_content_res?>
+                <?php
+                if (!empty($post_links)) {
+                    foreach ($post_links as $post_link) {
+                        if (strpos($post_link, "https://") === false && strpos($post_link, "http://") === false) {
+                            $post_link = "https://" . $post_link; // Ensure valid URL format
+                        }
+                ?>
+                <a href="<?=$post_link?>" target="_blank"><?=$post_link?></a>
+                <?php }} ?>
             </div>
             <?php if (!empty($post_video)) {?>
             <div class="post_links">
@@ -89,7 +98,7 @@ if (isset($_POST['post_id'])) {
                             <div class="post_link_preview_image">
                                 <img src="<?= htmlspecialchars($urlImage, ENT_QUOTES, 'UTF-8') ?>" alt="Preview Image">
                             </div>
-                        <?php } else { ?>
+                        <?php } if (!empty($urlLogo)) { ?>
                             <div class="post_link_preview_icon">
                                 <img src="<?= htmlspecialchars($urlLogo, ENT_QUOTES, 'UTF-8') ?>" alt="Favicon">
                             </div>

@@ -18,7 +18,7 @@ if ($result->num_rows === 1) {
         echo json_encode([
             "status" => "success",
             "id" => $pid,
-            "content" => htmlentities(decrypt($text), ENT_QUOTES | ENT_HTML5, 'UTF-8')
+            "content" => html_entity_decode(decrypt($text), ENT_QUOTES | ENT_HTML5, 'UTF-8')
         ]);
     } else {
         echo json_encode(["status" => "error", "message" => "Update failed"]);

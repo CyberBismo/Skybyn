@@ -1,6 +1,7 @@
 <?php include_once "assets/header.php";
 if (!isset($_SESSION['user'])) {
     ?><script>window.location.href = "../";</script><?php
+    return;
 }
 
 if (isset($_GET['security'])) {
@@ -35,7 +36,6 @@ if (isset($_GET['ip_history'])) {
                             <span>@<?=$username?></span>
                         </div>
                     </div>
-                    <hr>
                     <div class="profile-tabs">
                         <div class="settings-cat" onclick="setTab('general')">
                             <div class="settings-icon">

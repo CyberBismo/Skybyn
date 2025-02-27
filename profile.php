@@ -11,16 +11,20 @@ if (isset($_SESSION['user'])) {
     $rank = getUser('id',$uid,'rank');
 }
 
-if (isset($_GET['user'])) {
-    $user_id = getUser('username',$_GET['user'],'id');
-    if ($user_id != "error") {
-        if (isset($_SESSION['user'])) {
-            if (checkFriendship($uid,$user_id) == "ok") {
-                $friends = true;
+if (isset($_GET['u'])) {
+    $user_id = getUser('username',$_GET['u'],'id');
+    if ($user_id != $uid) {
+        if ($user_id != "error") {
+            if (isset($_SESSION['user'])) {
+                if (checkFriendship($uid,$user_id) == "ok") {
+                    $friends = true;
+                }
             }
+        } else {
+            return false;
         }
     } else {
-        return false;
+        ?><script>window.location.href = '../profile';</script><?php
     }
 } else {
     if (isset($_SESSION['user'])) {
@@ -65,9 +69,6 @@ if (isset($user_id)) {
             </div>
             <div class="profile">
                 <div class="profile-left" id="profile-left">
-                    <?php if ($myProfile == true) {?>
-                    <i class="fa-regular fa-pen-to-square" onclick="changeWallpaper()"></i>
-                    <?php }?>
                     <div class="profile-left-user">
                         <div class="avatar" style="<?=$Pavatar_bg?>" id="avatar">
                             <img src="<?=$Pavatar?>">
@@ -82,8 +83,8 @@ if (isset($user_id)) {
                     </div>
                     <div class="profile-btns">
                         <?php if ($Pprivate == "0" || $rank > 3) {?>
-                        <?php if (isset($_SESSION['user'])): ?>
-                            <?php if (!$myProfile): ?>
+                        <?php if (isset($_SESSION['user'])) { ?>
+                            <?php if (!$myProfile) { ?>
                                 <?php if ($friends) {?>
                                 <button onclick="startMessaging('<?= $uid ?>','<?= $user_id ?>')">
                                     <i class="fa-solid fa-message"></i> <span>Chat</span>
@@ -130,8 +131,9 @@ if (isset($user_id)) {
                                     </button>
                                 </div>
                                 <?php }?>
-                            <?php endif; ?>
-                        <?php endif; ?>
+                            <?php } else {?>
+                            <?php }?>
+                        <?php }?>
                         <?php } else {?>
                         <?php }?>
                     </div>
@@ -139,6 +141,13 @@ if (isset($user_id)) {
                     <?php if (isMobile($userAgent) == false) {?>
                     <hr>
                     <div class="profile-tabs">
+                        <div class="settings-cat" onclick="window.location.href='../settings'">
+                            <div class="settings-icon">
+                                <i class="fa-solid fa-gears"></i>
+                            </div>
+                            <div class="settings-name">Settings</div>
+                        </div>
+                        <br>
                         <b><?=$Pusername?>'s Groups</b>
                         <?php $groups = $conn->query("SELECT * FROM `group_members` WHERE `user`='$user_id'");
                         while($groupsData = $groups->fetch_assoc()) {
@@ -171,7 +180,14 @@ if (isset($user_id)) {
                     while($post = mysqli_fetch_assoc($getPosts)) {
                         $post_id = $post['id'];
                         $post_user = $post['user'];
-                        $post_content = html_entity_decode($post['content'], ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                        $post_content = $post['content'];
+                    
+                        if (isNotEncrypted($post_content)) {
+                            $post_content = html_entity_decode(encrypt($post_content), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                            $conn->query("UPDATE `posts` SET `content`='$post_content' WHERE `id`='$post_id'");
+                        }
+                    
+                        $post_content = html_entity_decode(decrypt($post_content), ENT_QUOTES | ENT_HTML5, 'UTF-8');
                         $post_created = date("d M. y H:i:s", $post['created']);
 
                         $getComments = mysqli_query($conn, "SELECT * FROM `comments` WHERE `post`='$post_id'");
@@ -184,9 +200,10 @@ if (isset($user_id)) {
                         if ($post_user_avatar == "../") {
                             $post_user_avatar = "../assets/images/logo_faded_clean.png";
                         }
-                        
+
                         $post_video = convertVideo($post_content);
-                        $post_content_res = fixEmojis(nl2br(cleanUrls($post_content)), 1);
+                        $post_links = extractUrls($post_content);
+                        $post_content_res = fixEmojis(cleanUrls(nl2br($post_content)), 1);
                     ?>
                     <div class="post" id="post_<?=$post_id?>">
                         <div class="post_body">
@@ -216,6 +233,15 @@ if (isset($user_id)) {
                             </div>
                             <div class="post_content" id="post_c_<?=$post_id?>">
                                 <?=$post_content_res?>
+                                <?php
+                                if (!empty($post_links)) {
+                                    foreach ($post_links as $post_link) {
+                                        if (strpos($post_link, "https://") === false && strpos($post_link, "http://") === false) {
+                                            $post_link = "https://" . $post_link; // Ensure valid URL format
+                                        }
+                                ?>
+                                <a href="<?=$post_link?>" target="_blank"><?=$post_link?></a>
+                                <?php }} ?>
                             </div>
                             <?php if (!empty($post_video)) {?>
                             <div class="post_links">
@@ -224,31 +250,39 @@ if (isset($user_id)) {
                             <?php }?>
                             <?php if (!empty($post_links)) { ?>
                             <div class="link_preview">
-                                <?php for ($i = 0; $i < count($post_links); $i++) {
-                                    if ($i <= count($post_links)) {
-                                        if (strpos($post_links[$i], "http") === false) {
-                                            $post_links[$i] = "http://".$post_links[$i];
-                                        }
-                                        $urlData = getLinkData($post_links[$i]);
-                                        $urlRestricted = $urlData['restricted'];
-                                        $urlLogo = $urlData['favicon'];
-                                        $urlTitle = $urlData['title'];
-                                        $urlDescription = $urlData['description'];
+                                <?php
+                                foreach ($post_links as $post_link) {
+                                    if (strpos($post_link, "https://") === false && strpos($post_link, "http://") === false) {
+                                        $post_link = "https://" . $post_link; // Ensure valid URL format
+                                    }
 
-                                        if ($urlRestricted == 0) {
-                                    ?>
-                                    <div class="post_link_preview">
-                                        <div class="post_link_preview_image">
-                                            <img src="<?=$urlLogo?>" alt="">
-                                        </div>
+                                    $urlData = getLinkData($post_link);
+                                    $urlRestricted = $urlData['restricted'];
+                                    $urlLogo = !empty($urlData['favicon']) ? $urlData['favicon'] : '../assets/images/logo_faded_clean.png';
+                                    $urlTitle = htmlspecialchars($urlData['title'], ENT_QUOTES, 'UTF-8');
+                                    $urlDescription = htmlspecialchars($urlData['description'], ENT_QUOTES, 'UTF-8');
+                                    $urlImage = !empty($urlData['featured']) ? $urlData['featured'] : ''; // Use featured image if available
+
+                                    if ($urlRestricted) {
+                                        continue; // Skip restricted links
+                                    }
+                                ?>
+                                    <div class="post_link_preview" onclick="window.open('<?= htmlspecialchars($post_link, ENT_QUOTES, 'UTF-8') ?>', '_blank')">
+                                        <?php if (!empty($urlImage)) { ?>
+                                            <div class="post_link_preview_image">
+                                                <img src="<?= htmlspecialchars($urlImage, ENT_QUOTES, 'UTF-8') ?>" alt="Preview Image">
+                                            </div>
+                                        <?php } if (!empty($urlLogo)) { ?>
+                                            <div class="post_link_preview_icon">
+                                                <img src="<?= htmlspecialchars($urlLogo, ENT_QUOTES, 'UTF-8') ?>" alt="Favicon">
+                                            </div>
+                                        <?php } ?>
                                         <div class="post_link_preview_info">
-                                            <div class="post_link_preview_title"><?=$urlTitle?></div>
-                                            <div class="post_link_preview_description"><?=$urlDescription?></div>
+                                            <div class="post_link_preview_title"><?= $urlTitle ?></div>
+                                            <div class="post_link_preview_description"><?= $urlDescription ?></div>
                                         </div>
                                     </div>
-                                    <?php }
-                                    }
-                                }?>
+                                <?php } ?>
                             </div>
                             <?php }?>
                             <?php $getUploads = $conn->query("SELECT * FROM `uploads` WHERE `post`='$post_id'");
@@ -285,7 +319,7 @@ if (isset($user_id)) {
                                             $commentUser = $commentData['user'];
                                             $commentUsername = getUser("id",$commentData['user'],"username");
                                             $commentAvatar = getUser("id",$commentData['user'],"avatar");
-                                            $commentText = fixEmojis(nl2br(cleanUrls(html_entity_decode($commentData['content'], ENT_QUOTES | ENT_HTML5, 'UTF-8'))), 1);
+                                            $commentText = fixEmojis(nl2br(cleanUrls(html_entity_decode(decrypt($commentData['content']), ENT_QUOTES | ENT_HTML5, 'UTF-8'))), 1);
                                             
                                             if ($commentAvatar == "") {
                                                 $commentAvatar = "../assets/images/logo_faded_clean.png";
@@ -348,33 +382,12 @@ if (isset($user_id)) {
             </form>
         </div>
 
-        <div class="changeWallpaper" hidden>
-            <i class="fa-solid fa-xmark" onclick="changeWallpaper()"></i>
-            <form method="post" enctype="multipart/form-data">
-                <h3>Change wallpaper</h3>
-                <img src="<?=$Pwallpaper?>" id="previewwallpaper">
-                <div class="changeBtns">
-                    <input type="file" name="wallpaper" id="setwallpaper" accept="image/png, image/jpeg, image/gif" onchange="preViewWallpaper(this)">
-                    <input type="submit" name="update_wallpaper" value="Update">
-                </div>
-            </form>
-        </div>
-
         <script>
             function preViewAvatar(input) {
                 if (input.files && input.files[0]) {
                     var reader = new FileReader();
                     reader.onload = function(e) {
                         document.getElementById('previewavatar').src = e.target.result;
-                    }
-                    reader.readAsDataURL(input.files[0]);
-                }
-            }
-            function preViewWallpaper(input) {
-                if (input.files && input.files[0]) {
-                    var reader = new FileReader();
-                    reader.onload = function(e) {
-                        document.getElementById('previewwallpaper').src = e.target.result;
                     }
                     reader.readAsDataURL(input.files[0]);
                 }
@@ -388,26 +401,6 @@ if (isset($user_id)) {
                 document.getElementById('avatar').style.width = window.innerWidth+"px";
             }
             //window.addEventListener("resize", avatarSize);
-
-            function changeWallpaper() {
-                const changeWallpaperElements = document.getElementsByClassName("changeWallpaper");
-                const changeAvatarElements = document.getElementsByClassName("changeAvatar");
-
-                for (let i = 0; i < changeWallpaperElements.length; i++) {
-                    const element = changeWallpaperElements[i];
-
-                    if (element.hasAttribute("hidden")) {
-                        element.removeAttribute("hidden");
-                    } else {
-                        element.setAttribute("hidden", "");
-                    }
-                }
-                for (let i = 0; i < changeAvatarElements.length; i++) {
-                    const element = changeAvatarElements[i];
-
-                    element.setAttribute("hidden", "");
-                }
-            }
 
             function changeAvatar() {
                 const changeWallpaperElements = document.getElementsByClassName("changeWallpaper");

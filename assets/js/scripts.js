@@ -500,3 +500,9 @@ function setQRSize() {
     const qrWidth = qrImage.style.width;
     qrImage.style.height = qrWidth + 'px';
 }
+
+function checkBetaCode(code) {
+    if (code.length > 9)
+    document.cookie = "beta="+code+"; path=/";
+    window.location.reload();
+}

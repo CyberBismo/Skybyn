@@ -1,20 +1,5 @@
 <?php include_once "functions.php";
 
-$domend = $_SERVER['HTTP_HOST'];
-$extension = substr($domend, -3);
-if ($extension == 'com') {
-    $domend = '.no';
-} elseif ($extension == 'no') {
-    $domend = '.com';
-}
-
-$devDomain = 'dev.skybyn.no';
-if ($domain == $devDomain) {
-    $homepage = "https://dev.skybyn$domend/";
-} else {
-    $homepage = "https://skybyn$domend/";
-}
-
 $signup = false;
 
 if (isset($_GET['signup'])) {
@@ -46,30 +31,10 @@ if (isset($_GET['signup'])) {
             observer.observe();
         </script>
         <script>
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('/assets/js/service-worker.js')
-                    .then(reg => {
-                        reg.addEventListener('updatefound', () => {
-                            const newSW = reg.installing;
-                            newSW.addEventListener('statechange', () => {
-                                if (newSW.state === 'activated') {
-                                    //window.location.reload();
-                                }
-                            });
-                        });
-                    })
-                    .catch(error => console.error('Service Worker registration failed:', error));
-
-                navigator.serviceWorker.ready.then(registration => {
-                    //console.log(registration.active.state); // Logs the current state
+            function updateCache() {
+                navigator.serviceWorker.ready.then((registration) => {
+                    registration.active.postMessage({ action: 'clear-cache' });
                 });
-
-                // Function to manually trigger cache clear
-                function updateCache() {
-                    navigator.serviceWorker.ready.then((registration) => {
-                        registration.active.postMessage({ action: 'clear-cache' });
-                    });
-                }
             }
         </script>
         <script src = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
@@ -660,11 +625,49 @@ if (isset($_GET['signup'])) {
                 <div id="console">
                     <?php if (isset($_COOKIE['login_token'])) echo '<p id="term_rem">Remember ON</p>'; else echo '<p id="term_rem">Remember OFF</p>';?>
                 </div>
+                <div class="con_input">
+                    <input placeholder="" onkeyup="consoleEnter(this)">
+                </div>
             </div>
             <script>
                 function clearConsole() {
                     const console = document.getElementById('console');
                     console.innerHTML = "";
+                }
+                function consoleEnter(input) {
+                    function handleKeyPress(event) {
+                        if (event.keyCode === 13) {
+                            const command = input.value;
+                            input.value = "";
+
+                            if (command) {
+                                // Example: broadcast:Hello world
+                                if (command.startsWith('broadcast:')) {
+                                    const console = document.getElementById('console');
+                                    const parts = command.split(':');
+                                    if (parts.length >= 2) {
+                                        const text = parts.slice(1).join(':');
+                                        
+                                        try {
+                                            if (typeof ws !== 'undefined' && ws.readyState === WebSocket.OPEN) {
+                                                ws.send(JSON.stringify({
+                                                    type: 'broadcast',
+                                                    message: text
+                                                }));
+                                                console.innerHTML += '<p>Broadcasting: ' + text + '</p>';
+                                            } else {
+                                                console.innerHTML += '<p>Error: WebSocket not connected</p>';
+                                            }
+                                        } catch (error) {
+                                            console.innerHTML += '<p>Error: ' + error.message + '</p>';
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    input.addEventListener('keydown', handleKeyPress, { once: true });
                 }
             </script>
             <?php }?>
@@ -738,6 +741,7 @@ if (isset($_GET['signup'])) {
                     <div onclick="expandFR()">
                         <span>Refer a friend</span><i class="fa-solid fa-plus"></i>
                     </div>
+                    <input value="<?php if(isset($referral)){echo trim($referral);}?>" id="frci" hidden>
                     <div class="fr_code" id="frc" <?php if(isset($referral) && $referral == "error") {?>onclick="genRef()"<?php } else {?>onclick="ctc()"<?php }?>>
                         <?php if(isset($referral)) {
                             if($referral == "error") {
@@ -752,6 +756,30 @@ if (isset($_GET['signup'])) {
                         <div class="fr_info_text" id="frit"><br>Refer a friend simply works as an invitation. By inviting a friend, you instantly become friends and earn 10 <a href="#">points</a>.</div>
                     </div>
                 </div>
+                <script>
+                function checkRef() {
+                    let inputValue = document.getElementById('frci').value;
+                    let code = document.getElementById('frc');
+                    
+                    $.ajax({
+                        url: '../assets/check/check_refer_code.php',
+                        type: "POST",
+                        data: {
+                            code: inputValue
+                        }
+                    }).done(function(response) {
+                        if (response != "") {
+                            code.innerHTML = response;
+                        }
+                    }).fail(function(_xhr, _status, error) {
+                        console.error("Error checking referral code:", error);
+                    });
+                }
+                checkRef();
+                setInterval(() => {
+                    checkRef();
+                }, 30000);
+                </script>
             </div>
         </div>
 

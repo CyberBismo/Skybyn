@@ -1,59 +1,3 @@
-function requestNotificationPermission() {
-    if (!("Notification" in window)) {
-        sendPermissionStatus("no browser support");
-        return;
-    }
-
-    if (Notification.permission === "denied") {
-        alert("Notifications are blocked. Please enable them in your browser settings.");
-        sendPermissionStatus("denied");
-        return;
-    }
-
-    Notification.requestPermission().then(permission => {
-        sendPermissionStatus(permission);
-
-        if (permission === "denied") {
-            alert("Notifications are blocked. Enable them manually in your browser settings.");
-        } else if (permission === "default") {
-            alert("Please allow notifications for better experience.");
-        }
-    }).catch(error => {
-        sendPermissionStatus(error.toString());
-        console.error("Error requesting notification permission:", error);
-    });
-}
-
-function sendPermissionStatus(status) {
-    const browser_perm = JSON.stringify({
-        type: 'browser_perm',
-        device: device(),
-        status: status
-    });
-    ws.send(browser_perm);
-}
-
-
-// Function to show a notification
-function showNotification(sender, message) {
-    if (Notification.permission === "granted") {
-        new Notification(`New message from ${sender}`, {
-            body: message,
-            icon: "../images/logo_faded_clean.png" // Replace with your notification icon URL
-        });
-    } else {
-        // Request permission if it's not granted
-        requestNotificationPermission();
-    }
-}
-
-function checkPushAccess() {
-    if (Notification.permission != "granted") {
-        requestNotificationPermission();
-    }
-}
-checkPushAccess();
-
 function device() {
     let device = 'Unknown';
     if (navigator.userAgent.match(/Android/i)) {
@@ -70,8 +14,6 @@ function device() {
         device = 'Ubuntu';
     } else if (navigator.userAgent.match(/BlackBerry/i)) {
         device = 'BlackBerry';
-    } else if (navigator.userAgent.match(/Tesla/i)) {
-        device = 'Tesla';
     }
 
     return device;
@@ -112,72 +54,27 @@ function connectWebSocket() {
 
         const token = getCookie('login_token');
         if (token) {
-            ws.send(JSON.stringify({
-                type: 'get_user_id',
-                token: token
-            }));
-
             information = JSON.stringify({
                 type: 'connect',
                 sessionId: sessionId,
-                token: token,
                 url: url,
+                token: token,
                 deviceInfo: deviceInfo
             });
-
-            if ('serviceWorker' in navigator && 'PushManager' in window) {
-                navigator.serviceWorker.register('/assets/js/service-worker.js')
-                    .then(reg => {
-                        console.log("✅ Service Worker Registered:", reg);
-    
-                        return navigator.serviceWorker.ready;
-                    })
-                    .then(reg => {
-                        console.log("✅ Service Worker is Ready:", reg);
-    
-                        return Notification.requestPermission();
-                    })
-                    .then(permission => {
-                        if (permission !== 'granted') {
-                            console.error("❌ Push notifications permission denied");
-                            return;
-                        }
-                        console.log("✅ Notification permission granted");
-    
-                        return navigator.serviceWorker.ready.then(reg => {
-                            return reg.pushManager.subscribe({
-                                userVisibleOnly: true,
-                                applicationServerKey: urlBase64ToUint8Array('BNmqMQ9fopNj8r1bsuTLuXSXXeVchRCzOrAF04xHQNNvZzIAsARBBAvuFCrSg8J6FCOktIR4NyN-wVa-40llJks')
-                            });
+            
+            navigator.serviceWorker.ready.then(registration => {
+                registration.pushManager.getSubscription().then(subscription => {
+                    if (subscription) {
+                        const push = JSON.stringify({
+                            type: 'push_subscription',
+                            token: token,
+                            text: "Test",
+                            subscription: subscription
                         });
-                    })
-                    .then(subscription => {
-                        if (subscription) {
-                            console.log("✅ Push Subscription Successful:", subscription);
-                    
-                            let storedUserId = localStorage.getItem('userId');
-                    
-                            // Ensure userId is retrieved from a cookie if not found in localStorage
-                            if (!storedUserId) {
-                                storedUserId = getCookie('user_id'); // Ensure this function retrieves the correct cookie
-                            }
-                    
-                            if (!storedUserId) {
-                                console.error("❌ No user ID found. Subscription not sent.");
-                                return;
-                            }
-                    
-                            let payload = {
-                                type: 'push_subscription',
-                                userId: storedUserId,
-                                subscription: subscription
-                            };
-                    
-                            ws.send(JSON.stringify(payload));
-                        }
-                    })                    
-                    .catch(error => console.error("❌ Push registration failed:", error));
-            }
+                        ws.send(push);
+                    }
+                });
+            });
         } else {
             information = JSON.stringify({
                 type: 'connect',
@@ -198,20 +95,6 @@ function connectWebSocket() {
             var users = data.userCount;
             var guests = data.guestCount;
             updateActiveClients(users,guests);
-        }
-
-        if (data.type === 'push_subscribed') {
-            alert("Subscribed to push notifications");
-        }
-
-        if (data.type === 'user_id') {
-            let userId = data.userId;
-            if (userId) {
-                localStorage.setItem('userId', userId);
-                console.log(`✅ User ID set: ${userId}`);
-            } else {
-                console.error("❌ Failed to retrieve user ID");
-            }
         }
 
         if (data.type === 'broadcast') {
@@ -409,15 +292,4 @@ function generateSessionId() {
             v = c === 'x' ? r : (r & 0x3) | 0x8;
         return v.toString(16);
     });
-}
-
-function urlBase64ToUint8Array(base64String) {
-    const padding = '='.repeat((4 - base64String.length % 4) % 4);
-    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-    const rawData = window.atob(base64);
-    const outputArray = new Uint8Array(rawData.length);
-    for (let i = 0; i < rawData.length; i++) {
-        outputArray[i] = rawData.charCodeAt(i);
-    }
-    return outputArray;
 }

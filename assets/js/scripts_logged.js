@@ -446,21 +446,6 @@ function genRef() {
         });
     }
 }
-function checkRef() {
-    let ref = document.getElementById('frc');
-    $.ajax({
-        url: '../assets/check/check_refer_code.php',
-        type: "POST",
-        data: {
-            code: ref
-        }
-    }).done(function(response) {
-        if (response == "expired") {
-            code.innerHTML = "GENERATE CODE";
-        }
-    });
-}
-checkRef();
 
 function expandFR() {
     const fr = document.getElementById('fr');
