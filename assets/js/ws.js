@@ -33,8 +33,7 @@ function getCookie(name) {
 }
 
 function connectWebSocket() {
-    require('dotenv').config();
-    ws = new WebSocket(WSURL);
+    ws = new WebSocket('wss://dev.skybyn.com:4433');
 
     ws.onerror = (error) => {
         console.error(error);
