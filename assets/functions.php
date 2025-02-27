@@ -350,108 +350,25 @@ function getLinkData($url) {
         'imlive.com', 'streamate.com', 'manyvids.com', 'onlyfans.com', 'justfor.fans',
         'fanpage.com', 'fansly.com', 'loyalfans.com', 'seegore.com', 'documentingreality.com'
     ];
+
+    $tags = get_meta_tags($url);
     
-    // Initialize cURL
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // Follow redirects
-    curl_setopt($ch, CURLOPT_TIMEOUT, 10); // Timeout for slow websites
-    $response = curl_exec($ch);
-    curl_close($ch);
-
-    // If response is empty, return a default error message
-    if (empty($response)) {
-        return [
-            'restricted' => false,
-            'title' => 'Empty content',
-            'description' => 'This content is empty',
-            'favicon' => '../assets/images/logo_faded_clean.png',
-            'featured' => '../assets/images/logo_faded_clean.png'
-        ];
-    }
-
-    // Fetch metadata
-    $preview = getLinkPreview($url);
-    $title = $preview['title'] ?? 'No Title';
-    $description = $preview['description'] ?? 'No Description';
-    $favicon = $preview['favicon'] ?? '../assets/images/logo_faded_clean.png';
-    $ogImage = $preview['image'] ?? '../assets/images/logo_faded_clean.png';
-
-    // Check if URL is restricted
-    $host = parse_url($url, PHP_URL_HOST);
-    $isRestricted = in_array($host, $ageRestrictedUrls) || isVideoPlatformUrl($url);
-
-    if ($isRestricted) {
-        // Fetch user age from session (ensure session is started)
-        if (isset($_SESSION['user'])) {
-            $date = getUser('id', $_SESSION['user'], 'birth_date');
-            if ($date) {
-                $dob = new DateTime($date);
-                $now = new DateTime();
-                $age = $now->diff($dob)->y;
-
-                if ($age < 18) {
-                    return [
-                        'restricted' => true,
-                        'title' => 'Restricted content',
-                        'description' => 'This content is restricted and cannot be displayed.',
-                        'favicon' => '../assets/images/logo_faded_clean.png',
-                        'featured' => ''
-                    ];
-                }
-            }
-        }
-    }
-
+    // Parse the HTML to get title and featured image
+    $html = file_get_contents($url);
+    preg_match("/<title>(.*?)<\/title>/is", $html, $title_matches);
+    preg_match('/<meta property="og:image" content="(.*?)"/is', $html, $image_matches);
+    preg_match('/<link rel="icon" href="(.*?)"/is', $html, $logo_matches);
+    
+    $title = $title_matches[1] ?? '';
+    $description = $tags['description'] ?? '';
+    $featured_image = $image_matches[1] ?? '';
+    $logo = $logo_matches[1] ?? '';
+    
     return [
-        'restricted' => false,
         'title' => $title,
         'description' => $description,
-        'favicon' => $favicon,
-        'featured' => $ogImage
-    ];
-}
-
-function getLinkDataAsync($url) {
-    // Generate a unique file path for this URL's data
-    $cacheFile = __DIR__ . '/cache/link_data_' . md5($url) . '.json';
-    
-    // Create cache directory if it doesn't exist
-    if (!file_exists(__DIR__ . '/cache')) {
-        mkdir(__DIR__ . '/cache', 0777, true);
-    }
-
-    // Run the getLinkData function in the background
-    $command = 'php -r ' . escapeshellarg('
-        require_once "' . __DIR__ . '/functions.php";
-        $data = getLinkData("' . $url . '");
-        file_put_contents("' . $cacheFile . '", json_encode($data));
-    ') . ' > /dev/null 2>&1 &';
-    
-    exec($command);
-}
-
-function fetchLinkData($url) {
-    $cacheFile = __DIR__ . '/cache/link_data_' . md5($url) . '.json';
-    
-    if (file_exists($cacheFile)) {
-        $data = json_decode(file_get_contents($cacheFile), true);
-        if ($data) {
-            // Delete cache file after reading to prevent stale data
-            unlink($cacheFile);
-            return $data;
-        }
-    }
-
-    // If data is not available yet, trigger async load and return loading state
-    getLinkDataAsync($url);
-    return [
-        'restricted' => false,
-        'title' => 'Loading...',
-        'description' => 'Loading preview...',
-        'favicon' => '../assets/images/logo_faded_clean.png',
-        'featured' => '../assets/images/logo_faded_clean.png'
+        'featured_image' => $featured_image,
+        'logo' => $logo,
     ];
 }
 

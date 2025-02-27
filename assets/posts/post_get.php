@@ -81,12 +81,12 @@ if (isset($_POST['post_id'])) {
                         $post_link = "https://" . $post_link;
                     }
 
-                    // Fetch cached data or trigger async load
-                    $urlData = fetchLinkData($post_link);
+                    // Get initial preview data
+                    $urlData = getLinkData($post_link);
                     $urlRestricted = $urlData['restricted'];
                     
                     if ($urlRestricted) {
-                        continue; // Skip restricted links
+                        continue;
                     }
 
                     $urlLogo = !empty($urlData['favicon']) ? $urlData['favicon'] : '../assets/images/logo_faded_clean.png';

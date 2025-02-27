@@ -1,17 +1,17 @@
 document.addEventListener("DOMContentLoaded", function() {
     document.querySelectorAll(".post_link_preview").forEach(function(element) {
-        let url = element.dataset.url;
+        let url = element.getAttribute('alt');
         let linkId = element.id;
 
-        fetch("./assets/posts/fetch_link_data.php?url=" + encodeURIComponent(url))
+        fetch("./assets/posts/post_link_preview.php?url=" + encodeURIComponent(url))
             .then(response => response.json())
             .then(data => {
                 if (data.restricted) {
                     document.getElementById(linkId).remove(); // Hide restricted links
                 } else {
                     document.getElementById(linkId).innerHTML = `
-                        ${data.featured ? `<div class="post_link_preview_image"><img src="${data.featured}" alt="Preview Image"></div>` : ""}
-                        ${data.favicon ? `<div class="post_link_preview_icon"><img src="${data.favicon}" alt="Favicon"></div>` : ""}
+                        ${data.featured_image ? `<div class="post_link_preview_image"><img src="${data.featured_image}" alt="Preview Image"></div>` : ""}
+                        ${data.logo ? `<div class="post_link_preview_icon"><img src="${data.logo}" alt="Favicon"></div>` : ""}
                         <div class="post_link_preview_info">
                             <div class="post_link_preview_title">${data.title}</div>
                             <div class="post_link_preview_description">${data.description}</div>

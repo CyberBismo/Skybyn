@@ -90,23 +90,8 @@ while ($post = $getPosts->fetch_assoc()) {
                 if (strpos($post_link, "https://") === false && strpos($post_link, "http://") === false) {
                     $post_link = "https://" . $post_link; // Ensure valid URL format
                 }
-
-                // Start background fetching
-                getLinkDataAsync($post_link);
-
-                // Fetch cached data (or loading placeholders)
-                $urlData = fetchLinkData($post_link);
-                $urlRestricted = $urlData['restricted'];
-                $urlLogo = !empty($urlData['favicon']) ? $urlData['favicon'] : '../assets/images/logo_faded_clean.png';
-                $urlTitle = htmlspecialchars($urlData['title'], ENT_QUOTES, 'UTF-8');
-                $urlDescription = htmlspecialchars($urlData['description'], ENT_QUOTES, 'UTF-8');
-                $urlImage = !empty($urlData['featured']) ? $urlData['featured'] : ''; // Use featured image if available
-
-                if ($urlRestricted) {
-                    continue; // Skip restricted links
-                }
             ?>
-                <div class="post_link_preview" id="plp_<?=$post_id?>" onclick="window.open('<?= htmlspecialchars($post_link, ENT_QUOTES, 'UTF-8') ?>', '_blank')"></div>
+            <div class="post_link_preview" id="plp_<?=$post_id?>" alt="<?= htmlspecialchars($post_link, ENT_QUOTES, 'UTF-8') ?>" onclick="window.open('<?= htmlspecialchars($post_link, ENT_QUOTES, 'UTF-8') ?>', '_blank')"></div>
             <?php } ?>
         </div>
         <?php }?>
