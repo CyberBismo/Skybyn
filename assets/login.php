@@ -1,15 +1,10 @@
 <?php  include_once "./functions.php";
 
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST, GET");
-header("Access-Control-Allow-Headers: Content-Type");
-
 if (!isset($_POST['username']) || !isset($_POST['password'])) {
     $data = array(
         "responseCode" => "error",
         "message" => "Missing required fields"
     );
-    header('Content-Type: application/json; charset=utf-8');
     echo json_encode($data);
     exit;
 }
@@ -49,11 +44,7 @@ if ($checkUName->num_rows == 1) {
         while($IPData = $checkIPLog->fetch_assoc()) {
             if ($checkIPLog->num_rows > 0) {
                 $ipID = $IPData['id'];
-                $loggedIP = $IPData['ip'];
-
-                if (isNotEncrypted($loggedIP)) {
-                    $loggedIP = encrypt($loggedIP);
-                }
+                $loggedIP = decrypt($IPData['ip']);
 
                 if ($loggedIP != $currentIP) {
                     $conn->query("INSERT INTO `ip_logs` (`user`,`date`,`ip`) VALUES ('$uid','$now','$encryptLastIP')");
@@ -146,9 +137,9 @@ if ($checkUName->num_rows == 1) {
                         </html>
                         ';
                     #mail($to, $subject, $message, $headers);
+                } else {
+                    $conn->query("UPDATE `ip_logs` SET `date`='$now' WHERE `ip`='$encryptLastIP' AND `user`='$uid'");
                 }
-            } else {
-                $conn->query("UPDATE `ip_logs` SET `date`='$now' WHERE `ip`='$currentIP' AND `user`='$uid'");
             }
         }
 

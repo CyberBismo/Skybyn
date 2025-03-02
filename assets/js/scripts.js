@@ -315,14 +315,15 @@ function login() {
     }
 
     $.ajax({
-        url: '../assets/login.php',
+        url: './assets/login.php',
         type: "POST",
         data: {
             username: username.value,
             password: password.value,
             remember: remember
         },
-        beforeSend: function() {
+        beforeSend: function(response) {
+            console.log(response);
             nlh.innerHTML = "Logging in...";
             normal_login.style.opacity = "0.5";
             normal_login.style.pointerEvents = "none";
@@ -347,12 +348,13 @@ function login() {
         },
         error: function(response) {
             console.error(response);
-            nlh.innerHTML = "Error connecting to server";
+            nlh.innerHTML = "Error logging in";
             setTimeout(() => {
                 nlh.innerHTML = "Sign in";
             }, 3000);
         },
-        complete: function() {
+        complete: function(response) {
+            console.log(response);
             normal_login.style.opacity = "1";
             normal_login.style.pointerEvents = "auto";
             normal_login.style.userSelect = "auto";

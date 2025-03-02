@@ -160,18 +160,18 @@ if ($domain == $devDomain) {
 }
 
 # Get specified system_data
-function skybyn($x) {
+function skybyn($valueOf) {
     global $conn;
     global $avatar;
     global $username;
 
-    $systemData = $conn->query("SELECT * FROM `system_data` WHERE `data`='$x'");
+    $systemData = $conn->query("SELECT * FROM `system_data` WHERE `data`='$valueOf'");
     $SDRow = $systemData->fetch_assoc();
 
-    if ($x == "logo" && isset($_SESSION['user'])) {
+    if ($valueOf == "logo" && isset($_SESSION['user'])) {
         return $avatar;
     } else
-    if ($x == "title" && isset($_SESSION['user'])) {
+    if ($valueOf == "title" && isset($_SESSION['user'])) {
         return $SDRow['text']." - ".$username;
     } else {
         return $SDRow['text'];
@@ -1313,7 +1313,7 @@ if (isset($_SESSION['user'])) {
     $verified = $UDRow['verified'];
 
     $checkBetaAccess = $conn->query("SELECT `key` FROM `beta_access` WHERE `user_id`='$uid'");
-    $beta = ($checkBetaAccess && $checkBetaAccess->num_rows > 0);
+    $beta = $checkBetaAccess && $checkBetaAccess->num_rows > 0;
 
     if (!isset($_COOKIE['login_token'])) {
         createCookie("login_token",$token,"10","2");
@@ -1403,14 +1403,8 @@ if (isset($_SESSION['user'])) {
     ## Wallet
     $getWallet = $conn->query("SELECT * FROM `wallets` WHERE `user`='$uid'");
     $countWallets = $getWallet->num_rows;
-
-    if ($countWallets == 0) {
-        $createWallet = $conn->query("INSERT INTO `wallets` (`user`,`wallet`) VALUES ('$uid','0')");
-        $wallet = 0;
-    } else {
-        $myWallet = $getWallet->fetch_assoc();
-        $wallet = $myWallet['wallet'];
-    }
+    $myWallet = $getWallet->fetch_assoc();
+    $wallet = $myWallet['wallet'];
     
     // Chatting functionalities - DO NOT CHANGE
     if (isset($_POST['start_chat'])) { // Start chat

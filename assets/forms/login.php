@@ -10,7 +10,7 @@
                 </div>
                 <div class="normal_login" id="normal_login">
                     <center><p id="login_msg"></p></center>
-                    <?php if (!isMobile($userAgent) && $beta == true) { ?>
+                    <?php if (skybyn('qr_login') == 1 || !isMobile($userAgent) || $beta == true) { ?>
                         <div class="login_qr" onclick="tglLogin()" id="qr_tgl"><i class="fa-solid fa-qrcode"></i></div>
                     <?php } ?>
                     
