@@ -2,10 +2,6 @@
 
 if (isset($_POST['post_id'])) {
     $post_id = $_POST['post_id'];
-
-    if (!isset($uid)) {
-        $uid = isset($_SESSION['user']) ? $_SESSION['user'] : 0;
-    }
     
     $stmt = $conn->prepare("SELECT * FROM `posts` WHERE `id` = ? AND (`user` = ? OR `user` IN (SELECT `friend_id` FROM `friendship` WHERE `user_id` = ? AND `status` = 'friends'))");
     $stmt->bind_param('iii', $post_id, $uid, $uid);

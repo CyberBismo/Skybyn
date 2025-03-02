@@ -130,9 +130,9 @@ wss.on('connection', (ws) => {
                     type: 'new_post',
                     id: postId
                 });
-                clientMap.forEach((client) => {
-                    if (client.ws.readyState === WebSocket.OPEN) {
-                        client.ws.send(broadcastMessage);
+                wss.clients.forEach((client) => {
+                    if (client.readyState === WebSocket.OPEN) {
+                        client.send(broadcastMessage);
                     }
                 });
             }
@@ -143,9 +143,9 @@ wss.on('connection', (ws) => {
                     type: 'delete_post',
                     id: postId
                 });
-                clientMap.forEach((client) => {
-                    if (client.ws.readyState === WebSocket.OPEN) {
-                        client.ws.send(broadcastMessage);
+                wss.clients.forEach((client) => {
+                    if (client.readyState === WebSocket.OPEN) {
+                        client.send(broadcastMessage);
                     }
                 });
             }

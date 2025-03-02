@@ -1,6 +1,7 @@
         <style>
             :root {
                 --mode: 0,0,0;
+                --mode-invert: 255,255,255;
                 --mode-text: white;
                 --mode-placeholder: lightgrey;
                 --lightmode: linear-gradient(to top, #48c6ef 0%, #6f86d6 100%);
@@ -83,7 +84,7 @@
                 align-items: center;
                 opacity: 0;
                 margin: 2px 0;
-                background: rgba(255,255,255,.1);
+                background: rgba(var(--mode-invert),.1);
                 border-radius: 10px 30px 30px 10px;
             }
             .new_user_left {
@@ -432,14 +433,14 @@
                 padding: 0;
                 border-radius: 10px;
                 color: var(--mode-text);
-                background: rgba(255,255,255,.1);
+                background: rgba(var(--mode-invert),.1);
                 border: none;
                 box-sizing: border-box;
                 outline: none;
                 cursor: pointer;
             }
             .form input[type=submit]:hover {
-                background: rgba(255,255,255,.2);
+                background: rgba(var(--mode-invert),.2);
             }
 
             .popup {
@@ -501,7 +502,6 @@
                 max-width: 650px;
                 margin: 0 auto;
                 margin-top: 75px;
-                padding: 10px 0;
             }
             .group-container {
                 min-width: 300px;
@@ -605,9 +605,9 @@
                 transform: scale(1.1);
             }
             .left-panel-open {
-                /** border-top: 1px solid rgba(255,255,255,.3);
-                border-right: 1px solid rgba(255,255,255,.3);
-                border-bottom: 1px solid rgba(255,255,255,.3);
+                /** border-top: 1px solid rgba(var(--mode-invert),.3);
+                border-right: 1px solid rgba(var(--mode-invert),.3);
+                border-bottom: 1px solid rgba(var(--mode-invert),.3);
                 border-top-right-radius: 10px;
                 border-bottom-right-radius: 10px; */
             }
@@ -623,9 +623,9 @@
             }
             .right-panel-open {
                 right: 0;
-                /** border-top: 1px solid rgba(255,255,255,.3);
-                border-left: 1px solid rgba(255,255,255,.3);
-                border-bottom: 1px solid rgba(255,255,255,.3);
+                /** border-top: 1px solid rgba(var(--mode-invert),.3);
+                border-left: 1px solid rgba(var(--mode-invert),.3);
+                border-bottom: 1px solid rgba(var(--mode-invert),.3);
                 border-top-left-radius: 10px;
                 border-bottom-left-radius: 10px; */
             }
@@ -1065,7 +1065,7 @@
                 width: 100%;
                 padding: 0 20px;
                 font-size: 18px;
-                background: rgba(255,255,255,.2);
+                background: rgba(var(--mode-invert),.2);
                 border: none;
                 overflow: hidden;
             }
@@ -1081,7 +1081,7 @@
                 height: 30px;
                 margin: 0 10%;
                 font-size: 14px;
-                background: rgba(255,255,255,.1);
+                background: rgba(var(--mode-invert),.1);
                 border: none;
             }
             .center_form .links {
@@ -1224,7 +1224,7 @@
                 margin-top: 20px;
                 padding: 0 50px;
                 color: var(--mode-text);
-                background: rgba(255,255,255,.1);
+                background: rgba(var(--mode-invert),.1);
                 backdrop-filter: blur(5px);
                 border: none;
                 border-radius: 10px;
@@ -1245,7 +1245,7 @@
                 width: 300px;
                 padding: 5px;
                 text-align: left;
-                background: rgba(255,255,255,.1);
+                background: rgba(var(--mode-invert),.1);
                 border-radius: 30px;
                 backdrop-filter: blur(5px);
                 transition: width .5s;
@@ -1254,7 +1254,7 @@
                 height: calc(100% - 20px);
                 margin: 10px;
                 padding: 5px;
-                border: 1px solid rgba(255,255,255,.2);
+                border: 1px solid rgba(var(--mode-invert),.2);
                 border-radius: 20px;
                 box-sizing: border-box;
                 transition: background .2s;
@@ -1264,12 +1264,12 @@
                 min-width: 100px;
                 height: 40px;
                 color: var(--mode-text);
-                background: rgba(255,255,255,.1);
+                background: rgba(var(--mode-invert),.1);
                 border: none;
                 border-radius: 10px;
             }
             .reg-pack-box button:hover {
-                background: rgba(255,255,255,.2);
+                background: rgba(var(--mode-invert),.2);
                 cursor: pointer;
             }
             .reg-pack-box p button {
@@ -1341,7 +1341,7 @@
             .rpbcb table tr td:hover tr,
             .rpbcb table tr td input:hover tr,
             .rpbcb table tr td span:hover tr {
-                background: rgba(255,255,255,.1);
+                background: rgba(var(--mode-invert),.1);
                 cursor: pointer;
             }
             <?php } else {?>
@@ -1358,7 +1358,7 @@
                 margin: 20px 0;
                 padding: 0 50px;
                 color: var(--mode-text);
-                background: rgba(255,255,255,.1);
+                background: rgba(var(--mode-invert),.1);
                 backdrop-filter: blur(5px);
                 border: none;
                 border-radius: 10px;
@@ -1379,7 +1379,7 @@
                 width: 300px;
                 padding: 5px;
                 text-align: left;
-                background: rgba(255,255,255,.1);
+                background: rgba(var(--mode-invert),.1);
                 border-radius: 30px;
                 backdrop-filter: blur(5px);
                 transition: width .5s;
@@ -1388,7 +1388,7 @@
                 height: calc(100% - 20px);
                 margin: 10px;
                 padding: 5px;
-                border: 1px solid rgba(255,255,255,.2);
+                border: 1px solid rgba(var(--mode-invert),.2);
                 border-radius: 20px;
                 box-sizing: border-box;
                 transition: background .2s;
@@ -1398,12 +1398,12 @@
                 min-width: 100px;
                 height: 40px;
                 color: var(--mode-text);
-                background: rgba(255,255,255,.1);
+                background: rgba(var(--mode-invert),.1);
                 border: none;
                 border-radius: 10px;
             }
             .reg-pack-box button:hover {
-                background: rgba(255,255,255,.2);
+                background: rgba(var(--mode-invert),.2);
                 cursor: pointer;
             }
             .reg-pack-box p button {
@@ -1440,7 +1440,7 @@
                 min-width: 100px;
                 height: 40px;
                 color: var(--mode-text);
-                background: rgba(255,255,255,.1);
+                background: rgba(var(--mode-invert),.1);
                 border: none;
                 border-radius: 10px;
             }
@@ -1478,7 +1478,7 @@
             .rpbcb table tr td:hover tr,
             .rpbcb table tr td input:hover tr,
             .rpbcb table tr td span:hover tr {
-                background: rgba(255,255,255,.1);
+                background: rgba(var(--mode-invert),.1);
                 cursor: pointer;
             }
             <?php }?>
@@ -1600,7 +1600,7 @@
                 color: var(--mode-text);
                 text-align: center;
                 backdrop-filter: blur(5px);
-                border: 1px solid rgba(255,255,255,.2);
+                border: 1px solid rgba(var(--mode-invert),.2);
                 border-radius: 50px;
                 box-sizing: border-box;
                 cursor: pointer;
@@ -1727,7 +1727,7 @@
                 cursor: pointer;
             }
             .create_post_actions_bottom .share:hover {
-                background: rgba(255,255,255,.3);
+                background: rgba(var(--mode-invert),.3);
             }
             .create_post_actions_bottom i {
                 line-height: 50px;
@@ -1758,7 +1758,7 @@
                 cursor: pointer;
             }
             .search_res_user:hover {
-                background: rgba(255,255,255,.2);
+                background: rgba(var(--mode-invert),.2);
             }
             .search_res_user .search_res_user_avatar {
                 width: 50px;
@@ -1904,7 +1904,7 @@
                 cursor: pointer;
             }
             .create_post_actions_bottom .share:hover {
-                background: rgba(255,255,255,.3);
+                background: rgba(var(--mode-invert),.3);
             }
             .create_post_actions_bottom label,
             .create_post_actions_bottom span {
@@ -1949,7 +1949,7 @@
                 height: calc(100% - 250px);
                 margin-top: 20px;
                 padding: 10px 20px;
-                background: rgba(255,255,255,.1);
+                background: rgba(var(--mode-invert),.1);
                 border-radius: 20px;
                 box-sizing: border-box;
                 overflow: auto;
@@ -1963,7 +1963,7 @@
                 box-sizing: border-box;
             }
             .search_res_user:hover {
-                background: rgba(255,255,255,.2);
+                background: rgba(var(--mode-invert),.2);
             }
             .search_res_user .search_res_user_avatar {
                 width: 50px;
@@ -2196,7 +2196,7 @@
             <?php if (isMobile($userAgent) == false) {?>
             .search {
                 height: 50px;
-                padding: 10px;
+                padding: 0 10px;
             }
             .search i {
                 position: absolute;
@@ -2212,7 +2212,7 @@
                 padding-right: 40px;
                 color: var(--mode-text);
                 background: none;
-                border: 1px solid rgba(255,255,255,.5);
+                border: 1px solid rgba(var(--mode-invert),.5);
                 backdrop-filter: blur(5px);
                 border-radius: 40px;
                 box-sizing: border-box;
@@ -2529,7 +2529,7 @@
                 width: 100%;
                 height: 64px;
                 margin-top: 20px;
-                background: rgba(255,255,255,.1);
+                background: rgba(var(--mode-invert),.1);
             }
             .image_box .image_slider img {
                 width: auto;
@@ -2643,7 +2643,7 @@
                 opacity: 1;
             }
             .post_action:hover {
-                background: rgba(255,255,255,.2);
+                background: rgba(var(--mode-invert),.2);
                 cursor: pointer;
             }
             .post_content {
@@ -2661,7 +2661,7 @@
                 margin-top: 10px;
                 border-radius: 20px;
                 overflow: auto;
-                background: rgba(var(--mode),.1);
+                background: rgba(var(--mode-invert),.1);
                 overflow: hidden;
                 cursor: pointer;
             }
@@ -2673,8 +2673,10 @@
                 height: auto;
                 max-height: 100px;
                 padding: 0;
-                border-radius: 10px;
+                text-align: center;
+                border-radius: 5px;
                 box-sizing: border-box;
+                overflow: hidden;
             }
             .post_link_preview_image img {
                 width: auto;
@@ -2682,33 +2684,35 @@
                 object-fit: cover;
             }
             .post_link_preview_icon {
-                width: 30px;
-                height: 30px;
-                margin-top: 60px;
-                margin-left: -50px;
+                position: absolute;
+                width: 20px;
+                height: 20px;
+                margin-top: 80px;
+                margin-left: 80px;
                 padding: 0;
-                border-radius: 50px;
                 background: black;
                 box-sizing: border-box;
+                border-radius: 5px;
+                overflow: hidden;
             }
             .post_link_preview_icon img {
-                width: auto;
+                width: 100%;
                 height: 100%;
-                object-fit: cover;
+                object-fit: contain;
             }
             .post_link_preview_info {
-                padding: 10px;
-                border-radius: 10px;
                 box-sizing: border-box;
                 overflow: hidden;
             }
             .post_link_preview_title {
-                line-height: 50px;
+                padding: 10px;
+                font-size: 14px;
                 font-weight: bold;
             }
             .post_link_preview_description {
-                font-size: 14px;
-            } 
+                padding: 10px;
+                font-size: 12px;
+            }
             .post_full {
                 margin-bottom: 10px;
                 padding-bottom: 30px;
@@ -2815,6 +2819,7 @@
             }
             .post_comment_new_content input[type=text] {
                 width: 100%;
+                padding-right: 50px;
                 color: var(--mode-text);
                 background: none;
                 border-radius: 10px;
@@ -2828,11 +2833,11 @@
                 line-height: 30px;
             }
             .post_comment_new_content {
-                width: calc(100% - 50px);
+                width: 100%;
                 line-height: 30px;
                 margin-right: 10px;
                 padding: 0 10px;
-                background: rgba(255,255,255,.1);
+                background: rgba(var(--mode-invert),.1);
                 border-radius: 10px;
                 box-sizing: border-box;
                 overflow: auto;
@@ -2846,7 +2851,7 @@
                 width: calc(100% - 30px);
                 line-height: 30px;
                 padding: 0 10px;
-                background: rgba(255,255,255,.1);
+                background: rgba(var(--mode-invert),.1);
                 border-radius: 10px;
                 box-sizing: border-box;
                 overflow: auto;
@@ -2855,6 +2860,7 @@
             <?php }?>
             .post_comment_new_actions {
                 width: 30px;
+                margin-left: -50px;
                 justify-content: center;
             }
             .post_comment_new_actions .btn {
@@ -2916,7 +2922,7 @@
                 line-height: 30px;
                 margin: 0;
                 padding: 0 10px;
-                background: rgba(255,255,255,.1);
+                background: rgba(var(--mode-invert),.1);
                 border-radius: 10px;
                 box-sizing: border-box;
                 overflow: auto;
@@ -2930,7 +2936,7 @@
                 width: 100%;
                 line-height: 30px;
                 padding: 0 10px;
-                background: rgba(255,255,255,.1);
+                background: rgba(var(--mode-invert),.1);
                 border-radius: 10px;
                 box-sizing: border-box;
                 overflow: auto;
@@ -3072,19 +3078,19 @@
             .shortcut-browse {
                 text-align: center;
                 padding: 10px;
-                border: 1px dashed rgba(255,255,255,.2);
+                border: 1px dashed rgba(var(--mode-invert),.2);
                 border-radius: 10px;
             }
             .shortcut-browse:hover {
-                background: rgba(255,255,255,.3);
+                background: rgba(var(--mode-invert),.3);
                 cursor: pointer;
             }
             .shortcuts .shortcut {
                 padding: 10px;
-                background: rgba(255,255,255,.1);
+                background: rgba(var(--mode-invert),.1);
             }
             .shortcuts .shortcut:hover {
-                background: rgba(255,255,255,.3);
+                background: rgba(var(--mode-invert),.3);
                 cursor: pointer;
             }
 
@@ -3128,7 +3134,7 @@
                 overflow: hidden;
             }
             .shortcut-group:hover {
-                background: rgba(255,255,255,.1);
+                background: rgba(var(--mode-invert),.1);
                 cursor: pointer;
             }
             .group-icon {
@@ -3462,7 +3468,7 @@
                 padding-bottom: 30px;
                 color: var(--mode-text);
                 font-size: 12px;
-                background: rgba(255,255,255,.05);
+                background: rgba(var(--mode-invert),.05);
                 border-radius: 10px;
                 box-sizing: border-box;
                 word-break: break-all;
@@ -3714,7 +3720,7 @@
             .chat_message_option_list {
                 display: none;
                 position: absolute;
-                background: rgba(255,255,255,.3);
+                background: rgba(var(--mode-invert),.3);
                 backdrop-filter: blur(5px);
                 box-shadow: 10px 10px 23px -5px rgba(var(--mode),0.6);
                 border-radius: 0 10px 10px 10px;
@@ -3980,7 +3986,7 @@
             .message-body .message .message-content p {
                 margin: 0;
                 padding: 10px;
-                border: 1px solid rgba(255,255,255,.1);
+                border: 1px solid rgba(var(--mode-invert),.1);
                 border-radius: 5px 10px 10px 10px;
             }
             .message-body .message.me .message-content p {
@@ -4123,7 +4129,7 @@
                 margin: 3px;
                 padding: 10px;
                 color: var(--mode-text);
-                background: rgba(255,255,255,.1);
+                background: rgba(var(--mode-invert),.1);
                 backdrop-filter: blur(5px);
                 border: none;
                 border-radius: 10px;
@@ -4239,7 +4245,7 @@
                 margin: 3px;
                 padding: 10px 0;
                 color: var(--mode-text);
-                background: rgba(255,255,255,.1);
+                background: rgba(var(--mode-invert),.1);
                 backdrop-filter: blur(5px);
                 border: none;
                 border-radius: 10px;
@@ -4393,7 +4399,7 @@
             }
             .changeBtns input[type=submit] {
                 width: 100px;
-                background: rgba(255,255,255,.1);
+                background: rgba(var(--mode-invert),.1);
             }
 
             .avatar_select_area {
@@ -4632,7 +4638,7 @@
             }
             .gbox-right {
                 width: 70px;
-                background: rgba(255,255,255,.1);
+                background: rgba(var(--mode-invert),.1);
                 border-radius: 0 20px 20px 0;
             }
             <?php } else {?>
@@ -4699,7 +4705,7 @@
             .gchat-message-option-list {
                 display: none;
                 position: absolute;
-                background: rgba(255,255,255,.3);
+                background: rgba(var(--mode-invert),.3);
                 backdrop-filter: blur(5px);
                 box-shadow: 10px 10px 23px -5px rgba(var(--mode),0.6);
                 border-radius: 0 10px 10px 10px;

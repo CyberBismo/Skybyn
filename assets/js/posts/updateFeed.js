@@ -10,8 +10,10 @@ document.addEventListener("DOMContentLoaded", function() {
                     document.getElementById(linkId).remove(); // Hide restricted links
                 } else {
                     document.getElementById(linkId).innerHTML = `
-                        ${data.featured_image ? `<div class="post_link_preview_image"><img src="${data.featured_image}" alt="Preview Image"></div>` : ""}
-                        ${data.logo ? `<div class="post_link_preview_icon"><img src="${data.logo}" alt="Favicon"></div>` : ""}
+                        ${data.featured_image ? `<div class="post_link_preview_image">
+                            <div class="post_link_preview_icon"><img src="${data.logo}" alt="Favicon"></div>
+                            <img src="${data.featured_image}" alt="Preview Image">
+                        </div>` : ""}
                         <div class="post_link_preview_info">
                             <div class="post_link_preview_title">${data.title}</div>
                             <div class="post_link_preview_description">${data.description}</div>
