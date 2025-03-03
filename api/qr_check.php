@@ -1,8 +1,8 @@
 <?php include_once("../assets/conn.php");
 $code = $_POST['code'];
-$email = $_POST['user'];
+$username = $_POST['user'];
 
-$checkUser = $conn->query("SELECT * FROM `users` WHERE `email`='$email'");
+$checkUser = $conn->query("SELECT * FROM `users` WHERE `username`='$username'");
 if ($checkUser->num_rows == 0) {
     $json = array("responseCode"=>0,"message"=>"User not found");
     echo json_encode($json);
