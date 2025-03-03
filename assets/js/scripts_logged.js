@@ -2,7 +2,7 @@
 // If session user stops being set, redirect to login page
 window.addEventListener('storage', function(event) {
     if (event.key === 'user' && event.newValue === null) {
-        window.location.href = '../';
+        window.location.reload();
     }
 });
 
