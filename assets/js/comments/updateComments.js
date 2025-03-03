@@ -44,3 +44,13 @@ function delComment(x) {
         ws.send(JSON.stringify(data)); // Send the new post ID to the server
     });
 }
+
+function expandComments(x) {
+    const post = document.getElementById('post_'+x);
+    const comments = post.getElementsByClassName('post_comments')[0];
+    if (comments) {
+        comments.style.height = "auto";
+        comments.style.maxHeight = "500px";
+        comments.style.scrollBehavior = "smooth";
+    }
+}
