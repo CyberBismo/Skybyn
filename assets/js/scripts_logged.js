@@ -403,7 +403,11 @@ function hitEnter(input,x) {
 
     function handleKeyPress(event) {
         if (event.keyCode === 13) {
-            sendComment(x);
+            if (button) {
+                button.click();
+            } else {
+                sendComment(x);
+            }
         }
     }
 
