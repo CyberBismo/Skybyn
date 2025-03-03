@@ -150,13 +150,13 @@ if (isset($_POST['post_id'])) {
                         </div>
                         <div class="post_comment_content"><?=$commentText?></div>
                     </div>
-                    <?php }}
-                    if ($getComment->num_rows > 3) {?>
-                    <div class="post_comment_expand" id="post_comment_expand_<?=$post_id?>" onclick="expandComments(<?=$post_id?>)">
-                        Show more
-                    </div>
-                    <?php }?>
+                    <?php }}?>
                 </div>
+                <?php if ($getComment->num_rows > 3) {?>
+                <div class="post_comment_expand" id="post_comment_expand_<?=$post_id?>" onclick="expandComments(<?=$post_id?>)">
+                    Show more
+                </div>
+                <?php }?>
             </div>
         </div>
     </div>

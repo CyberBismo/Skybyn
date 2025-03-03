@@ -2949,6 +2949,16 @@
                 word-break: break-all;
             }
             <?php }?>
+            .post_comment_expand {
+                display: flex;
+                justify-content: center;
+                margin-top: 10px;
+                padding: 10px;
+                background: rgba(var(--mode-invert),.1);
+                border-radius: 10px;
+                box-sizing: border-box;
+                cursor: pointer;
+            }
 
             .preview-container {
                 display: flex;
