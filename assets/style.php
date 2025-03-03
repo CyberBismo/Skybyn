@@ -2843,6 +2843,11 @@
                 overflow: auto;
                 word-break: break-all;
             }
+            .post_comment_new_actions {
+                width: 30px;
+                margin-left: -40px;
+                justify-content: center;
+            }
             <?php } else {?>
             .post_comment_new_user span {
                 display: none;
@@ -2857,12 +2862,12 @@
                 overflow: auto;
                 word-break: break-all;
             }
-            <?php }?>
             .post_comment_new_actions {
                 width: 30px;
                 margin-left: -30px;
                 justify-content: center;
             }
+            <?php }?>
             .post_comment_new_actions .btn {
                 width: 30px;
                 padding: 10px 10px 0 10px;
