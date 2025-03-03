@@ -2784,12 +2784,13 @@
                 overflow: auto;
             }
             .post_gallery img {
-                max-width: 100%;
-                height: auto;
+                width: 500px;
+                height: 500px;
                 border-radius: 10px;
             }
             .post_comments {
                 width: 100%;
+                max-height: 320px;
                 padding: 0 10px;
                 padding-left: 10px;
                 box-sizing: border-box;

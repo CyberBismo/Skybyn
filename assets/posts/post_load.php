@@ -92,7 +92,7 @@ if (isset($_POST['post_id'])) {
                 <div class="post_gallery" id="post_g_<?=$post_id?>">
                     <?php while($upload = $getUploads->fetch_assoc()) {
                         $file = $upload['file_url'];?>
-                    <img src="<?=$file?>" onclick="showImage(<?=$post_id?>)">
+                    <img src="<?=$file?>" alt="" onclick="showImage(<?=$post_id?>)">
                 <?php }?>
                 </div>
             </div>

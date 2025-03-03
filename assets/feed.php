@@ -100,9 +100,10 @@ while ($post = $getPosts->fetch_assoc()) {
         <div class="post_uploads" id="post_u_<?=$post_id?>">
             <div class="post_gallery" id="post_g_<?=$post_id?>">
                 <?php while($upload = $getUploads->fetch_assoc()) {
-                    $file = $upload['file_url'];?>
-                <img src="<?=$file?>" onclick="showImage(<?=$post_id?>)">
-            <?php }?>
+                    $file = $upload['file_url'];
+                    ?>
+                <img src="<?=$file?>" alt="" onclick="showImage(<?=$post_id?>)">
+                <?php }?>
             </div>
         </div>
         <div class="post_expand" id="post_expand" onclick="expandPost(<?=$post_id?>)">
