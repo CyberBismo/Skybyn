@@ -1,3 +1,11 @@
+// Listen to session storage changes
+// If session user stops being set, redirect to login page
+window.addEventListener('storage', function(event) {
+    if (event.key === 'user' && event.newValue === null) {
+        window.location.href = '../';
+    }
+});
+
 // Redirect to post view
 function showPost(x) {
     window.location.href = "../post/"+x;

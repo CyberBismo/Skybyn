@@ -36,16 +36,16 @@ function handleDisconnect() {
     
     db.connect(err => {
         if (err) {
-            console.error("| Database: FAILED         |\nReason:\n", err, "\n\n");
+            //console.error("| Database: FAILED         |\nReason:\n", err, "\n\n");
             setTimeout(handleDisconnect, 5000); // Retry connection after 5 seconds
         } else {
-            console.info("| Database: CONNECTED      |\n");
+            //console.info("| Database: CONNECTED      |\n");
         }
     });
 
     db.on("error", err => {
         if (err.code === "PROTOCOL_CONNECTION_LOST") {
-            console.error("⚠️ Database connection lost. Reconnecting...\n");
+            //console.error("⚠️ Database connection lost. Reconnecting...\n");
             handleDisconnect();
         } else {
             throw err;
