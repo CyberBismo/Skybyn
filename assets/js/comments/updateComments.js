@@ -64,7 +64,7 @@ function collapseComments(x) {
     const expand = document.getElementById('post_comment_expand_'+x);
     if (comments) {
         comments.style.height = "auto";
-        comments.style.maxHeight = "320px";
+        comments.style.maxHeight = "255px";
         comments.style.scrollBehavior = "smooth";
         expand.innerHTML = "Show more";
         expand.setAttribute('onclick', `expandComments(${x})`);
