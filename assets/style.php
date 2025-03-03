@@ -2790,7 +2790,8 @@
             }
             .post_comments {
                 width: 100%;
-                max-height: 320px;
+                max-height: 255px;
+                margin-bottom: 63px;
                 padding: 0 10px;
                 padding-left: 10px;
                 box-sizing: border-box;
