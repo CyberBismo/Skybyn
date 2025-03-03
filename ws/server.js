@@ -158,9 +158,9 @@ wss.on('connection', (ws) => {
                     pid: postId,
                     cid: commentId
                 });
-                clientMap.forEach((client) => {
-                    if (client.ws.readyState === WebSocket.OPEN) {
-                        client.ws.send(broadcastMessage);
+                wss.clients.forEach((client) => {
+                    if (client.readyState === WebSocket.OPEN) {
+                        client.send(broadcastMessage);
                     }
                 });
             }
@@ -173,9 +173,9 @@ wss.on('connection', (ws) => {
                     id: commentId,
                     pid: postId
                 });
-                clientMap.forEach((client) => {
-                    if (client.ws.readyState === WebSocket.OPEN) {
-                        client.ws.send(broadcastMessage);
+                wss.clients.forEach((client) => {
+                    if (client.readyState === WebSocket.OPEN) {
+                        client.send(broadcastMessage);
                     }
                 });
             }             

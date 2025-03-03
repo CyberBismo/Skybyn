@@ -2848,7 +2848,7 @@
                 display: none;
             }
             .post_comment_new_content {
-                width: calc(100% - 30px);
+                width: 100%;
                 line-height: 30px;
                 padding: 0 10px;
                 background: rgba(var(--mode-invert),.1);
@@ -2860,7 +2860,7 @@
             <?php }?>
             .post_comment_new_actions {
                 width: 30px;
-                margin-left: -50px;
+                margin-left: -30px;
                 justify-content: center;
             }
             .post_comment_new_actions .btn {
