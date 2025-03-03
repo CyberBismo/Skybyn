@@ -83,7 +83,9 @@ function createPost() {
                     image.value = "";
                     filesDiv.innerHTML = "";
                     ws.send(JSON.stringify(data));
-                    loadPostLinkPreview(post_id);
+                    setTimeout(() => {
+                        loadPostLinkPreview(post_id);
+                    }, 1000);
                 },
                 error: function (response) {
                     console.log(response);
@@ -108,7 +110,9 @@ function createPost() {
                     post_id = response.post_id;
                     const data = { type: 'new_post', id: post_id };
                     ws.send(JSON.stringify(data));
-                    loadPostLinkPreview(post_id);
+                    setTimeout(() => {
+                        loadPostLinkPreview(post_id);
+                    }, 1000);
                 },
                 error: function (response) {
                     if (document.getElementById('console')) {
@@ -132,16 +136,17 @@ function createPost() {
 }
 
 function loadPostLinkPreview(x) {
-    const url = document.getElementById('plp_'+x).getAttribute('alt');
-    const linkPreview = document.getElementById('post_link_preview_'+x);
+    const element = document.getElementById('plp_'+x);
+    let url = element.getAttribute('alt');
+    let linkId = element.id;
 
-    fetch("../assets/posts/post_link_preview.php?url=" + encodeURIComponent(url))
+    fetch("./assets/posts/post_link_preview.php?url=" + encodeURIComponent(url))
         .then(response => response.json())
         .then(data => {
             if (data.restricted) {
-                linkPreview.innerHTML = '<p>This link is restricted</p>';
+                document.getElementById(linkId).remove(); // Hide restricted links
             } else {
-                linkPreview.innerHTML = `
+                document.getElementById(linkId).innerHTML = `
                     ${data.featured_image ? `<div class="post_link_preview_image">
                         <div class="post_link_preview_icon"><img src="${data.logo}" alt="Favicon"></div>
                         <img src="${data.featured_image}" alt="Preview Image">
