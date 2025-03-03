@@ -132,7 +132,7 @@ function createPost() {
 }
 
 function loadPostLinkPreview(x) {
-    const url = document.getElementById('plp_'+x).value;
+    const url = document.getElementById('plp_'+x).getAttribute('alt');
     const linkPreview = document.getElementById('post_link_preview_'+x);
 
     fetch("../assets/posts/post_link_preview.php?url=" + encodeURIComponent(url))
