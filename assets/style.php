@@ -2952,10 +2952,9 @@
             .post_comment_expand {
                 display: flex;
                 justify-content: center;
-                margin-top: 10px;
-                padding: 10px;
-                background: rgba(var(--mode-invert),.1);
-                border-radius: 10px;
+                padding: 20px;
+                background: rgba(var(--mode),.8);
+                backdrop-filter: blur(5px);
                 box-sizing: border-box;
                 cursor: pointer;
             }
@@ -3828,6 +3827,7 @@
                 width: 100%;
                 margin: 10px;
                 z-index: 10;
+                pointer-events: none;
             }
             .message-box-icon {
                 display: none;
