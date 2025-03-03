@@ -83,6 +83,7 @@ function createPost() {
                     image.value = "";
                     filesDiv.innerHTML = "";
                     ws.send(JSON.stringify(data));
+                    loadPostLinkPreview(post_id);
                 },
                 error: function (response) {
                     console.log(response);
@@ -107,6 +108,7 @@ function createPost() {
                     post_id = response.post_id;
                     const data = { type: 'new_post', id: post_id };
                     ws.send(JSON.stringify(data));
+                    loadPostLinkPreview(post_id);
                 },
                 error: function (response) {
                     if (document.getElementById('console')) {
@@ -127,6 +129,31 @@ function createPost() {
         text.placeholder = "Please enter a message";
         submitButton.disabled = false;
     }
+}
+
+function loadPostLinkPreview(x) {
+    const url = document.getElementById('pip_'+x).value;
+    const linkPreview = document.getElementById('post_link_preview_'+x);
+
+    fetch("../assets/posts/post_link_preview.php?url=" + encodeURIComponent(url))
+        .then(response => response.json())
+        .then(data => {
+            if (data.restricted) {
+                linkPreview.innerHTML = '<p>This link is restricted</p>';
+            } else {
+                linkPreview.innerHTML = `
+                    ${data.featured_image ? `<div class="post_link_preview_image">
+                        <div class="post_link_preview_icon"><img src="${data.logo}" alt="Favicon"></div>
+                        <img src="${data.featured_image}" alt="Preview Image">
+                    </div>` : ""}
+                    <div class="post_link_preview_info">
+                        <div class="post_link_preview_title">${data.title}</div>
+                        <div class="post_link_preview_description">${data.description}</div>
+                    </div>
+                `;
+            }
+        })
+        .catch(error => console.error("Error fetching link preview:", error));
 }
 
 function editPost(x) {
