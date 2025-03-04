@@ -49,12 +49,14 @@ function expandComments(x) {
     const post = document.getElementById('post_'+x);
     const comments = post.getElementsByClassName('post_comments')[0];
     const expand = document.getElementById('post_comment_expand_'+x);
+    const post_comments = post.getElementsByClassName('post_comments')[0];
     if (comments) {
         comments.style.height = "auto";
         comments.style.maxHeight = "500px";
         comments.style.scrollBehavior = "smooth";
         expand.innerHTML = "Show less";
         expand.setAttribute('onclick', `collapseComments(${x})`);
+        post_comments.style.marginBottom = "62px";
     }
 }
 
@@ -62,11 +64,13 @@ function collapseComments(x) {
     const post = document.getElementById('post_'+x);
     const comments = post.getElementsByClassName('post_comments')[0];
     const expand = document.getElementById('post_comment_expand_'+x);
+    const post_comments = post.getElementsByClassName('post_comments')[0];
     if (comments) {
         comments.style.height = "auto";
         comments.style.maxHeight = "255px";
         comments.style.scrollBehavior = "smooth";
         expand.innerHTML = "Show more";
         expand.setAttribute('onclick', `expandComments(${x})`);
+        post_comments.style.marginBottom = "0";
     }
 }
