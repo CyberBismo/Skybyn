@@ -655,6 +655,7 @@
                 transform: translate(-50%, -20px);
                 color: var(--mode-text);
                 background: rgba(var(--mode),.7);
+                backdrop-filter: blur(5px);
                 border: 1px solid rgba(var(--mode),5);
                 border-radius: 100px;
                 box-sizing: border-box;
@@ -718,6 +719,7 @@
                 text-align: center;
                 font-size: 24px;
                 background: rgba(var(--mode),.5);
+                backdrop-filter: blur(5px);
                 border-radius: 25px;
                 border: 1px solid rgba(var(--mode-text),1);
                 box-sizing: border-box;
@@ -3886,6 +3888,7 @@
                 padding: 13px;
                 font-size: 24px;
                 background: rgba(var(--mode),.5);
+                backdrop-filter: blur(5px);
                 border-radius: 25px;
                 border: 1px solid rgba(var(--mode-text),1);
                 box-sizing: border-box;
