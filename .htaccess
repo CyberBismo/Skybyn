@@ -16,25 +16,31 @@ RewriteRule ^(reg|register|registrer|signup)$ index.php?signup [L,QSA]
 RewriteRule ^verify$ index.php?verify [L,QSA]
 
 # Rewrite /reset to ?reset
-RewriteRule ^reset$ index.php?reset [L,QSA]
+RewriteRule ^(reset|tilbakestill)$ index.php?reset [L,QSA]
 
 # Rewrite /forgot to ?forgot
 RewriteRule ^(forgot|glemt)$ index.php?forgot [L,QSA]
 
 # Rewrite /profile/username to /profile.php?user=username
-RewriteRule ^profile/([A-Za-z0-9-]+)/?$ profile.php?user=$1 [NC,L]
+RewriteRule ^(profile|profil)/([A-Za-z0-9-]+)/?$ profile.php?user=$2 [NC,L]
 
 # Rewrite /profile to /profile.php
 RewriteRule ^(profile|profil)$ profile.php [QSA,L]
 
 # Rewrite /post/id to /post?id=id
-RewriteRule ^(post|innlegg)/([^/]+)$ index.php?post&id=$1 [QSA,L]
+RewriteRule ^(post|innlegg)/([^/]+)$ post.php?id=$1 [QSA,L]
 
 # Rewrite /group/name to /group?id=name
-RewriteRule ^(group|gruppe)/([^/]+)$ index.php?group&id=$1 [QSA,L]
+RewriteRule ^(group|gruppe)/([^/]+)$ group.php?id=$1 [QSA,L]
+
+# Rewrite /groups/name to /groups
+RewriteRule ^(groups|grupper)/([^/]+)$ groups.php [QSA,L]
 
 # Rewrite /page/name to /page?id=name
-RewriteRule ^(page|side)/([^/]+)$ index.php?page&id=$1 [QSA,L]
+RewriteRule ^(page|side)/([^/]+)$ page.php?id=$1 [QSA,L]
+
+# Rewrite /pages/name to /pages
+RewriteRule ^(pages|sider)/([^/]+)$ pages.php [QSA,L]
 
 # Rewrite betaaccess/code to ?betaaccess=code
 RewriteRule ^betaaccess/([^/]+)$ index.php?betaaccess=$1 [QSA,L]
