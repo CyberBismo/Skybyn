@@ -1,7 +1,8 @@
 <?php include_once "assets/header.php";
 
 if (!isset($_SESSION['user'])) {
-    ?><meta http-equiv="Refresh" content="0; url='./'" /><?php
+    include_once "assets/forms/login-popup.php";
+    return;
 }
 ?>
         <div class="page-container">

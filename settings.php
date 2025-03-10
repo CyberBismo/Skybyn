@@ -1,6 +1,6 @@
 <?php include_once "assets/header.php";
 if (!isset($_SESSION['user'])) {
-    ?><script>window.location.href = "../";</script><?php
+    include_once "assets/forms/login-popup.php";
     return;
 }
 

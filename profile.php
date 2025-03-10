@@ -21,7 +21,7 @@ if (isset($_GET['u'])) {
                 }
             }
         } else {
-            return false;
+            return;
         }
     } else {
         ?><script>window.location.href = '../profile';</script><?php
@@ -31,8 +31,8 @@ if (isset($_GET['u'])) {
         $user_id = $uid;
         $myProfile = true;
     } else {
-        ?><script>window.location.href = '../';</script><?php
-        return false;
+        include_once "assets/forms/login-popup.php";
+        return;
     }
 }
 
