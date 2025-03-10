@@ -1,7 +1,7 @@
 <?php include_once "assets/header.php";
 
 if (!isset($_SESSION['user'])) {
-    ?><meta http-equiv="Refresh" content="0; url='./'" /><?php
+    include_once "assets/forms/login-popup.php";
 }
 
 if (isset($_GET['new'])) {?>
@@ -10,43 +10,42 @@ if (isset($_GET['new'])) {?>
             Create New Page
         </div>
         <div class="new-page-create">
-            <div class="left" id="left">
-                <h3>What are pages for<span onclick="showLeft()"><i class="fa-solid fa-angles-right"></i></span></h3>
-                <ul>
-                    <li>Something</li>
-                    <li>Something</li>
-                    <li>Something</li>
-                    <li>Something</li>
-                    <li>Something</li>
-                </ul>
+            <div class="page-intro">
+                <h3>What are pages for?</h3>
+                <p>Pages are a way to share your interests with others.<br>
+                You can create a page for a group, a project, or anything else you want to share.<br>
+                Pages can be public or private, and you can choose who can see them.</p>
             </div>
             <div class="form">
                 <i class="fa-solid fa-sign-hanging"></i>
-                <input type="text" name="group_name" id="ng-name" placeholder="Name of group" autofocus required>
+                <input type="text" name="page_name" id="ng-name" placeholder="Name of page" autofocus required>
                 <i class="fa-solid fa-quote-right"></i>
-                <textarea name="group_desc" id="ng-desc" placeholder="Who is this group for"></textarea>
-                <div class="new-group-privacy">
-                    <span><input type="radio" name="group_privacy" value="open" id="ng-p-open" checked><i class="fa-regular fa-eye"></i> Open</span>
-                    <span><input type="radio" name="group_privacy" value="locked" id="ng-p-locked"><i class="fa-solid fa-key"></i> Locked</span>
-                    <span><input type="radio" name="group_privacy" value="private" id="ng-p-private"><i class="fa-solid fa-user-secret"></i> Private</span>
+                <textarea name="page_desc" id="ng-desc" placeholder="Who is this page for"></textarea>
+                <div class="new-page-privacy">
+                    <input type="radio" name="page_privacy" value="open" id="np-p-open" checked>
+                    <input type="radio" name="page_privacy" value="locked" id="np-p-locked">
+                    <input type="radio" name="page_privacy" value="private" id="np-p-private">
+                    <label for="np-p-open" onclick="selectPrivacy()"><i class="fa-solid fa-globe"></i> Public</label>
+                    <label for="np-p-locked" onclick="selectPrivacy()"><i class="fa-solid fa-key"></i> Locked</label>
+                    <label for="np-p-private" onclick="selectPrivacy()"><i class="fa-solid fa-user-secret"></i> Private</label>
                 </div>
                 <div id="lock-options" style="display: none">
-                    <select name="group_lock_type" id="ng-lt" onchange="lockType(this)">
+                    <select name="page_lock_type" id="ng-lt" onchange="lockType(this)">
                         <option value="" hidden>- Select lock type -</option>
                         <option value="password">Password</option>
                         <option value="pin">PIN code</option>
                     </select>
-                    <input type="password" name="group_password" id="lt-password" placeholder="Password" title="Enter a password to access the group" autocomplete="new-password" style="display: none">
-                    <input type="password" name="group_pin" id="lt-pin" pattern="[0-9]{4,}" placeholder="PIN" title="Enter a PIN code to access the group" autocomplete="new-password" style="display: none">
+                    <input type="password" name="page_password" id="lt-password" placeholder="Set Password" title="Enter a password to access the page" autocomplete="new-password" style="display: none">
+                    <input type="password" name="page_pin" id="lt-pin" pattern="[0-9]{4,}" placeholder="Set PIN code" title="Enter a PIN code to access the page" autocomplete="new-password" style="display: none">
                 </div>
                 
-                <input type="submit" onclick="createGroup()" value="Create">
+                <input type="submit" onclick="createPage()" value="Create">
             </div>
         </div>
     </div>
 
     <script>
-        const privacyInputs = document.getElementsByName('group_privacy');
+        const privacyInputs = document.getElementsByName('page_privacy');
         privacyInputs.forEach(element => {
             element.addEventListener('change', function () {
                 const lockOptions = document.getElementById('lock-options');
@@ -57,14 +56,14 @@ if (isset($_GET['new'])) {?>
                 }
             });
         });
-
-        function showLeft() {
-            const left = document.getElementById('left');
-            if (left.style.height == "auto") {
-                left.style.height = "80px";
-            } else {
-                left.style.height = "auto";
-            }
+        function selectPrivacy() {
+            const privacyInputs = document.getElementsByName('page_privacy');
+            privacyInputs.forEach(element => {
+                if (element.checked) {
+                    element.checked = false;
+                }
+            });
+            this.children[0].checked = true;
         }
         function lockType(x) {
             const pw = document.getElementById('lt-password');
@@ -78,7 +77,7 @@ if (isset($_GET['new'])) {?>
                 pw.style.display = "none";
             }
         }
-        function createGroup() {
+        function createPage() {
             const name = document.getElementById('ng-name');
             const desc = document.getElementById('ng-desc');
             const privacy = document.getElementsByName('privacy').value;
@@ -96,16 +95,16 @@ if (isset($_GET['new'])) {?>
             }
             
             const data = {
-                group_name: name.value,
-                group_desc: desc.value,
-                group_privacy: privacy,
-                group_lock_type: lockType,
-                group_password: password,
-                group_pin: pin,
+                page_name: name.value,
+                page_desc: desc.value,
+                page_privacy: privacy,
+                page_lock_type: lockType,
+                page_password: password,
+                page_pin: pin,
             };
 
             $.ajax({
-                url: '../assets/group_new.php',
+                url: '../assets/page_new.php',
                 type: "POST",
                 data: data,
             }).done(function (response) {
@@ -114,7 +113,7 @@ if (isset($_GET['new'])) {?>
                 var message = result.message;
 
                 if (response === "ok") {
-                    window.location.href = "./group?id=" + message;
+                    window.location.href = "./page?id=" + message;
                 }
                 if (response === "error") {
                     alert(message);
@@ -165,7 +164,7 @@ if (isset($_GET['new'])) {?>
                     }
                 } else {
                     ?>
-                    <div class="pb-intro">No public pages found at this moment.<br>Come back later.</div>
+                    <div class="pb-intro" onclick="window.location.href='?new'">Be the first to create a page</div>
                     <?php
                 }
                 ?>

@@ -137,28 +137,30 @@ function createPost() {
 
 function loadPostLinkPreview(x) {
     const element = document.getElementById('plp_'+x);
-    let url = element.getAttribute('alt');
-    let linkId = element.id;
+    if (element) {
+        let url = element.getAttribute('alt');
+        let linkId = element.id;
 
-    fetch("./assets/posts/post_link_preview.php?url=" + encodeURIComponent(url))
-        .then(response => response.json())
-        .then(data => {
-            if (data.restricted) {
-                document.getElementById(linkId).remove(); // Hide restricted links
-            } else {
-                document.getElementById(linkId).innerHTML = `
-                    ${data.featured_image ? `<div class="post_link_preview_image">
-                        <div class="post_link_preview_icon"><img src="${data.logo}" alt="Favicon"></div>
-                        <img src="${data.featured_image}" alt="Preview Image">
-                    </div>` : ""}
-                    <div class="post_link_preview_info">
-                        <div class="post_link_preview_title">${data.title}</div>
-                        <div class="post_link_preview_description">${data.description}</div>
-                    </div>
-                `;
-            }
-        })
-        .catch(error => console.error("Error fetching link preview:", error));
+        fetch("./assets/posts/post_link_preview.php?url=" + encodeURIComponent(url))
+            .then(response => response.json())
+            .then(data => {
+                if (data.restricted) {
+                    document.getElementById(linkId).remove(); // Hide restricted links
+                } else {
+                    document.getElementById(linkId).innerHTML = `
+                        ${data.featured_image ? `<div class="post_link_preview_image">
+                            <div class="post_link_preview_icon"><img src="${data.logo}" alt="Favicon"></div>
+                            <img src="${data.featured_image}" alt="Preview Image">
+                        </div>` : ""}
+                        <div class="post_link_preview_info">
+                            <div class="post_link_preview_title">${data.title}</div>
+                            <div class="post_link_preview_description">${data.description}</div>
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => console.error("Error fetching link preview:", error));
+    }
 }
 
 function editPost(x) {

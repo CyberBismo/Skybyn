@@ -61,20 +61,6 @@ function connectWebSocket() {
                 token: token,
                 deviceInfo: deviceInfo
             });
-            
-            navigator.serviceWorker.ready.then(registration => {
-                registration.pushManager.getSubscription().then(subscription => {
-                    if (subscription) {
-                        const push = JSON.stringify({
-                            type: 'push_subscription',
-                            token: token,
-                            text: "Test",
-                            subscription: subscription
-                        });
-                        ws.send(push);
-                    }
-                });
-            });
         } else {
             information = JSON.stringify({
                 type: 'connect',

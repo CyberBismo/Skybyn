@@ -55,6 +55,7 @@ function handleDisconnect() {
 
 handleDisconnect();
 
+// VAPID keys (replace with your generated keys)
 const vapidKeys = {
     publicKey: process.env.VAPID_PUBLIC_KEY,
     privateKey: process.env.VAPID_PRIVATE_KEY
@@ -62,13 +63,27 @@ const vapidKeys = {
 
 // Set VAPID details
 webPush.setVapidDetails(
-    'mailto:admin@skybyn.no',
+    'mailto:admin@skybyn.no', // Replace with your email
     vapidKeys.publicKey,
     vapidKeys.privateKey
 );
 
+function getTime() {
+    let now = new Date();
+    let time = now.getFullYear() + "." +
+            String(now.getMonth() + 1).padStart(2, '0') + "." +
+            String(now.getDate()).padStart(2, '0') + " - " +
+            String(now.getHours()).padStart(2, '0') + ":" +
+            String(now.getMinutes()).padStart(2, '0') + ":" +
+            String(now.getSeconds()).padStart(2, '0');
+    return time;
+}
+
+// Store client subscriptions
+let subscriptions = {};
+
 const wss = new WebSocket.Server({ server });
-const clientMap = new Map();
+const clientMap = new Map(); // Map to store clients by their unique identifier
 
 // Handle WebSocket connections
 wss.on('connection', (ws) => {
@@ -88,34 +103,35 @@ wss.on('connection', (ws) => {
 
             if (data.type === 'connect') {
                 let clientID = data.sessionId;
-                let token = data.token;
+                let userId = data.token;
                 let url = data.url;
                 let device = data.deviceInfo['device'];
                 let time = getTime();
 
-                getUserIdFromToken(token).then(userId => {
-                    let guestCount = 0;
-                    wss.clients.forEach(client => {
-                        if (client.readyState === WebSocket.OPEN && !client.userid) {
-                            guestCount++;
-                        }
-                    });
-                    
-                    if (userId === null) {
-                        let guest = "g" + guestCount;
-                        let logType = "Guest connected: " + guest;
-                        clientMap.set(guest, { ws, ip: cleanedIp, sessionID: clientID });
-                        console.log(`${time}\n${logType}\nIP: ${cleanedIp}\nUrl: ${url}\nDevice: ${device}\n`);
-                        updateActiveClients();
-                    } else {
-                        getUsernameFromId(userId).then(username => {
-                            let logType = "User online: " + username;
-                            clientMap.set(userId, { ws, ip: cleanedIp, sessionID: clientID });
-                            console.log(`${time}\n${logType}\nIP: ${cleanedIp}\nUrl: ${url}\nDevice: ${device}\n`);
-                            updateActiveClients();
-                        });
+                let guestCount = 0; // Start guest ID count at 1
+                wss.clients.forEach(client => {
+                    if (client.readyState === WebSocket.OPEN && !client.userid) {
+                        guestCount++;
                     }
                 });
+                
+                if (userId === null) {
+                    userId = guestCount;
+                    logType = "Guest " + userId + " connected";
+                } else {
+                    let username = "";
+                    db.query("SELECT username FROM users WHERE token = ?", [userId], (err, results) => {
+                        if (err) {
+                            console.error("Error fetching username:", err);
+                            return;
+                        }
+                        username = results[0]?.username || userId;
+                        logType = "User " + username + " connected";
+                        clientMap.set(userId, { ws, ip: cleanedIp, sessionID: clientID });
+                        console.log(`${time}\n${logType} \nIP: ${cleanedIp}\nUrl: ${url}\nDevice: ${device}\n`);
+                        updateActiveClients();
+                    });
+                }
             }
 
             if (data.type === 'disconnect') {
@@ -178,10 +194,16 @@ wss.on('connection', (ws) => {
                         client.send(broadcastMessage);
                     }
                 });
-            }             
+            }
 
             if (data.type === 'chat') {
                 const { id, from, to, message: messageText } = data;
+                const payload = JSON.stringify({
+                    title: 'New Message!',
+                    body: messageText,
+                    icon: 'https://skybyn.com/assets/images/logo_faded_clean.png',
+                });
+
                 const sendMsg = JSON.stringify({
                     type: 'chat',
                     id,
@@ -197,11 +219,10 @@ wss.on('connection', (ws) => {
                         sent = true;
                     }
                 });
-            }
 
-            if (data.type === 'broadcast') {
-                let message = data.message;
-                broadcastToAll(message);
+                if (!sent) {
+                    console.log(`Client ${to} is not connected.`);
+                }
             }
 
             if (data.type === 'pong') {
@@ -224,8 +245,9 @@ wss.on('connection', (ws) => {
         const clientID = [...clientMap.entries()].find(([_, client]) => client.ws === ws)?.[0];
         if (clientID) {
             clientMap.delete(clientID);
-            console.log(`Client disconnected: ${clientID}\n`);
             updateActiveClients();
+        } else {
+            //console.log('Disconnected WebSocket was not found in the clientMap.');
         }
     });
 
@@ -233,43 +255,6 @@ wss.on('connection', (ws) => {
         console.error(`WebSocket error: ${error}`);
     });
 });
-
-function getUserIdFromToken(token) {
-    return new Promise((resolve) => {
-        db.query("SELECT id FROM users WHERE token = ?", [token], (err, results) => {
-            if (err) {
-                console.error("Error checking token:", err);
-                resolve(null);
-                return;
-            }
-            resolve(results.length > 0 ? results[0].id : null);
-        });
-    });
-}
-
-function getUsernameFromId(userId) {
-    return new Promise((resolve) => {
-        db.query("SELECT username FROM users WHERE id = ?", [userId], (err, results) => {
-            if (err) {
-                console.error("Error fetching username:", err);
-                resolve("");
-                return;
-            }
-            resolve(results.length > 0 ? results[0].username : "");
-        });
-    });
-}
-
-function getTime() {
-    const now = new Date();
-    const hours = now.getHours().toString().padStart(2, '0');
-    const minutes = now.getMinutes().toString().padStart(2, '0');
-    const seconds = now.getSeconds().toString().padStart(2, '0');
-    const day = now.getDate().toString().padStart(2, '0');
-    const month = (now.getMonth() + 1).toString().padStart(2, '0');
-    const year = now.getFullYear();
-    return `[${day}/${month}/${year} ${hours}:${minutes}:${seconds}]`;
-}
 
 function isJsonString(value) {
     try {
@@ -286,8 +271,10 @@ function pingPong() {
         client.ws.send(pingPong);
     });
 }
+
 setInterval(pingPong, 5000);
 
+// Function to broadcast messages to all connected WebSocket clients
 function broadcastToAll(message) {
     let broadcastMessage = JSON.stringify({
         type: 'broadcast',
@@ -301,6 +288,7 @@ function broadcastToAll(message) {
     });
 }
 
+// Send message to client
 function sendMessage(clientId, message) {
     const clientSocket = clientMap.get(clientId);
     if (clientSocket && clientSocket.ws.readyState === WebSocket.OPEN) {
@@ -337,12 +325,8 @@ rl.on('line', (input) => {
         console.log('help, ? - Show this help message');
         console.log('cls, clear - Clear console');
         console.log('online - List connected users/guests count');
-        console.log('subscribers - Show total push notification subscribers');
-        console.log('list_subscribers - List all push notification subscribers');
         console.log('broadcast:message, bc:message - Send message to all clients');
         console.log('msgto:clientId msg:message - Send message to specific client');
-        console.log('push:clientId msg:message - Send push notification to specific user');
-        console.log('push_all:message - Send push notification to all subscribers');
         console.log('reload:clientId - Force reload specific client');
         console.log('refresh - Force all clients to clear cache');
         console.log('kick:clientId url:URL - Redirect client to specified URL');
@@ -352,6 +336,23 @@ rl.on('line', (input) => {
     // Clear the console
     if (input === 'cls' || input === 'clear') {
         console.clear();
+    }
+
+    // Send push notification to a specific user
+    if (input.startsWith('push:')) {
+        const clientMatch = input.match(/push:([a-zA-Z0-9]+)/);
+        const messageMatch = input.match(/push:[a-zA-Z0-9]+ msg:(.*)/);
+
+        if (clientMatch && messageMatch) {
+            const clientId = clientMatch[1]; // Extract client ID
+            const message = messageMatch[1].trim(); // Extract the message
+
+            console.log(`Sending push notification to ${clientId}: ${message}`);
+            
+            sendPushNotification(clientId, 'New Notification', message);
+        } else {
+            console.log('Invalid input format. Use: push:clientId msg:Your message');
+        }
     }
 
     // Reload a specific client

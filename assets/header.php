@@ -138,9 +138,10 @@ if (isset($_GET['signup'])) {
 
             <?php // New post if logged in
             if (isset($_SESSION['user'])) {
-                if (isMobile($userAgent) == false) {?>
+                if (isMobile($userAgent) == false) {
+                    if (basename($_SERVER['PHP_SELF']) == 'index.php' || basename($_SERVER['PHP_SELF']) == 'profile.php') { ?>
             <div class="new_post_button" id="new_post_btn" onclick="newPost()">Anything new?</div>
-            <?php }?>
+            <?php }}?>
             <script>// Display new post button only when the user is on the home page
             const homePage = window.location.href;
             const pages = ['group', 'page', 'search', 'notifications', 'settings', 'profile', 'post'];

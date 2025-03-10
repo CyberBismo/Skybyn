@@ -880,13 +880,14 @@
                 box-sizing: border-box;
                 backdrop-filter: blur(5px);
             }
-            .center_form .form .login,
-            .center_form .form .register {
+            .login,
+            .register {
                 width: 100%;
                 padding: 0;
             }
-            .center_form .form .login input,
-            .center_form .form .register input {
+            .login input,
+            .login-popup input,
+            .register input {
                 display: block;
                 width: 100%;
                 padding: 0 10px;
@@ -894,15 +895,15 @@
                 background: rgba(var(--mode),.1);
                 box-sizing: border-box;
             }
-            .center_form .form .login input::placeholder,
-            .center_form .form .register input::placeholder {
+            .login input::placeholder,
+            .register input::placeholder {
                 color: var(--mode-placeholder);
             }
-            .center_form .form .register input[type="number"] {
+            .register input[type="number"] {
                 -moz-appearance: textfield; /* Firefox */
             }
 
-            .center_form .form .register input[type="date"]::-webkit-calendar-picker-indicator {
+            .register input[type="date"]::-webkit-calendar-picker-indicator {
                 position: absolute;
                 width: 90%;
                 height: 35px;
@@ -913,13 +914,14 @@
             }
 
             /* Chrome, Edge, and Safari */
-            .center_form .form .register input[type="number"]::-webkit-inner-spin-button,
-            .center_form .form .register input[type="number"]::-webkit-outer-spin-button {
+            .register input[type="number"]::-webkit-inner-spin-button,
+            .register input[type="number"]::-webkit-outer-spin-button {
                 -webkit-appearance: none;
                 margin: 0;
             }
-            .center_form .form .login input[type=checkbox],
-            .center_form .form .register input[type=checkbox] {
+            .login input[type=checkbox],
+            .login-popup input[type=checkbox],
+            .register input[type=checkbox] {
                 float: left;
                 width: 0;
                 height: 40px;
@@ -931,8 +933,9 @@
                 appearance: none;
                 cursor: pointer;
             }
-            .center_form .form .login input[type=checkbox]::before,
-            .center_form .form .register input[type=checkbox]::before {
+            .login input[type=checkbox]::before,
+            .login-popup input[type=checkbox]::before,
+            .register input[type=checkbox]::before {
                 content: "";
                 display: block;
                 width: 15px;
@@ -943,8 +946,9 @@
                 border-radius: 5px;
                 box-sizing: border-box;
             }
-            .center_form .form .login input[type=checkbox]:checked::before,
-            .center_form .form .register input[type=checkbox]:checked::before {
+            .login input[type=checkbox]:checked::before,
+            .login-popup input[type=checkbox]:checked::before,
+            .register input[type=checkbox]:checked::before {
                 content: "\2713";
                 text-align: center;
                 line-height: 15px;
@@ -954,8 +958,9 @@
                 font-size: 12px;
             }
 
-            .center_form .form .login label,
-            .center_form .form .register label {
+            .login label,
+            .login-popup label,
+            .register label {
                 float: left;
                 line-height: 40px;
                 cursor: pointer;
@@ -969,19 +974,20 @@
                 width: 100%;
             }
 
-            .center_form .form .password-criteria {
+            .password-criteria {
                 padding-bottom: 10px;
                 font-size: 12px;
             }
-            .center_form .form .password-criteria i {
+            .password-criteria i {
                 float: none;
                 color: #ff4545 !important;
             }
-            .center_form .form .password-criteria i.ok {
+            .password-criteria i.ok {
                 color: #6aff45 !important;
             }
 
-            .center_form .form .login button {
+            .login button,
+            .login-popup button {
                 float: right;
                 width: auto;
                 margin-left: auto;
@@ -993,40 +999,50 @@
                 border: none;
                 overflow: hidden;
             }
-            .center_form .form .login button i {
+            .login button i,
+            .login-popup button i {
                 line-height: 20px;
                 float: none;
             }
-            .center_form .form .login button:hover {
+            .login button:hover,
+            .login-popup button:hover {
                 background: var(--mode-placeholder) !important;
             }
-            .center_form .form .login .show_qr_login {
+            .login .show_qr_login,
+            .login-popup .show_qr_login {
                 cursor: pointer;
             }
-            .center_form .form .login .show_qr_login span {
+            .login .show_qr_login span,
+            .login-popup .show_qr_login span {
                 padding-right: 30px;
                 box-sizing: border-box;
             }
-            .center_form .form .login .show_qr_login i {
+            .login .show_qr_login i,
+            .login-popup .show_qr_login i {
                 float: right;
                 margin-top: -13px;
                 font-size: 18px;
             }
-            .center_form .form .login .qr_login {
+            .login .qr_login,
+            .login-popup .qr_login {
                 width: 400px;
                 display: none;
                 justify-content: space-between;
             }
-            .center_form .form .login .qr_login .qr_login_text {
+            .login .qr_login .qr_login_text,
+            .login-popup .qr_login .qr_login_text {
                 width: 50%;
             }
-            .center_form .form .login .qr_login .qr_login_text p {
+            .login .qr_login .qr_login_text p,
+            .login-popup .qr_login .qr_login_text p {
                 padding-right: 10px;
             }
-            .center_form .form .login .qr_login .qr_login_text img {
+            .login .qr_login .qr_login_text img,
+            .login-popup .qr_login .qr_login_text img {
                 height: 40px;
             }
-            .center_form .form .login .qr_login .qr_login_text .btn {
+            .login .qr_login .qr_login_text .btn,
+            .login-popup .qr_login .qr_login_text .btn {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
@@ -1038,13 +1054,15 @@
                 border-radius: 10px;
                 cursor: pointer;
             }
-            .center_form .form .login .qr_login .qr_login_text .btn i {
+            .login .qr_login .qr_login_text .btn i,
+            .login-popup .qr_login .qr_login_text .btn i {
                 height: 20px;
                 line-height: 20px;
                 margin: 0;
                 padding: 0;
             }
-            .center_form .form .login .qr_login .qr_login_img {
+            .login .qr_login .qr_login_img,
+            .login-popup .qr_login .qr_login_img {
                 width: 50%;
                 padding: 10px;
                 background: white;
@@ -1052,17 +1070,19 @@
                 box-sizing: border-box;
                 overflow: hidden;
             }
-            .center_form .form .login .qr_login .qr_login_img img {
+            .login .qr_login .qr_login_img img,
+            .login-popup .qr_login .qr_login_img img {
                 width: 100%;
                 height: auto;
                 max-height: 100%;
                 object-fit: cover;
                 object-position: center;
             }
-            .center_form .form .login .normal_login {
+            .login .normal_login,
+            .login-popup .normal_login {
                 vertical-align: top;
             }
-            .center_form .form .register input[type=submit] {
+            .register input[type=submit] {
                 float: right;
                 width: 100%;
                 padding: 0 20px;
@@ -1071,14 +1091,14 @@
                 border: none;
                 overflow: hidden;
             }
-            .center_form .form .register input#send_again {
+            .register input#send_again {
                 width: 100%;
                 height: 30px;
                 margin-bottom: 5px;
                 font-size: 16px;
                 border: none;
             }
-            .center_form .form .register input#step_back {
+            .register input#step_back {
                 width: 80%;
                 height: 30px;
                 margin: 0 10%;
@@ -2448,6 +2468,28 @@
                 margin: 0;
                 padding: 0;
                 color: var(--mode-text);
+            }
+
+            .login-popup {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                backdrop-filter: blur(5px);
+                z-index: 10;
+                pointer-events: none;
+            }
+            .login-popup img {
+                width: 100px;
+                object-fit: cover;
+            }
+            .login-popup-box {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                max-width: 500px;
+                transform: translate(-50%,-70%);
             }
 
             <?php if (isMobile($userAgent) == false) {?>
@@ -3826,10 +3868,8 @@
                 display: flex;
                 gap: 10px;
                 bottom: 0;
-                width: 100%;
                 margin: 10px;
                 z-index: 10;
-                pointer-events: none;
             }
             .message-box-icon {
                 display: none;
@@ -4631,6 +4671,32 @@
                 margin: 0 5px;
                 border-radius: 40px;
             }
+
+            .group-list {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 10px;
+                width: 100%;
+                padding: 10px;
+            }
+            .group-intro {
+                text-align: center;
+                margin: 20px;
+                padding: 10px;
+                background: rgba(var(--mode),.1);
+                border-radius: 10px;
+                box-sizing: border-box;
+            }
+            .group-intro button {
+                margin: 10px;
+                padding: 10px;
+                color: var(--mode-text);
+                background: rgba(var(--mode-invert),.1);
+                border: none;
+                border-radius: 10px;
+                cursor: pointer;
+            }
+
             .group-box {
                 display: flex;
                 height: 800px;
@@ -4951,6 +5017,81 @@
             /** EVENTS */
 
             /** MUSIC */
+
+            /** PAGES */
+            .new-page-create {
+            }
+            .new-page-create .page-intro {
+                width: 100%;
+                margin-top: 20px;
+                padding: 10px;
+                color: var(--mode-text);
+                background: rgba(var(--mode),.3);
+                backdrop-filter: blur(5px);
+                border-radius: 10px;
+                box-sizing: border-box;
+            }
+            .new-page-create .form {
+                align-items: center;
+                margin: 10px 0;
+                background: rgba(var(--mode),.1);
+                backdrop-filter: blur(5px);
+                border-radius: 20px;
+            }
+            .new-page-privacy {
+                display: flex;
+                justify-content: space-between;
+                margin: 10px 0;
+            }
+            .new-page-privacy span {
+                display: flex;
+                align-items: center;
+            }
+            .new-page-privacy input {
+                display: none;
+            }
+            .new-page-privacy label {
+                display: flex;
+                align-items: center;
+                padding: 5px 15px;
+                background: rgba(var(--mode),.3);
+                border-radius: 5px;
+                box-sizing: border-box;
+                cursor: pointer;
+            }
+            .new-page-privacy label:hover {
+                background: rgba(var(--mode),.5);
+            }
+            .new-page-privacy label i {
+                margin: 0;
+                margin-right: 5px;
+            }
+            #lock-options {
+                margin: 10px 0;
+            }
+            #lock-options select {
+                width: 100%;
+                padding: 5px;
+                margin: 5px 0;
+                color: var(--text);
+                background: rgba(var(--mode),.3);
+                border: 1px solid rgba(var(--mode),.5);
+                outline: none;
+                border-radius: 5px;
+                box-sizing: border-box;
+                cursor: pointer;
+            }
+            #lock-options input {
+                width: 100%;
+                padding: 5px;
+                margin: 5px 0;
+                color: var(--text);
+                background: rgba(var(--mode),.3);
+                border: 1px solid rgba(var(--mode),.5);
+                outline: none;
+                border-radius: 5px;
+                box-sizing: border-box;
+            }
 
             /** Other */
 
