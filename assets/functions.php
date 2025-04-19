@@ -1290,6 +1290,10 @@ if (isset($_SESSION['user'])) {
     $firstTime = false;
     $uid = $_SESSION['user'];
     $UDRes = $conn->query("SELECT * FROM `users` WHERE `id`='$uid'");
+    if ($UDRes->num_rows == 0) {
+        session_destroy();
+        ?><script>window.location.href = "../";</script><?php
+    }
     $UDRow = $UDRes->fetch_assoc();
     $email = $UDRow['email'];
     $username = $UDRow['username'];
