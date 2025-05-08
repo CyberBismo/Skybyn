@@ -219,8 +219,8 @@ function sendMessage(uid, fid) {
                 ws.send(JSON.stringify({
                     type: 'chat',
                     id: id,
-                    sender: uid,
-                    reciever: fid,
+                    from: uid,
+                    to: fid,
                     message: message
                 }));
             }

@@ -4101,6 +4101,18 @@
                 outline: none;
             }
 
+            @keyframes breathing {
+                0%   { box-shadow: 0 0 0 rgba(0, 150, 255, 0); }
+                50%  { box-shadow: 0 0 10px rgba(255, 255, 255, 0.7); }
+                100% { box-shadow: 0 0 0 rgba(0, 150, 255, 0); }
+            }
+
+            .breathing {
+                animation: breathing 1.5s infinite;
+                transition: box-shadow 0.3s ease-in-out;
+                cursor: pointer;
+            }
+
             /** END OF FLOATING MESSAGES */
 
             /** PROFILE */

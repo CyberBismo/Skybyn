@@ -8,7 +8,7 @@ if ($devDomain == true) {
 
 if (!isset($_SESSION['user'])) {
     $currentURl = $_SERVER['REQUEST_URI'];
-    createCookie("redirect", $currentURl, time() + 3600, "/");
+    //createCookie("redirect", $currentURl, time() + 3600, "/");
     include "./assets/forms/login-popup.php";
     return;
 }

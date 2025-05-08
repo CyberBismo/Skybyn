@@ -181,7 +181,6 @@ function connectWebSocket() {
         }
 
         if (data.type === 'chat') {
-            console.log('Chat message received:', data);
             const messageBox = document.getElementById('message_box_' + data.from);
             if (messageBox) {
                 const messageContainer = document.getElementById('message_body_' + data.from);
@@ -205,24 +204,18 @@ function connectWebSocket() {
                     messageContainer.scrollTop = messageContainer.scrollHeight;
                 }
 
-                showNotification(data.from, data.message);
+                if (!messageBox.classList.contains('maximized') && !messageBox.classList.contains('breathing')) {
+                    messageBox.classList.add('breathing');
 
-                if (!messageBox.classList.contains('maximized')) {
-                    function breathe(x) {
-                        let intervalId; // Variable to store the interval ID
-                    
-                        if (x == "start") {
-                            intervalId = setInterval(() => {
-                                messageBox.style.background = "";
-                                setTimeout(() => {
-                                    messageBox.style.background = "";
-                                }, 500);
-                            }, 1000);
-                        } else if (x == "stop") {
-                            clearInterval(intervalId);
-                        }
-                    }
-                    breathe('start');
+                    // Stop breathing on hover or click
+                    const stopBreathing = () => {
+                        messageBox.classList.remove('breathing');
+                        messageBox.removeEventListener('mouseenter', stopBreathing);
+                        messageBox.removeEventListener('click', stopBreathing);
+                    };
+
+                    messageBox.addEventListener('mouseenter', stopBreathing);
+                    messageBox.addEventListener('click', stopBreathing);
                 }
             } else {
                 startMessaging(data.to,data.from);
@@ -234,11 +227,9 @@ function connectWebSocket() {
         }
 
         if (data.type === 'ping') {
-            console.log('Ping received from server');
             ws.send(JSON.stringify({type: 'pong', sessionId: sessionId}));
             // Check is ws is connected
             if (ws.readyState !== WebSocket.OPEN) {
-                console.log('WebSocket is not open. Attempting to reconnect...');
                 connectWebSocket();
             }
         }
@@ -257,8 +248,7 @@ function connectWebSocket() {
     };
 
     ws.onclose = () => {
-        console.log('Reestablishing connection...');
-        setTimeout(connectWebSocket, 3000);
+        setTimeout(connectWebSocket, 1000);
     };
 }
 

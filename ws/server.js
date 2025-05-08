@@ -87,37 +87,47 @@ wss.on('connection', (ws) => {
             const data = JSON.parse(message);
 
             if (data.type === 'connect') {
-                let clientID = data.sessionId;
-                let userId = data.token;
-                let url = data.url;
-                let device = data.deviceInfo['device'];
+                let clientID = data.sessionId; // Unique identifier for the client
+                let token = data.token; // User token from the client (if logged in)
+                let device = data.deviceInfo['device']; // Device information from the client
                 let time = getTime();
 
                 let guestCount = 0; // Start guest ID count at 1
+                let userCount = 0; // Start user ID count at 1
+
                 wss.clients.forEach(client => {
                     if (client.readyState === WebSocket.OPEN && !client.clientID) {
                         guestCount++;
                     }
                 });
+                wss.clients.forEach(client => {
+                    if (client.readyState === WebSocket.OPEN && client.userId) {
+                        userCount++;
+                    }
+                });
                 
                 let logType = "";
 
-                if (userId === null) {
-                    userId = "g"+guestCount;
-                    logType = "Guest " + userId + " connected";
-                    clientMap.set(clientID, { ws, ip: cleanedIp, userId: userId });
-                    console.log(`${time}\n${logType} \nIP: ${cleanedIp}\nUrl: ${url}\nDevice: ${device}\n`);
+                if (token === null) {
+                    guestId = "g"+guestCount;
+                    logType = "Client connected\nActive guests: " + guestCount;
+                    clientMap.set(clientID, { ws, ip: cleanedIp, guestId });
+                    console.log(`${time}\n${logType} \nIP: ${cleanedIp}\nDevice: ${device}\n`);
                 } else {
                     let username = "";
-                    db.query("SELECT username FROM users WHERE token = ?", [userId], (err, results) => {
+                    db.query("SELECT * FROM users WHERE token = ?", [token], (err, results) => {
                         if (err) {
                             console.error("Error fetching username:", err);
                             return;
                         }
-                        username = results[0]?.username || userId;
-                        logType = "User " + username + " connected";
-                        clientMap.set(clientID, { ws, ip: cleanedIp, userId: userId });
-                        console.log(`${time}\n${logType} \nIP: ${cleanedIp}\nUrl: ${url}\nDevice: ${device}\n`);
+                        // Collect username and id from the results
+                        if (results.length > 0) {
+                            username = results[0].username;
+                            userId = results[0].id;
+                        }
+                        logType = username + " connected";
+                        clientMap.set(clientID, { ws, ip: cleanedIp, userId });
+                        console.log(`${time}\n${logType} \nIP: ${cleanedIp}\nDevice: ${device}\n`);
                     });
                 }
 
@@ -191,25 +201,21 @@ wss.on('connection', (ws) => {
             }
 
             if (data.type === 'chat') {
-                const { id, sender, reciever, message: messageText } = data;
+                const { id, from, to, message } = data;
                 const sendMsg = JSON.stringify({
                     type: 'chat',
                     id,
-                    sender,
-                    reciever,
-                    message: messageText,
+                    from,
+                    to,
+                    message,
                 });
                 
-                clientMap.forEach((client, userId) => {
-                    if (userId === reciever && client.ws.readyState === WebSocket.OPEN) {
+                clientMap.forEach((client, clientID) => {
+                    if (client.userId === Number(to) && client.ws.readyState === WebSocket.OPEN) {
                         client.ws.send(sendMsg);
-                        console.log(`Message sent to client ${userId}: ${messageText}`);
                     }
-                });
-                clientMap.forEach((client, userId) => {
-                    if (userId === sender && client.ws.readyState === WebSocket.OPEN) {
+                    if (client.userId === Number(from) && client.ws !== ws && client.ws.readyState === WebSocket.OPEN) {
                         client.ws.send(sendMsg);
-                        console.log(`Message sent to client ${userId}: ${messageText}`);
                     }
                 });
             }
@@ -224,12 +230,10 @@ wss.on('connection', (ws) => {
             }
 
             if (data.type === 'pong') {
-                console.log("Pong received from client:", data.sessionId);
-                clientMap.forEach((client, userId) => {
-                    if (client.sessionID === data.sessionId) {
-                        clientMap.set(userId, { ws, ip: cleanedIp, sessionID: data.sessionId });
-                    }
-                });
+                const clientID = data.sessionId;
+                const clientSocket = clientMap.get(clientID);
+                // Get userId from the clientMap
+                const userId = clientSocket.userId;
             }
 
             else {
@@ -311,7 +315,6 @@ function insertActivity(ip) {
 }
 
 function pingPong() {
-    console.log("Sending ping to all clients\n");
     let pingPong = JSON.stringify({ type: 'ping' });
     clientMap.forEach((client) => {
         client.ws.send(pingPong);
