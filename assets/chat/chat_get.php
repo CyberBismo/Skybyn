@@ -1,4 +1,4 @@
-<?php include_once "functions.php";
+<?php include_once("../functions.php");
 
 $fid = $_POST['friend'];
 
@@ -7,7 +7,7 @@ while ($message = $getMessages->fetch_assoc()) {
     $message_id = $message['id'];
     $message_user = $message['user'];
     $message_friend = $message['friend'];
-    $message_content = $conn->real_escape_string(htmlentities(decrypt($message['content']), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+    $message_content = decrypt($message['content']);
     $message_created = date("Y-m-d H:i:s", $message['date']);
 
     $getFriendData = $conn->query("SELECT * FROM `users` WHERE `id`='$message_user'");

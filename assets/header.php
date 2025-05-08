@@ -1,5 +1,10 @@
 <?php include_once "functions.php";
 
+// Logg all errors in erro_logs.txt
+ini_set('log_errors', 1);
+ini_set('error_log', 'erro_logs.txt');
+error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
+
 $signup = false;
 
 if (isset($_GET['signup'])) {
@@ -20,10 +25,12 @@ if (isset($_GET['signup'])) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <meta name="theme-color" content="transparent">
         <meta name="mobile-web-app-capable" content="yes">
+        <link rel="icon" type="image/png" href="/assets/images/logo_faded_clean.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/logo_faded_clean.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/logo_faded_clean.png">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="pink">
         <link rel="apple-touch-icon" sizes="180x180" href="../assets/images/logo.png">
-        <link rel="icon" type="image/x-icon" href="../assets/images/logo_fav.png">
         <link href="../fontawe/css/all.css" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/lozad@1.0.0/dist/lozad.min.js"></script>
         <script>
@@ -725,7 +732,7 @@ if (isset($_GET['signup'])) {
                                     <div class="friend-name"><?=$friend_username?></div>
                                 </div>
                                 <div class="friend-actions">
-                                    <div class="friend-action" onclick="window.location.href='../profile?user=<?=$friend_username?>'">
+                                    <div class="friend-action" onclick="window.location.href='../profile/<?=$friend_username?>'">
                                         <i class="fa-solid fa-user"></i>
                                     </div>
                                     <div class="friend-action" onclick="startMessaging('<?=$uid?>','<?=$fid?>')">
@@ -834,16 +841,7 @@ if (isset($_GET['signup'])) {
                         if ($getMessages->num_rows > 0) {
                             while ($msgData = $getMessages->fetch_assoc()) {
                                 $msg_id = $msgData['id'];
-                                $msg_text = $msgData['content'];
-                                if (isNotEncrypted($msg_text)) {
-                                    $msg_text = encrypt(htmlentities($msg_text, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
-                                    $stmt = $conn->prepare("UPDATE `messages` SET `content` = ? WHERE `id` = ?");
-                                    $stmt->bind_param("si", $msg_text, $msg_id);
-                                    $stmt->execute();
-                                    $stmt->close();
-                                }
-
-                                $msg = html_entity_decode(decrypt($msg_text), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                                $msg = decrypt($msgData['content']);
                                 $msg_from = $msgData['from'];
                                 $msg_to = $msgData['to'];
                                 $msg_date = $msgData['date'];

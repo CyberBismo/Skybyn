@@ -25,7 +25,7 @@ function createMessageBox(user_id,friend_id) {
     document.getElementById('msg_con').appendChild(messageBox);
 
     $.ajax({
-        url: './assets/functions.php',
+        url: '../../assets/functions.php',
         type: 'POST',
         data: {
             start_chat: null,
@@ -37,7 +37,7 @@ function createMessageBox(user_id,friend_id) {
         let avatar = res.friend_avatar;
 
         if (!avatar) {
-            avatar = './assets/images/logo_faded_clean.png';
+            avatar = '../../assets/images/logo_faded_clean.png';
         }
 
         const message_user = document.getElementById('message_user_'+fid);
@@ -49,7 +49,7 @@ function createMessageBox(user_id,friend_id) {
     });
 
     $.ajax({
-        url: './assets/functions.php',
+        url: '../../assets/functions.php',
         type: 'POST',
         data: {
             load_chat: null,
@@ -121,7 +121,7 @@ function maximizeMessageBox(fid) {
         minimize.classList.add('fa-chevron-down');
 
         $.ajax({
-            url: './assets/functions.php',
+            url: '../../assets/functions.php',
             type: 'POST',
             data: {
                 max_chat: null,
@@ -134,7 +134,7 @@ function maximizeMessageBox(fid) {
         minimize.classList.add('fa-chevron-up');
 
         $.ajax({
-            url: './assets/functions.php',
+            url: '../../assets/functions.php',
             type: 'POST',
             data: {
                 max_chat: null,
@@ -163,7 +163,7 @@ function closeMessageBox(friend_id) {
     }, 500);
 
     $.ajax({
-        url: './assets/functions.php',
+        url: '../../assets/functions.php',
         type: 'POST',
         data: {
             close_chat: null,
@@ -180,7 +180,7 @@ function checkEnter(event, uid, fid) {
 
 function sendMessage(uid, fid) {
     let messageInput = document.getElementById('message_input_'+fid);
-    let message = DOMPurify.sanitize(messageInput.value);
+    let message = messageInput.value.replace(/</g, "&lt;").replace(/>/g, "&gt;");
     if (message) {
         const avatar = document.querySelector('.message-user-avatar img').getAttribute('src');
         let messageContainer = document.getElementById('message_body_' + fid);
@@ -205,7 +205,7 @@ function sendMessage(uid, fid) {
         }
 
         $.ajax({
-            url: './assets/chat_send.php',
+            url: '../../assets/chat/chat_send.php',
             type: 'POST',
             data: {
                 to: fid,
@@ -219,8 +219,8 @@ function sendMessage(uid, fid) {
                 ws.send(JSON.stringify({
                     type: 'chat',
                     id: id,
-                    from: uid,
-                    to: fid,
+                    sender: uid,
+                    reciever: fid,
                     message: message
                 }));
             }

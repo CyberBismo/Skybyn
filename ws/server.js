@@ -15,10 +15,7 @@ require('dotenv').config();
 
 // Start WebSocket server on port 4433
 server.listen(4433, () => {
-    console.warn('+--------------------------+');
-    console.warn('| Secure Web Socket Server |');
-    console.warn('+--------------------------+');
-    console.info("| Listening on port: 4433  |");
+    console.warn('Server running\n');
 });
 
 const dbConfig = {
@@ -31,13 +28,13 @@ const dbConfig = {
 
 let db;
 
-function handleDisconnect() {
+function connectDatabase() {
     db = mysql.createConnection(dbConfig);
     
     db.connect(err => {
         if (err) {
             //console.error("| Database: FAILED         |\nReason:\n", err, "\n\n");
-            setTimeout(handleDisconnect, 5000); // Retry connection after 5 seconds
+            setTimeout(connectDatabase, 5000); // Retry connection after 5 seconds
         } else {
             //console.info("| Database: CONNECTED      |\n");
         }
@@ -46,14 +43,13 @@ function handleDisconnect() {
     db.on("error", err => {
         if (err.code === "PROTOCOL_CONNECTION_LOST") {
             //console.error("⚠️ Database connection lost. Reconnecting...\n");
-            handleDisconnect();
+            connectDatabase();
         } else {
             throw err;
         }
     });
 }
-
-handleDisconnect();
+connectDatabase();
 
 // VAPID keys (replace with your generated keys)
 const vapidKeys = {
@@ -79,9 +75,6 @@ function getTime() {
     return time;
 }
 
-// Store client subscriptions
-let subscriptions = {};
-
 const wss = new WebSocket.Server({ server });
 const clientMap = new Map(); // Map to store clients by their unique identifier
 
@@ -89,17 +82,9 @@ const clientMap = new Map(); // Map to store clients by their unique identifier
 wss.on('connection', (ws) => {
     const cleanedIp = ws._socket.remoteAddress.replace(/^::ffff:/, '');
 
-    ws.on('message', (message, isBinary) => {
-        if (isBinary) {
-            // Broadcast the binary message (video frame) to all connected clients
-            clientMap.forEach((client) => {
-                if (client.ws.readyState === WebSocket.OPEN && client.ws !== ws) {
-                    client.ws.send(message, { binary: true });
-                }
-            });
-        } else
+    ws.on('message', (message) => {
         if (isJsonString(message)) {
-            let data = JSON.parse(message);
+            const data = JSON.parse(message);
 
             if (data.type === 'connect') {
                 let clientID = data.sessionId;
@@ -110,14 +95,18 @@ wss.on('connection', (ws) => {
 
                 let guestCount = 0; // Start guest ID count at 1
                 wss.clients.forEach(client => {
-                    if (client.readyState === WebSocket.OPEN && !client.userid) {
+                    if (client.readyState === WebSocket.OPEN && !client.clientID) {
                         guestCount++;
                     }
                 });
                 
+                let logType = "";
+
                 if (userId === null) {
-                    userId = guestCount;
+                    userId = "g"+guestCount;
                     logType = "Guest " + userId + " connected";
+                    clientMap.set(clientID, { ws, ip: cleanedIp, userId: userId });
+                    console.log(`${time}\n${logType} \nIP: ${cleanedIp}\nUrl: ${url}\nDevice: ${device}\n`);
                 } else {
                     let username = "";
                     db.query("SELECT username FROM users WHERE token = ?", [userId], (err, results) => {
@@ -127,11 +116,16 @@ wss.on('connection', (ws) => {
                         }
                         username = results[0]?.username || userId;
                         logType = "User " + username + " connected";
-                        clientMap.set(userId, { ws, ip: cleanedIp, sessionID: clientID });
+                        clientMap.set(clientID, { ws, ip: cleanedIp, userId: userId });
                         console.log(`${time}\n${logType} \nIP: ${cleanedIp}\nUrl: ${url}\nDevice: ${device}\n`);
-                        updateActiveClients();
                     });
                 }
+
+                setTimeout(() => {
+                    updateActiveClients();
+                }
+                , 1000); // Delay to ensure all clients are registered
+                registerActivity(cleanedIp);
             }
 
             if (data.type === 'disconnect') {
@@ -197,38 +191,43 @@ wss.on('connection', (ws) => {
             }
 
             if (data.type === 'chat') {
-                const { id, from, to, message: messageText } = data;
-                const payload = JSON.stringify({
-                    title: 'New Message!',
-                    body: messageText,
-                    icon: 'https://skybyn.com/assets/images/logo_faded_clean.png',
-                });
-
+                const { id, sender, reciever, message: messageText } = data;
                 const sendMsg = JSON.stringify({
                     type: 'chat',
                     id,
-                    from,
-                    to,
+                    sender,
+                    reciever,
                     message: messageText,
                 });
+                
+                clientMap.forEach((client, userId) => {
+                    if (userId === reciever && client.ws.readyState === WebSocket.OPEN) {
+                        client.ws.send(sendMsg);
+                        console.log(`Message sent to client ${userId}: ${messageText}`);
+                    }
+                });
+                clientMap.forEach((client, userId) => {
+                    if (userId === sender && client.ws.readyState === WebSocket.OPEN) {
+                        client.ws.send(sendMsg);
+                        console.log(`Message sent to client ${userId}: ${messageText}`);
+                    }
+                });
+            }
 
-                let sent = false;
+            if (data.type === 'notification') {
+                const to = data.to;
                 clientMap.forEach((client, userId) => {
                     if (userId === to && client.ws.readyState === WebSocket.OPEN) {
                         client.ws.send(sendMsg);
-                        sent = true;
                     }
                 });
-
-                if (!sent) {
-                    console.log(`Client ${to} is not connected.`);
-                }
             }
 
             if (data.type === 'pong') {
+                console.log("Pong received from client:", data.sessionId);
                 clientMap.forEach((client, userId) => {
-                    if (client.ws === ws) {
-                        clientMap.set(userId, { ws, ip: cleanedIp, userId });
+                    if (client.sessionID === data.sessionId) {
+                        clientMap.set(userId, { ws, ip: cleanedIp, sessionID: data.sessionId });
                     }
                 });
             }
@@ -238,6 +237,9 @@ wss.on('connection', (ws) => {
                     console.log(message);
                 }
             }
+        }
+        else {
+            console.log("Received non-JSON message:", message);
         }
     });
 
@@ -265,7 +267,51 @@ function isJsonString(value) {
     }
 }
 
+// Function to register activity in the database
+function registerActivity(ip) {
+    const time = Math.floor(Date.now() / 1000);
+    // Check if the IP address is already registered
+    const checkQuery = "SELECT COUNT(*) AS count FROM visitors WHERE ip = ?";
+    db.query(checkQuery, [ip], (err, results) => {
+        if (err) {
+            console.error("Error checking activity:", err);
+            return;
+        }
+
+        const count = results[0].count;
+        if (count === 0) {
+            // If not registered, insert the new activity
+            insertActivity(ip);
+        } else {
+            //console.log("IP address already registered for today.");
+            // Optionally, you can update the existing record if needed
+            const updateQuery = "UPDATE visitors SET time = ? WHERE ip = ?";
+            db.query(updateQuery, [time, ip], (err) => {
+                if (err) {
+                    console.error("Error updating activity:", err);
+                } else {
+                    //console.log("Activity updated successfully.");
+                }
+            });
+        }
+    });
+}
+
+function insertActivity(ip) {
+    const time = Math.floor(Date.now() / 1000);
+    const insertQuery = "INSERT INTO visitors (ip, time) VALUES (?, ?)";
+    //console.log("Inserting activity:", ip, time);
+    db.query(insertQuery, [ip, time], (err) => {
+        if (err) {
+            console.error("Error inserting activity:", err);
+        } else {
+            //console.log("Activity registered successfully.");
+        }
+    });
+}
+
 function pingPong() {
+    console.log("Sending ping to all clients\n");
     let pingPong = JSON.stringify({ type: 'ping' });
     clientMap.forEach((client) => {
         client.ws.send(pingPong);
@@ -296,9 +342,9 @@ function sendMessage(clientId, message) {
             type: 'broadcast',
             message: message
         }));
-        console.log(`Message sent to client ${clientId}`);
+        console.log(`Message sent to client ${clientId}\n`);
     } else {
-        console.log(`Cannot send message. Client ${clientId} not found or WebSocket not open.`);
+        console.log(`Cannot send message. Client ${clientId} not found or WebSocket not open.\n`);
     }
 }
 
@@ -338,23 +384,6 @@ rl.on('line', (input) => {
         console.clear();
     }
 
-    // Send push notification to a specific user
-    if (input.startsWith('push:')) {
-        const clientMatch = input.match(/push:([a-zA-Z0-9]+)/);
-        const messageMatch = input.match(/push:[a-zA-Z0-9]+ msg:(.*)/);
-
-        if (clientMatch && messageMatch) {
-            const clientId = clientMatch[1]; // Extract client ID
-            const message = messageMatch[1].trim(); // Extract the message
-
-            console.log(`Sending push notification to ${clientId}: ${message}`);
-            
-            sendPushNotification(clientId, 'New Notification', message);
-        } else {
-            console.log('Invalid input format. Use: push:clientId msg:Your message');
-        }
-    }
-
     // Reload a specific client
     if (input.startsWith('reload:')) {
         const clientMatch = input.match(/reload:([a-zA-Z0-9]+)/);
@@ -369,16 +398,16 @@ rl.on('line', (input) => {
                     type: 'reload'
                 }));
             } else {
-                console.log(`Client with ID ${clientId} not found.`);
+                console.log(`Client with ID ${clientId} not found.\n`);
             }
         } else {
-            console.log('Invalid input format. Use "reload:clientId"');
+            console.log('Invalid input format. Use "reload:clientId"\n');
         }
     }
 
     // Reload a specific client
     if (input.startsWith('refresh')) {
-        console.log(`Forcing clients to clear website cache.`);
+        console.log(`Forcing clients to clear website cache.\n`);
         
         clientMap.forEach((client) => {
             if (client.ws.readyState === WebSocket.OPEN) {
@@ -407,11 +436,12 @@ rl.on('line', (input) => {
                     type: 'kick',
                     url: urlString
                 }));
+                console.log(`Client ${clientId} redirected to ${urlString}\n`);
             } else {
-                console.log(`Client with ID ${clientId} not found.`);
+                console.log(`Client with ID ${clientId} not found.\n`);
             }
         } else {
-            console.log('Invalid input format. Use "kick:clientId url:YourURL"');
+            console.log('Invalid input format. Use "kick:clientId url:YourURL"\n');
         }
     }
 
@@ -449,8 +479,9 @@ rl.on('line', (input) => {
             const message = messageMatch[1].trim(); 
 
             sendMessage(clientId, message); 
+            console.log(`Message sent to client ${clientId}: ${message}\n`);
         } else {
-            console.log('Invalid input format. Use "msgto:clientId msg:Your message"');
+            console.log('Invalid input format. Use "msgto:clientId msg:Your message"\n');
         }
     }
 
@@ -461,13 +492,13 @@ rl.on('line', (input) => {
 
         clientMap.forEach((clientData, clientId) => {
             if (clientData.userId === userIdToCheck) {
-                console.log(`User ID ${userIdToCheck} is connected with client ID: ${clientId}`);
+                console.log(`User ID ${userIdToCheck} is connected with client ID: ${clientId}\n`);
                 found = true;
             }
         });
 
         if (!found) {
-            console.log(`User ID ${userIdToCheck} is not connected.`);
+            console.log(`User ID ${userIdToCheck} is not connected.\n`);
         }
     }
 });

@@ -1,5 +1,5 @@
 <?php
-define('SECRET_KEY', 'your-64-character-secure-key-here'); // 512-bit key
+define('SECRET_KEY', '093cee001dd6a2c41d66382b849f86706aa836824e3da3e0f6feb006c1b23ad8'); // 512-bit key
 
 function encrypt_email($email) {
     // Generate a 256-bit key from a 512-bit SHA-512 hash

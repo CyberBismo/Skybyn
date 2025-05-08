@@ -1,6 +1,15 @@
-<?php include_once "assets/header.php";
+<?php include_once "./assets/header.php";
+
+if ($devDomain == true) {
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+}
+
 if (!isset($_SESSION['user'])) {
-    include_once "assets/forms/login-popup.php";
+    $currentURl = $_SERVER['REQUEST_URI'];
+    createCookie("redirect", $currentURl, time() + 3600, "/");
+    include "./assets/forms/login-popup.php";
     return;
 }
 
@@ -18,19 +27,20 @@ if (isset($_GET['ip_history'])) {
     $security = "hidden";
     $ip_history = "hidden";
 }
+
+$avatar_bg = "background: black";
 ?>
         <div class="page-container">
-            <div class="profile-wallpaper">
+            <div class="wallpaper">
                 <img src="<?=$wallpaper?>">
             </div>
             <div class="profile">
                 <div class="profile-left">
-                    <!--i class="fa-regular fa-pen-to-square" onclick="changeWallpaper()"></i-->
                     <div class="profile-left-user">
-                        <div class="avatar" id="avatar">
+                        <div class="avatar" style="<?=$avatar_bg?>" id="avatar">
                             <img src="<?=$avatar?>">
-                            <!--i class="fa-regular fa-pen-to-square" onclick="changeAvatar()"></i-->
                         </div>
+                        <i class="fa-regular fa-pen-to-square" onclick="changeAvatar()"></i>
                         <div class="username">
                             <?=$username?>
                             <span>@<?=$username?></span>
@@ -67,14 +77,14 @@ if (isset($_GET['ip_history'])) {
                     <div id="tab-general" <?=$general?>>
                         <form method="post" enctype="multipart/form-data">
 
-                            <label class="avatar_select_area" for="avatar_select" id="avatar_preview">
+                            <label class="wallpaper_select_area" for="wallpaper_select" id="wallpaper_preview">
                                 <i class="fa-solid fa-camera"></i>
                             </label>
-                            <input type="file" name="avatar" id="avatar_select" hidden required>
+                            <input type="file" name="wallpaper" id="wallpaper_select" hidden required>
                             
                             <br>
 
-                            <input type="submit" name="update_avatar" value="Update avatar">
+                            <input type="submit" name="update_wallpaper" value="Update wallpaper">
                         </form>
                         <br><br>
                         <form method="post">
@@ -98,7 +108,7 @@ if (isset($_GET['ip_history'])) {
 
                             <h3>Name</h3>
                             <i class="fa-solid fa-user"></i>
-                            <input type="text" name="title_name" value="<?=$title_name?>" placeholder="Title">
+                            <input type="text" name="title_name" value="<?=$title_name?>" placeholder="Title name" required>
                             
                             <i class="fa-solid fa-user"></i>
                             <input type="text" name="first_name" value="<?=$first_name?>" placeholder="First name" required>
@@ -183,15 +193,15 @@ if (isset($_GET['ip_history'])) {
 
         <script>
             document.addEventListener("DOMContentLoaded", function() {
-                var avatarSelect = document.getElementById('avatar_select');
-                var avatarPreview = document.getElementById('avatar_preview');
+                var wallpaperSelect = document.getElementById('wallpaper_select');
+                var wallpaperPreview = document.getElementById('wallpaper_preview');
 
                 // Function to update the preview with the selected image
                 function updatePreview(file) {
                     if (file.type.startsWith('image/')) {
                         var reader = new FileReader();
                         reader.onload = function(e) {
-                            avatarPreview.innerHTML = '<img src="' + e.target.result + '" alt="Avatar">';
+                            wallpaperPreview.innerHTML = '<img src="' + e.target.result + '" alt="wallpaper">';
                         };
                         reader.readAsDataURL(file);
                     } else {
@@ -200,36 +210,36 @@ if (isset($_GET['ip_history'])) {
                 }
 
                 // Handling file selection via input
-                avatarSelect.addEventListener('change', function() {
+                wallpaperSelect.addEventListener('change', function() {
                     if (this.files.length > 0) {
                         updatePreview(this.files[0]);
                     }
                 });
 
                 // Handling drag and drop
-                avatarPreview.addEventListener('dragover', function(e) {
+                wallpaperPreview.addEventListener('dragover', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    avatarPreview.style.backgroundColor = '#f0f0f0'; // Optional: visual feedback
+                    wallpaperPreview.style.backgroundColor = '#f0f0f0'; // Optional: visual feedback
                 });
 
-                avatarPreview.addEventListener('dragleave', function(e) {
+                wallpaperPreview.addEventListener('dragleave', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    avatarPreview.style.backgroundColor = ''; // Optional: reset visual feedback
+                    wallpaperPreview.style.backgroundColor = ''; // Optional: reset visual feedback
                 });
 
-                avatarPreview.addEventListener('drop', function(e) {
+                wallpaperPreview.addEventListener('drop', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    avatarPreview.style.backgroundColor = ''; // Optional: reset visual feedback
+                    wallpaperPreview.style.backgroundColor = ''; // Optional: reset visual feedback
                     var dt = e.dataTransfer;
                     var file = dt.files[0];
                     updatePreview(file);
-                    avatarSelect.files = dt.files; // Update the file input
+                    wallpaperSelect.files = dt.files; // Update the file input
                 });
             });
-            document.getElementById('avatar_select').addEventListener('change', function(event) {
+            document.getElementById('wallpaper_select').addEventListener('change', function(event) {
                 // Get the file list from the input
                 var files = event.target.files;
 
@@ -245,7 +255,7 @@ if (isset($_GET['ip_history'])) {
                         // Define the onload event handler for the FileReader
                         reader.onload = function(e) {
                             // Set the preview's background to the image
-                            var preview = document.getElementById('avatar_preview');
+                            var preview = document.getElementById('wallpaper_preview');
                             preview.style.backgroundImage = 'url(' + e.target.result + ')';
                             preview.style.backgroundSize = 'cover';
                             preview.style.backgroundPosition = 'center';
@@ -266,10 +276,10 @@ if (isset($_GET['ip_history'])) {
                 }
             });
 
-            function avatarSize() {
-                document.getElementById('avatar').style.width = window.innerWidth+"px";
+            function wallpaperSize() {
+                document.getElementById('wallpaper').style.width = window.innerWidth+"px";
             }
-            //window.addEventListener("resize", avatarSize);
+            //window.addEventListener("resize", wallpaperSize);
 
             function setTab(tab) {
                 const general = document.getElementById('tab-general');
@@ -387,5 +397,61 @@ if (isset($_GET['ip_history'])) {
                 }
             }
         </script>
+
+        <div class="changeAvatar" hidden>
+            <i class="fa-solid fa-xmark" onclick="changeAvatar()"></i>
+            <form method="post" enctype="multipart/form-data">
+                <h3>Change avatar</h3>
+                <img src="<?=$Pavatar?>" id="previewavatar">
+                <div class="changeBtns">
+                    <input type="file" name="avatar" id="setavatar" accept="image/png, image/jpeg, image/gif" onchange="preViewAvatar(this)">
+                    <input type="submit" name="update_avatar" value="Update">
+                </div>
+            </form>
+        </div>
+    
+        <script>
+            function preViewAvatar(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('previewavatar').src = e.target.result;
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+            function stickyProfile() {
+                const avatar = document.getElementById('profile-left');
+                avatar.style.height = window.innerHeight - 125 +"px";
+            }
+
+            function avatarSize() {
+                document.getElementById('avatar').style.width = window.innerWidth+"px";
+            }
+            //window.addEventListener("resize", avatarSize);
+
+            function changeAvatar() {
+                const changeWallpaperElements = document.getElementsByClassName("changeWallpaper");
+                const changeAvatarElements = document.getElementsByClassName("changeAvatar");
+
+                for (let i = 0; i < changeAvatarElements.length; i++) {
+                    const element = changeAvatarElements[i];
+
+                    if (element.hasAttribute("hidden")) {
+                        element.removeAttribute("hidden");
+                    } else {
+                        element.setAttribute("hidden", "");
+                    }
+                }
+                for (let i = 0; i < changeWallpaperElements.length; i++) {
+                    const element = changeWallpaperElements[i];
+
+                    element.setAttribute("hidden", "");
+                }
+            }
+        </script>
+        <?php if (isMobile($userAgent) == false) {?>
+        <script>stickyProfile();</script>
+        <?php }?>
     </body>
 </html>

@@ -66,10 +66,12 @@
                 margin: 0 20%;
                 padding: 20px;
                 text-align: center;
-                background: white;
+                background: rgba(var(--mode),.5);
+                color: var(--mode-text);
                 box-sizing: border-box;
                 border-radius: 20px;
                 z-index: 3;
+                transition: all .5s ease-in-out;
             }
 
             .new_users {
@@ -353,7 +355,7 @@
             }
             .form input::placeholder,
             .form input[type=date]::placeholder {
-                color: var(--mode-text);
+                color: var(--mode-placeholder);
             }
             .form textarea {
                 width: 100%;
@@ -813,6 +815,11 @@
             #reg_table tr {
                 transition: all .3s ease-in-out;
             }
+            #reg_table {
+            }
+            #reg_table tr td {
+                padding: 10px;
+            }
             
             .info_text h2 {
                 margin: 0;
@@ -954,6 +961,7 @@
                 line-height: 15px;
                 color: var(--mode-text);
             }
+            
             label[for=login-remember] {
                 font-size: 12px;
             }
@@ -1082,6 +1090,15 @@
             .login-popup .normal_login {
                 vertical-align: top;
             }
+            .login .normal_login i.fa-square,
+            .login-popup .normal_login i.fa-square {
+                margin-left: -30px;
+                pointer-events: none;
+            }
+            .register i.fa-square {
+                margin-left: -40px;
+                pointer-events: none;
+            }
             .register input[type=submit] {
                 float: right;
                 width: 100%;
@@ -1127,6 +1144,7 @@
             .log-button,
             .reg-button {
                 display: flex;
+                align-items: center;
                 width: auto;
                 margin-top: 10px;
                 text-align: center;
@@ -2477,13 +2495,14 @@
                 width: 100%;
                 height: 100%;
                 backdrop-filter: blur(5px);
-                z-index: 10;
-                pointer-events: none;
+                z-index: 100;
             }
             .login-popup img {
                 width: 100px;
                 object-fit: cover;
             }
+
+            <?php if (isMobile($userAgent) == false) {?>
             .login-popup-box {
                 position: fixed;
                 top: 50%;
@@ -2491,8 +2510,6 @@
                 max-width: 500px;
                 transform: translate(-50%,-70%);
             }
-
-            <?php if (isMobile($userAgent) == false) {?>
             .image_viewer {
                 position: fixed;
                 display: flex;
@@ -2525,6 +2542,13 @@
                 backdrop-filter: blur(5px); 
             }
             <?php } else {?>
+            .login-popup-box {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                width: 90%;
+                transform: translate(-50%,-70%);
+            }
             .image_viewer {
                 position: fixed;
                 top: 0;
@@ -4081,7 +4105,7 @@
 
             /** PROFILE */
 
-            .profile-wallpaper {
+            .wallpaper {
                 position: fixed;
                 top: 0;
                 left: 0;
@@ -4090,7 +4114,7 @@
                 border-bottom: 2px solid black;
                 z-index: -1;
             }
-            .profile-wallpaper img {
+            .wallpaper img {
                 width: 100%;
                 height: 100%;
                 background-size: cover;
@@ -4111,7 +4135,6 @@
                 position: sticky;
                 top: 115px;
                 width: 30%;
-                height: calc(100vh - 125px);
             }
             .profile-left i {
                 position: absolute;
@@ -4169,24 +4192,17 @@
                 background: rgba(var(--mode),.1);
             }
             .profile-btns {
-                display: flex;
                 width: 100%;
-                margin: 20px 0;
+                padding-bottom: 5px;
             }
             #friend_actions {
-                height: 40px;
-                overflow-y: hidden;
-            }
-            #friend_actions:hover {
-                height: auto;
+                width: 100%;
             }
             .profile-btns button {
-                display: flex;
-                min-width: 35px;
-                width: auto;
+                width: 100%;
                 height: 35px;
-                margin: 3px;
-                padding: 10px;
+                margin: 3px 0px;
+                padding: 0 10px;
                 color: var(--mode-text);
                 background: rgba(var(--mode-invert),.1);
                 backdrop-filter: blur(5px);
@@ -4197,7 +4213,8 @@
                 overflow: hidden;
             }
             .profile-btns button:hover {
-                width: auto;
+                transform: scale(1.05);
+                background: rgba(var(--mode),.2);
                 cursor: pointer;
             }
             .profile-btns button i {
@@ -4208,11 +4225,7 @@
                 margin-left: -10px;
             }
             .profile-btns button span {
-                display: none;
                 padding-left: 25px;
-            }
-            .profile-btns button:hover span {
-                display: block;
             }
             .profile-btns button.red {
                 color: var(--mode-text);
@@ -4252,6 +4265,9 @@
             }
             .profile-right .post {
                 width: 100%;
+            }
+            .profile-right.form {
+                padding-top: 0px;
             }
             <?php } else {?>
             .profile-left {
@@ -4461,22 +4477,21 @@
                 background: rgba(var(--mode-invert),.1);
             }
 
-            .avatar_select_area {
+            .wallpaper_select_area {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                width: 200px;
+                width: 100%;
                 height: 200px;
-                margin: 0 auto;
-                border: 3px dashed rgba(var(--white-dark),.3);
-                border-radius: 50px;
+                border: 1px dashed rgba(255,255,255,.3);
+                border-radius: 20px;
                 cursor: pointer;
                 overflow: hidden;
             }
-            .avatar_select_area i {
+            .wallpaper_select_area i {
                 margin: 0;
             }
-            .avatar_select_area img {
+            .wallpaper_select_area img {
                 width: 100%;
                 max-width: 100%;
                 height: 100%;
@@ -4520,9 +4535,6 @@
                 overflow: hidden;
             }
             .settings {
-                width: 90%;
-                margin: 0 auto;
-                padding-bottom: 100px;
             }
             .settings h3 {
                 margin: 10px 0;

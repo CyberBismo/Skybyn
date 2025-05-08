@@ -22,7 +22,7 @@
                     <i class="fa-solid fa-key"></i>
                     <input type="password" pattern="^(?=.*[a-zà-ÿ])(?=.*[A-ZÀ-Ý])(?=.*\d)[\p{L}\d]{4,}$" id="login-password" onkeydown="hitEnterLogin(this)" placeholder="Password" oninvalid="setCustomValidity('Password must be at least 8 characters long, with at least one lowercase letter, one uppercase letter, and one digit.')" required>                <i class="fa-regular fa-eye" onclick="showPassword('login-password')"></i>
 
-                    <input type="checkbox" id="login-remember"><label for="login-remember">Remember me</label>
+                    <input type="checkbox" id="login-remember"><i class="fa-regular fa-square"></i><label for="login-remember">Remember me</label>
                     
                     <button id="login" onclick="login()">Sign in <i class="fa-solid fa-right-to-bracket"></i></button>
                 </div>

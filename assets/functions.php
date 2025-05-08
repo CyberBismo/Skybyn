@@ -695,21 +695,21 @@ function language($x,$y,$z) {
 }
 
 # Get user data
-function getUser($x, $y, $z) {
+function getUser($column, $data, $return) {
     # X = Lookup from column
     # Y = Lookup from column data
     # Z = Get column data result
     global $conn;
 
-    $user = $conn->query("SELECT * FROM `users` WHERE `$x`='$y'");
+    $user = $conn->query("SELECT * FROM `users` WHERE `$column`='$data'");
     if ($user->num_rows == 0) {
         return "error";
     } else {
-        $data = $user->fetch_assoc();
-        if ($x == "email") {
-            return decrypt($data[$z]);
+        $result = $user->fetch_assoc();
+        if ($column == "email") {
+            return decrypt($result[$return]);
         } else {
-            return $data[$z];
+            return $result[$return];
         }
     }
 }
@@ -822,16 +822,16 @@ function friendship($uid, $friend, $action) {
     }
 }
 # Check friendship
-function checkFriendship($uid,$friend) {
+function checkFriendship($user,$friend) {
     global $conn;
 
-    $checkFriendship = $conn->query("SELECT * FROM `friendship` WHERE `user_id`='$friend' AND `friend_id`='$uid'");
+    $checkFriendship = $conn->query("SELECT * FROM `friendship` WHERE `user_id`='$friend' AND `friend_id`='$user'");
     if ($checkFriendship->num_rows == 1) {
         $friendshipData = $checkFriendship->fetch_assoc();
         $status = $friendshipData['status'];
 
         if ($status == "friends") {
-            return "ok";
+            return "friends";
         } else {
             if ($status == "blocked") {
                 return "blocked";
@@ -1123,13 +1123,15 @@ if (isset($_POST['first-time'])) {
 
 # Forgot password
 if (isset($_POST['forgot'])) {
-    $email = $_POST['email'];
+    $username = $_POST['username'];
     $reset = rand(100000, 999999);
+    $msg = "If the username you provided exists, we have sent you an email with a link to reset your password. Remember to check your spam/trash.";
 
-    $checkEmail = $conn->query("SELECT * FROM `users` WHERE `email`='$email'");
-    $userData = $checkEmail->fetch_assoc();
-    $user_id = $userData['id'];
-    if ($checkEmail->num_rows == 1) {
+    $checkUser = $conn->query("SELECT * FROM `users` WHERE `username`='$username'");
+    if ($checkUser->num_rows == 1) {
+        $userData = $checkUser->fetch_assoc();
+        $user_id = $userData['id'];
+        $email = decrypt($userData['email']);
         $checkReset = $conn->query("SELECT * FROM `reset_codes` WHERE `userid`='$user_id'");
         if ($checkReset->num_rows == 1) {
             $setReset = $conn->query("UPDATE `reset_codes` SET `code`='$reset', `expiration_date`='$now' WHERE `userid`='$user_id'");
@@ -1257,9 +1259,11 @@ if (isset($_POST['forgot'])) {
         ';
     
         //mail($to, $subject, $message, $headers);
-        $msg = "If the e-mail address you provided is correct, we have sent a link for you to reset your password. Check your spam/inbox/trash.";
         createCookie("msg", $msg, "10", null);
-        ?><script>window.location.href = "../";</script><?php
+        ?><script>window.location.href = "../reset";</script><?php
+    } else {
+        createCookie("msg", $msg, "10", null);
+        ?><script>window.location.href = "../forgot";</script><?php
     }
 }
 
@@ -1310,14 +1314,52 @@ if (isset($_SESSION['user'])) {
     $wallpaper_margin = $UDRow['wallpaper_margin'];
     $country = $UDRow['country'];
     $darkmode = $UDRow['darkmode'];
-    $minecraft = $UDRow['minecraft'];
-    $habbo = $UDRow['habbo'];
-    $fivem = $UDRow['fivem'];
-
+    $last_url = $UDRow['last_url'];
     $verified = $UDRow['verified'];
+
+    $currentUrl = $_SERVER['REQUEST_URI'];
+
+    if (isNotEncrypted($email)) {
+        $email;
+    } else {
+        $email = decrypt($email);
+    }
+    if ($title_name != "") {
+        if (isNotEncrypted($title_name)) {
+            $title_name;
+        } else {
+            $title_name = decrypt($title_name);
+        }
+    }
+    if (isNotEncrypted($first_name)) {
+        $first_name;
+    } else {
+        $first_name = decrypt($first_name);
+    }
+    if (isNotEncrypted($middle_name)) {
+        $middle_name;
+    } else {
+        $middle_name = decrypt($middle_name);
+    }
+    if (isNotEncrypted($last_name)) {
+        $last_name;
+    } else {
+        $last_name = decrypt($last_name);
+    }
 
     $checkBetaAccess = $conn->query("SELECT `key` FROM `beta_access` WHERE `user_id`='$uid'");
     $beta = $checkBetaAccess && $checkBetaAccess->num_rows > 0;
+
+    if ($last_url != $currentUrl) {
+        $returnTo = $last_url;
+    } else {
+        $returnTo = "";
+    }
+
+    if ($token == "") {
+        $token = hash("sha512", rand(100000, 999999)."_".$uid."_".time());
+        $conn->query("UPDATE `users` SET `token`='$token' WHERE `id`='$uid'");
+    }
 
     if (!isset($_COOKIE['login_token'])) {
         createCookie("login_token",$token,"10","2");
@@ -1407,8 +1449,15 @@ if (isset($_SESSION['user'])) {
     ## Wallet
     $getWallet = $conn->query("SELECT * FROM `wallets` WHERE `user`='$uid'");
     $countWallets = $getWallet->num_rows;
-    $myWallet = $getWallet->fetch_assoc();
-    $wallet = $myWallet['wallet'];
+    if ($countWallets == 0) {
+        $createWallet = $conn->query("INSERT INTO `wallets` (`user`,`wallet`) VALUES ('$uid','0')");
+        $getWallet = $conn->query("SELECT * FROM `wallets` WHERE `user`='$uid'");
+        $myWallet = $getWallet->fetch_assoc();
+        $wallet = $myWallet['wallet'];
+    } else {
+        $myWallet = $getWallet->fetch_assoc();
+        $wallet = $myWallet['wallet'];
+    }
     
     // Chatting functionalities - DO NOT CHANGE
     if (isset($_POST['start_chat'])) { // Start chat
@@ -1463,7 +1512,7 @@ if (isset($_SESSION['user'])) {
         $getMessages = $conn->query("SELECT * FROM `messages` WHERE `from`='$uid' AND `to`='$friend' OR `from`='$friend' AND `to`='$uid' ORDER BY `date` ASC");
         if ($getMessages->num_rows > 0) {
             while ($msgData = $getMessages->fetch_assoc()) {
-                $msg = $msgData['content'];
+                $msg = decrypt($msgData['content']);
                 $msg_from = $msgData['from'];
                 $msg_to = $msgData['to'];
                 $msg_date = $msgData['date'];
@@ -1666,22 +1715,35 @@ if (isset($_POST['update_account'])) {
     $dob = $_POST['dob'];
     
     if ($newemail != $email) {
-        $checkEmail = mysqli_query($conn, "SELECT * FROM `users` WHERE `email`='$newemail'");
-        $count = mysqli_num_rows($checkEmail);
-        if ($count == 0) {
-            $conn->query("UPDATE `users` SET `email`='$newemail' WHERE `id`='$uid'");
+        $checkEmail = $conn->prepare("SELECT * FROM `users` WHERE `email` = ?");
+        $checkEmail->bind_param("s", $newemail);
+        $checkEmail->execute();
+        $result = $checkEmail->get_result();
+        if ($result->num_rows == 0) {
+            $newemail = encrypt($newemail); // Encrypt the new email
+            $updateEmail = $conn->prepare("UPDATE `users` SET `email` = ? WHERE `id` = ?");
+            $updateEmail->bind_param("si", $newemail, $uid);
+            $updateEmail->execute();
         }
+        $checkEmail->close();
     }
     if ($newusername != $username) {
-        $checkUsername = mysqli_query($conn, "SELECT * FROM `users` WHERE `username`='$newusername'");
-        $count = mysqli_num_rows($checkUsername);
-        if ($count == 0) {
-            $conn->query("UPDATE `users` SET `username`='$newusername' WHERE `id`='$uid'");
+        $checkUsername = $conn->prepare("SELECT * FROM `users` WHERE `username` = ?");
+        $checkUsername->bind_param("s", $newusername);
+        $checkUsername->execute();
+        $result = $checkUsername->get_result();
+        if ($result->num_rows == 0) {
+            $updateUsername = $conn->prepare("UPDATE `users` SET `username` = ? WHERE `id` = ?");
+            $updateUsername->bind_param("si", $newusername, $uid);
+            $updateUsername->execute();
         }
+        $checkUsername->close();
     }
     if (!empty($dob)) {
         if ($rank > 0) {
-            $conn->query("UPDATE `users` SET `birth_date`='$dob' WHERE `id`='$uid'");
+            $updateDob = $conn->prepare("UPDATE `users` SET `birth_date` = ? WHERE `id` = ?");
+            $updateDob->bind_param("si", $dob, $uid);
+            $updateDob->execute();
         }
     }
 

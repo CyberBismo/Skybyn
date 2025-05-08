@@ -1,4 +1,4 @@
-<?php include_once "functions.php";
+<?php include_once("../functions.php");
 
 $fid = $_POST['friend'];
 $amount = $_POST['amount'];

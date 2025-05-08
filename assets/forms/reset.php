@@ -17,7 +17,7 @@ if (isset($_GET['code'])) {
 }
 
 ?>
-                <script src="assets/js/jquery.min.js"></script>
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
                 <?php if ($expired) {?>
                 <h2>This code has expired</h2>
                 <?php } else {
@@ -48,6 +48,7 @@ if (isset($_GET['code'])) {
                     <span onclick="window.location.href='../'">Go back</span>
                 </div>
 
+                <?php if (!$resetOK) {?>
                 <script>
                     function checkCode(code) {
                         const ra = document.getElementById('ra');
@@ -60,12 +61,18 @@ if (isset($_GET['code'])) {
                                 code : code.value
                             }
                         }).done(function(response) {
-                            console.log(response);
                             if (response == "ok") {
                                 window.location.href = '../reset?code=' + code.value;
+                            } else {
+                                ra.classList.remove("fa-angle-right");
+                                ra.classList.add("fa-xmark");
+                                inputs.setAttribute("hidden","");
                             }
                         });
                     }
+                </script>
+                <?php } else {?>
+                <script>
                     function checkPassword() {
                         const pw = document.getElementById('pw').value;
                         const cpw = document.getElementById('cpw').value;
@@ -82,3 +89,4 @@ if (isset($_GET['code'])) {
                         }
                     }
                 </script>
+                <?php }?>

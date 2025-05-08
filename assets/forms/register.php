@@ -28,7 +28,7 @@
                     <div class="split">
                         <div class="split-box">
                             <i class="fa-solid fa-user"></i>
-                            <input type="name" id="fname" placeholder="First name *" required>
+                            <input type="name" id="fname" placeholder="First name *" onkeyup="nextStep()" required>
                         </div>
                         <div class="split-box">
                             <i class="fa-solid fa-user"></i>
@@ -36,36 +36,36 @@
                         </div>
                     </div>
                     <i class="fa-solid fa-user"></i>
-                    <input type="name" id="lname" placeholder="Last name *" required>
+                    <input type="name" id="lname" placeholder="Last name *" onkeyup="nextStep()" required>
                 </div>
 
                 <div id="set_email" style="display: none">
                     <p>Your preferred email address</p>
                     <i class="fa-solid fa-at"></i>
                     <input type="email" id="email-check" placeholder="Email">
-                    <input type="email" id="register-email" pattern="[a-zA-Z0-9._\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}" placeholder="E-mail address" title="example@example.com" oninput="setCustomValidity('')" oninvalid="setCustomValidity('Please enter a valid e-mail address')" required>
+                    <input type="email" id="register-email" pattern="[a-zA-Z0-9._\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}" placeholder="E-mail address" title="example@example.com" oninput="setCustomValidity('')" oninvalid="setCustomValidity('Please enter a valid e-mail address')" onkeyup="nextStep()" required>
                 </div>
 
                 <div id="set_email_verify" style="display: none">
                     <p>Enter the code we just sent you</p>
                     <i class="fa-solid fa-arrows-rotate" id="email-verify-status"></i>
-                    <input type="number" id="email-verify" pattern="[a-zA-Z0-9]" placeholder="Enter code" title="example@example.com" oninput="setCustomValidity('')" oninvalid="setCustomValidity('Please enter a valid e-mail address')" autocomplete="new-password" required>
+                    <input type="number" id="email-verify" pattern="[a-zA-Z0-9]" placeholder="Enter code" title="example@example.com" oninput="setCustomValidity('')" oninvalid="setCustomValidity('Please enter a valid e-mail address')" autocomplete="new-password" onkeyup="nextStep()" required>
                 </div>
 
                 <div id="set_username" style="display: none">
                     <p>Set your username</p>
                     <i class="fa-solid fa-user"></i>
-                    <input type="text" id="username" placeholder="Choose a username" title="" required>
+                    <input type="text" id="username" placeholder="Choose a username" title="" onkeyup="nextStep()" required>
                 </div>
 
                 <div id="set_password" style="display: none">
                     <p>Set a strong password</p>
                     <i class="fa-solid fa-key"></i>
-                    <input type="password" id="register-password" placeholder="Password" autocomplete="new-password" onkeyup="checkPw()" required>
+                    <input type="password" id="register-password" placeholder="Password" autocomplete="new-password" onkeyup="checkPw();nextStep()" required>
                     <i class="fa-regular fa-eye" onclick="showPassword('register-password')"></i>
                     
                     <i class="fa-solid fa-key"></i>
-                    <input type="password" id="cpassword" placeholder="Confirm password" autocomplete="new-password" onkeyup="checkPw()" required>
+                    <input type="password" id="cpassword" placeholder="Confirm password" autocomplete="new-password" onkeyup="checkPw();nextStep()" required>
                     <i class="fa-regular fa-eye" onclick="showPassword('cpassword')"></i>
 
                     <div class="password-strength">
@@ -88,7 +88,7 @@
                     <div class="refer_user" id="refer-user"></div>
                     <div class="check">
                         <input type="checkbox" id="terms" required>
-                        <label for="terms">I accept the <span onclick="showTerms()">terms and conditions</a>.</label>
+                        <label for="terms">I accept the <span onclick="showTerms()"><i class="fa-regular fa-square"></i>terms and conditions</a>.</label>
                     </div>
                 </div>
 
@@ -150,6 +150,14 @@
                         text.style.display = "none";
                         set.style.display = "flex";
                         btn.style.display = "block";
+                    }
+
+                    function nextStep() {
+                        document.addEventListener('keydown', function(event) {
+                            if (event.key === 'Enter') {
+                                hitEnterRegister();
+                            }
+                        });
                     }
 
                     function stepBack() {
@@ -287,11 +295,30 @@
                         
                         // Verify date of birth value and enter full name
                         if (set_dob.style.display != "none") {
-                            let step_one = false;
-                            if (dob_v) {
-                                step_one = true;
-                            }
-                            if (step_one == true) {
+                            const dob = new Date(dob_v);
+                            const today = new Date();
+                            // Check if the dob has a valid date
+                            if (isNaN(dob.getTime())) {
+                                err_msg.innerHTML = "Invalid date of birth.";
+                                err_msg.style.display = "block";
+                                setTimeout(() => {
+                                    err_msg.style.display = "none";
+                                }, 3000);
+                            } else
+                            if (dob > today) {
+                                err_msg.innerHTML = "Date of birth cannot be in the future.";
+                                err_msg.style.display = "block";
+                                setTimeout(() => {
+                                    err_msg.style.display = "none";
+                                }, 3000);
+                            } else
+                            if (dob.getFullYear() > today.getFullYear() - 15) {
+                                err_msg.innerHTML = "You must be at least 15 years old to register.";
+                                err_msg.style.display = "block";
+                                setTimeout(() => {
+                                    err_msg.style.display = "none";
+                                }, 3000);
+                            } else {
                                 info_text.style.display = "none";
                                 reg_info.style.display = "block";
 
@@ -305,13 +332,15 @@
                                 intro.style.display = "none";
                                 reg_info.style.display = "block";
                                 fname.focus();
-                                // Adding age to table
+                                // Adding age to table if not already added
+                                if (document.getElementById('reg-t-age')) {
+                                    document.getElementById('reg-t-age').remove();
+                                }
                                 tr = document.createElement('tr');
                                 tr.id = "reg-t-age";
                                 tr.style.opacity = 0;
                                 setTimeout(() => {
                                     tr.style.opacity = 1;
-                                    table.style.height = (table.offsetHeight + 30) + "px";
                                 }, 300);
                                 table.appendChild(tr);
                                 td = document.createElement('td');
@@ -332,13 +361,15 @@
                                 set_email.style.display = "block";
                                 email.focus();
                                 register.value = "Send code";
-                                // Adding name to table
+                                // Adding name to table if not already added
+                                if (document.getElementById('reg-t-name')) {
+                                    document.getElementById('reg-t-name').remove();
+                                }
                                 tr = document.createElement('tr');
                                 tr.id = "reg-t-name";
                                 tr.style.opacity = 0;
                                 setTimeout(() => {
                                     tr.style.opacity = 1;
-                                    table.style.height = (table.offsetHeight + 30) + "px";
                                 }, 300);
                                 table.appendChild(tr);
                                 td_name = document.createElement('td');
@@ -426,18 +457,24 @@
                                         send_again.style.display = "none";
                                         username.focus();
                                         register.value = "Continue";
+                                        // Adding email to table if not already added
+                                        if (document.getElementById('email-s')) {
+                                            document.getElementById('email-s').remove();
+                                        }
                                         td_email_v = document.createElement('td');
                                         td_email_v.id = "email-s";
                                         td_email_v.style.textAlign = "left";
                                         td_email_v.innerHTML = email.value;
                                     }
-                                    // Adding email to table
+                                    // Adding email to table if not already added
+                                    if (document.getElementById('reg-t-email')) {
+                                        document.getElementById('reg-t-email').remove();
+                                    }
                                     tr = document.createElement('tr');
                                     tr.id = "reg-t-email";
                                     tr.style.opacity = 0;
                                     setTimeout(() => {
                                         tr.style.opacity = 1;
-                                        table.style.height = (table.offsetHeight + 30) + "px";
                                     }, 300);
                                     table.appendChild(tr);
                                     td_email = document.createElement('td');
@@ -535,13 +572,15 @@
                                     set_pw.style.display = "block";
                                     register.style.display = "none";
                                     step_back.style.display = "block";
-                                    // Adding username to table
+                                    // Adding username to table if not already added
+                                    if (document.getElementById('reg-t-uname')) {
+                                        document.getElementById('reg-t-uname').remove();
+                                    }
                                     tr = document.createElement('tr');
                                     tr.id = "reg-t-uname";
                                     tr.style.opacity = 0;
                                     setTimeout(() => {
                                         tr.style.opacity = 1;
-                                        table.style.height = (table.offsetHeight + 30) + "px";
                                     }, 300);
                                     table.appendChild(tr);
                                     td_uname = document.createElement('td');
@@ -576,13 +615,15 @@
                                         x = x + "*";
                                     }
                                 }
-                                // Adding password to table
+                                // Adding password to table if not already added
+                                if (document.getElementById('reg-t-pw')) {
+                                    document.getElementById('reg-t-pw').remove();
+                                }
                                 tr = document.createElement('tr');
                                 tr.id = "reg-t-pw";
                                 tr.style.opacity = 0;
                                 setTimeout(() => {
                                     tr.style.opacity = 1;
-                                    table.style.height = (table.offsetHeight + 30) + "px";
                                 }, 300);
                                 table.appendChild(tr);
                                 td_pw = document.createElement('td');
@@ -731,70 +772,68 @@
                     };
 
                     function selectPackage(x) {
-                        let set_dob = document.getElementById('set_dob');
-                        let set_name = document.getElementById('set_name');
-                        let set_email = document.getElementById('set_email');
-                        let set_email_c = document.getElementById('set_email_verify');
-                        let set_username = document.getElementById('set_username');
-                        let set_pw = document.getElementById('set_password');
-                        let set_terms = document.getElementById('set_terms');
-                        let send_again = document.getElementById('send_again');
-                        let register = document.getElementById('register');
-                        let step_back = document.getElementById('step_back');
-                        let err_msg = document.getElementById('err_msg');
+                        const set_dob = document.getElementById('set_dob');
+                        const set_name = document.getElementById('set_name');
+                        const set_email = document.getElementById('set_email');
+                        const set_email_c = document.getElementById('set_email_verify');
+                        const set_username = document.getElementById('set_username');
+                        const set_pw = document.getElementById('set_password');
+                        const set_terms = document.getElementById('set_terms');
+                        const send_again = document.getElementById('send_again');
+                        const register = document.getElementById('register');
+                        const step_back = document.getElementById('step_back');
+                        const err_msg = document.getElementById('err_msg');
 
-                        const dob_v = document.getElementById('dob').value;
+                        const fname = document.getElementById('fname');
+                        const mname = document.getElementById('mname');
+                        const lname = document.getElementById('lname');
+                        const email_c = document.getElementById('email-check');
+                        const email = document.getElementById('register-email');
+                        const email_verify = document.getElementById('email-verify');
+                        const username = document.getElementById('username');
+                        const pw = document.getElementById('register-password');
+                        const cpw = document.getElementById('cpassword');
+                        const refer = document.getElementById('refer').value;
+
+                        const dobInput = document.getElementById('dob');
+                        const dob_v = dobInput.value;
                         const age = calculateAge(dob_v);
-                        
-                        const fname = document.getElementById('fname'); // First name
-                        const mname = document.getElementById('mname'); // Middle name
-                        const lname = document.getElementById('lname'); // Last name
 
-                        const email_c = document.getElementById('email-check'); // Email check (special)
-                        const email = document.getElementById('register-email'); // Email
-                        const email_verify = document.getElementById('email-verify'); // Email code verify
-                        const username = document.getElementById('username'); // Username
-                        const pw = document.getElementById('register-password'); // Password
-                        const cpw = document.getElementById('cpassword'); // Confirm password
-                        const refer = document.getElementById('refer').value; // Referral code
-                        
-                        if (reg_packs.style.display != "none") {
-                            const ppr = document.getElementById('ppr');
-                            const ppu = document.getElementById('ppu');
-                            const vv = document.getElementById('vv');
-                            const vi = document.getElementById('vi');
-                            if (x == "op") {
-                                pack = "op";
-                            } else 
-                            if (x == "pp") {
-                                pack = "pp";
-                            } else {
-                                pack = "cp";
-                            }
-                            
-                            var private;
-                            var public;
-                            var visible;
-                            var invisible;
+                        const reg_packs = document.getElementById('reg_packs');
+                        const reg_form = document.getElementById('log_reg_form');
+                        const reg_info = document.getElementById('reg_info');
+                        const start = document.getElementsByClassName('start')[0];
+                        const welcomeScreen = document.getElementById('welcomeScreen'); // <-- Make sure you have this ID in your HTML!
 
-                            if (pack == "cp") {
-                                private = ppr.value;
-                                public = ppu.value;
-                                visible = vv.value;
-                                invisible = vi.value;
+                        if (reg_packs && reg_packs.style.display !== "none") {
+                            let pack = "cp"; // default
+                            if (x === "op") pack = "op";
+                            else if (x === "pp") pack = "pp";
+
+                            let privateValue = null;
+                            let publicValue = null;
+                            let visibleValue = null;
+                            let invisibleValue = null;
+
+                            if (pack === "cp") {
+                                const ppr = document.getElementById('ppr');
+                                const ppu = document.getElementById('ppu');
+                                const vv = document.getElementById('vv');
+                                const vi = document.getElementById('vi');
+
+                                privateValue = ppr?.value || '';
+                                publicValue = ppu?.value || '';
+                                visibleValue = vv?.value || '';
+                                invisibleValue = vi?.value || '';
                             }
 
-                            // Disable all buttons and inputs, and show a loading animation while waiting for registration status.
-                            const reg_packs = document.getElementById('reg_packs');
-                            const reg_form = document.getElementById('log_reg_form');
-                            const reg_info = document.getElementById('reg_info');
-                            const welcomeScreen = document.getElementById('welcome-screen');
                             reg_packs.style.display = "none";
-                            welcomeScreen.style.display = "block";
+                            start.style.display = "block";
 
                             $.ajax({
                                 url: '../assets/signup.php',
                                 type: "POST",
+                                dataType: "json", // Tell jQuery you expect JSON back
                                 data: {
                                     username: username.value,
                                     fname: fname.value,
@@ -803,28 +842,37 @@
                                     email: email.value,
                                     email_c: email_c.value,
                                     password: pw.value,
-                                    dob: dob.value,
+                                    dob: dob_v,
                                     pack: pack,
-                                    private: private,
-                                    public: public,
-                                    visible: visible,
-                                    invisible: invisible,
+                                    private: privateValue,
+                                    public: publicValue,
+                                    visible: visibleValue,
+                                    invisible: invisibleValue,
                                     refer: refer
                                 }
                             }).done(function(response) {
+                                console.log(response);
+
                                 if (response.responseCode === "ok") {
-                                    window.location.href='../register?complete&user='+response.user+'&token='+response.token;
+                                    window.location.href = `../register?complete&user=${response.user}&token=${response.token}`;
                                 } else {
-                                    welcomeScreen.style.display = "none";
+                                    start.style.display = "none";
                                     reg_packs.style.display = "block";
                                     err_msg.style.display = "block";
-                                    err_msg.innerHTML = response.responseMessage;
+                                    err_msg.innerHTML = response.message || "An error occurred.";
                                     setTimeout(() => {
                                         err_msg.style.display = "none";
                                     }, 3000);
                                 }
-                            }).fail(function(response) {
-                                console.log(response);
+                            }).fail(function(jqXHR, textStatus, errorThrown) {
+                                console.error("Registration failed:", textStatus, errorThrown);
+                                start.style.display = "none";
+                                reg_packs.style.display = "block";
+                                err_msg.style.display = "block";
+                                err_msg.innerHTML = "Server error. Please try again.";
+                                setTimeout(() => {
+                                    err_msg.style.display = "none";
+                                }, 3000);
                             });
                         }
                     }

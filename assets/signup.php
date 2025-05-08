@@ -1,5 +1,13 @@
 <?php require_once "./functions.php";
 
+// Create error log file if it doesn't exist and log errors
+if (!file_exists('error_log.txt')) {
+    file_put_contents('error_log.txt', '');
+}
+ini_set('log_errors', 1);
+ini_set('error_log', 'error_log.txt');
+error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT & ~E_WARNING);
+
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, GET");
 header("Access-Control-Allow-Headers: Content-Type");
@@ -9,19 +17,24 @@ $dob = isset($_POST['dob']) ? $_POST['dob'] : '';
 $fname = isset($_POST['fname']) ? encrypt($_POST['fname']) : '';
 $mname = isset($_POST['mname']) ? encrypt($_POST['mname']) : '';
 $lname = isset($_POST['lname']) ? encrypt($_POST['lname']) : '';
-$email = isset($_POST['email']) ? encrypt($_POST['email']) : '';
+$email = isset($_POST['email']) ? $_POST['email'] : '';
 $email_c = isset($_POST['email_c']) ? $_POST['email_c'] : '';
 $username = isset($_POST['username']) ? $_POST['username'] : '';
 $refer = isset($_POST['refer']) ? $_POST['refer'] : '';
+
 $password = isset($_POST['password']) ? hash("sha512", $_POST['password']) : '';
 $salt = hash("sha512", rand());
 $pw = hash("sha512", $salt . "_" . $password);
+
 $ip = encrypt(getIP());
-$country = geoData("countryName");
-$lang = geoData("countryCode");
+$country = "";#function_exists('geoData') ? geoData("countryName") : '';
+$lang = "";#function_exists('geoData') ? geoData("countryCode") : '';
 $pack = isset($_POST['pack']) ? $_POST['pack'] : '';
 
 $token = rand();
+$now = time();
+
+$e_email = encrypt($email);
 
 if (isset($_POST['private'])) {
     $private = "1";
@@ -37,7 +50,7 @@ if (isset($_POST['visible'])) {
 
 $cleanEmailCheck = $conn->query("DELETE FROM `email_check` WHERE `email`='$email'");
 if ($email_c == "" && $dob != "" && $email != "" && $username != "" && $password != "") {
-    $conn->query("INSERT INTO `users` (`username`,`email`,`birth_date`,`password`,`salt`,`registration_date`,`token`,`ip`) VALUES ('$username','$email','$dob','$pw','$salt','$now','$token','$ip')");
+    $conn->query("INSERT INTO `users` (`username`,`email`,`birth_date`,`password`,`salt`,`registration_date`,`token`,`first_name`,`middle_name`,`last_name`,`private`,`visible`,`country`) VALUES ('$username','$e_email','$dob','$pw','$salt',$now,'$token','$fname','$mname','$lname','$private','$visible','$country')");
 
     $id = $conn->insert_id;
     

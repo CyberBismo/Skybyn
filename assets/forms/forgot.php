@@ -1,8 +1,8 @@
                 <h2>Forgot your password?</h2>
                 <form method="post">
                     
-                    <i class="fa-solid fa-at"></i>
-                    <input type="email" name="email" placeholder="Enter e-mail address" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" required title="example@example.com" oninput="setCustomValidity('')" oninvalid="setCustomValidity('Please enter a valid email address')" autofocus>
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" name="username" placeholder="Enter your username" required>
 
                     <input type="submit" name="forgot" value="Request password reset">
                 </form>

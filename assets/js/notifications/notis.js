@@ -11,6 +11,7 @@ function showNotifications() {
             notiList.innerHTML = response;
         });
     }
+    checkNoti();
 }
 
 function showNoti(x) {
@@ -43,10 +44,10 @@ function showNoti(x) {
             notWin_user.innerHTML = "Skybyn";
         }
         if (noti_profile !== null) {
-            var profileURL = "window.location.href='./profile?u="+noti_profile+"'";
+            var profileURL = "window.location.href='./profile/"+noti_profile+"'";
             notWin_foot_profile.setAttribute("onclick",profileURL);
         } else {
-            var profileURL = "window.location.href='./profile?u="+data.notiUserUsername+"'";
+            var profileURL = "window.location.href='./profile/"+data.notiUserUsername+"'";
             notWin_foot_profile.setAttribute("onclick",profileURL);
         }
         notWin_text.innerHTML = data.noti_content;
@@ -64,6 +65,7 @@ function showNoti(x) {
             }
         });
     });
+    checkNoti();
 }
 
 function closeNotiWin() {
@@ -88,6 +90,7 @@ function readNoti() {
             noti_status[i].innerHTML = '<i class="fa-solid fa-envelope-open-text"></i>';
         }
     });
+    checkNoti();
 }
 
 function delNoti(x) {

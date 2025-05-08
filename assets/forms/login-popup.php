@@ -1,7 +1,7 @@
 <div class="login-popup">
         <div class="login-popup-box">
             <div class="center_form" id="log_reg_form">
-                <center><img src="assets/images/logo_faded_clean.png"></center>
+                <center><img src="../assets/images/logo_faded_clean.png" onclick="window.location.href='/'" alt="Skybyn Logo" class="logo"></center>
                 <div class="form">
                     <?php include_once "assets/forms/login.php";?>
                 </div>

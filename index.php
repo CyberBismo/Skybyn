@@ -127,6 +127,20 @@ if (isset($_COOKIE['logged'])) {
         }
     </script>
     <?php }?>
+
+    <?php if (isset($_COOKIE['msg'])) { ?>
+        <div class="msg">
+            <span><?php echo $_COOKIE['msg']; ?></span>
+        </div>
+    <?php } ?>
+    <script>
+        setTimeout(function() {
+            const msgElement = document.querySelector('.msg');
+            if (msgElement) {
+                msgElement.style.display = 'none';
+            }
+        }, 5000);
+    </script>
 </div>
 
 <div class="reg-packs" id="reg_packs" style="display: none">

@@ -89,7 +89,7 @@ function startSearch(x) {
                             const userDiv = document.createElement('div');
                             userDiv.classList.add('search_res_user');
                             userDiv.setAttribute('data-username', user.username);
-                            userDiv.onclick = () => window.location.href = `../profile?user=${user.username}`;
+                            userDiv.onclick = () => window.location.href = `../profile/${user.username}`;
 
                             const avatarDiv = document.createElement('div');
                             avatarDiv.classList.add('search_res_user_avatar');
@@ -110,7 +110,7 @@ function startSearch(x) {
                     res.groups.forEach(group => {
                         const groupDiv = document.createElement('div');
                         groupDiv.classList.add('search_res_group');
-                        groupDiv.onclick = () => window.location.href = `./group?g=${group.id}`;
+                        groupDiv.onclick = () => window.location.href = `./group/${group.id}`;
 
                         const avatarDiv = document.createElement('div');
                         avatarDiv.classList.add('search_res_group_avatar');
@@ -130,7 +130,7 @@ function startSearch(x) {
                     res.pages.forEach(page => {
                         const pageDiv = document.createElement('div');
                         pageDiv.classList.add('search_res_page');
-                        pageDiv.onclick = () => window.location.href = `./page?p=${page.id}`;
+                        pageDiv.onclick = () => window.location.href = `./page/${page.id}`;
 
                         const avatarDiv = document.createElement('div');
                         avatarDiv.classList.add('search_res_page_avatar');
@@ -162,6 +162,7 @@ function startSearch(x) {
 function feedbackInfo() {
     alert("This is a BETA feature.\n\nPlease report any bugs or issues you find.\nYour ID and current timestamp will be stored with what you submit.\n\nThank you for your help and feedback!");
 }
+
 document.querySelectorAll('#unsolved').forEach(item => {
     item.addEventListener('mouseover', event => {
         item.classList.remove('fa-regular', 'fa-circle');
@@ -172,6 +173,7 @@ document.querySelectorAll('#unsolved').forEach(item => {
         item.classList.add('fa-regular', 'fa-circle');
     });
 });
+
 function sendFeedback() {
     const feedback = document.getElementById('beta-feedback-text').value;
     const currentPage = window.location.href;
@@ -190,6 +192,7 @@ function sendFeedback() {
         });
     }
 }
+
 function deleteFeedback(x) {
     $.ajax({
         url: '../assets/feedback.php',
@@ -202,6 +205,7 @@ function deleteFeedback(x) {
         }
     });
 }
+
 function solveFeedback(x) {
     $.ajax({
         url: '../assets/feedback.php',
@@ -480,69 +484,19 @@ function friExpand() {
     }
 }
 
-function friendAction(friend, action) {
-    const actions = document.getElementById('friend_actions');
-    const buttons = {
-        send: `
-            <button class="blue" onclick="friendAction('${friend}', 'send')">
-                <i class="fa-solid fa-user-plus"></i> <span>Send friend request</span>
-            </button>`,
-        cancel: `
-            <button onclick="friendAction('${friend}', 'cancel')">
-                <i class="fa-solid fa-user-xmark"></i> <span>Cancel friend request</span>
-            </button>`,
-        unfriend: `
-            <button onclick="friendAction('${friend}', 'unfriend')">
-                <i class="fa-solid fa-user-minus"></i> <span>Unfriend</span>
-            </button>`,
-        block: `
-            <button class="red" onclick="friendAction('${friend}', 'block')">
-                <i class="fa-solid fa-user-slash"></i> <span>Block</span>
-            </button>`,
-        unblock: `
-            <button class="red" onclick="friendAction('${friend}', 'unblock')">
-                <i class="fa-solid fa-user-slash"></i> <span>Unblock</span>
-            </button>`,
-        report: `
-            <button class="orange" onclick="friendAction('${friend}', 'report')">
-                <i class="fa-solid fa-triangle-exclamation"></i> <span>Report</span>
-            </button>`
-    };
-
-    const templates = {
-        "Friend request sent.": buttons.cancel + buttons.block + buttons.report,
-        "Friend request accepted.": buttons.unfriend + buttons.block + buttons.report,
-        "Friend request ignored.": buttons.send + buttons.block + buttons.report,
-        "Friend request canceled.": buttons.send + buttons.block + buttons.report,
-        "Unfriended.": buttons.send + buttons.block + buttons.report,
-        "Blocked.": buttons.unblock + buttons.report,
-        "Unblocked.": buttons.send + buttons.block + buttons.report
-    };
-    if (action == "check") {
-        $.ajax({
-            url: '../assets/friendship.php',
-            type: 'POST',
-            data: { friend, action }
-        }).done(function(response) {
-            
-        });
-    } else {
-        $.ajax({
-            url: '../assets/friendship.php',
-            type: 'POST',
-            data: { friend, action }
-        }).done(function(response) {
-            if (templates[response]) {
-                actions.innerHTML = templates[response];
-                ws.send(JSON.stringify({
-                    type: 'notify',
-                    to: friend
-                }));
-            } else {
-                alert(`Error: ${response}`);
-            }
-        });
-    }
+function friendAction(action, friend) {
+    $.ajax({
+        url: '../assets/friendship.php',
+        type: 'POST',
+        data: { friend, action }
+    }).done(function() {
+        if (ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify({
+                type: 'notification',
+                to: friend
+            }));
+        }
+    });
 }
 
 // Function to extract metadata from a given URL

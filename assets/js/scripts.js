@@ -1,3 +1,40 @@
+// Register Service worker for push notifications
+if ('serviceWorker' in navigator && 'PushManager' in window) {
+    navigator.serviceWorker.register('/assets/js/service-worker.js')
+    .then(swReg => {
+        //console.log('Service Worker registered:', swReg);
+
+        return Notification.requestPermission().then(permission => {
+            if (permission === 'granted') {
+                subscribeUser(swReg);
+            }
+        });
+    });
+}
+
+function subscribeUser(swReg) {
+    const applicationServerKey = urlBase64ToUint8Array('BNmqMQ9fopNj8r1bsuTLuXSXXeVchRCzOrAF04xHQNNvZzIAsARBBAvuFCrSg8J6FCOktIR4NyN-wVa-40llJks');
+    swReg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey
+    }).then(subscription => {
+        // Send subscription to your server
+        fetch('../assets/save-subscription.php', {
+            method: 'POST',
+            body: JSON.stringify(subscription),
+            headers: { 'Content-Type': 'application/json' }
+        });
+    });
+}
+
+function urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+    const rawData = atob(base64);
+    return new Uint8Array([...rawData].map(char => char.charCodeAt(0)));
+}
+
+
 // Prioritixe loading speed by loading images "lazy"
 document.addEventListener("DOMContentLoaded", function() {
     const images = document.querySelectorAll('img');
@@ -504,7 +541,29 @@ function setQRSize() {
 }
 
 function checkBetaCode(code) {
-    if (code.length > 9)
-    document.cookie = "beta="+code+"; path=/";
-    window.location.reload();
+    const value = code.value;
+    if (typeof value === 'string' && value.length > 9) {
+        const date = new Date();
+        date.setTime(date.getTime() + (30 * 24 * 60 * 60 * 1000)); // 30 days
+        
+        $.ajax({
+            url: './assets/checkBetaCode.php',
+            type: "POST",
+            data: {
+                code : value
+            }
+        }).done(function(response) {
+            if (response === "ok") {
+                document.cookie = "beta=" + value + "; expires=" + date.toUTCString() + "; path=/";
+                window.location.reload();
+            } else {
+                code.value = "Invalid code";
+                code.style.color = "red";
+                setTimeout(() => {
+                    code.value = "";
+                    code.style.color = "white";
+                }, 3000);
+            }
+        });
+    }
 }
