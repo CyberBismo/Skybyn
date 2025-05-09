@@ -13,8 +13,7 @@ function createMessageBox(user_id,friend_id) {
                     <span id="msg_user_name_${fid}"></span>
                 </div>
                 <div class="message-actions">
-                    <div class="message-min" onclick="maximizeMessageBox('${fid}')"><i class="fa-solid fa-chevron-down" id="msg_min_${fid}"></i></div>
-                    <div class="message-close" onclick="closeMessageBox('${fid}')"><i class="fa-solid fa-xmark"></i></div>
+                    <div class="message-close" onclick="closeMessageBox('<?=$friend?>')"><i class="fa-solid fa-xmark"></i></div>
                 </div>
             </div>
             <div class="message-body" id="message_body_${fid}"></div>
@@ -74,17 +73,33 @@ function startMessaging(user_id,friend_id) {
 
 function openMessages() {
     const msgBox = document.getElementById('msg_con');
-    const msgBbls = msgBox.querySelectorAll('.message-box-icon');
+    const msgIcon = msgBox.querySelectorAll('.icon');
     if (msgBox.style.height == "auto") {
-        msgBox.style.height = "50px";
+        msgBox.style.height = "0";
         let messageBoxes = document.querySelectorAll('.message-box');
         messageBoxes.forEach(box => {
             if (box.classList.contains('open')) {
                 box.classList.remove('open');
             }
         });
+        msgIcon.forEach(iconContainer => {
+            iconContainer.querySelectorAll('i').forEach(icon => {
+                icon.classList.remove('fa-solid');
+                icon.classList.remove('fa-xmark');
+                icon.classList.add('fa-regular');
+                icon.classList.add('fa-message');
+            });
+        });
     } else {
         msgBox.style.height = "auto";
+        msgIcon.forEach(iconContainer => {
+            iconContainer.querySelectorAll('i').forEach(icon => {
+                icon.classList.remove('fa-regular');
+                icon.classList.remove('fa-message');
+                icon.classList.add('fa-solid');
+                icon.classList.add('fa-xmark');
+            });
+        });
     }
 }
 

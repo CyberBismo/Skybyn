@@ -19,6 +19,24 @@ function device() {
     return device;
 }
 
+function isLikelyTeslaBrowser() {
+  const ua = navigator.userAgent;
+  const isChromium = ua.includes("Chrome") || ua.includes("Chromium");
+  const noWebRTC = typeof RTCPeerConnection === "undefined";
+  const lowWebGL = (() => {
+    try {
+      const canvas = document.createElement('canvas');
+      return !canvas.getContext('webgl');
+    } catch (e) {
+      return true;
+    }
+  })();
+  const resolution = window.screen.width + "x" + window.screen.height;
+  const lowRes = parseInt(window.screen.height) < 800;
+
+  return isChromium && noWebRTC && lowWebGL && lowRes;
+}
+
 function urlBase64ToUint8Array(base64String) {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
     const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');

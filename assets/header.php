@@ -796,12 +796,26 @@ if (isset($_GET['signup'])) {
             <div class="icon" onclick="openMessages()"><i class="fa-regular fa-message"></i></div>
             <?php }?>
             <?php if (isset($_SESSION['user'])) { if (getuser("id",$_SESSION['user'],"rank") > 3) {include_once './assets/design/chat_popup.php';}}?>
-            <?php
-            $checkActiveChats = $conn->query("SELECT * FROM `active_chats` WHERE `user`='$uid'");
+            <?php if (isMobile($userAgent) == false) {
+                $checkActiveChats = $conn->query("SELECT * FROM `active_chats` WHERE `user`='$uid'");
+            } else {
+                $checkActiveChats = $conn->query("SELECT * FROM `friendship` WHERE `user_id`='$uid' AND `status`='friends'");
+            }
             if ($checkActiveChats->num_rows > 0) {
                 while ($chatData = $checkActiveChats->fetch_assoc()) {
-                    $friend = $chatData['friend'];
-                    $open = $chatData['open'];
+                    if (isMobile($userAgent) == false) {
+                        $friend = $chatData['friend'];
+                        $open = $chatData['open'];
+
+                        if ($open == "1") {
+                            $open = " maximized";
+                        } else {
+                            $open = "";
+                        }
+                    } else {
+                        $friend = $chatData['friend_id'];
+                    }
+                    
                     $getFriendData = $conn->query("SELECT * FROM `users` WHERE `id`='$friend'");
                     $friendData = $getFriendData->fetch_assoc();
                     $friend_username = $friendData['username'];
@@ -809,29 +823,19 @@ if (isset($_GET['signup'])) {
                     if ($friend_avatar == "../") {
                         $friend_avatar = "../assets/images/logo_faded_clean.png";
                     }
-                    if ($open == "1") {
-                        $open = " maximized";
-                        $icon = "fa-chevron-down";
-                    } else {
-                        $open = "";
-                        $icon = "fa-chevron-up";
-                    }
                 ?>
                 <div class="message-box-icon" onclick="showChat('<?=$friend?>')">
                     <img src="<?=$friend_avatar?>">
                 </div>
                 <div class="message-box<?=$open?>" id="message_box_<?=$friend?>">
-                    <div class="message-header">
-                        <div class="message-user" onclick="maximizeMessageBox('<?=$friend?>')">
+                    <div class="message-header" onclick="maximizeMessageBox('<?=$friend?>')">
+                        <div class="message-user">
                             <img src="<?=$friend_avatar?>" id="msg_user_avatar_<?=$friend?>">
                             <span id="msg_user_name_<?=$friend?>"><?=$friend_username?></span>
                         </div>
                         <div class="message-actions">
                             <?php if (isMobile($userAgent) == false) {?>
-                            <div class="message-min" onclick="maximizeMessageBox('<?=$friend?>')"><i class="fa-solid <?=$icon?>" id="msg_min_<?=$friend?>"></i></div>
                             <div class="message-close" onclick="closeMessageBox('<?=$friend?>')"><i class="fa-solid fa-xmark"></i></div>
-                            <?php } else {?>
-                                <div class="message-close" onclick="closeMessages()"><i class="fa-solid fa-xmark"></i></div>
                             <?php }?>
                         </div>
                     </div>

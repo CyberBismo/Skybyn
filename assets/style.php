@@ -3939,13 +3939,18 @@
                 flex-direction: column-reverse;
                 gap: 5px;
                 left: 20px;
-                bottom: 20px;
+                bottom: 80px;
                 width: 50px;
-                height: 50px;
+                height: 0;
                 overflow: hidden;
                 z-index: 10;
             }
             .message-container .icon {
+                position: fixed;
+                display: flex;
+                justify-content: center;
+                bottom: 20px;
+                left: 20px;
                 width: 50px;
                 height: 50px;
                 padding: 13px;
@@ -4021,6 +4026,8 @@
             }
             .message-header .message-actions {
                 display: flex;
+                justify-content: right;
+                align-items: right;
                 gap: 10px;
                 width: 50px;
                 text-align: center;
@@ -4327,10 +4334,10 @@
                 margin: 0 3px;
             }
             .profile-btns button {
-                width: 35px;
+                width: auto;
                 height: 35px;
-                margin: 3px;
-                padding: 10px 0;
+                margin: 3px 0px;
+                padding: 0 10px;
                 color: var(--mode-text);
                 background: rgba(var(--mode-invert),.1);
                 backdrop-filter: blur(5px);
@@ -4341,13 +4348,14 @@
                 overflow: hidden;
             }
             .profile-btns button:hover {
+                transform: scale(1.05);
+                background: rgba(var(--mode),.2);
                 cursor: pointer;
             }
             .profile-btns button i {
                 width: 35px;
                 height: 35px;
                 line-height: 35px;
-                margin-top: -10px;
             }
             .profile-btns button span {
                 display: none;

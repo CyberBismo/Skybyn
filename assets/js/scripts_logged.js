@@ -496,6 +496,7 @@ function friendAction(action, friend) {
                 to: friend
             }));
         }
+        window.location.reload();
     });
 }
 

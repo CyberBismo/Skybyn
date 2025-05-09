@@ -129,7 +129,7 @@ $avatar_bg = "background: black";
                         <form method="post">
                             <h3>Password</h3>
                             <i class="fa-solid fa-key"></i>
-                            <input type="password" name="password" placeholder="Old password" required>
+                            <input type="password" name="password" placeholder="Current password" required>
                             
                             <i class="fa-solid fa-key"></i>
                             <input type="password" name="password" placeholder="New password" required>
@@ -148,13 +148,17 @@ $avatar_bg = "background: black";
                             <h3>PIN code</h3>
                             <i class="fa-solid fa-key"></i>
                             <select name="pinv" style="width: 100%; margin-bottom: 5px; padding: 11px 20px; padding-left: 50px; background: white; border: none; border-radius: 10px; outline: none" onchange="setPIN(this)">
-                                <option disabled selected>-- Select --</option>
+                                <?php if ($pin_v == 0) {?>
+                                <option value="0" selected>No PIN set</option>
+                                <?php } else {?>
+                                <option value="<?=$pin_v?>" selected><?=$pin_v?> digit</option>
+                                <?php }?>
                                 <option value="4">4 digit</option>
                                 <option value="6">6 digit</option>
                                 <option value="8">8 digit</option>
                             </select>
                             
-                            <div id="set_pin" hidden>
+                            <div id="set_pin" <?php if ($pin_v == 0) {?>hidden<?php }?>>
                                 <i class="fa-solid fa-key"></i>
                                 <input type="password" name="pin" id="pin" placeholder="Enter PIN code" required>
                                 

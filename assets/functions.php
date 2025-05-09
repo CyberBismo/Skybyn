@@ -1317,6 +1317,9 @@ if (isset($_SESSION['user'])) {
     $last_url = $UDRow['last_url'];
     $verified = $UDRow['verified'];
 
+    $pin_v = $UDRow['pin_v'];
+    $pin = $UDRow['pin'];
+
     $currentUrl = $_SERVER['REQUEST_URI'];
 
     if (isNotEncrypted($email)) {
@@ -1751,10 +1754,10 @@ if (isset($_POST['update_account'])) {
 }
 
 if (isset($_POST['update_name'])) {
-    $fname = $_POST['first_name'];
-    $mname = $_POST['middle_name'];
-    $lname = $_POST['last_name'];
-    $tname = $_POST['title_name'];
+    $fname = encrypt($_POST['first_name']);
+    $mname = encrypt($_POST['middle_name']);
+    $lname = encrypt($_POST['last_name']);
+    $tname = encrypt($_POST['title_name']);
 
     if (!empty($fname)) {
         $conn->query("UPDATE `users` SET `first_name`='$fname' WHERE `id`='$uid'");

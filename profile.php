@@ -116,28 +116,28 @@ if ($result->num_rows == 1 && $unknownUser == false) {
                                 <div id="friend_action_buttons">
                                     <?php switch ($status):
                                         case "friends": ?>
-                                            <button id="fa_unfriend" onclick="friendAction('unfriend', '<?= $user_id ?>')">Unfriend</button>
-                                            <button id="fa_block" onclick="friendAction('block', '<?= $user_id ?>')">Block</button>
+                                            <button id="fa_unfriend" onclick="friendAction('unfriend', '<?= $user_id ?>')"><i class="fa-solid fa-user-minus"></i><span>Unfriend</span></button>
+                                            <button id="fa_block" onclick="friendAction('block', '<?= $user_id ?>')"><i class="fa-solid fa-user-slash"></i><span>Block</span></button>
                                             <?php break;
                                         case "sent": ?>
-                                            <button id="fa_cancel" onclick="friendAction('cancel', '<?= $user_id ?>')">Cancel</button>
-                                            <button id="fa_block" onclick="friendAction('block', '<?= $user_id ?>')">Block</button>
+                                            <button id="fa_cancel" onclick="friendAction('cancel', '<?= $user_id ?>')"><i class="fa-solid fa-xmark"></i><span>Cancel</span></button>
+                                            <button id="fa_block" onclick="friendAction('block', '<?= $user_id ?>')"><i class="fa-solid fa-user-slash"></i><span>Block</span></button>
                                             <?php break;
                                         case "received": ?>
-                                            <button id="fa_accept" onclick="friendAction('accept', '<?= $user_id ?>')">Accept</button>
-                                            <button id="fa_ignore" onclick="friendAction('ignore', '<?= $user_id ?>')">Ignore</button>
-                                            <button id="fa_block" onclick="friendAction('block', '<?= $user_id ?>')">Block</button>
+                                            <button id="fa_accept" onclick="friendAction('accept', '<?= $user_id ?>')"><i class="fa-solid fa-user-check"></i><span>Accept</span></button>
+                                            <button id="fa_ignore" onclick="friendAction('ignore', '<?= $user_id ?>')"><i class="fa-solid fa-xmark"></i><span>Ignore</span></button>
+                                            <button id="fa_block" onclick="friendAction('block', '<?= $user_id ?>')"><i class="fa-solid fa-user-slash"></i><span>Block</span></button>
                                             <?php break;
                                         case "blocked": ?>
-                                            <button id="fa_unblock" onclick="friendAction('unblock', '<?= $user_id ?>')">Unblock</button>
+                                            <button id="fa_unblock" onclick="friendAction('unblock', '<?= $user_id ?>')"><i class="fa-solid fa-user-check"></i><span>Unblock</span></button>
                                             <?php break;
                                         default: ?>
-                                            <button id="fa_send" onclick="friendAction('send', '<?= $user_id ?>')">Add Friend</button>
-                                            <button id="fa_block" onclick="friendAction('block', '<?= $user_id ?>')">Block</button>
+                                            <button id="fa_send" onclick="friendAction('send', '<?= $user_id ?>')"><i class="fa-solid fa-user-plus"></i><span>Add Friend</span></button>
+                                            <button id="fa_block" onclick="friendAction('block', '<?= $user_id ?>')"><i class="fa-solid fa-user-slash"></i><span>Block</span></button>
                                             <?php break;
                                         endswitch; ?>
+                                    <button class="red" onclick="reportUser('<?= $user_id ?>')"><i class="fa-solid fa-flag"></i><span>Report</span></button>
                                 </div>
-                                <button onclick="reportUser('<?= $user_id ?>')">Report</button>
                             </div>
                             <?php }?>
                         </div>
@@ -307,7 +307,7 @@ if ($result->num_rows == 1 && $unknownUser == false) {
                                 <?php }?>
                                 <div class="post_comments">
                                     <div class="post_comment_count"><div id="comments_count_<?=$post_id?>"><?=$comments?></div><i class="fa-solid fa-message"></i></div>
-                                    <?php if ($loggedIn) {?>
+                                    <?php if ($logged_in) {?>
                                     <div class="post_comment_new">
                                         <div class="post_comment_new_content">
                                             <input type="text" id="pc_<?=$post_id?>" onkeydown="hitEnter(this,<?=$post_id?>)" placeholder="Write a comment <?php if(isset($username)) {echo $username;}?>">
