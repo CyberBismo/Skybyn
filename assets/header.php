@@ -135,6 +135,12 @@ if (isset($_GET['signup'])) {
             <div class="cloud"></div>
         </div>
 
+        <?php if ($wallpaper != "../") {?>
+        <div class="wallpaper" id="wallpaper">
+            <img src="<?=$wallpaper?>" alt="Wallpaper">
+        </div>
+        <?php }?>
+
         <div class="header" id="header">
 
             <?php // Logo

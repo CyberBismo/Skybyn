@@ -406,7 +406,7 @@ $avatar_bg = "background: black";
             <i class="fa-solid fa-xmark" onclick="changeAvatar()"></i>
             <form method="post" enctype="multipart/form-data">
                 <h3>Change avatar</h3>
-                <img src="<?=$Pavatar?>" id="previewavatar">
+                <img src="<?=$avatar?>" id="previewavatar">
                 <div class="changeBtns">
                     <input type="file" name="avatar" id="setavatar" accept="image/png, image/jpeg, image/gif" onchange="preViewAvatar(this)">
                     <input type="submit" name="update_avatar" value="Update">

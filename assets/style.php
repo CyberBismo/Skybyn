@@ -2311,10 +2311,9 @@
             }
             <?php }?>
             .header .top .user-avatar {
-                max-width: 50px;
-                max-height: 50px;
+                width: 50px;
+                height: 50px;
                 border-radius: 10px;
-                object-fit: cover;
             }
             <?php if (isMobile($userAgent) == false) {?>
             .header .top .user-avatar {
@@ -2334,6 +2333,7 @@
             .header .top .user-avatar img {
                 width: 50px;
                 height: 50px;
+                object-fit: cover;
             }
             .header .top .user-nav {
                 height: 75px;
@@ -2806,6 +2806,7 @@
                 border-radius: 10px;
                 box-sizing: border-box;
                 overflow: hidden;
+                object-fit: cover;
             }
             .post_links iframe {
                 width: calc(100% - 20px);
