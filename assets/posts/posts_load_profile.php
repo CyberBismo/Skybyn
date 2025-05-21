@@ -37,7 +37,7 @@ while ($post = $getPosts->fetch_assoc()) {
         <div class="post_header">
             <div class="post_details">
                 <div class="post_user">
-                    <div class="post_user_image" onclick="window.location.href='../profile?u=<?=$post_user_name?>'">
+                    <div class="post_user_image" onclick="window.location.href='../profile/<?=$post_user_name?>'">
                         <img src="<?=$post_user_avatar?>">
                     </div>
                     <div class="post_user_name"><?=$post_user_name?></div>

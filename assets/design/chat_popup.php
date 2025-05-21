@@ -2,14 +2,15 @@
             <img src="../assets/images/logo_faded_clean.png">
         </div>
         <div class="message-box" id="message_box_0">
-            <div class="message-header">
-                <div class="message-user" id="message_user_0" onclick="maximizeMessageBox('0')">
+            <div class="message-header" onclick="maximizeMessageBox('0')">
+                <div class="message-user" id="message_user_0">
                     <img src="../assets/images/logo_faded_clean.png" id="msg_user_avatar_0">
                     <span id="msg_user_name_0">Friend</span>
                 </div>
                 <div class="message-actions">
-                    <div class="message-min" onclick="maximizeMessageBox('0')"><i class="fa-solid fa-chevron-up" id="msg_min_0"></i></div>
+                    <?php if (isMobile($userAgent) == false) {?>
                     <div class="message-close" onclick="closeMessageBox('0')"><i class="fa-solid fa-xmark"></i></div>
+                    <?php }?>
                 </div>
             </div>
             <div class="message-body" id="message_body_0">

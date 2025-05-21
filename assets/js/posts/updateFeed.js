@@ -57,7 +57,7 @@ function createPost() {
     submitButton.disabled = true;
 
     const formData = new FormData();
-    formData.append('text', text.value);
+    formData.append('content', text.value);
     for (let i = 0; i < image.files.length; i++) {
         formData.append('image[]', image.files[i]);
     }
@@ -183,6 +183,9 @@ function editPost(x) {
 }
 
 function deletePost(x) {
+    if (!confirm("Are you sure you want to delete this post?")) {
+        return;
+    }
     const post = document.getElementById('post_'+ x);
     post.remove();
     $.ajax({

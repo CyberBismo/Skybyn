@@ -1,10 +1,8 @@
 window.addEventListener('DOMContentLoaded', function() {
     const welcomeInner = document.getElementById('welcome-inner');
-    const welcomeClick = document.getElementById('welcome-click');
 
     setTimeout(function() {
         welcomeInner.classList.add('show');
-        welcomeClick.classList.add('show');
     }, 1000);
 
     const welcomeClouds = document.getElementById('welcome-clouds');
@@ -53,18 +51,23 @@ window.addEventListener('DOMContentLoaded', function() {
 
         moveCloud();
     }
+
+    setTimeout(() => {
+        hideWelcome();
+    }, 3500);
 });
+
 function hideWelcome() {
     const welcomeScreen = document.getElementById('welcome-screen');
-    const welcomeClick = document.getElementById('welcome-click');
     const login_email = document.getElementById('login-email');
 
     welcomeScreen.style.pointerEvents = "none";
     welcomeScreen.style.opacity = "0";
-    welcomeClick.style.opacity = "0";
 
     setTimeout(() => {
-        welcomeScreen.remove();
+        if (welcomeScreen) {
+            welcomeScreen.remove();
+        }
     }, 1000);
     if (login_email) {
         login_email.focus();

@@ -317,19 +317,19 @@ function adjustTextareaHeight() {
 }
 
 function hideMenus(event) {
-    const usermenu = document.getElementById('usermenu');
-    const notification = document.getElementById('notification');
-    const notifications = document.getElementById('notifications');
-    if (notifications.style.display == "block") {
-        if (!notifications.contains(event.target) && !notification.contains(event.target)) {
-            notifications.style.display = "none";
-        }
-    }
-    if (usermenu.style.display == "block") {
-        if (!usermenu.contains(event.target)) {
-            usermenu.style.display = "none";
-        }
-    }
+    //const usermenu = document.getElementById('usermenu');
+    //const notification = document.getElementById('notification');
+    //const notifications = document.getElementById('notifications');
+    //if (notifications.style.display == "block") {
+    //    if (!notifications.contains(event.target) && !notification.contains(event.target)) {
+    //        notifications.style.display = "none";
+    //    }
+    //}
+    //if (usermenu.style.display == "block") {
+    //    if (!usermenu.contains(event.target)) {
+    //        usermenu.style.display = "none";
+    //    }
+    //}
 }
 
 function showImage(x) {

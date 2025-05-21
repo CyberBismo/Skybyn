@@ -25,6 +25,9 @@ function sendComment(x) {
 }
 
 function delComment(x) {
+    if (!confirm("Are you sure you want to delete this comment?")) {
+        return;
+    }
     const comment = document.getElementById('comment_'+x);
     comment.remove();
     $.ajax({

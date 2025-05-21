@@ -1,8 +1,11 @@
 <?php include "../functions.php";
 
-if (!empty($_POST['text'])) {
+if (!empty($_POST['content'])) {
     //$public = $_POST['public'];
-    $text = encrypt(htmlentities($_POST['text'], ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+
+    $plain = htmlentities($_POST['content'], ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+    $text = encrypt($plain);
 
     $stmt = $conn->prepare("INSERT INTO `posts` (`user`, `content`, `created`) VALUES (?, ?, ?)");
     $stmt->bind_param("sss", $uid, $text, $now);

@@ -2067,14 +2067,6 @@
                 color: orange;
                 opacity: 0;
             }
-            .notification_alert.nat {
-                margin-left: 30px;
-                margin-top: -5px;
-            }
-            .notification_alert.nab {
-                margin-left: 18px;
-                margin-top: -7px;
-            }
             <?php if (isMobile($userAgent) == false) {?>
             .notifications {
                 position: fixed;
@@ -2090,6 +2082,14 @@
                 box-shadow: 10px 10px 23px -5px rgba(var(--mode),0.6);
                 z-index: 11;
             }
+            .notification_alert.nat {
+                margin-left: 30px;
+                margin-top: -5px;
+            }
+            .notification_alert.nab {
+                margin-left: 18px;
+                margin-top: -7px;
+            }
             <?php } else {?>
             .notifications {
                 position: fixed;
@@ -2103,6 +2103,9 @@
                 backdrop-filter: blur(5px);
                 box-shadow: 10px 10px 23px -5px rgba(var(--mode),0.6);
                 z-index: 11;
+            }
+            .notification_alert {
+                display: none;
             }
             <?php }?>
             .notifications i {
@@ -2307,6 +2310,12 @@
                 color: white;
             }
             <?php }?>
+            .header .top .user-avatar {
+                max-width: 50px;
+                max-height: 50px;
+                border-radius: 10px;
+                object-fit: cover;
+            }
             <?php if (isMobile($userAgent) == false) {?>
             .header .top .user-avatar {
                 height: 50px;
@@ -2324,11 +2333,7 @@
             <?php }?>
             .header .top .user-avatar img {
                 width: 50px;
-                max-width: 50px;
                 height: 50px;
-                max-height: 50px;
-                border-radius: 50px;
-                object-fit: cover;
             }
             .header .top .user-nav {
                 height: 75px;
@@ -2987,6 +2992,8 @@
                 width: 30px;
             }
             .post_comment_user_actions .btn {
+                display: flex;
+                justify-content: center;
                 width: 30px;
                 padding: 10px 10px 0 10px;
                 box-sizing: border-box;
@@ -3005,6 +3012,18 @@
             <?php } else {?>
             .post_comment_user span {
                 max-width: 200px;
+            }
+            .post_comment_user_actions {
+                float: right;
+                width: 30px;
+            }
+            .post_comment_user_actions .btn {
+                display: flex;
+                justify-content: center;
+                width: 30px;
+                padding: 10px 10px 0 10px;
+                box-sizing: border-box;
+                cursor: pointer;
             }
             .post_comment_content {
                 width: 100%;
@@ -3612,7 +3631,7 @@
                 backdrop-filter: blur(5px);
                 border-radius: 10px;
             }
-            .friend {
+            #friend-list .friend {
                 width: 100%;
                 height: 60px;
                 margin-bottom: 3px;
@@ -3620,12 +3639,13 @@
                 transition: background .5s, height .2s;
                 overflow: hidden;
                 backdrop-filter: blur(5px);
+                border-radius: 5px;
             }
-            .friend:hover {
+            #friend-list .friend:hover {
                 height: 90px;
                 cursor: pointer;
             }
-            .friend:hover .friend-actions {
+            #friend-list .friend:hover .friend-actions {
                 height: 30px;
             }
             .friend-user {
@@ -3653,7 +3673,7 @@
                 padding: 10px 0;
                 overflow: hidden;
             }
-            .friend-actions {
+            .friend .friend-actions {
                 display: flex;
                 width: 90%;
                 height: 0;
@@ -3664,16 +3684,16 @@
                 overflow: hidden;
                 transition: height .2s;
             }
-            .friend-action {
+            .friend-actions .friend-action {
                 width: 30px;
                 height: 20px;
             }
-            .friend-action i {
+            .friend-actions .friend-action i {
                 line-height: 30px;
                 padding: 0 10px;
                 text-align: center;
             }
-            .friend-action i:hover {
+            .friend-actions .friend-action i:hover {
                 background: rgba(var(--mode),.1);
             }
 
@@ -4059,7 +4079,13 @@
             }
             .message-body .message .message-user .message-user-avatar {
                 width: 30px;
-                padding: 0 10px;
+                height: 30px;
+                aspect-ratio: 1/1;
+                background: rgba(var(--mode),.3);
+                border-radius: 10px;
+                overflow: hidden;
+                object-fit: cover;
+                box-sizing: border-box;
             }
             .message-body .message .message-user .message-user-avatar img {
                 width: 100%;
@@ -4214,8 +4240,14 @@
                 width: 100%;
                 padding-bottom: 5px;
             }
-            #friend_actions {
+            .profile-btns .friend-actions {
+                position: relative;
                 width: 100%;
+                height: 40px;
+                overflow: hidden;
+            }
+            .profile-btns .friend-actions:hover {
+                height: auto;
             }
             .profile-btns button {
                 width: 100%;
@@ -4232,7 +4264,6 @@
                 overflow: hidden;
             }
             .profile-btns button:hover {
-                transform: scale(1.05);
                 background: rgba(var(--mode),.2);
                 cursor: pointer;
             }
@@ -4329,12 +4360,34 @@
                 padding: 10px 0;
                 box-sizing: border-box;
             }
-            #friend_actions {
+            .friend-actions {
                 width: 100%;
                 margin: 0 3px;
             }
+            .profile-btns .friend-action-buttons {
+                display: none;
+                position: fixed;
+                top: 240px;
+                left: 0;
+                width: 100%;
+                padding: 20px;
+                background: rgba(var(--mode),.2);
+                backdrop-filter: blur(5px);
+                box-sizing: border-box;
+                z-index: 5;
+            }
+            .profile-btns .friend-action-buttons button {
+                height: auto;
+                padding: 15px 0;
+                font-size: 18px;
+                box-sizing: border-box;
+            }
+            .profile-btns .friend-action-buttons button span {
+                display: inline;
+                padding-left: 10px;
+            }
             .profile-btns button {
-                width: auto;
+                width: 100%;
                 height: 35px;
                 margin: 3px 0px;
                 padding: 0 10px;
@@ -4358,11 +4411,8 @@
                 line-height: 35px;
             }
             .profile-btns button span {
-                display: none;
-                padding-left: 25px;
-            }
-            .profile-btns button:hover span {
-                display: block;
+                display: inline;
+                padding-left: 0;
             }
             .profile-btns button.red {
                 background: rgba(255,0,0,.5);

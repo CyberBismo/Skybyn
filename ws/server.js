@@ -92,26 +92,22 @@ wss.on('connection', (ws) => {
                 let device = data.deviceInfo['device']; // Device information from the client
                 let time = getTime();
 
-                let guestCount = 0; // Start guest ID count at 1
-                let userCount = 0; // Start user ID count at 1
+                let guestCount = 1; // Start guest ID count at 1
+                let userCount = 1; // Start user ID count at 1
 
-                wss.clients.forEach(client => {
-                    if (client.readyState === WebSocket.OPEN && !client.clientID) {
-                        guestCount++;
-                    }
-                });
-                wss.clients.forEach(client => {
-                    if (client.readyState === WebSocket.OPEN && client.userId) {
-                        userCount++;
+                clientMap.forEach((client) => {
+                    if (client.ws.readyState === WebSocket.OPEN) {
+                        if (client.guestId) guestCount++;
+                        if (client.userId) userCount++;
                     }
                 });
                 
                 let logType = "";
 
                 if (token === null) {
-                    guestId = "g"+guestCount;
-                    logType = "Client connected\nActive guests: " + guestCount;
-                    clientMap.set(clientID, { ws, ip: cleanedIp, guestId });
+                    logType = "Guest "+guestCount+" connected";
+                    guestId = "g" + guestCount;
+                    clientMap.set(clientID, {ip: cleanedIp, guestId, ws});
                     console.log(`${time}\n${logType} \nIP: ${cleanedIp}\nDevice: ${device}\n`);
                 } else {
                     let username = "";
@@ -125,8 +121,8 @@ wss.on('connection', (ws) => {
                             username = results[0].username;
                             userId = results[0].id;
                         }
-                        logType = username + " connected";
-                        clientMap.set(clientID, { ws, ip: cleanedIp, userId });
+                        logType = "User " + username + " connected";
+                        clientMap.set(clientID, {ip: cleanedIp, userId, ws});
                         console.log(`${time}\n${logType} \nIP: ${cleanedIp}\nDevice: ${device}\n`);
                     });
                 }
@@ -140,6 +136,27 @@ wss.on('connection', (ws) => {
 
             if (data.type === 'disconnect') {
                 let clientID = data.sessionId;
+                // Check if client was a user or guest
+                const client = clientMap.get(clientID);
+                if (client) {
+                    if (client.userId) {
+                        let id = client.userId;
+                        let username = "";
+                        db.query("SELECT * FROM users WHERE id = ?", [id], (err, results) => {
+                            if (err) {
+                                console.error("Error fetching username:", err);
+                                return;
+                            }
+                            // Collect username and id from the results
+                            if (results.length > 0) {
+                                username = results[0].username;
+                            }
+                            console.log(`User ${username} disconnected`);
+                        });
+                    } else {
+                        console.log(`Guest ${client.guestId} disconnected`);
+                    }
+                }
                 clientMap.delete(clientID); // Remove the client from the map on disconnect
                 updateActiveClients();
             }
@@ -352,8 +369,8 @@ function sendMessage(clientId, message) {
 }
 
 function updateActiveClients() {
-    const activeUsersCount = [...clientMap.entries()].filter(([userId, client]) => client.ws.readyState === WebSocket.OPEN && !/^g\d+$/.test(userId)).length;
-    const activeGuestsCount = [...clientMap.entries()].filter(([userId, client]) => client.ws.readyState === WebSocket.OPEN && /^g\d+$/.test(userId)).length;
+    const activeUsersCount = [...clientMap.values()].filter(client => client.ws.readyState === WebSocket.OPEN && client.userId).length;
+    const activeGuestsCount = [...clientMap.values()].filter(client => client.ws.readyState === WebSocket.OPEN && client.guestId).length;
     clientMap.forEach((client) => {
         if (client.ws.readyState === WebSocket.OPEN) {
             client.ws.send(JSON.stringify({ type: 'active_clients', userCount: activeUsersCount, guestCount: activeGuestsCount }));

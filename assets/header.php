@@ -194,7 +194,7 @@ if (isset($_GET['signup'])) {
                     <?php if (isMobile($userAgent) == true) {?>
                     <img src="../assets/images/logo_faded_clean.png" onclick="window.location.href='../'">
                     <?php } else {?>
-                    <img src="<?=$avatar?>" onclick="window.location.href='../profile'">
+                    <img src="<?=$avatar?>" onclick="window.location.href='../profile'" style="background:black">
                     <?php }?>
                 </div>
                 <?php } else {?>
@@ -321,14 +321,22 @@ if (isset($_GET['signup'])) {
                 um.style.transform = 'translateX(100%)';
                 left.style.transform = 'translateX(-100%)';
                 right.style.transform = 'translateX(100%)';
-                leftButton.style.transform = 'translateX(0px)';
-                rightButton.style.transform = 'translateX(0px)';
+                if (leftButton) {
+                    leftButton.style.transform = 'translateX(0px)';
+                }
+                if (rightButton) {
+                    rightButton.style.transform = 'translateX(0px)';
+                }
             } else {
                 um.style.transform = 'translateX(100%)';
                 left.style.transform = 'translateX(0px)';
                 right.style.transform = 'translateX(100%)';
-                leftButton.style.transform = 'translateX('+left.clientWidth+'px)';
-                rightButton.style.transform = 'translateX(0px)';
+                if (rightButton) {
+                    rightButton.style.transform = 'translateX(0px)';
+                }
+                if (leftButton) {
+                    leftButton.style.transform = 'translateX('+left.clientWidth+'px)';
+                }
             }
         }
         function showRightPanel() {
@@ -341,14 +349,22 @@ if (isset($_GET['signup'])) {
                 um.style.transform = 'translateX(100%)';
                 left.style.transform = 'translateX(-100%)';
                 right.style.transform = 'translateX(100%)';
-                leftButton.style.transform = 'translateX(0px)';
-                rightButton.style.transform = 'translateX(0px)';
+                if (leftButton) {
+                    leftButton.style.transform = 'translateX(0px)';
+                }
+                if (rightButton) {
+                    rightButton.style.transform = 'translateX(0px)';
+                }
             } else {
                 um.style.transform = 'translateX(100%)';
                 left.style.transform = 'translateX(-100%)';
                 right.style.transform = 'translateX(0px)';
-                rightButton.style.transform = 'translateX(-'+left.clientWidth+'px)';
-                leftButton.style.transform = 'translateX(0px)';
+                if (leftButton) {
+                    leftButton.style.transform = 'translateX(0px)';
+                }
+                if (rightButton) {
+                    rightButton.style.transform = 'translateX('+left.clientWidth+'px)';
+                }
             }
         }
         <?php }?>
@@ -448,7 +464,6 @@ if (isset($_GET['signup'])) {
             </div>
             <?php }?>
 
-            <?php if (isset($rank) && $rank > 3) {?>
             <div class="shortcuts discord-widget">
                 <h3><i class="fa-brands fa-discord"></i><div>Discord Server</div><i class="fa-solid fa-arrow-up-right-from-square" onclick="window.open('https:/\/discord.gg/wBhPvEvn87','_blank')" title="Go to server"></i></h3>
                 <div id="discordWidget"></div>
@@ -467,7 +482,6 @@ if (isset($_GET['signup'])) {
                     );
                 };
             </script>
-            <?php }?>
 
             <?php if (isset($rank) && $rank > 3) {?>
             <div class="shortcuts music">
@@ -735,7 +749,7 @@ if (isset($_GET['signup'])) {
                                     <div class="friend-action" onclick="window.location.href='../profile/<?=$friend_username?>'">
                                         <i class="fa-solid fa-user"></i>
                                     </div>
-                                    <div class="friend-action" onclick="startMessaging('<?=$uid?>','<?=$fid?>')">
+                                    <div class="friend-action" onclick="startMessaging(<?=$uid?>,<?=$fid?>)">
                                         <i class="fa-solid fa-message"></i>
                                     </div>
                                 </div>
@@ -930,8 +944,11 @@ if (isset($_GET['signup'])) {
         </div>
 
         <div class="noti_menu" onclick="showNotifications()">
+            <?php if (isMobile($userAgent) == false) {?>
             <div class="notification_alert nab"><i class="fa-solid fa-circle-exclamation"></i></div>
-            <i class="fa-solid fa-bell"></i>
+            <?php } else { $mob_noti = " mob_noti";?>
+            <i class="fa-solid fa-bell<?=$mob_noti?>"></i>
+            <?php }?>
         </div>
 
         <?php }?>
@@ -983,7 +1000,6 @@ if (isset($_GET['signup'])) {
                     <h1>Skybyn</h1>
                 </center>
             </div>
-            <p id="welcome-click">Click to continue</p>
         </div>
 
         <?php if (isset($_COOKIE['welcomeScreen'])) {?>

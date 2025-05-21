@@ -8,33 +8,40 @@ if ($devDomain == true) {
 
 $unknownUser = false;
 $myProfile = true;
-$friendStatus = false;
-$friends = false;
 $logged_in = false;
 
-// Check if user is logged in
-if (isset($_SESSION['user'])) {
-    $user_id = $_SESSION['user'];
-    $logged_in = true;
-}
+$rProfile = false; # Restricted
 
 // Check if user is visiting someone else's profile
-if (isset($_GET['user'])) {
+if (isset($_GET['user']) && $_GET['user'] != "") {
     $user = $_GET['user'];
-    $user_id = getUser("username",$user,"id");
-    $checkUserID = $conn->query("SELECT * FROM `users` WHERE `id`='$user_id'");
-    if ($checkUserID->num_rows == 1) {
-        if ($user_id != "error") {
-            if ($user_id == $uid) {
-                $myProfile = true;
-            } else {
+    if ($user == $username) {
+        ?><script>window.location.href = "./profile";</script><?php
+    } else {
+        $user_id = getUser("username",$user,"id");
+        $checkUserID = $conn->query("SELECT * FROM `users` WHERE `id`='$user_id'");
+        if ($checkUserID->num_rows == 1) {
+            if ($user_id != "error") {
                 $myProfile = false;
+                $userData = $checkUserID->fetch_assoc();
+                $userRank = $userData['rank'];
+                if ($userRank > 0) {
+                    $friends = true;
+                } else {
+                    $friends = false;
+                }
+            } else {
+                $unknownUser = true;
             }
         } else {
             $unknownUser = true;
         }
-    } else {
-        $unknownUser = true;
+    }
+} else {
+    // Check if user is logged in
+    if (isset($uid) && $uid != "") {
+        $logged_in = true;
+        $user_id = $uid;
     }
 }
 
@@ -59,6 +66,12 @@ if ($result->num_rows == 1 && $unknownUser == false) {
     $Pcountry = $PUDRow['country'];
     $Pverified = $PUDRow['verified'];
     $Pprivate = $PUDRow['private'];
+
+    if ($myProfile) {
+        $GPusername = "My ";
+    } else {
+        $GPusername = "$Pusername's ";
+    }
     
     if (!isNotEncrypted($Pemail)) { // Check if email is encrypted
         $Pemail = decrypt($Pemail);
@@ -108,12 +121,13 @@ if ($result->num_rows == 1 && $unknownUser == false) {
                                 $status = $checkFriendship->num_rows ? $checkFriendship->fetch_assoc()['status'] : null; 
                             ?>
                             <?php if ($Pprivate == "0" || $rank > 3) {?>
-                            <button onclick="startMessaging('<?= $uid ?>','<?= $user_id ?>')">
+                            <button onclick="startMessaging(<?=$uid?>,<?=$user_id?>)">
                                 <i class="fa-solid fa-message"></i> <span>Chat</span>
                             </button>
                             <?php }?>
-                            <div id="friend_actions">
-                                <div id="friend_action_buttons">
+                            <div class="friend-actions" id="friend_actions">
+                                <button onclick="mobFAM()"><i class="fa-solid fa-user"></i><span>Actions</span></button>
+                                <div class="friend-action-buttons" id="friend_action_buttons">
                                     <?php switch ($status):
                                         case "friends": ?>
                                             <button id="fa_unfriend" onclick="friendAction('unfriend', '<?= $user_id ?>')"><i class="fa-solid fa-user-minus"></i><span>Unfriend</span></button>
@@ -139,6 +153,18 @@ if ($result->num_rows == 1 && $unknownUser == false) {
                                     <button class="red" onclick="reportUser('<?= $user_id ?>')"><i class="fa-solid fa-flag"></i><span>Report</span></button>
                                 </div>
                             </div>
+                            <?php if (isMobile($userAgent)) {?>
+                            <script>
+                                function mobFAM() { // mobile Friend Action Menu
+                                    const buttons = document.getElementById('friend_action_buttons');
+                                    if (buttons.style.display == "block") {
+                                        buttons.style.display = "none";
+                                    } else {
+                                        buttons.style.display = "block";
+                                    }
+                                }
+                            </script>
+                            <?php }?>
                             <?php }?>
                         </div>
                         <?php if (isMobile($userAgent) == false) {?>
@@ -153,7 +179,7 @@ if ($result->num_rows == 1 && $unknownUser == false) {
                             <br>
                             <?php }?>
                             <?php if ($Pprivate == "0" || $rank > 3) {?>
-                            <b><?=$Pusername?>'s Groups</b>
+                            <b><?=$GPusername?>Groups</b>
                             <?php $groups = $conn->query("SELECT * FROM `group_members` WHERE `user`='$user_id'");
                             while($groupsData = $groups->fetch_assoc()) {
                                 $group_id = $groupsData['id'];
@@ -186,14 +212,7 @@ if ($result->num_rows == 1 && $unknownUser == false) {
                         while($post = mysqli_fetch_assoc($getPosts)) {
                             $post_id = $post['id'];
                             $post_user = $post['user'];
-                            $post_content = $post['content'];
-                        
-                            if (isNotEncrypted($post_content)) {
-                                $post_content = html_entity_decode(encrypt($post_content), ENT_QUOTES | ENT_HTML5, 'UTF-8');
-                                $conn->query("UPDATE `posts` SET `content`='$post_content' WHERE `id`='$post_id'");
-                            }
-                        
-                            $post_content = html_entity_decode(decrypt($post_content), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                            $post_content = decrypt($post['content']);
                             $post_created = date("d M. y H:i:s", $post['created']);
     
                             $getComments = mysqli_query($conn, "SELECT * FROM `comments` WHERE `post`='$post_id'");
@@ -209,7 +228,7 @@ if ($result->num_rows == 1 && $unknownUser == false) {
     
                             $post_video = convertVideo($post_content);
                             $post_links = extractUrls($post_content);
-                            $post_content_res = fixEmojis(cleanUrls(nl2br($post_content)), 1);
+                            $post_content_res = fixEmojis(nl2br(cleanUrls(html_entity_decode($post_content, ENT_QUOTES | ENT_HTML5, 'UTF-8'))), 1);
                         ?>
                         <div class="post" id="post_<?=$post_id?>">
                             <div class="post_body">
@@ -223,6 +242,7 @@ if ($result->num_rows == 1 && $unknownUser == false) {
                                         </div>
                                         <div class="post_date"><?=$post_created?></div>
                                     </div>
+                                    <?php if ($logged_in) {?>
                                     <div class="post_actions" onclick="showPostActions(<?=$post_id?>)">
                                         <i class="fa-solid fa-ellipsis-vertical"></i>
                                         <div class="post_action_list" id="pal_<?=$post_id?>" hidden>
@@ -236,6 +256,7 @@ if ($result->num_rows == 1 && $unknownUser == false) {
                                             <?php }}?>
                                         </div>
                                     </div>
+                                    <?php }?>
                                 </div>
                                 <div class="post_content" id="post_c_<?=$post_id?>">
                                     <?=$post_content_res?>

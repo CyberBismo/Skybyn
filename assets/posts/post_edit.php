@@ -11,7 +11,10 @@ $result = $stmt->get_result();
 if ($result->num_rows === 1) {
     $post = $result->fetch_assoc();
     $post_id = $post['id'];
-    $text = html_entity_decode(decrypt($post['content']), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    $text = decrypt($post['content']);
+    // Convert line breaks to \n for textarea readability
+    $plain = str_replace(["\r\n", "\r", "<br>", "<br/>", "<br />"], "\n", html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+    $text = $plain;
 
     echo json_encode([
         "status" => "success",

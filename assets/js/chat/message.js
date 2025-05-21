@@ -1,7 +1,4 @@
-function createMessageBox(user_id,friend_id) {
-    const uid = user_id;
-    const fid = friend_id;
-
+function createMessageBox(uid,fid) {
     const messageBox = document.createElement('div');
     messageBox.id = 'message_box_' + fid;
     messageBox.classList.add('message-box');
@@ -61,13 +58,17 @@ function createMessageBox(user_id,friend_id) {
     });    
 }
 
-function startMessaging(user_id,friend_id) {
-    const uid = user_id;
-    const fid = friend_id;
-    if (document.getElementById('message_box_'+fid)) {
-        maximizeMessageBox(fid);
+function startMessaging(uid,fid) {
+    const msg_icon = document.getElementById('msg_con');
+    if (msg_icon.querySelector('.icon')) {
+        openMessages();
+        showChat(fid);
     } else {
-        createMessageBox(uid,fid);
+        if (document.getElementById('message_box_'+fid)) {
+            maximizeMessageBox(fid);
+        } else {
+            createMessageBox(uid,fid);
+        }
     }
 }
 
@@ -103,6 +104,33 @@ function openMessages() {
     }
 }
 
+function hideChat(event) {
+    const msgBox = document.getElementById('msg_con');
+    const profileChatBtn = document.getElementsByClassName('profile-btns');
+    // Only hide if msgBox is open (height == "auto") and click is outside msgBox
+    if (
+        msgBox.style.height === "auto" &&
+        !msgBox.contains(event.target) &&
+        !Array.from(profileChatBtn).some(btn => btn.contains(event.target))
+    ) {
+        msgBox.style.height = "0";
+        let messageBoxes = document.querySelectorAll('.message-box');
+        messageBoxes.forEach(box => {
+            box.classList.remove('open');
+        });
+        const msgIcon = msgBox.querySelectorAll('.icon');
+        msgIcon.forEach(iconContainer => {
+            iconContainer.querySelectorAll('i').forEach(icon => {
+                icon.classList.remove('fa-solid', 'fa-xmark');
+                icon.classList.add('fa-regular', 'fa-message');
+            });
+        });
+    }
+}
+
+// Add this event listener to trigger hideChat on document clicks
+document.addEventListener('click', hideChat);
+
 function closeMessages() {
     const msgBox = document.getElementById('msg_con');
     msgBox.style.height = "50px";
@@ -130,10 +158,8 @@ function showChat(fid) {
 function maximizeMessageBox(fid) {
     const messageContainer = document.getElementById('message_box_'+fid);
     messageContainer.classList.toggle('maximized');
-    const minimize = document.getElementById('msg_min_'+fid);
-    if (minimize.classList.contains('fa-chevron-up')) {
-        minimize.classList.remove('fa-chevron-up');
-        minimize.classList.add('fa-chevron-down');
+    if (messageContainer.classList.contains('open')) {
+        messageContainer.classList.add('open');
 
         $.ajax({
             url: '../../assets/functions.php',
@@ -145,8 +171,7 @@ function maximizeMessageBox(fid) {
             }
         });
     } else {
-        minimize.classList.remove('fa-chevron-down');
-        minimize.classList.add('fa-chevron-up');
+        messageContainer.classList.remove('open');
 
         $.ajax({
             url: '../../assets/functions.php',
