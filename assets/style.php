@@ -2663,7 +2663,7 @@
                 width: 50px;
                 height: 50px;
                 margin: 10px;
-                border-radius: 50px;
+                border-radius: 10px;
                 overflow: hidden;
                 cursor: pointer;
             }
@@ -2960,6 +2960,7 @@
             .post_comment_user {
                 display: flex;
                 justify-content: space-between;
+                margin: 3px;
                 margin-top: 20px;
             }
             .post_comment_user_info {
@@ -2973,7 +2974,7 @@
                 max-width: 30px;
                 height: 30px;
                 margin-right: 10px;
-                border-radius: 30px;
+                border-radius: 5px;
                 overflow: hidden;
             }
             .post_comment_user_avatar img {
@@ -3991,10 +3992,12 @@
                 margin: 0 auto;
                 border-radius: 20px;
                 background: rgba(var(--mode),.5);
+                overflow: hidden;
             }
             .message-box-icon img {
                 width: 40px;
                 height: 40px;
+                object-fit: cover;
             }
             .message-box {
                 position: fixed;
