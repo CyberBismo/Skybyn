@@ -4040,9 +4040,10 @@
                 align-items: center;
             }
             .message-header .message-user img {
-                width: 40px;
-                height: 40px;
-                border-radius: 40px;
+                width: 30px;
+                height: 30px;
+                padding: 0 5px;
+                border-radius: 10px;
                 object-fit: cover;
             }
             .message-header .message-user span {
@@ -4082,17 +4083,20 @@
                 justify-content: right;
             }
             .message-body .message .message-user .message-user-avatar {
-                width: 30px;
-                height: 30px;
+                width: 20px;
+                height: 20px;
                 aspect-ratio: 1/1;
+                margin: 5px;
                 background: rgba(var(--mode),.3);
-                border-radius: 10px;
+                border-radius: 5px;
                 overflow: hidden;
                 object-fit: cover;
                 box-sizing: border-box;
             }
             .message-body .message .message-user .message-user-avatar img {
-                width: 100%;
+                width: 20px;
+                height: 20px;
+                object-fit: cover;
             }
             .message-body .message .message-user .message-user-name {
                 font-size: 12px;

@@ -157,8 +157,8 @@ function showChat(fid) {
 
 function maximizeMessageBox(fid) {
     const messageContainer = document.getElementById('message_box_'+fid);
-    messageContainer.classList.toggle('maximized');
-    if (messageContainer.classList.contains('open')) {
+    const isMaximized = messageContainer.classList.toggle('maximized');
+    if (isMaximized) {
         messageContainer.classList.add('open');
 
         $.ajax({
