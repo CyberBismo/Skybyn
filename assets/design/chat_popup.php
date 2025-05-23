@@ -7,7 +7,7 @@
                     <div class="message-user-avatar">
                     <img src="../assets/images/logo_faded_clean.png" id="msg_user_avatar_0">
                     </div>
-                    <div class="message-user-name">Friend</div>
+                    <span id="msg_user_name_0">Friend</span>
                 </div>
                 <div class="message-actions">
                     <?php if (isMobile($userAgent) == false) {?>
