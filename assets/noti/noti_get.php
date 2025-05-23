@@ -48,6 +48,8 @@ if ($getNotifications->num_rows > 0) {
             $noti_text = $noti_content;
             $noti_action = "";
         }
+
+        // showNoti(<?=$noti_id? >)
         ?>
         <div class="noti" id="noti_<?=$noti_id?>">
             <div class="noti-status" id="noti_status_<?=$noti_id?>">
@@ -62,7 +64,7 @@ if ($getNotifications->num_rows > 0) {
                 <span><?=$noti_text?></span>
             </div>
             <div class="noti-actions">
-                <div class="noti-action" onclick="showNoti(<?=$noti_id?>)"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>
+                <?php if ($noti_action != "") {?><div class="noti-action" onclick="<?=$noti_action?>"><i class="fa-solid fa-arrow-up-right-from-square"></i></div><?php }?>
                 <div class="noti-action" onclick="delNoti(<?=$noti_id?>)"><i class="fa-solid fa-trash-can"></i></div>
             </div>
         </div>

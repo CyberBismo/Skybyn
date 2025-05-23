@@ -2185,9 +2185,10 @@
             <?php if (isMobile($userAgent) == false) {?>
             .notification-window {
                 left: 50%;
-                width: 600px;
+                min-width: 600px;
+                width: 50%;
                 max-height: 80%;
-                margin-left: -300px;
+                transform: translateX(-50%);
             }
             <?php } else {?>
             .notification-window {

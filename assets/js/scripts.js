@@ -34,6 +34,24 @@ function urlBase64ToUint8Array(base64String) {
     return new Uint8Array([...rawData].map(char => char.charCodeAt(0)));
 }
 
+document.addEventListener('click', function(event) {
+    // Hide notification window if clicking outside
+    const notification = document.getElementById('notification');
+    const notifications = document.getElementById('notifications');
+    if (notifications && notifications.style.display === "block") {
+        if (!notifications.contains(event.target) && !notification.contains(event.target)) {
+            notifications.style.display = "none";
+        }
+    }
+
+    // Hide user menu if clicking outside
+    const userMenu = document.getElementById('usermenu');
+    if (userMenu && userMenu.style.display === "block") {
+        if (!userMenu.contains(event.target)) {
+            userMenu.style.display = "none";
+        }
+    }
+});
 
 // Prioritixe loading speed by loading images "lazy"
 document.addEventListener("DOMContentLoaded", function() {

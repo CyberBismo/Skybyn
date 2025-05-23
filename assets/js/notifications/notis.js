@@ -1,15 +1,17 @@
 function showNotifications() {
     const notifications = document.getElementById('notifications');
     const notiList = document.getElementById('noti-list');
-    if (notifications.style.display == "block") {
-        notifications.style.display = "none";
-    } else {
-        notifications.style.display = "block";
-        $.ajax({
-            url: '../assets/noti/noti_get.php'
-        }).done(function(response) {
-            notiList.innerHTML = response;
-        });
+    if (notifications) {
+        if (notifications.style.display == "block") {
+            notifications.style.display = "none";
+        } else {
+            notifications.style.display = "block";
+            $.ajax({
+                url: '../assets/noti/noti_get.php'
+            }).done(function(response) {
+                notiList.innerHTML = response;
+            });
+        }
     }
     checkNoti();
 }
