@@ -4036,15 +4036,20 @@
             }
             .message-header .message-user {
                 display: flex;
-                width: 50px;
+                width: 200px;
                 height: 20px;
                 align-items: center;
             }
-            .message-header .message-user img {
+            .message-header .message-user .message-user-avatar {
                 width: 30px;
                 height: 30px;
-                padding: 0 5px;
+                margin: 0 5px;
                 border-radius: 10px;
+                overflow: hidden;
+            }
+            .message-header .message-user .message-user-avatar img {
+                width: 30px;
+                height: 30px;
                 object-fit: cover;
             }
             .message-header .message-user span {

@@ -850,7 +850,9 @@ if (isset($_GET['signup'])) {
                 <div class="message-box<?=$open?>" id="message_box_<?=$friend?>">
                     <div class="message-header" onclick="maximizeMessageBox('<?=$friend?>')">
                         <div class="message-user">
-                            <img src="<?=$friend_avatar?>" id="msg_user_avatar_<?=$friend?>">
+                            <div class="message-user-avatar">
+                                <img src="<?=$friend_avatar?>" id="msg_user_avatar_<?=$friend?>">
+                            </div>
                             <span id="msg_user_name_<?=$friend?>"><?=$friend_username?></span>
                         </div>
                         <div class="message-actions">
