@@ -7,10 +7,14 @@ if ($devDomain == true) {
 }
 
 $unknownUser = false;
-$myProfile = true;
+$myProfile = false;
 $logged_in = false;
 
 $rProfile = false; # Restricted
+
+if (isset($uid) && $uid != "") {
+    $logged_in = true;
+}
 
 // Check if user is visiting someone else's profile
 if (isset($_GET['user']) && $_GET['user'] != "") {
@@ -40,8 +44,7 @@ if (isset($_GET['user']) && $_GET['user'] != "") {
 } else {
     // Check if user is logged in
     if (isset($uid) && $uid != "") {
-        $logged_in = true;
-        $user_id = $uid;
+        ?><script>window.location.href = "./profile";</script><?php
     }
 }
 
@@ -328,7 +331,6 @@ if ($result->num_rows == 1 && $unknownUser == false) {
                                 <?php }?>
                                 <div class="post_comments">
                                     <div class="post_comment_count"><div id="comments_count_<?=$post_id?>"><?=$comments?></div><i class="fa-solid fa-message"></i></div>
-                                    <?php if ($logged_in) {?>
                                     <div class="post_comment_new">
                                         <div class="post_comment_new_content">
                                             <input type="text" id="pc_<?=$post_id?>" onkeydown="hitEnter(this,<?=$post_id?>)" placeholder="Write a comment <?php if(isset($username)) {echo $username;}?>">
@@ -337,7 +339,6 @@ if ($result->num_rows == 1 && $unknownUser == false) {
                                             <div class="btn" onclick="sendComment(<?=$post_id?>)"><i class="fa-solid fa-paper-plane"></i></div>
                                         </div>
                                     </div>
-                                    <?php }?>
                                     <div id="post_comments_<?=$post_id?>">
                                         <?php $getComment = $conn->query("SELECT * FROM `comments` WHERE `post`='$post_id' ORDER BY `date` DESC");
                                         if ($getComment->num_rows > 0) {
@@ -346,13 +347,23 @@ if ($result->num_rows == 1 && $unknownUser == false) {
                                                 $commentUser = $commentData['user'];
                                                 $commentUsername = getUser("id",$commentData['user'],"username");
                                                 $commentAvatar = getUser("id",$commentData['user'],"avatar");
-                                                $commentText = fixEmojis(nl2br(cleanUrls(html_entity_decode(decrypt($commentData['content']), ENT_QUOTES | ENT_HTML5, 'UTF-8'))), 1);
+                                                $commentText = $commentData['content'];
+                            
+                                                if (isNotEncrypted($commentText)) {
+                                                    $commentText = encrypt(htmlentities($commentText, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+                                                    $stmt = $conn->prepare("UPDATE `comments` SET `content` = ? WHERE `id` = ?");
+                                                    $stmt->bind_param("si", $commentText, $commentID);
+                                                    $stmt->execute();
+                                                    $stmt->close();
+                                                }
+                                                
+                                                $commentText = fixEmojis(nl2br(cleanUrls(html_entity_decode(decrypt($commentText), ENT_QUOTES | ENT_HTML5, 'UTF-8'))), 1);
                                                 
                                                 if ($commentAvatar == "") {
                                                     $commentAvatar = "../assets/images/logo_faded_clean.png";
                                                 }
-    
-                                                if ($commentUser == $user_id) {
+
+                                                if ($commentUser == $_SESSION['user']) {
                                                     $myComment = " me";
                                                 } else {
                                                     $myComment = "";

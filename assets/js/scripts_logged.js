@@ -11,6 +11,18 @@ function showPost(x) {
     window.location.href = "../post/"+x;
 }
 
+function checkEmptyLinkPreview() {
+    // Check if the link preview is empty and try to load it again
+    const linkPreview = document.querySelector('.post_link_preview');
+    if (linkPreview && linkPreview.innerHTML.trim() === '') {
+        const postId = linkPreview.dataset.postId;
+        loadPostLinkPreview(postId);
+    }
+}
+setTimeout(() => {
+    checkEmptyLinkPreview();
+}, 1000);
+
 // Show search form
 function showSearch() {
     const mobileSearch = document.getElementById('mobile-search');
@@ -19,14 +31,25 @@ function showSearch() {
     const usermenu = document.getElementById('usermenu');
     usermenu.style.transform = 'translateX(100%)';
 
+    // Replace fa-magnifying-glass with fa-xmark
+    const searchIcon = document.getElementById('searchIcon');
+    if (searchIcon.classList.contains('fa-magnifying-glass')) {
+        searchIcon.classList.remove('fa-magnifying-glass');
+        searchIcon.classList.add('fa-xmark');
+    }
+
     // Function to hide the search form
     function hideSearchForm() {
         mobileSearch.style.transform = "translateY(-155px)";
         searchRes.style.display = "none";
+        search.value = ""; // Clear the search input
+        searchIcon.classList.remove('fa-xmark');
+        searchIcon.classList.add('fa-magnifying-glass');
     }
 
     // Function to show the search form
     function showSearchForm() {
+        searchRes.style.display = "block";
         mobileSearch.style.transform = "translateY(0px)";
         search.focus();
     }
@@ -35,18 +58,16 @@ function showSearch() {
     window.addEventListener('resize', function() {
         if (window.innerHeight === window.screen.height) {
             // Keyboard is hidden
-            hideSearchForm();
+            //hideSearchForm();
         }
     });
 
     // Listen for the search input blur event (if user taps outside)
     search.addEventListener('blur', function() {
-        setTimeout(function() {
-            if (!search.matches(':focus')) {
-                // Keyboard is hidden
-                hideSearchForm();
-            }
-        }, 300); // You may need to adjust the delay based on your specific needs
+        if (!search.matches(':focus')) {
+            // Keyboard is hidden
+            hideSearchForm();
+        }
     });
 
     // Toggle the search form

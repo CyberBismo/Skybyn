@@ -263,6 +263,12 @@ function connectWebSocket() {
             var url = data.url;
             window.location.href = url;
         }
+
+        if (data.type === 'logout') {
+            // Clear session ID and redirect to login page
+            localStorage.removeItem('sessionId');
+            window.location.href = data.url || '/logout';
+        }
     };
 
     ws.onclose = () => {
@@ -270,9 +276,30 @@ function connectWebSocket() {
     };
 }
 
-addEventListener('beforeunload', () => {
-    ws.send(JSON.stringify({type: 'disconnect', sessionId: localStorage.getItem('sessionId') }));
-    ws.close();
+// Handle disconnect on unload or navigation away from site
+addEventListener('beforeunload', (event) => {
+    // Check if navigation is within the same site
+    const nextUrl = document.activeElement && document.activeElement.href;
+    const isSameOrigin = nextUrl && nextUrl.startsWith(window.location.origin);
+
+    // Check if it's a page reload (F5, Ctrl+R, etc.)
+    const isReload = performance.getEntriesByType("navigation")[0]?.type === "reload";
+
+    // If navigating away from site or closing tab/window, send disconnect
+    if (!isSameOrigin && !isReload) {
+        ws.send(JSON.stringify({type: 'disconnect', sessionId: localStorage.getItem('sessionId') }));
+        ws.close();
+    }
+    // If it's a reload or navigation within the site, do not send disconnect
+});
+
+// Also handle clicks on links to same-site pages
+document.addEventListener('click', function(e) {
+    const link = e.target.closest('a[href]');
+    if (link && link.origin === window.location.origin && !link.hasAttribute('target')) {
+        ws.send(JSON.stringify({type: 'disconnect', sessionId: localStorage.getItem('sessionId') }));
+        ws.close();
+    }
 });
 
 // Initial connection

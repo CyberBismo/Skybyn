@@ -1,31 +1,31 @@
-// Register Service worker for push notifications
-if ('serviceWorker' in navigator && 'PushManager' in window) {
-    navigator.serviceWorker.register('/assets/js/service-worker.js')
-    .then(swReg => {
-        //console.log('Service Worker registered:', swReg);
-
-        return Notification.requestPermission().then(permission => {
-            if (permission === 'granted') {
-                subscribeUser(swReg);
-            }
-        });
-    });
-}
-
-function subscribeUser(swReg) {
-    const applicationServerKey = urlBase64ToUint8Array('BNmqMQ9fopNj8r1bsuTLuXSXXeVchRCzOrAF04xHQNNvZzIAsARBBAvuFCrSg8J6FCOktIR4NyN-wVa-40llJks');
-    swReg.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey
-    }).then(subscription => {
-        // Send subscription to your server
-        fetch('../assets/save-subscription.php', {
-            method: 'POST',
-            body: JSON.stringify(subscription),
-            headers: { 'Content-Type': 'application/json' }
-        });
-    });
-}
+//// Register Service worker for push notifications
+//if ('serviceWorker' in navigator && 'PushManager' in window) {
+//    navigator.serviceWorker.register('/assets/js/service-worker.js')
+//    .then(swReg => {
+//        //console.log('Service Worker registered:', swReg);
+//
+//        return Notification.requestPermission().then(permission => {
+//            if (permission === 'granted') {
+//                subscribeUser(swReg);
+//            }
+//        });
+//    });
+//}
+//
+//function subscribeUser(swReg) {
+//    const applicationServerKey = urlBase64ToUint8Array('BNmqMQ9fopNj8r1bsuTLuXSXXeVchRCzOrAF04xHQNNvZzIAsARBBAvuFCrSg8J6FCOktIR4NyN-wVa-40llJks');
+//    swReg.pushManager.subscribe({
+//        userVisibleOnly: true,
+//        applicationServerKey
+//    }).then(subscription => {
+//        // Send subscription to your server
+//        fetch('../assets/save-subscription.php', {
+//            method: 'POST',
+//            body: JSON.stringify(subscription),
+//            headers: { 'Content-Type': 'application/json' }
+//        });
+//    });
+//}
 
 function urlBase64ToUint8Array(base64String) {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);

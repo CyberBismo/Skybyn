@@ -1,27 +1,54 @@
 document.addEventListener("DOMContentLoaded", function() {
     document.querySelectorAll(".post_link_preview").forEach(function(element) {
-        let url = element.getAttribute('alt');
-        let linkId = element.id;
+        if (!element) return;
 
-        fetch("./assets/posts/post_link_preview.php?url=" + encodeURIComponent(url))
-            .then(response => response.json())
+        const url = element.getAttribute('data-url');
+        const linkId = element.id;
+
+        if (!url) {
+            console.warn("No URL found in data-url attribute.");
+            return;
+        }
+
+        fetch(`./assets/posts/post_link_preview.php?url=${encodeURIComponent(url)}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
+                const linkElem = document.getElementById(linkId);
+                if (!linkElem) return;
+
+                if (data.error) {
+                    console.warn("Preview error:", data.error);
+                    return;
+                }
+
                 if (data.restricted) {
-                    document.getElementById(linkId).remove(); // Hide restricted links
-                } else {
-                    document.getElementById(linkId).innerHTML = `
-                        ${data.featured_image ? `<div class="post_link_preview_image">
-                            <div class="post_link_preview_icon"><img src="${data.logo}" alt="Favicon"></div>
+                    linkElem.remove(); // Remove element if age-restricted
+                    return;
+                }
+
+                // Build and insert preview HTML
+                linkElem.innerHTML = `
+                    ${data.featured_image ? `
+                        <div class="post_link_preview_image">
+                            <div class="post_link_preview_icon">
+                                <img src="${data.logo || ''}" alt="Favicon">
+                            </div>
                             <img src="${data.featured_image}" alt="Preview Image">
                         </div>` : ""}
-                        <div class="post_link_preview_info">
-                            <div class="post_link_preview_title">${data.title}</div>
-                            <div class="post_link_preview_description">${data.description}</div>
-                        </div>
-                    `;
-                }
+                    <div class="post_link_preview_info">
+                        <div class="post_link_preview_title">${data.title || ''}</div>
+                        <div class="post_link_preview_description">${data.description || ''}</div>
+                    </div>
+                `;
             })
-            .catch(error => console.error("Error fetching link preview:", error));
+            .catch(error => {
+                console.error("Error fetching link preview:", error);
+            });
     });
 });
 
@@ -136,31 +163,56 @@ function createPost() {
 }
 
 function loadPostLinkPreview(x) {
-    const element = document.getElementById('plp_'+x);
-    if (element) {
-        let url = element.getAttribute('alt');
-        let linkId = element.id;
+    const element = document.getElementById('plp_' + x);
+    if (!element) return;
 
-        fetch("./assets/posts/post_link_preview.php?url=" + encodeURIComponent(url))
-            .then(response => response.json())
-            .then(data => {
-                if (data.restricted) {
-                    document.getElementById(linkId).remove(); // Hide restricted links
-                } else {
-                    document.getElementById(linkId).innerHTML = `
-                        ${data.featured_image ? `<div class="post_link_preview_image">
-                            <div class="post_link_preview_icon"><img src="${data.logo}" alt="Favicon"></div>
-                            <img src="${data.featured_image}" alt="Preview Image">
-                        </div>` : ""}
-                        <div class="post_link_preview_info">
-                            <div class="post_link_preview_title">${data.title}</div>
-                            <div class="post_link_preview_description">${data.description}</div>
-                        </div>
-                    `;
-                }
-            })
-            .catch(error => console.error("Error fetching link preview:", error));
+    const url = element.getAttribute('data-url');
+    const linkId = element.id;
+
+    if (!url) {
+        console.warn("No URL found in data-url attribute.");
+        return;
     }
+
+    fetch(`./assets/posts/post_link_preview.php?url=${encodeURIComponent(url)}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const linkElem = document.getElementById(linkId);
+            if (!linkElem) return;
+
+            if (data.error) {
+                console.warn("Preview error:", data.error);
+                return;
+            }
+
+            if (data.restricted) {
+                linkElem.remove(); // Remove element if age-restricted
+                return;
+            }
+
+            // Build and insert preview HTML
+            linkElem.innerHTML = `
+                ${data.featured_image ? `
+                    <div class="post_link_preview_image">
+                        <div class="post_link_preview_icon">
+                            <img src="${data.logo || ''}" alt="Favicon">
+                        </div>
+                        <img src="${data.featured_image}" alt="Preview Image">
+                    </div>` : ""}
+                <div class="post_link_preview_info">
+                    <div class="post_link_preview_title">${data.title || ''}</div>
+                    <div class="post_link_preview_description">${data.description || ''}</div>
+                </div>
+            `;
+        })
+        .catch(error => {
+            console.error("Error fetching link preview:", error);
+        });
 }
 
 function editPost(x) {

@@ -105,10 +105,12 @@ wss.on('connection', (ws) => {
                 let logType = "";
 
                 if (token === null) {
-                    logType = "Guest "+guestCount+" connected";
+                    logType = "Guest " + guestCount + " connected";
                     guestId = "g" + guestCount;
-                    clientMap.set(clientID, {ip: cleanedIp, guestId, ws});
-                    console.log(`${time}\n${logType} \nIP: ${cleanedIp}\nDevice: ${device}\n`);
+                    if (!clientMap.has(clientID)) {
+                        clientMap.set(clientID, { ip: cleanedIp, guestId, ws });
+                        console.log(`${time}\n${logType} \nIP: ${cleanedIp}\nDevice: ${device}\n`);
+                    }
                 } else {
                     let username = "";
                     db.query("SELECT * FROM users WHERE token = ?", [token], (err, results) => {
@@ -122,42 +124,48 @@ wss.on('connection', (ws) => {
                             userId = results[0].id;
                         }
                         logType = "User " + username + " connected";
-                        clientMap.set(clientID, {ip: cleanedIp, userId, ws});
-                        console.log(`${time}\n${logType} \nIP: ${cleanedIp}\nDevice: ${device}\n`);
+                        if (!clientMap.has(clientID)) {
+                            clientMap.set(clientID, { ip: cleanedIp, userId, ws });
+                            console.log(`${time}\n${logType} \nIP: ${cleanedIp}\nDevice: ${device}\n`);
+                        }
                     });
                 }
 
                 setTimeout(() => {
                     updateActiveClients();
-                }
-                , 1000); // Delay to ensure all clients are registered
+                }, 1000); // Delay to ensure all clients are registered
                 registerActivity(cleanedIp);
             }
 
             if (data.type === 'disconnect') {
                 let clientID = data.sessionId;
                 // Check if client was a user or guest
-                const client = clientMap.get(clientID);
-                if (client) {
-                    if (client.userId) {
-                        let id = client.userId;
-                        let username = "";
-                        db.query("SELECT * FROM users WHERE id = ?", [id], (err, results) => {
-                            if (err) {
-                                console.error("Error fetching username:", err);
-                                return;
-                            }
-                            // Collect username and id from the results
-                            if (results.length > 0) {
-                                username = results[0].username;
-                            }
-                            console.log(`User ${username} disconnected`);
-                        });
-                    } else {
-                        console.log(`Guest ${client.guestId} disconnected`);
+                setTimeout(() => {
+                    const client = clientMap.get(clientID);
+                    if (client) {
+                        if (client.userId) {
+                            let id = client.userId;
+                            let username = "";
+                            db.query("SELECT * FROM users WHERE id = ?", [id], (err, results) => {
+                                if (err) {
+                                    console.error("Error fetching username:", err);
+                                    return;
+                                }
+                                // Collect username and id from the results
+                                if (results.length > 0) {
+                                    username = results[0].username;
+                                }
+                                //console.log(`User ${username} disconnected\n`);
+                            });
+                        } else {
+                            //console.log(`Guest ${client.guestId} disconnected\n`);
+                        }
                     }
-                }
-                clientMap.delete(clientID); // Remove the client from the map on disconnect
+                    // Remove the client from the map after 5 seconds if no longer connected
+                    if (!client || client.ws.readyState !== WebSocket.OPEN) {
+                        clientMap.delete(clientID);
+                    }
+                }, 5000);
                 updateActiveClients();
             }
 
@@ -373,7 +381,12 @@ function updateActiveClients() {
     const activeGuestsCount = [...clientMap.values()].filter(client => client.ws.readyState === WebSocket.OPEN && client.guestId).length;
     clientMap.forEach((client) => {
         if (client.ws.readyState === WebSocket.OPEN) {
+            // Send to all clients
             client.ws.send(JSON.stringify({ type: 'active_clients', userCount: activeUsersCount, guestCount: activeGuestsCount }));
+            // Additionally, send to userId 1
+            if (client.userId === 1) {
+                client.ws.send(JSON.stringify({ type: 'special_message', message: 'Hello userId 1!' }));
+            }
         }
     });
 }
@@ -462,6 +475,28 @@ rl.on('line', (input) => {
             }
         } else {
             console.log('Invalid input format. Use "kick:clientId url:YourURL"\n');
+        }
+    }
+
+    // Logout a specific client
+    if (input.startsWith('logout:')) {
+        const clientMatch = input.match(/logout:([a-zA-Z0-9]+)/);
+        if (clientMatch) {
+            const clientId = clientMatch[1];
+            console.log(`Logging out client (${clientId})`);
+            const clientSocket = clientMap.get(clientId); // Retrieve client WebSocket object
+            if (clientSocket) {
+                clientSocket.ws.send(JSON.stringify({
+                    type: 'logout',
+                    message: 'You have been logged out by the server.'
+                }));
+                console.log(`Client ${clientId} has been logged out.\n`);
+            } else {
+                console.log(`Client with ID ${clientId} not found.\n`);
+            }
+        }
+        else {
+            console.log('Invalid input format. Use "logout:clientId"\n');
         }
     }
 

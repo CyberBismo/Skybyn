@@ -135,7 +135,7 @@ if (isset($_GET['signup'])) {
             <div class="cloud"></div>
         </div>
 
-        <?php if (isset($uid) && $wallpaper != "../") {?>
+        <?php if (isset($_SESSION['user']) && $wallpaper != "../") {?>
         <div class="wallpaper" id="wallpaper">
             <img src="<?=$wallpaper?>" alt="Wallpaper">
         </div>
@@ -177,7 +177,7 @@ if (isset($_GET['signup'])) {
                 <div class="top-nav">
                     <ul>
                         <?php if (isMobile($userAgent) == true) {?>
-                        <li onclick="showSearch()"><i class="fa-solid fa-magnifying-glass"></i></li>
+                        <li onclick="showSearch()"><i id="searchIcon" class="fa-solid fa-magnifying-glass"></i></li>
                         <?php } else {?>
                         <li onclick="showNotifications(event)" id="notification">
                             <div class="notification_alert nat"><i class="fa-solid fa-circle-exclamation"></i></div>

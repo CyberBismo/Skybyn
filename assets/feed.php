@@ -91,7 +91,7 @@ while ($post = $getPosts->fetch_assoc()) {
                     $post_link = "https://" . $post_link; // Ensure valid URL format
                 }
             ?>
-            <div class="post_link_preview" id="plp_<?=$post_id?>" alt="<?= htmlspecialchars($post_link, ENT_QUOTES, 'UTF-8') ?>" onclick="window.open('<?= htmlspecialchars($post_link, ENT_QUOTES, 'UTF-8') ?>', '_blank')"></div>
+            <div class="post_link_preview" id="plp_<?=$post_id?>" data-url="<?= htmlspecialchars($post_link, ENT_QUOTES, 'UTF-8') ?>" onclick="window.open('<?= htmlspecialchars($post_link, ENT_QUOTES, 'UTF-8') ?>', '_blank')"></div>
             <?php } ?>
         </div>
         <?php }?>
