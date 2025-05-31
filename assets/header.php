@@ -173,20 +173,24 @@ if (isset($_GET['signup'])) {
             <?php }?>
 
             <div class="top">
-                <?php if (isset($_SESSION['user'])) {?>
-                <div class="top-nav">
+                <?php if (isset($_SESSION['user'])) {
+                    if (isMobile($userAgent) == true) {?>
+                <div class="top-nav" id="searchIcon" onclick="showSearchForm()">
                     <ul>
-                        <?php if (isMobile($userAgent) == true) {?>
-                        <li onclick="showSearch()"><i id="searchIcon" class="fa-solid fa-magnifying-glass"></i></li>
-                        <?php } else {?>
-                        <li onclick="showNotifications(event)" id="notification">
-                            <div class="notification_alert nat"><i class="fa-solid fa-circle-exclamation"></i></div>
-                            <i class="fa-solid fa-bell"></i>
-                        </li>
-                        <?php }?>
+                        <li><i class="fa-solid fa-magnifying-glass"></i></li>
                     </ul>
                 </div>
                 <?php } else {?>
+                <div class="top-nav" id="notification" onclick="showNotifications()">
+                    <ul>
+                        <li>
+                            <div class="notification_alert nat"><i class="fa-solid fa-circle-exclamation"></i></div>
+                            <i class="fa-solid fa-bell"></i>
+                        </li>
+                    </ul>
+                </div>
+                <?php }
+                } else {?>
                 <div class="top-nav">
                     <ul>
                         <?php if (isMobile($userAgent) == true) {?>
@@ -211,9 +215,9 @@ if (isset($_GET['signup'])) {
                 </div>
                 <?php }?>
                 <?php if (isset($_SESSION['user'])) {?>
-                <div class="user-nav" onclick="showUserMenu(event)">
+                <div class="user-nav" onclick="showUserMenu()">
                     <ul>
-                        <li><i class="fa-solid fa-bars"></i></li>
+                        <li><i class="fa-solid fa-bars" id="usernav"></i></li>
                     </ul>
                 </div>
                 <?php } else {?>
@@ -295,85 +299,6 @@ if (isset($_GET['signup'])) {
         <?php }?>
 
         <script>
-        <?php if (isset($_SESSION['user'])) {?>
-        function showUserMenu(event) {
-            const um = document.getElementById('usermenu');
-            const left = document.getElementById('left-panel');
-            const right = document.getElementById('right-panel');
-            const mSearch = document.getElementById('mobile-search');
-            <?php if (isMobile($userAgent) == true) {?>
-            if (um.style.transform == "translateX(0px)") {
-                um.style.transform = 'translateX(100%)';
-            } else {
-                um.style.transform = 'translateX(0px)';
-                left.style.transform = 'translateX(-100%)';
-                right.style.transform = 'translateX(100%)';
-                mSearch.style.transform = 'translateY(-155px)';
-            }
-            <?php } else {?>
-            if (event) {
-                event.stopPropagation();
-                um.style.display = "block";
-            }
-            <?php }?>
-        }
-        function showLeftPanel() {
-            const left = document.getElementById('left-panel');
-            const leftButton = document.getElementById('lp-open');
-            const right = document.getElementById('right-panel');
-            const rightButton = document.getElementById('rp-open');
-            const um = document.getElementById('usermenu');
-            if (left.style.transform == "translateX(0px)") {
-                um.style.transform = 'translateX(100%)';
-                left.style.transform = 'translateX(-100%)';
-                right.style.transform = 'translateX(100%)';
-                if (leftButton) {
-                    leftButton.style.transform = 'translateX(0px)';
-                }
-                if (rightButton) {
-                    rightButton.style.transform = 'translateX(0px)';
-                }
-            } else {
-                um.style.transform = 'translateX(100%)';
-                left.style.transform = 'translateX(0px)';
-                right.style.transform = 'translateX(100%)';
-                if (rightButton) {
-                    rightButton.style.transform = 'translateX(0px)';
-                }
-                if (leftButton) {
-                    leftButton.style.transform = 'translateX('+left.clientWidth+'px)';
-                }
-            }
-        }
-        function showRightPanel() {
-            const left = document.getElementById('left-panel');
-            const leftButton = document.getElementById('lp-open');
-            const right = document.getElementById('right-panel');
-            const rightButton = document.getElementById('rp-open');
-            const um = document.getElementById('usermenu');
-            if (right.style.transform == "translateX(0px)") {
-                um.style.transform = 'translateX(100%)';
-                left.style.transform = 'translateX(-100%)';
-                right.style.transform = 'translateX(100%)';
-                if (leftButton) {
-                    leftButton.style.transform = 'translateX(0px)';
-                }
-                if (rightButton) {
-                    rightButton.style.transform = 'translateX(0px)';
-                }
-            } else {
-                um.style.transform = 'translateX(100%)';
-                left.style.transform = 'translateX(-100%)';
-                right.style.transform = 'translateX(0px)';
-                if (leftButton) {
-                    leftButton.style.transform = 'translateX(0px)';
-                }
-                if (rightButton) {
-                    rightButton.style.transform = 'translateX('+left.clientWidth+'px)';
-                }
-            }
-        }
-        <?php }?>
         function newPost(x) {
             const header = document.getElementById('header');
             const mobile_nav_btn = document.getElementById('mobile_new_post');
@@ -958,6 +883,39 @@ if (isset($_GET['signup'])) {
             <i class="fa-solid fa-bell<?=$mob_noti?>"></i>
             <?php }?>
         </div>
+
+        <script>
+            document.addEventListener('click', function(event) {
+                // Hide search form if clicking outside of it
+                const searchForm = document.getElementById('mobile-search');
+                const searchIcon = document.getElementById('searchIcon');
+                const searchBtn = document.getElementsByClassName('top-nav')[0];
+                if (!searchForm.contains(event.target) && !searchIcon.contains(event.target)) {
+                    if (searchForm.style.transform === "translateY(0px)") {
+                        hideSearchForm();
+                    }
+                }
+
+                // Hide notification window if clicking outside
+                const notification = document.getElementById('notification');
+                const notifications = document.getElementById('notifications');
+                if (notifications && notifications.style.display === "block") {
+                    if (!notifications.contains(event.target) && !notification.contains(event.target)) {
+                        console.log("Hiding notifications");
+                        notifications.style.display = "none";
+                    }
+                }
+
+                // Hide user menu if clicking outside
+                const userMenu = document.getElementById('usermenu');
+                const userNav = document.getElementById('usernav');
+                if (!userMenu.contains(event.target) && !userNav.contains(event.target)) {
+                    if (userMenu.style.transform === "translateX(0px)") {
+                        showUserMenu();
+                    }
+                }
+            });
+        </script>
 
         <?php }?>
 

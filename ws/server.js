@@ -125,7 +125,7 @@ wss.on('connection', (ws) => {
                         }
                         logType = "User " + username + " connected";
                         if (!clientMap.has(clientID)) {
-                            clientMap.set(clientID, { ip: cleanedIp, userId, ws });
+                            clientMap.set(clientID, { ip: cleanedIp, userId, userName: username, ws });
                             console.log(`${time}\n${logType} \nIP: ${cleanedIp}\nDevice: ${device}\n`);
                         }
                     });
@@ -478,25 +478,28 @@ rl.on('line', (input) => {
         }
     }
 
-    // Logout a specific client
+    // Logout a specific client by userName
     if (input.startsWith('logout:')) {
-        const clientMatch = input.match(/logout:([a-zA-Z0-9]+)/);
-        if (clientMatch) {
-            const clientId = clientMatch[1];
-            console.log(`Logging out client (${clientId})`);
-            const clientSocket = clientMap.get(clientId); // Retrieve client WebSocket object
-            if (clientSocket) {
-                clientSocket.ws.send(JSON.stringify({
-                    type: 'logout',
-                    message: 'You have been logged out by the server.'
-                }));
-                console.log(`Client ${clientId} has been logged out.\n`);
-            } else {
-                console.log(`Client with ID ${clientId} not found.\n`);
+        const userNameMatch = input.match(/logout:([a-zA-Z0-9_]+)/);
+        if (userNameMatch) {
+            const userName = userNameMatch[1];
+            let found = false;
+            clientMap.forEach((client, clientId) => {
+                if (client.userName === userName) {
+                    console.log(`Logging out client (${clientId}) with userName (${userName})`);
+                    client.ws.send(JSON.stringify({
+                        type: 'logout',
+                        message: 'You have been logged out by the server.'
+                    }));
+                    console.log(`Client ${clientId} (${userName}) has been logged out.\n`);
+                    found = true;
+                }
+            });
+            if (!found) {
+                console.log(`No client with userName ${userName} found.\n`);
             }
-        }
-        else {
-            console.log('Invalid input format. Use "logout:clientId"\n');
+        } else {
+            console.log('Invalid input format. Use "logout:userName"\n');
         }
     }
 

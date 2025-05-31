@@ -44,7 +44,8 @@ if (isset($_GET['user']) && $_GET['user'] != "") {
 } else {
     // Check if user is logged in
     if (isset($uid) && $uid != "") {
-        ?><script>window.location.href = "./profile";</script><?php
+        $user_id = $uid;
+        $myProfile = true;
     }
 }
 

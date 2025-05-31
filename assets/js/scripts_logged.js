@@ -6,61 +6,55 @@ window.addEventListener('storage', function(event) {
     }
 });
 
-// Redirect to post view
-function showPost(x) {
-    window.location.href = "../post/"+x;
-}
-
-function checkEmptyLinkPreview() {
-    // Check if the link preview is empty and try to load it again
-    const linkPreview = document.querySelector('.post_link_preview');
-    if (linkPreview && linkPreview.innerHTML.trim() === '') {
-        const postId = linkPreview.dataset.postId;
-        loadPostLinkPreview(postId);
-    }
-}
-setTimeout(() => {
-    checkEmptyLinkPreview();
-}, 1000);
-
-// Show search form
-function showSearch() {
+// Show/Hide search form
+// Function to show the search form
+function showSearchForm() {
+    const searchIcon = document.getElementById('searchIcon');
     const mobileSearch = document.getElementById('mobile-search');
     const search = document.getElementById('searchInput');
-    const searchRes = document.getElementById('search_result');
-    const usermenu = document.getElementById('usermenu');
-    usermenu.style.transform = 'translateX(100%)';
 
-    // Replace fa-magnifying-glass with fa-xmark
+    if (mobileSearch.style.transform === "translateY(0px)") {
+        hideSearchForm();
+        return;
+    }
+
+    mobileSearch.style.transform = "translateY(0px)";
+    icon = searchIcon.querySelector('i');
+    if (icon.classList.contains('fa-magnifying-glass')) {
+        icon.classList.remove('fa-magnifying-glass');
+        icon.classList.add('fa-xmark');
+    }
+    search.focus();
+}
+// Function to hide the search form
+function hideSearchForm() {
     const searchIcon = document.getElementById('searchIcon');
-    if (searchIcon.classList.contains('fa-magnifying-glass')) {
-        searchIcon.classList.remove('fa-magnifying-glass');
-        searchIcon.classList.add('fa-xmark');
+    const mobileSearch = document.getElementById('mobile-search');
+    const searchRes = document.getElementById('search_result');
+    const search = document.getElementById('searchInput');
+    
+    mobileSearch.style.transform = "translateY(-155px)";
+    icon = searchIcon.querySelector('i');
+    if (icon.classList.contains('fa-xmark')) {
+        icon.classList.remove('fa-xmark');
+        icon.classList.add('fa-magnifying-glass');
     }
-
-    // Function to hide the search form
-    function hideSearchForm() {
-        mobileSearch.style.transform = "translateY(-155px)";
-        searchRes.style.display = "none";
-        search.value = ""; // Clear the search input
-        searchIcon.classList.remove('fa-xmark');
-        searchIcon.classList.add('fa-magnifying-glass');
-    }
-
-    // Function to show the search form
-    function showSearchForm() {
-        searchRes.style.display = "block";
-        mobileSearch.style.transform = "translateY(0px)";
-        search.focus();
-    }
-
-    // Listen for the window resize event (keyboard hide)
-    window.addEventListener('resize', function() {
-        if (window.innerHeight === window.screen.height) {
-            // Keyboard is hidden
-            //hideSearchForm();
-        }
-    });
+    search.value = ""; // Clear the search input
+    const searchRUsers = document.getElementById('search_r_users');
+    const searchRGroups = document.getElementById('search_r_groups');
+    const searchRPages = document.getElementById('search_r_pages');
+    const searchRPosts = document.getElementById('search_r_posts');
+    // Clear search results
+    if (searchRUsers) searchRUsers.innerHTML = "";
+    if (searchRGroups) searchRGroups.innerHTML = "";
+    if (searchRPages) searchRPages.innerHTML = "";
+    if (searchRPosts) searchRPosts.innerHTML = "";
+    // Remove the hidden attribute from search result container
+    searchRes.addAttribute("hidden", "");
+}
+// Function to toggle the search form visibility
+function showSearch() {
+    const search = document.getElementById('searchInput');
 
     // Listen for the search input blur event (if user taps outside)
     search.addEventListener('blur', function() {
@@ -69,13 +63,6 @@ function showSearch() {
             hideSearchForm();
         }
     });
-
-    // Toggle the search form
-    if (mobileSearch.style.transform == "translateY(0px)") {
-        hideSearchForm();
-    } else {
-        showSearchForm();
-    }
 }
 
 // Start searching while typing
@@ -179,6 +166,103 @@ function startSearch(x) {
         searchResult.setAttribute("hidden", "");
     }
 }
+
+function showUserMenu() {
+    const userNav = document.getElementById('usernav');
+    const um = document.getElementById('usermenu');
+    const left = document.getElementById('left-panel');
+    const right = document.getElementById('right-panel');
+    const mSearch = document.getElementById('mobile-search');
+    if (um.style.transform == "translateX(0px)") {
+        userNav.classList.remove('fa-xmark');
+        userNav.classList.add('fa-bars');
+        um.style.transform = 'translateX(100%)';
+        left.style.transform = 'translateX(-100%)';
+        right.style.transform = 'translateX(100%)';
+    } else {
+        userNav.classList.remove('fa-bars');
+        userNav.classList.add('fa-xmark');
+        um.style.transform = 'translateX(0px)';
+        left.style.transform = 'translateX(-100%)';
+        right.style.transform = 'translateX(100%)';
+        hideSearchForm();
+    }
+}
+
+function showLeftPanel() {
+    const left = document.getElementById('left-panel');
+    const leftButton = document.getElementById('lp-open');
+    const right = document.getElementById('right-panel');
+    const rightButton = document.getElementById('rp-open');
+    const um = document.getElementById('usermenu');
+    if (left.style.transform == "translateX(0px)") {
+        um.style.transform = 'translateX(100%)';
+        left.style.transform = 'translateX(-100%)';
+        right.style.transform = 'translateX(100%)';
+        if (leftButton) {
+            leftButton.style.transform = 'translateX(0px)';
+        }
+        if (rightButton) {
+            rightButton.style.transform = 'translateX(0px)';
+        }
+    } else {
+        um.style.transform = 'translateX(100%)';
+        left.style.transform = 'translateX(0px)';
+        right.style.transform = 'translateX(100%)';
+        if (rightButton) {
+            rightButton.style.transform = 'translateX(0px)';
+        }
+        if (leftButton) {
+            leftButton.style.transform = 'translateX('+left.clientWidth+'px)';
+        }
+    }
+}
+
+function showRightPanel() {
+    const left = document.getElementById('left-panel');
+    const leftButton = document.getElementById('lp-open');
+    const right = document.getElementById('right-panel');
+    const rightButton = document.getElementById('rp-open');
+    const um = document.getElementById('usermenu');
+    if (right.style.transform == "translateX(0px)") {
+        um.style.transform = 'translateX(100%)';
+        left.style.transform = 'translateX(-100%)';
+        right.style.transform = 'translateX(100%)';
+        if (leftButton) {
+            leftButton.style.transform = 'translateX(0px)';
+        }
+        if (rightButton) {
+            rightButton.style.transform = 'translateX(0px)';
+        }
+    } else {
+        um.style.transform = 'translateX(100%)';
+        left.style.transform = 'translateX(-100%)';
+        right.style.transform = 'translateX(0px)';
+        if (leftButton) {
+            leftButton.style.transform = 'translateX(0px)';
+        }
+        if (rightButton) {
+            rightButton.style.transform = 'translateX('+left.clientWidth+'px)';
+        }
+    }
+}
+
+// Redirect to post view
+function showPost(x) {
+    window.location.href = "../post/"+x;
+}
+
+function checkEmptyLinkPreview() {
+    // Check if the link preview is empty and try to load it again
+    const linkPreview = document.querySelector('.post_link_preview');
+    if (linkPreview && linkPreview.innerHTML.trim() === '') {
+        const postId = linkPreview.dataset.postId;
+        loadPostLinkPreview(postId);
+    }
+}
+setTimeout(() => {
+    checkEmptyLinkPreview();
+}, 1000);
 
 function feedbackInfo() {
     alert("This is a BETA feature.\n\nPlease report any bugs or issues you find.\nYour ID and current timestamp will be stored with what you submit.\n\nThank you for your help and feedback!");
