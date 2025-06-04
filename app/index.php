@@ -1,3 +1,36 @@
+<?php
+if (isset($_GET['dl'])) {
+    if (!empty($_GET['dl'])) {
+        if ($_GET['dl'] == "android") {
+            $file = basename('skybyn.apk');
+            $filepath = __DIR__ . '/android/' . $file;
+
+            if (file_exists($filepath) && $file === 'skybyn.apk') {
+                header('Content-Description: File Transfer');
+                header('Content-Type: application/vnd.android.package-archive');
+                header('Content-Disposition: attachment; filename="' . $file . '"');
+                header('Expires: 0');
+                header('Cache-Control: must-revalidate');
+                header('Pragma: public');
+                header('Content-Length: ' . filesize($filepath));
+                readfile($filepath);
+                exit;
+            } else {
+                http_response_code(404);
+                echo 'File not found.';
+                exit;
+            }
+        }
+    } else {
+        echo '<div style="text-align:center; margin-top:50px;">
+            <p>Select a platform to download:</p>
+            <button style="font-size:1.5em; padding:15px 40px; margin:10px; cursor:pointer;" onclick="window.location.href=\'?dl=android\'">Download for Android</button>
+            <button style="font-size:1.5em; padding:15px 40px; margin:10px; cursor:pointer;" onclick="window.location.href=\'?dl=ios\'">Download for iOS</button>
+        </div>';
+        exit;
+    }
+}
+?>
 <!DOCTYPE html>
 <html>
     <head>
